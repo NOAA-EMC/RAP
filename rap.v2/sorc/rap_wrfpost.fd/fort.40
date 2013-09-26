@@ -1,0 +1,10 @@
+subroutine init_xml_type_paramset_t_array( dvar )  
+   type(paramset_t), dimension(:), pointer :: dvar 
+   if ( associated( dvar ) ) then
+      deallocate( dvar )
+   endif
+   allocate( dvar(0) )
+end subroutine init_xml_type_paramset_t_array
+subroutine init_xml_type_paramset_t(dvar)
+   type(paramset_t) :: dvar 
+end subroutine init_xml_type_paramset_t
