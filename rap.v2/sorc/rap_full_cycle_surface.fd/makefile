@@ -9,9 +9,7 @@ CPP      = /lib/cpp -P
 ARCH     =
 CPPFLAGS =  -DLINUX -Dfunder -DFortranByte=char -DFortranInt=int -DFortranLlong='long long' -D_UNDERSCORE
 
-
-## WRFPATH  = /meso/save/Dusan.Jovic/WRFV3
-WRFPATH  = /meso/save/Ming.Hu/nwprod/rap.v2.0.0/sorc_v2/rap_wrf.fd/WRFV3.4.1_r732
+WRFPATH  = /nwprod/sorc/wrf_shared.fd
 W3FLAGS = -I/nwprod/lib/incmod/w3emc_v2.0.3_4
 INCLD =
 NWPLIBS =/nwprod/lib -lw3emc_4 -lw3nco_4 -lbacio_4

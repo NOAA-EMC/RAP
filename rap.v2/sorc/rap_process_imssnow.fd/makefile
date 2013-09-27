@@ -3,8 +3,9 @@
 
 # Define the fortran compiler and options
 
-WRFPATH=/meso/save/Ming.Hu/nwprod/rap.v2.0.0/sorc_v2/rap_wrf.fd/WRFV3.4.1_r732
-NETCDFPATH = /u/wx20rv/lib_tmp/netcdf/lib
+WRFPATH=/nwprod/sorc/wrf_shared.fd
+## NETCDFPATH = /u/wx20rv/lib_tmp/netcdf/lib
+NETCDFPATH = /usrx/local/NetCDF/3.6.3/lib
 FC       = mpfort -g -traceback
 CPP      = /lib/cpp -P
 ARCH     =

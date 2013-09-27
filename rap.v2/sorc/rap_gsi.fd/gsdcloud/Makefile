@@ -146,7 +146,7 @@ default: $(LIBGNRLCLD).a
 
 $(LIBGNRLCLD).a: $(GNRLCLDOBJS)
 	ar $(ARFLAG) rc $@ $(GNRLCLDOBJS)
-#	cp $(LIBGNRLCLD).a 
+	cp $(LIBGNRLCLD).a  ../.
 
 #-----------------------------------------------------------------------
 #
@@ -155,5 +155,5 @@ $(LIBGNRLCLD).a: $(GNRLCLDOBJS)
 #-----------------------------------------------------------------------
 
 clean:
-	-$(RM) -f $(GNRLCLDOBJS) $(LIBGNRLCLD).a
+	-$(RM) -f $(GNRLCLDOBJS) $(LIBGNRLCLD).a *.mod
 

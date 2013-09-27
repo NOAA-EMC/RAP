@@ -121,7 +121,7 @@ include $(MAKE_CONF)
 # Load module
 # -----------
 
-  EXE_FILE = global_gsi
+  EXE_FILE = rap_gsi
 
 
 # --------------------
