@@ -1,0 +1,168 @@
+#!/bin/sh
+
+#$SMSBIN/smsinit $LOADL_STEP_ID
+jid=`echo $LSB_OUTPUTFILE | cut -f2 -d.`
+mv $LSB_OUTPUTFILE /com/output/${envir}/today/${job}.${jid}
+
+set -xa
+export MP_IOAGENT_CNT=all
+export MP_IO_BUFFER_SIZE=8M
+
+###### 09/01/2004 ####################################################
+echo "------------------------------------------------"
+echo "XXXX -  HRLYMON"
+echo "------------------------------------------------"
+echo "Executing JHRLY_REALTIME.sms.prod job script    "
+echo "Authors: V. Krishna Kumar & Bradley Ballish     "
+echo "NCO/Data Management & Quality Assessment Branch "
+echo "History: SEP 2004 - First implementation of this new script."
+echo "NCO/Systems Integration Branch "
+echo "JULY 2008 - Modified to automate plotting data types timeseries"
+echo "MAY 2010 - Modified to extend time series out to 3 days"
+echo "NOV 2011 - Modified to replace RUC with Rapid Refresh (RAP)"
+echo "AUG 2012 - Commented out removal of temp/data directory"
+echo "FEB 2013 - Transition to WCOSS System "
+#####################################################################
+
+####################################
+# obtain unique process id (pid) and make temp directory
+####################################
+export pid=$$
+export DATA=/tmpnwprd/${job}.${pid}
+
+mkdir -p $DATA
+cd $DATA
+
+export cycle=t${cyc}z
+
+##################################################
+# Specify RUN Name 
+# Specify NET Name in the corresponding sms script
+##################################################
+export RUN=realtime
+export ARCH=arch
+export DLY=obcount_30day
+export MLY=avgdata
+
+hostname > /com/web/${envir}/Check_CCS_Machine
+####################################
+# Determine Job Output Name on System
+####################################
+export outid="LL$job"
+export jobid="${outid}.o${pid}"
+export pgmout="OUTPUT.${pid}"
+
+####################################
+# File To Log Msgs
+####################################
+if [ $envir = "prod" ]
+then
+   export jlogfile=/com/logs/jlogfiles/jlogfile.${job}.${pid}
+   export ALERTL=/com/logs/alertlog    # used by child script bufr_datacount.sh
+else
+   export jlogfile=/com/logs/${envir}/jlogfile
+   export ALERTL=/com/logs/${envir}/alertlog    # used by child script bufr_datacount.sh
+fi
+
+####################################
+# SENDECF  - Flag Events on ECF
+# SENDDBN  - Issue DBNet Client Calls
+# SENDCOM  - Copy files to /com directory
+# SENDSDM  - Send files to SDM printer (used by child script bufr_datacount.sh)
+####################################
+export SENDECF=YES
+export SENDDBN=YES
+export SENDCOM=YES
+export SENDSDM=YES
+
+# turn on gathering of I/O statistics
+export GET_IOPROFILE=NO 
+####################################
+# Specify Execution Areas
+####################################
+export HOMEPREP=/nw${envir}
+export HOMESCRIPTS=/nw${envir}/scripts
+export EXECPREP=${HOMEPREP}/exec
+export USHPREP=${HOMEPREP}/ush
+export UTILPREP=${HOMEPREP}/util/ush
+export FIXPREP=${HOMEPREP}/fix
+export FIXWEB=${HOMEPREP}/gempak/web
+export PARMPREP=${HOMEPREP}/parm
+ 
+#############################
+# Set up the UTILITIES
+##############################
+export ushscript=/nw${envir}/ush
+export utilscript=/nwprod/util/ush
+export utilparm=/nwprod/util/parm
+export utilexec=/nwprod/util/exec
+##############################
+# Run setup to initialize working directory and utility scripts
+##############################
+$utilscript/setup.sh
+
+##############################
+# Run setpdy and initialize PDY variables
+##############################
+$utilscript/setpdy.sh
+. ./PDY
+
+export DATESTAMP=$PDY
+######
+###### WILL UPDATE THE PDY HERE ONLY IF exhrly_realtime_startup.sh IS INVOKED   ######
+###### THIS IS REQUIRED TO CREATE YESTERDAY'S DIRECTORY FILES FOR SUBSEQUENT    ######
+###### GEMPAK GRAPHICS PROGRAMS - APPLICABLE ONLY FOR THE VERY FIRST (COLD RUN) ######
+######
+######
+if [ "$SWITCH" = "YES" ] 
+then
+   export PDY=$1
+fi
+######
+######
+
+export COMOUTRT=/com/${RUN}/${envir}/${NET}.${PDY}
+export COMOUT=/com/web/${envir}/${RUN}/${RUN}/${NET}/${cycle}
+export COM1OUT=/com/web/${envir}/${RUN}/${RUN}
+export COMTABLE=/com/web/${envir}/realtime
+
+mkdir -p $COMOUTRT
+mkdir -p $COMOUT
+
+#####
+if [ $NET = "hourly" ]; then
+   export BASERUN=dump
+else
+   export BASERUN=rap
+fi
+#####
+if [ $NET = "hourly" ]; then
+   export COMDAY=/com/$BASERUN/${envir}
+else
+   export COMDAY=/com/$NET/${envir}
+fi
+
+export COMMON=/com/$ARCH/${envir}/$MLY
+#####
+
+#############################################################
+# execute the script
+#bsm - profiling test
+if [ $GET_IOPROFILE = YES ]; then
+   "/usrx/local/mio/tools/bin/miostats -X0 $HOMESCRIPTS/exhrly_realtime.sh.ecf"
+else
+   $HOMESCRIPTS/exhrly_realtime.sh.ecf
+fi
+#############################################################
+
+msg="JHRLY_REALTIME.sms.${envir} has ended"
+postmsg "$jlogfile" "$msg"
+
+cat $pgmout
+
+##################################################
+
+#cd /tmpnwprd
+#rm -rf $DATA
+
+#$SMSBIN/smscomplete

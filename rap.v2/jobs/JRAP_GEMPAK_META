@@ -1,0 +1,105 @@
+#!/bin/sh
+
+########################################
+# Creates RAP META files for NAWIPS
+########################################
+
+#$SMSBIN/smsinit $LOADL_STEP_ID 
+
+set -xa
+# #### 11/17/2004 ###################
+# SET SHELL PROCESSING VARIABLES
+# ###################################
+export PS4='$SECONDS + ' 
+date
+# 
+# obtain unique process id (pid) and make temp directories
+#
+export pid=$$
+export DATA=/tmpnwprd/${job}.${pid}
+mkdir $DATA
+cd $DATA 
+
+####################################
+# File To Log Msgs
+####################################
+export jlogfile=/com/logs/jlogfiles/jlogfile.${job}.${pid}
+
+####################################
+# Determine Job Output Name on System
+####################################
+export outid="LL$job"
+export jobid="${outid}.o${pid}"
+export pgmout="${DATA}/OUTPUT.${pid}"
+
+export cycle=t${cyc}z 
+
+export SENDCOM=YES
+export SENDDBN=YES
+export SENDECF=YES
+
+#
+# Set up model and cycle specific variables
+#
+export NET=rap
+export RUN=rap
+export DBN_ALERT_TYPE=RAP_METAFILE
+
+export HOMEgempak=${HOMEgempak:-/nw${envir}/${NET}.${model_ver}/gempak}
+export FIXgempak=$HOMEgempak/fix
+export USHgempak=$HOMEgempak/ush
+
+#
+# Now set up GEMPAK/NTRANS environment
+#
+. /nwprod/gempak/.gempak
+set -x
+
+cp $FIXgempak/datatype.tbl datatype.tbl
+
+###################################
+# Set up the UTILITIES
+###################################
+export utilscript=/nwprod/util/ush
+export utilities=/nwprod/util/ush
+export utilexec=/nwprod/util/exec
+
+#export PDY=20121218
+#export PDY=20130222
+# Run setup to initialize working directory and utility scripts
+sh $utilscript/setup.sh
+
+# Run setpdy and initialize PDY variables
+sh $utilscript/setpdy.sh
+. PDY
+
+export COMAWP=/com/nawips/${envir}
+export COMIN=/com/nawips/${envir}/${RUN}.${PDY}
+export COMOUT=/com/nawips/${envir}/${RUN}.${PDY}/meta
+
+if [ ! -f $COMOUT ] ; then
+  mkdir -p -m 775 $COMOUT
+fi
+
+env
+
+msg="Begin job for $job"
+postmsg "$jlogfile" "$msg"
+
+########################################################
+# Execute the script.
+/nw${envir}/${NET}.${model_ver}/scripts/exrap_gempak_meta.sh.ecf
+########################################################
+
+
+msg="job has ended"
+postmsg "$jlogfile" "$msg"
+
+cat $pgmout
+
+cd /tmpnwprd
+#rm -rf $DATA
+
+date
+
+#$SMSBIN/smscomplete

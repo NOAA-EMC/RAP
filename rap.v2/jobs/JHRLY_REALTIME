@@ -1,0 +1,171 @@
+#!/bin/sh
+
+#### UNIX Script Documentation Block ################################
+#
+# Script Name: JHRLY_REALTIME
+# RFC Contact: Kelly Kempisty
+# Abstract:  This is the top level J-Job script that processes the
+#    data that will eventually populate the Real Time Data Monitoring
+#    (RTDM) web page for the Hourly and Rapid Refresh (RAP) data sets.
+#
+# Script History Log:
+#    09/2004	Kumar/Ballish	Script developed and implemented.
+#    07/2008			Modified to automate plotting data
+#				types timeseries
+#    09/2009	Stoudt		Added a feature to dynamically produce
+#				the Explanation of Data Types file.
+#    01/2010	Stoudt		Added copies of new Fix Files that link
+#				to regular expression metacharacters in
+#				the Data Troubleshooting Guide.
+#    05/2010	Kumar/Malone	Modified to extend time series out to
+#	             (Kempisty)	3 days.  Added a sort to both the 
+#				hrly_monx output files to alphabetize
+#				data types for ease of reading on the
+#				web.
+#    11/2011	Kempisty	Modified to replace RUC with RAP
+#    08/2012	Kempisty	Commented out temp/data directory for
+#				error troubleshooting purposes.
+#    12/2012	Kempisty	Modified to run on WCOSS - Tide/Gyre
+#
+# Usage: J-job run by way of ECFlow
+#  Script Parameters:
+#  Modules and Files referenced:
+#    scripts:     /nwprod/scripts/exhrly_realtime.sh.ecf
+#                 /nwprod/ush/bufrdumplist.pl
+#    fix:         /nwprod/fix/bufr_dumplist
+#                 /nwprod/fix/realtime_hrlymon_acardist.txt
+#		  /nwprod/fix/realtime_hrlymon_amdrdist.txt
+#                 /nwprod/gempak/web/index.tsg.shtml
+#                 /nwprod/gempak/web/index.dec.shtml
+#                 /nwprod/gempak/web/index.sat.shtml
+#                 /nwprod/gempak/web/index.bufrdump.shtml
+#                 /nwprod/gempak/web/body.tsg.html
+#                 /nwprod/gempak/web/body.decoders.html
+#                 /nwprod/gempak/web/body.satlutil.html
+#                 /nwprod/gempak/web/body.regexprmeta.html
+#                 /nwprod/gempak/web/DataInventory.xls
+#    executables: /nwprod/exec/realtime_hrlymonx
+#
+# Attributes:
+#    Language:  RedHat Linux
+#    Machine:   NCEP WCOSS
+#
+#####################################################################
+
+set -x
+
+export PS4='$SECONDS +'
+date
+
+####################################
+# Determine job output name on the system
+####################################
+export pid=$$
+
+export outid="LL${job}"
+export jobid="${outid}.o${pid}"
+export pgmout="OUTPUT.${pid}"
+
+export DATA=/tmpnwprd/${job}.${pid}
+mkdir -p ${DATA}
+cd ${DATA}
+
+export cycle=t${cyc}z
+
+export RUN=realtime
+export ARCH=arch
+export DLY=obcount_30day
+export MLY=avgdata
+
+hostname > /com/web/${envir}/Check_CCS_Machine
+
+####################################
+# Setup jlogfile
+####################################
+if [ ${envir} = "prod" ]; then
+   export jlogfile=/com/logs/jlogfiles/jlogfile.${job}.${pid}
+   export ALERTL=/com/logs/alertlog    # used by child script bufr_datacount.sh
+else
+   export jlogfile=/com/logs/${envir}/jlogfile
+   export ALERTL=/com/logs/${envir}/alertlog    # used by child script bufr_datacount.sh
+fi
+
+####################################
+# SENDECF  - Flag Events on ecFlow
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+# SENDSDM  - Send files to SDM printer (used by child script bufr_datacount.sh)
+####################################
+export SENDECF=YES
+export SENDCOM=YES
+export SENDDBN=YES
+#export SENDSDM=YES
+export SENDSDM=NO
+
+####################################
+# Specify Execution Areas
+####################################
+export HOMErealtime=/nw${envir}
+export SCRIPTSrealtime=${HOMErealtime}/scripts
+export EXECrealtime=${HOMErealtime}/exec
+export USHrealtime=${HOMErealtime}/ush
+export UTILrealtime=${HOMErealtime}/util/ush
+export FIXrealtime=${HOMErealtime}/fix
+export WEBrealtime=${HOMErealtime}/gempak/web
+export PARMrealtime=${HOMErealtime}/parm
+
+export utilscript=/nwprod/util/ush
+export EXECutil=/nwprod/util/exec
+
+####################################
+# Run setup to initialize working directory and utility scripts
+####################################
+${utilscript}/setup.sh
+
+####################################
+# Run setpdy and initialize PDY variables
+####################################
+${utilscript}/setpdy.sh
+. PDY
+export DATESTAMP=${PDY}
+
+######
+###### WILL UPDATE THE PDY HERE ONLY IF exhrly_realtime_startup.sh IS INVOKED   ######
+###### THIS IS REQUIRED TO CREATE YESTERDAY'S DIRECTORY FILES FOR SUBSEQUENT    ######
+###### GEMPAK GRAPHICS PROGRAMS - APPLICABLE ONLY FOR THE VERY FIRST (COLD RUN) ######
+######
+if [ "${SWITCH}" = "YES" ]
+then
+   export PDY=$1
+fi
+######
+
+####################################
+# set COMIN, COMOUT, etc. directories
+####################################
+export COMOUTRT=/com/${RUN}/${envir}/${NET}.${PDY}
+export COMOUT=/com/web/${envir}/${RUN}/${RUN}/${NET}/${cycle}
+export COM1OUT=/com/web/${envir}/${RUN}/${RUN}
+export COMTABLE=/com/web/${envir}/realtime
+mkdir -p ${COMOUTRT}
+mkdir -p ${COMOUT}
+
+if [ ${NET} = "hourly" ]; then
+   export BASERUN=dump
+   export COMDAY=/com/${BASERUN}/${envir}
+else
+   export BASERUN=rap
+   export COMDAY=/com/${NET}/${envir}
+fi
+export COMMON=/com/${ARCH}/${envir}/${MLY}
+
+####################################
+# execute the script
+${SCRIPTSrealtime}/exhrly_realtime.sh.ecf
+####################################
+
+cat ${pgmout}
+
+date
+cd /tmpnwprd
+rm -rf ${DATA}
