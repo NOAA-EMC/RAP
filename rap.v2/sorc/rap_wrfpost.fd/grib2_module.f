@@ -690,16 +690,17 @@
          where(abs(datafld1)>=SPVAL)bmap=.false.
        endif
 !
-       if(size(pset%param(nprm)%level)==size(pset%param(nprm)%scale)) then
-         if(size(pset%param(nprm)%level)==1) nlvl=1
-         if(nlvl/=0) then
-           fldscl=nint(pset%param(nprm)%scale(nlvl))
-         else
-           fldscl=0
-         endif
-       else if (size(pset%param(nprm)%scale)==1) then
-         fldscl=nint(pset%param(nprm)%scale(1))
-       endif
+!       if(size(pset%param(nprm)%level)==size(pset%param(nprm)%scale)) then
+!         if(size(pset%param(nprm)%level)==1) nlvl=1
+!         if(nlvl/=0) then
+!           fldscl=nint(pset%param(nprm)%scale(nlvl))
+!         else
+!           fldscl=0
+!         endif
+!       else if (size(pset%param(nprm)%scale)==1) then
+!         fldscl=nint(pset%param(nprm)%scale(1))
+!       endif
+        stop 999
 !
        call g2getbits(ibmap,fldscl,size(datafld1),bmap,datafld1,ibin_scl,idec_scl,inumbits)
 !        print *,'idec_scl=',idec_scl,'ibin_scl=',ibin_scl,'number_bits=',inumbits

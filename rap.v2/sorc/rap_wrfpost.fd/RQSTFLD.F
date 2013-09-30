@@ -1731,9 +1731,8 @@
      &                      /1,'NCICE ON MDL SFCS   ',198,109,     &
      &                         'NCICE ON MDL SFCS   '/
 
-! no entry in GRIB table for NRAIN, use 148 - Meridional flux of gravity wave stress
       DATA IFILV(754),AVBL(754),IQ(754),IS(754),AVBLGRB2(754)      &
-     &                      /1,'NCRAIN ON MDL SFCS  ',148,109,     &
+     &                      /1,'NCRAIN ON MDL SFCS  ',153,109,     &
      &                         'NCRAIN ON MDL SFCS  '/
 ! ---
       DATA IFILV(546),AVBL(546),IQ(546),IS(546),AVBLGRB2(546)      &

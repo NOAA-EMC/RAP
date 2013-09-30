@@ -9,6 +9,7 @@ TARGET   = rap_wrfpost
 FC       = mpfort -compiler ifort 
 CPP      = /lib/cpp -P
 CPPFLAGS = -DLINUX 
+CPPFLAGS2 =  -DLINUX -Dfunder -DFortranByte=char -DFortranInt=int -DFortranLlong='long long' -D_UNDERSCORE
 OPTS     = -O -fp-model strict
 FREE     = -FR
 TRAPS    = 
@@ -131,7 +132,7 @@ OBJS =  \
 
 ## CALRAD.o CALRAD_WCLOUD.o
 
-.SUFFIXES: .F .f .o .f90
+.SUFFIXES: .F .f .c .o .f90
 
 .F.f:
 	$(CPP) $(CPPFLAGS) $< > $*.f
@@ -144,6 +145,9 @@ $(TARGET): $(OBJS)
 
 .f90.o:
 	$(FC) $(FFLAGS) -c $<
+
+.c.o :
+	${CC} ${CPPFLAGS2} -c $<
 
 
 clean:

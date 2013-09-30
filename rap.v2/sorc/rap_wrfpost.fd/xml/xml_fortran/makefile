@@ -42,3 +42,4 @@ clean:
 	rm -f *.o
 	rm -f *.mod
 	rm -f *.a
+	rm -f xmlreader tstparse

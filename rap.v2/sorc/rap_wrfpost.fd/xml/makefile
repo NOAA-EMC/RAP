@@ -23,3 +23,4 @@ clean:
 	 rm -f postcntrl_t.f90 *.o
 	 rm -f *.mod
 	 rm -f *.a
+	 rm -f fort.35 fort.40 xmlreader.out
