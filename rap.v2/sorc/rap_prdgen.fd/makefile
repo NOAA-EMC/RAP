@@ -22,7 +22,7 @@ OBJS=	ADD_WMO.o PRDGEN.o CTL_RDR.o xmovex.o \
 # PROFLIB       Library needed for profiling
 
 #FC =            ifort -openmp -convert big_endian -g -traceback -check bounds
- FC =            ifort -openmp -convert big_endian -g -traceback
+ FC =            ifort -openmp -convert big_endian 
  LDFLAGS =
  LIBS =          -L/nwprod/lib \
                  -lip_4 -lw3nco_v2.0.3_4 -lw3emc_4 -lsp_4 -lbacio_4 \
