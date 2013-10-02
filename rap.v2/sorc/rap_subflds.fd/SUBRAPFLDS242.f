@@ -1,0 +1,685 @@
+      PROGRAM SUBRAPFLDS242
+C                .      .    .                                       .
+C SUBPROGRAM:   SUBRAPFLDS
+C   PRGMMR: MANIKIN        ORG: W/NP22     DATE:  08-20-11
+C
+C ABSTRACT: PRODUCES 3-HOUR STRATIFORM AND CONVECTIVE PRECIPITATION BUCKETS,
+C      3-HR PRESSURE TENDENCY, & 3-HR SNOWFALL ON RAPID REFRESH 242 GRID
+C
+C PROGRAM HISTORY LOG:
+C   08-20-11  GEOFF MANIKIN
+C
+C REMARKS:
+
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN-90
+C   MACHINE:  CRAY C-90
+C$$$
+      INCLUDE "parmg242"
+      PARAMETER(ITOT=ILIM*JLIM)
+      DIMENSION GRID(ITOT),DIFF(5)
+      DIMENSION INCDAT(8),JNCDAT(8)
+      INTEGER JPDS(200),JGDS(200),KPDS(200),KGDS(200)
+      INTEGER LEVS(MAXLEV),IVAR(5)
+      LOGICAL*1 MASK(ITOT), MASK2(ITOT), MASK3(ITOT)
+      LOGICAL NEEDP
+C
+      PARAMETER(MBUF=2000000,JF=1000000)
+      CHARACTER CBUF(MBUF)
+      CHARACTER CBUF2(MBUF)
+      CHARACTER*11 ENVVAR
+      CHARACTER*256 FNAME
+      LOGICAL*1 LB(JF)
+      REAL F(JF)
+      PARAMETER(MSK1=32000,MSK2=4000)
+      INTEGER JENS(200),KENS(200)
+      INTEGER FHR,FHRPCP,FHR3,FHRX
+      INTEGER IGDNUM, YEAR, MON, DAY, CYC
+      DIMENSION SPCP(ITOT), SPCP2(ITOT),
+     &     CPCP(ITOT),CPCP2(ITOT),
+     &     SFCP(ITOT),SFCPTM3(ITOT),PTND(ITOT),
+     &     SWEM(ITOT),SWEM2(ITOT),
+     &     SPCP3HR(ITOT),CPCP3HR(ITOT),SWEM3HR(ITOT),
+     &     SPCP0(ITOT),CPCP0(ITOT)
+C
+C READ THE PRIMARY FORECAST HOUR, THE FORECAST HOUR OF
+C   PRECIP, AND THE FORECAST HOUR FOR THE 3-HR PRESSURE
+C   TENDENCY.  IF THE FCST HR IS 99, THIS MEANS THAT THE 
+C   FILE ALREADY CONTAINS THE FIELDS THAT IT NEEDS 
+      READ (5,*) FHR, FHRPCP, FHR3
+      print *, FHR, FHRPCP, FHR3
+      NUMLEV=MAXLEV
+
+C  IF THE FHR < 3, WE NEED A FILE FROM A PREVIOUS CYCLE TO
+C   COMPUTE PRESSURE TENDENCY.  IF THIS FILE ISN'T AVAILBLE,
+C   READ IN '99' AND SET PTND TO VALUES OF ZERO 
+C  FOR HOURS NOT DIVISIBLE BY 3, NEED AN FILE 3 HOURS OLD FOR PTND
+C   AND A FILE 1 or 2 HOURS OLD FOR PRECIP/SNOW. 
+C  FOR HOURS DIVISIBLE BY 3, THE FILE VALID 3 HOURS EARLIER
+C   CONTAINS THE PRECIP/SNOW AND PRESSURE DATA THAT WE NEED 
+ 
+      IF (FHRPCP .EQ. 99 .AND. FHR3 .EQ. 99) THEN
+        print *, 'ONLY NEED TO READ ONE GRIB FILE'
+        LUGB=13
+        LUGI=14
+        LUGB4=50
+      ELSE IF (FHR3 .EQ. 99 .OR. FHR .GT. 80) THEN
+        print *, 'WILL READ 2 GRIB FILES'
+        LUGB=13
+        LUGI=14
+        LUGB2=15
+        LUGI2=16
+        LUGB4=50
+      ELSE IF (FHR3 .LT. 0) THEN
+        print *, 'WILL READ 2 GRIB FILES'
+        LUGB=13
+        LUGI=14
+        LUGB3=17
+        LUGI3=18
+        LUGB4=50
+      ELSE
+        print *, 'WILL READ 3 GRIB FILES'
+        LUGB=13
+        LUGI=14
+        LUGB2=15
+        LUGI2=16
+        LUGB3=17
+        LUGI3=18
+        LUGB4=50
+      ENDIF
+
+C USING A HIGH VALUE FOR FHR TO SHOW THAT WE DON'T NEED
+C  TO GENERATE PRESSURE TENDENCY, SO DON'T PROCESS IT
+      IF (FHR .GE. 80) THEN
+       NEEDP=.FALSE.
+       FHR=FHR-80
+      ELSE
+       NEEDP=.TRUE.
+      ENDIF
+
+C  READ IN THE PRIMARY FORECAST FILE
+      JJ1 = 1
+      JJINC = 1
+      ISTAT = 0
+C
+C  READ 1ST INDEX FILE TO GET GRID SPECS
+C
+      IRGI = 1
+      IRGS = 1
+      KMAX = 0
+      JR=0
+      KSKIP = 0
+      CALL BAOPEN(LUGB,'fort.13',IRETGB)
+      CALL BAOPEN(LUGI,'fort.14',IRETGI)
+      CALL GETGI(LUGI,KSKIP,MBUF,CBUF,NLEN,NNUM,IRGI)
+      write(6,*)' IRET FROM GETGI ',IRGI
+      write(6,*)' IRET FROM GETGI ',IRGI
+      IF(IRGI .NE. 0) THEN
+        WRITE(6,*)' PROBLEMS READING 1ST GRIB INDEX FILE SO ABORT'
+        ISTAT = IRGI
+        STOP
+      ENDIF
+c      REWIND LUGI
+
+C
+      DO K = 1, NNUM
+        JR = K - 1
+        JPDS = -1
+        JGDS = -1
+        CALL GETGB1S(CBUF,NLEN,NNUM,JR,JPDS,JGDS,JENS,
+     &               KR,KPDS,KGDS,KENS,LSKIP,LGRIB,IRGS)
+        write(6,*)' IRET FROM GETGB1S ',IRGS
+        IF(IRGI .NE. 0) THEN
+          WRITE(6,*)' PROBLEMS ON 1ST READ OF GRIB FILE SO ABORT'
+          ISTAT = IRGS
+          STOP
+        ENDIF
+C
+      ENDDO
+
+C    GET GRID NUMBER & DATE INFO FROM PDS
+C
+      IGDNUM = KPDS(3)
+      YEAR = KPDS(8)
+      MON = KPDS(9)
+      DAY = KPDS(10)
+      CYC = KPDS(11)
+
+      print *, YEAR, MON, DAY, CYC
+      IF (FHR .EQ. 2 .AND. FHR3 .EQ. 99) GOTO 444 
+C
+C   PROCESS THE PRIMARY GRIB FILE
+C
+      IMAX = KGDS(2)
+      JMAX = KGDS(3)
+      NUMVAL = IMAX*JMAX
+      KMAX = MAXLEV
+      WRITE(6,280) IMAX,JMAX,NUMLEV,KMAX
+      print *, 'IMAX JMAX ', IMAX, JMAX
+  280 FORMAT(' IMAX,JMAX,NUMLEV,KMAX ',5I4)
+  285 FORMAT(' IV, IVAR, L, IRET:  ',4I5)
+
+C -== GET FIELDS FROM FILE 1 ==-
+
+C  ALWAYS NEED TO GET SFC PRESSURE EXCEPT FOR BGRB
+C   SFC PRESSURE
+      IF (NEEDP) THEN
+       L = 0
+       IV= 0
+       J = 0
+       JPDS = -1
+       JPDS(3) = IGDNUM
+       JPDS(5) = 001
+       JPDS(6) = 001
+       JPDS(13) = 1
+       CALL GETGB(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF,K,
+     X           KPDS,KGDS,MASK,GRID,IRET)
+       IF(IRET.EQ.0) THEN
+         print *, 'UNPACKED SFC PRESSURE AT F',FHR
+         II = 1
+         JJ = JJ1
+         DO KK = 1, ITOT
+           SFCP(KK) = GRID(KK)
+         ENDDO
+       ELSE
+         WRITE(6,285)IV,JPDS(5),L,IRET
+         WRITE(6,*)' COULD NOT UNPACK SFC PRESSURE at F',FHR
+          ISTAT = IRET
+         STOP
+       ENDIF  
+      ENDIF
+
+C  ONLY NEED PRECIP AND SNOW AT CERTAIN HOURS
+C  WE WANT TO MAKE 3-HR BUCKETS - THE RUC MAKES
+C    3-HR ACCUMS AT F3, F6, F9...  2-HR ACCUMS AT
+C    F2, F5, F8....  AND 1-HR ACCUMS at F1, F4, F7...
+C  THE RAP ALREADY HAS 1-HR PCP ACCUMS AT ALL FCST HOURS
+C    SO WE DON'T NEED TO DO ANYTHING AT F4, F7, F10...
+C    FOR PRECIP BUT STILL NEED TO DO SNOW
+C  AND SINCE THE RAP HAS RUN TOTAL ACCUMS AT ALL FCST 
+C    HOURS, WE'RE SET AT F01, F02, AND F03
+
+      IF (FHR .GT. 3) THEN
+
+C  SNOW WATER EQUIVALENT
+      J = 0
+      JPDS = -1
+      JPDS(3) = IGDNUM
+      JPDS(5) = 065
+      JPDS(6) = 001
+      JPDS(16) = 4
+      CALL GETGB(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF,K,
+     X           KPDS,KGDS,MASK,GRID,IRET)
+      IF(IRET.EQ.0) THEN
+        print *, 'UNPACKED SNOW WATER EQUIV at F',FHR, K
+        II = 1
+        JJ = JJ1
+        DO KK = 1, ITOT
+          SWEM(KK) = GRID(KK)
+        ENDDO
+      ELSE
+        WRITE(6,285)IV,JPDS(5),L,IRET
+        WRITE(6,*)' COULD NOT UNPACK SNOW WATER EQUIV at F',FHR
+        ISTAT = IRET
+        STOP
+      ENDIF
+      ENDIF
+
+      print *, 'fhr ', FHR
+      IF ((FHR .GT. 3 .AND. MOD(FHR,3) .NE. 1) 
+     X    .OR. FHR .LE. 1)  THEN
+C   STRATIFORM PRECIP
+      J = 0
+      JPDS = -1
+      JPDS(3) = IGDNUM
+      JPDS(5) = 062
+      JPDS(6) = 001
+      JPDS(13) = 1
+      JPDS(14) = 0
+      JPDS(15) = FHR
+      CALL GETGB(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF,K,
+     X           KPDS,KGDS,MASK,GRID,IRET)
+      IF(IRET.EQ.0) THEN
+        print *, 'UNPACKED STRATIFORM PCP at F',FHR
+        II = 1
+        JJ = JJ1
+        DO KK = 1, ITOT
+          SPCP(KK) = GRID(KK)
+        ENDDO
+      ELSE
+        WRITE(6,285)IV,JPDS(5),L,IRET
+        WRITE(6,*)' COULD NOT UNPACK STRATIFORM PCP at F',FHR
+         ISTAT = IRET
+        STOP
+      ENDIF
+
+C  CONVECTIVE PRECIP
+      J = 0
+      JPDS = -1
+      JPDS(3) = IGDNUM
+      JPDS(5) = 063
+      JPDS(6) = 001
+      JPDS(13) = 1
+      JPDS(14) = 0
+      JPDS(15) = FHR
+      CALL GETGB(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF,K,
+     X           KPDS,KGDS,MASK,GRID,IRET)
+      IF(IRET.EQ.0) THEN
+        print *, 'UNPACKED CONVECTIVE PCP at F',FHR
+        II = 1
+        JJ = JJ1
+        DO KK = 1, ITOT
+          CPCP(KK) = GRID(KK)
+        ENDDO
+      ELSE
+        WRITE(6,285)IV,JPDS(5),L,IRET
+        WRITE(6,*)' COULD NOT UNPACK CONVECTIVE PCP at F',FHR
+         ISTAT = IRET
+        STOP
+      ENDIF
+      ENDIF    ! done with unpacking precip fields 
+
+C  FHR=0,1 ARE A LITTLE ODD.   THE 1-HR AND RUN TOTAL BUCKETS ARE
+C   THE SAME, SO WE GET 2 OF EACH PRECIP FIELD IN THE FILE.  READ
+C   THEM IN SO THAT WE CAN STRIP THE FIELDS OUT OF THE FILE AND THEN
+C   TACK A SINGLE ONE OF EACH AT THE END
+
+      IF (FHR .LE. 1)  THEN
+C   STRATIFORM PRECIP
+      J = 0
+      JPDS = -1
+      JPDS(3) = IGDNUM
+      JPDS(5) = 062
+      JPDS(6) = 001
+      JPDS(13) = 1
+      JPDS(14) = 0
+      JPDS(15) = FHR
+      CALL GETGB(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF,K,
+     X           KPDS,KGDS,MASK,GRID,IRET)
+      IF(IRET.EQ.0) THEN
+        print *, 'UNPACKED STRATIFORM PCP at F',FHR
+        II = 1
+        JJ = JJ1
+        DO KK = 1, ITOT
+          SPCP(KK) = GRID(KK)
+        ENDDO
+      ELSE
+        WRITE(6,285)IV,JPDS(5),L,IRET
+        WRITE(6,*)' COULD NOT UNPACK STRATIFORM PCP at F',FHR
+         ISTAT = IRET
+        STOP
+      ENDIF
+
+C  CONVECTIVE PRECIP
+      J = 0
+      JPDS = -1
+      JPDS(3) = IGDNUM
+      JPDS(5) = 063
+      JPDS(6) = 001
+      JPDS(13) = 1
+      JPDS(14) = 0
+      JPDS(15) = FHR
+      CALL GETGB(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF,K,
+     X           KPDS,KGDS,MASK,GRID,IRET)
+      IF(IRET.EQ.0) THEN
+        print *, 'UNPACKED CONVECTIVE PCP at F',FHR
+        II = 1
+        JJ = JJ1
+        DO KK = 1, ITOT
+          CPCP(KK) = GRID(KK)
+        ENDDO
+      ELSE
+        WRITE(6,285)IV,JPDS(5),L,IRET
+        WRITE(6,*)' COULD NOT UNPACK CONVECTIVE PCP at F',FHR
+         ISTAT = IRET
+        STOP
+      ENDIF
+      ENDIF    !  FHR=1
+ 
+C BEGIN WORK ON 2ND FILE
+      IF (FHRPCP .NE. 99) THEN
+       JJ1 = 1
+       JJINC = 1
+
+C  READ INDEX FILE TO GET GRID SPECS
+C
+      IRGI = 1
+      IRGS = 1
+      KMAX = 0
+      JR=0
+      KSKIP = 0
+      CALL BAOPEN(LUGB2,'fort.15',IRETGB)
+      CALL BAOPEN(LUGI2,'fort.16',IRETGI)
+      CALL GETGI(LUGI2,KSKIP,MBUF,CBUF2,NLEN,NNUM,IRGI)
+      IF(IRGI .NE. 0) THEN
+        WRITE(6,*)' PROBLEMS READING 2ND GRIB INDEX FILE SO ABORT'
+        ISTAT = IRGI
+        STOP
+      ENDIF
+c      REWIND LUGI2
+
+      DO K = 1, NNUM
+        JR = K - 1
+        JPDS = -1
+        JGDS = -1
+        CALL GETGB1S(CBUF2,NLEN,NNUM,JR,JPDS,JGDS,JENS,
+     &               KR,KPDS,KGDS,KENS,LSKIP,LGRIB,IRGS)
+        write(6,*)' IRET FROM GETGB1S ',IRGS
+        IF(IRGI .NE. 0) THEN
+          WRITE(6,*)' PROBLEMS ON READ OF 2ND GRIB FILE SO ABORT'
+          ISTAT = IRGS
+          STOP
+        ENDIF
+      ENDDO
+
+C   CAN GET SFC PRESSURE FROM SAME FILE AS PRECIP INFO IF THE
+C     FCST HOUR IS F3, F6, F9, F12, F15, F18
+C   SFC PRESSURE
+       IF (NEEDP) THEN
+        print *, 'getting sfc press at precip hour ', mod(fhr,3)
+        J = -1
+        JPDS = -1
+        JPDS(3) = IGDNUM
+        JPDS(5) = 001
+        JPDS(6) = 001
+        JPDS(13) = 1
+        CALL GETGB(LUGB2,LUGI2,NUMVAL,J,JPDS,JGDS,KF,K,
+     X           KPDS,KGDS,MASK2,GRID,IRET)
+        IF(IRET.EQ.0) THEN
+          print *, 'UNPACKED SFC PRESSURE AT F', FHRPCP
+          II = 1
+          JJ = JJ1
+          DO KK = 1, ITOT
+            SFCPTM3(KK) = GRID(KK)
+          ENDDO
+        ELSE
+          WRITE(6,285)IV,JPDS(5),L,IRET
+          WRITE(6,*)' COULD NOT UNPACK SFC PRESSURE at F', FHRPCP 
+          ISTAT = IRET
+          STOP
+        ENDIF
+       ENDIF
+
+C  SNOW WATER EQUIVALENT NEEDED EACH FORECAST HOUR > 3 
+C    FHR 0-3 ALREADY HAS ACCUMULATION WE WANT
+      IF (FHR .GT. 3) THEN
+       J = 0
+       JPDS = -1
+       JPDS(3) = IGDNUM
+       JPDS(5) = 065
+       JPDS(6) = 001
+       JPDS(16) = 4
+       CALL GETGB(LUGB2,LUGI2,NUMVAL,J,JPDS,JGDS,KF,K,
+     X           KPDS,KGDS,MASK2,GRID,IRET)
+       IF(IRET.EQ.0) THEN
+         print *, 'UNPACKED SNOW WATER EQUIV at F', FHRPCP
+         II = 1
+         JJ = JJ1
+         DO KK = 1, ITOT
+           SWEM2(KK) = GRID(KK)
+         ENDDO
+       ELSE
+         WRITE(6,*)' COULD NOT UNPACK SNOW WATER EQUIV at F', FHRPCP
+         ISTAT = IRET
+         STOP
+        ENDIF
+       ENDIF
+
+      IF (FHR .GT. 3 .AND. MOD(FHR,3) .NE. 1) THEN
+C   GET PRECIP FIELDS 
+C     NON-CNVCT PRECIP
+      J = -1
+      JPDS = -1
+      JPDS(3) = IGDNUM
+      JPDS(5) = 062
+      JPDS(6) = 001
+      JPDS(13) = 1
+      JPDS(14) = 0 
+      JPDS(15) = FHRPCP
+      CALL GETGB(LUGB2,LUGI2,NUMVAL,J,JPDS,JGDS,KF,K,
+     X           KPDS,KGDS,MASK2,GRID,IRET)
+      IF(IRET.EQ.0) THEN
+        print *, 'UNPACKED STRATIFORM PCP at F', FHRPCP 
+        II = 1
+        JJ = JJ1
+        DO KK = 1, ITOT
+          SPCP2(KK) = GRID(KK)
+        ENDDO
+      ELSE
+        WRITE(6,285)IV,JPDS(5),L,IRET
+        WRITE(6,*)' COULD NOT UNPACK STRATIFORM PCP at F', FHRPCP
+         ISTAT = IRET
+        STOP
+      ENDIF
+
+C   ACCUMULATED CONVECTIVE PRECIP
+      J = -1
+      JPDS = -1
+      JPDS(3) = IGDNUM
+      JPDS(5) = 063
+      JPDS(6) = 001
+      JPDS(13) = 1
+      JPDS(14) = 0 
+      JPDS(15) = FHRPCP
+      CALL GETGB(LUGB2,LUGI2,NUMVAL,J,JPDS,JGDS,KF,K,
+     X           KPDS,KGDS,MASK2,GRID,IRET)
+      IF(IRET.EQ.0) THEN
+        print *, 'UNPACKED CONVECTIVE PCP at F', FHRPCP
+        II = 1
+        JJ = JJ1
+        DO KK = 1, ITOT
+          CPCP2(KK) = GRID(KK)
+        ENDDO
+  111 CONTINUE
+      ELSE
+        WRITE(6,285)IV,JPDS(5),L,IRET
+        WRITE(6,*)' COULD NOT UNPACK CONVECTIVE PCP at F', FHRPCP
+         ISTAT = IRET
+        STOP
+      ENDIF
+      ENDIF     ! processing of precip
+      ENDIF     ! processing of 2nd file
+
+C   3RD FILE NEEDED AT F4, F5, F7, F8, F10, F11.....
+C     FOR SFC PRESSURE FOR PGRB
+
+      IF (FHR3 .NE. 99) THEN
+       print *, 'getting sfc pressure from 3rd file'
+       JJ1 = 1
+       JJINC = 1
+       ISTAT = 0
+C
+C  READ INDEX FILE TO GET GRID SPECS
+C
+      IRGI = 1
+      IRGS = 1
+      KMAX = 0
+      JR=0
+      KSKIP = 0
+      CALL BAOPEN(LUGB3,'fort.17',IRETGB)
+      ENVVAR='XLFUNIT_   '
+      CALL BAOPEN(LUGI3,'fort.18',IRETGI)
+      CALL GETGI(LUGI3,KSKIP,MBUF,CBUF,NLEN,NNUM,IRGI)
+      write(6,*)' IRET FROM GETGI ',IRGI
+
+      IF(IRGI .NE. 0) THEN
+        WRITE(6,*)' PROBLEMS READING 3RD GRIB INDEX FILE SO ABORT'
+        ISTAT = IRGI
+        STOP
+      ENDIF
+
+      DO K = 1, NNUM
+        JR = K - 1
+        JPDS = -1
+        JGDS = -1
+        CALL GETGB1S(CBUF,NLEN,NNUM,JR,JPDS,JGDS,JENS,
+     &               KR,KPDS,KGDS,KENS,LSKIP,LGRIB,IRGS)
+        write(6,*)' IRET FROM GETGB1S ',IRGS
+        IF(IRGI .NE. 0) THEN
+          WRITE(6,*)' PROBLEMS ON 3RD READ OF GRIB FILE SO ABORT'
+          ISTAT = IRGS
+          STOP
+        ENDIF
+      ENDDO
+
+C   SFC PRESSURE
+      J = -1
+      JPDS = -1
+      JPDS(3) = IGDNUM
+      JPDS(5) = 001
+      JPDS(6) = 001
+      JPDS(13) = 1
+      CALL GETGB(LUGB3,LUGI3,NUMVAL,J,JPDS,JGDS,KF,K,
+     X           KPDS,KGDS,MASK3,GRID,IRET)
+      IF(IRET.EQ.0) THEN
+        print *, 'UNPACKED SFC PRESSURE AT F', FHR3
+        II = 1
+        JJ = JJ1
+        DO KK = 1, ITOT
+          SFCPTM3(KK) = GRID(KK)
+        ENDDO
+      ELSE
+        WRITE(6,285)IV,JPDS(5),L,IRET
+        WRITE(6,*)' COULD NOT UNPACK SFC PRESSURE at F', FHR3
+         ISTAT = IRET
+        STOP
+      ENDIF
+      ENDIF
+
+ 444  CONTINUE
+
+C  COMPUTE 3-HR SFC PRESSURE TENDENCY
+      IF (NEEDP) THEN
+       DO K = 1, ITOT
+         IF (FHR .LT. 3 .AND. FHR3 .EQ. 99) THEN
+          PTND(K)=-9999.
+         ELSE
+          PTND(K)=(SFCP(K)-SFCPTM3(K))/10800.
+         ENDIF
+       ENDDO
+      ENDIF
+
+      IF (FHR .GT. 3 .AND. FHRPCP .NE. 99) THEN
+       DO K = 1, ITOT
+         SPCP3HR(K)=SPCP(K)-SPCP2(K)
+         CPCP3HR(K)=CPCP(K)-CPCP2(K)
+         SWEM3HR(K)=AMAX1(0.0,SWEM(K)-SWEM2(K))
+       ENDDO
+      ENDIF
+
+C  PUT WHATEVER EXTRA FIELDS HAVE BEEN CREATED INTO A GRIB FILE 
+C     NEED TO FORCE THE CYCLE TIME INTO THE PDS OR ELSE IT MAY
+C       USE THE INFO FROM THE PREVIOUS CYCLE USED TO COMPUTE PTND
+
+      CALL BAOPEN(LUGB4,'fort.50',IRET)
+      print *,'IRET from BAOPEN on LUGB4 = ', IRET
+
+      IF (NEEDP) THEN
+       KPDS(5)=003
+       KPDS(6)=1
+       KPDS(8)=YEAR
+       KPDS(9)=MON
+       KPDS(10)=DAY
+       KPDS(11)=CYC
+       KPDS(14)=FHR
+       KPDS(15)=0
+       KPDS(16)=0
+       KPDS(19)=2
+       KPDS(22)=3
+
+       CALL PUTGB(LUGB4,ITOT,KPDS,KGDS,MASK2,PTND,IRET)
+       print *,'IRET from PTND PUTGB on LUGB4 = ', IRET
+      ENDIF
+
+      IF (FHR .LT. 3) THEN
+        FHRX=00
+      ELSE 
+        FHRX=FHRPCP
+      ENDIF
+
+      IF (FHR .GT. 3) THEN
+       IF (MOD(FHR,3) .NE. 1) THEN
+        KPDS(5)=62
+        KPDS(6)=1
+        KPDS(14)=FHRX
+        KPDS(15)=FHR
+        KPDS(16)=4
+        KPDS(19)=2
+        KPDS(22)=3
+        CALL PUTGB(LUGB4,ITOT,KPDS,KGDS,MASK2,SPCP3HR,IRET)
+        print *,'IRET from SPCP PUTGB on LUGB4 = ', IRET
+
+        KPDS(5)=63
+        KPDS(6)=1
+        KPDS(14)=FHRX
+        KPDS(15)=FHR
+        KPDS(16)=4
+        KPDS(19)=2
+        KPDS(22)=3
+        CALL PUTGB(LUGB4,ITOT,KPDS,KGDS,MASK2,CPCP3HR,IRET)
+        print *,'IRET from CPCP PUTGB on LUGB4 = ', IRET
+       ENDIF
+
+       KPDS(5)=65
+       KPDS(6)=1
+       KPDS(14)=FHRX
+       KPDS(15)=FHR
+       KPDS(16)=4
+       KPDS(19)=2
+       KPDS(22)=4
+       CALL PUTGB(LUGB4,ITOT,KPDS,KGDS,MASK2,SWEM3HR,IRET)
+       print *,'IRET from SWEM PUTGB on LUGB4 = ', IRET
+      ENDIF
+
+      IF (FHR .EQ. 1) THEN
+       KPDS(5)=62
+       KPDS(6)=1
+       KPDS(14)=FHRX
+       KPDS(15)=FHR
+       KPDS(16)=4
+       KPDS(19)=2
+       KPDS(22)=3
+       CALL PUTGB(LUGB4,ITOT,KPDS,KGDS,MASK,SPCP,IRET)
+       print *,'IRET from SPCP PUTGB on LUGB4 = ', IRET
+
+       KPDS(5)=63
+       KPDS(6)=1
+       KPDS(14)=FHRX
+       KPDS(15)=FHR
+       KPDS(16)=4
+       KPDS(19)=2
+       KPDS(22)=3
+       CALL PUTGB(LUGB4,ITOT,KPDS,KGDS,MASK,CPCP,IRET)
+       print *,'IRET from CPCP PUTGB on LUGB4 = ', IRET
+      ENDIF
+
+      IF (FHR .EQ. 0) THEN
+       DO K = 1, ITOT
+          SPCP0(K)=0.0
+          CPCP0(K)=0.0
+       ENDDO
+
+       KPDS(5)=62
+       KPDS(6)=1
+       KPDS(14)=FHRX
+       KPDS(15)=FHR
+       KPDS(16)=4
+       KPDS(19)=2
+       KPDS(22)=3
+       CALL PUTGB(LUGB4,ITOT,KPDS,KGDS,MASK,SPCP0,IRET)
+       print *,'IRET from SPCP PUTGB on LUGB4 = ', IRET
+
+       KPDS(5)=63
+       KPDS(6)=1
+       KPDS(14)=FHRX
+       KPDS(15)=FHR
+       KPDS(16)=4
+       KPDS(19)=2
+       KPDS(22)=3
+       CALL PUTGB(LUGB4,ITOT,KPDS,KGDS,MASK,CPCP0,IRET)
+       print *,'IRET from CPCP PUTGB on LUGB4 = ', IRET
+      ENDIF
+
+      CALL BACLOSE(LUGB4,IRET)
+      STOP
+      END 
