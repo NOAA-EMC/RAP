@@ -2,7 +2,7 @@
 ################################################################################
 ####  UNIX Script Documentation Block
 #                      .                                             .
-# Script name:         exrap_wrfbufr.sh
+# Script name:         exrap_wrfbufr.ecf
 # Script description:  Run rap wrfbufr jobs
 #
 # Author:      G Manikin / M Hu    EMC/GSD         Date: 2011-09-15
@@ -109,7 +109,7 @@ mpirun.lsf ${EXECrap}/rap_wrfbufr  >> $pgmout 2>errfile
 
 mv profilm.c1.tm00 profilm.c1.f${fhr}
 
-#echo done >$FCSTDIR/rappost.done${fhr}
+echo done >$FCSTDIR/rappost.done${fhr}
   postmsg $jlogfile "RAP POST done for F${fhr}"
 
 echo EXITING $0
