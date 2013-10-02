@@ -1,0 +1,169 @@
+#!/bin/ksh -l
+################################################################################
+####  UNIX Script Documentation Block
+#
+# Script name:         rap_update_bc.sh.ecf
+# Script description:  runs the update_bc for RAP full cycle
+#
+# Author:     Julia Zhu / Ming Hu / Geoff Manikin   Org: EMC     Date: 2011-10-17
+#
+# Script history log:
+# 2011-10-17  J Zhu / M Hu / G Manikin
+# 2013-01-10  G Manikin  - adapted for WCOSS
+#
+
+set -x
+
+cd $DATA
+
+# Set up some constants
+export HOMErap=${HOMErap:-/nwprod/rap.${ver}}
+export PARMrap=${PARMrap:-$HOMErap/parm}
+export FIXrap=${FIXrap:-$HOMErap/fix}
+export EXECrap=${EXECrap:-$HOMErap/exec}
+export ndate=${ndate:-/nwprod/util/exec/ndate}
+
+export WPSNAMELIST=namelist.wps
+START_TIME=$PDY$cyc
+echo $START_TIME >STARTTIME
+
+# Compute date & time components for the analysis time
+ymd=`echo ${START_TIME} | cut -c1-8`
+ymdh=`echo ${START_TIME} | cut -c1-10`
+mdh=`echo ${START_TIME} | cut -c5-10`
+hh=`echo ${START_TIME} | cut -c9-10`
+
+# Set up some constants
+export RAPGES_FCYC=${RAPGES_FCYC:-$gespath/rap/rapges}
+export RAPGES_PCYC=${RAPGES_PCYC:-$gespath/rap/rapges_pcyc}
+export RAPGES_SFC=${RAPGES_SFC:-$gespath/rap/rapges_sfc}
+export RAPBC=${RAPBC:-$gespath/rap/rapbc}
+
+# Compute date & time components for the analysis time
+YYYY=`echo ${START_TIME} | cut -c1-4`
+MM=`echo ${START_TIME} | cut -c5-6`
+DD=`echo ${START_TIME} | cut -c7-8`
+HH=`echo ${START_TIME} | cut -c9-10`
+yy=`echo ${START_TIME} | cut -c3-4`
+YYYYMMDDHH=${YYYY}${MM}${DD}${HH}
+YYYYMMDD=${YYYY}${MM}${DD}
+
+# Compute date & time components for the analysis time minus 1 day
+DDm1=`$ndate -24 $START_TIME`
+YMDm1=`echo ${DDm1} | cut -c1-8`
+
+# Create the ram work directory and cd into it
+workdir=$DATA/adjustbc
+rm -rf ${workdir}
+mkdir -p ${workdir}
+cd ${workdir}
+/nwprod/util/ush/setup.sh
+
+#######################################
+# Process Update BC
+#######################################
+
+# Set up some constants
+export FCST_LENGTH="36"
+export FCST_INTERVAL="3"
+export METGRIDPROC="METGRID_PROC"
+
+# Set up the work directory and cd into it
+workdir=$DATA/adjustbc
+mkdir -p ${workdir}
+cd ${workdir}
+/nwprod/util/ush/setup.sh
+
+START_TIME=`cat ../STARTTIME`
+echo $START_TIME
+
+# Calculate start and end time date strings
+END_TIME=`$ndate +${FCST_LENGTH} $START_TIME`
+syyyy=`echo ${START_TIME} | cut -c1-4`
+smm=`echo ${START_TIME} | cut -c5-6`
+sdd=`echo ${START_TIME} | cut -c7-8`
+shh=`echo ${START_TIME} | cut -c9-10`
+ymd=`echo ${START_TIME} | cut -c1-8`
+
+eyyyy=`echo ${END_TIME} | cut -c1-4`
+emm=`echo ${END_TIME} | cut -c5-6`
+edd=`echo ${END_TIME} | cut -c7-8`
+ehh=`echo ${END_TIME} | cut -c9-10`
+start_yyyymmdd_hhmmss=${syyyy}-${smm}-${sdd}_${shh}:00:00
+end_yyyymmdd_hhmmss=${eyyyy}-${emm}-${edd}_${ehh}:00:00
+
+# Calculate the forecast interval in seconds
+(( fcst_interval_sec = ${FCST_INTERVAL} * 3600 ))
+
+# Print run parameters
+echo
+echo "START TIME = "${START_TIME}"
+echo "  END TIME = "${END_TIME}"
+echo
+
+ if [ -r ${DATA}/gsiprd/wrf_inout ]; then
+  echo " Initial condition ${DATA}/gsiprd/wrf_inout"
+  cp ${DATA}/gsiprd/wrf_inout wrfinput_d01
+  cp ${DATA}/gsiprd/wrf_inout wrfvar_output
+ else
+   echo "ERROR: ${DATA}/gsiprd/wrf_inout does not exist.  Run will stop."
+   err_exit
+ fi
+
+## boundary condition searching
+currentime=${syyyy}${smm}${sdd}${shh}00
+set -A XX `ls ${RAPBC}/wrfbdy_d01.* | sort -r`
+maxnum=${#XX[*]}
+#bdtime=`echo ${XX[0]} | cut -c41-52`
+bdtime=`echo ${XX[0]} |awk 'BEGIN {FS="/"} {print $NF}'|cut -c12-`
+
+if [[ ${currentime} -ge ${bdtime} ]]; then
+   echo "using latest ${XX[0]} as boundary condition "
+   cp ${XX[0]} wrfbdy_d01
+else
+   nn=1
+   #bdtime=`echo ${XX[$nn]} | cut -c41-52`
+   bdtime=`echo ${XX[$nn]} |awk 'BEGIN {FS="/"} {print $NF}'|cut -c12-`
+   until [[ ${currentime} -ge ${bdtime} || ${nn} -eq ${maxnum} ]];do
+      ((nn += 1))
+       #bdtime=`echo ${XX[$nn]} | cut -c41-52`
+       bdtime=`echo ${XX[$nn]} |awk 'BEGIN {FS="/"} {print $NF}'|cut -c12-`
+   done
+
+   if [[ ${nn} -eq ${maxnum} ]]; then
+        echo " can not find boundary conditions for ${currentime} !!!"
+        err_exit
+   else
+      echo " using old ${XX[$nn]} as boundary condition"
+      cp ${XX[$nn]} wrfbdy_d01
+   fi
+fi
+## end of boundary condition searching
+
+# Get the start and end time components
+start_year=`echo ${START_TIME} | cut -c1-4`
+start_month=`echo ${START_TIME} | cut -c5-6`
+start_day=`echo ${START_TIME} | cut -c7-8`
+start_hour=`echo ${START_TIME} | cut -c9-10`
+start_minute="00"
+start_second="00"
+end_year=`echo ${END_TIME} | cut -c1-4`
+end_month=`echo ${END_TIME} | cut -c5-6`
+end_day=`echo ${END_TIME} | cut -c7-8`
+end_hour=`echo ${END_TIME} | cut -c9-10`
+end_minute="00"
+end_second="00"
+start_YYYYMMDDHHMM=${start_year}${start_month}${start_day}${start_hour}${start_minute}
+
+# update bc
+echo "begin update bc"
+cp ${PARMrap}/rap_update_bc_parame.in parame.in
+ln -s wrfinput_d01  wrfinputd1
+ln -s wrfvar_output wrfvar_out
+mpirun.lsf ${EXECrap}/rap_update_bc  >> $DATA/$pgmout 2>errfile 
+export err=$?; err_chk
+
+echo "end update bc"
+
+cp wrfbdy_d01 ${COMOUT}/rap.t${cyc}z.wrfbdy 
+exit 0
