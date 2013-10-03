@@ -100,7 +100,24 @@ if [[ ${mod} -ne '0' ]]; then
   echo 'a cold start will not be possible this cycle if needed'
 fi
 
-if [[ ! -r ${RAPGES_PCYC}/rap_${PCYC_TIME}f001 &&  ! -r ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr && ! -r ${RAPBC}/wrfinput_d01_${time_str} ]]; then
+PCYC_TIME=`$ndate -1 $START_TIME`
+if [[ ! -r ${RAPGES_PCYC}/rap_${PCYC_TIME}f001 &&  ! -r ${RAPBC}/wrfinput_d01_${time_str} ]]; then
+    counter=1
+    while [[ $counter -lt 19 ]]; do
+     counterhr=$counter
+     typeset -Z2 counterhr
+     FCYC_TIME=`$ndate -${counter} $START_TIME`
+     if [ -r ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr ]; then
+      echo 'guess available' >> guess.out
+      break
+     fi
+     counter=` expr $counter + 1 `
+    done
+else
+    echo 'guess available' >> guess.out
+fi
+
+if [ ! -r guess.out ]; then
     echo 'no first guess is available'
     echo 'please try a cycle divisible by 3'
     exit
