@@ -118,7 +118,7 @@
       real(r_kind),parameter:: r100=100.0_r_kind
       real,parameter:: ozsmall = 1.e-10 ! to convert to mass mixing ratio
       real(r_kind) tsfc 
-      real(r_kind),dimension(4):: sfcpct
+      real(8),dimension(4):: sfcpct
       real(r_kind) snodepth,snoeqv,vegcover
       real snofrac
       real(r_kind),dimension(im,jsta:jend):: tb1,tb2,tb3,tb4
