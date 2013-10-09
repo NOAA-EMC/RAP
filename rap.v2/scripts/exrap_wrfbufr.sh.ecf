@@ -109,8 +109,5 @@ mpirun.lsf ${EXECrap}/rap_wrfbufr  >> $pgmout 2>errfile
 
 mv profilm.c1.tm00 profilm.c1.f${fhr}
 
-echo done >$FCSTDIR/rappost.done${fhr}
-  postmsg $jlogfile "RAP POST done for F${fhr}"
-
 echo EXITING $0
 exit
