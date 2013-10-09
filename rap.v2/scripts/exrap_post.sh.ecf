@@ -28,6 +28,7 @@ fhr=$fhr
 export HOMErap=${HOMErap:-/nwprod/rap.${ver}}
 export PARMrap=${PARMrap:-$HOMErap/parm}
 export FIXrap=${FIXrap:-$HOMErap/fix}
+export CRTM=${CRTM:-/nwprod/fix/crtm_2.0.5}
 export EXECrap=${EXECrap:-$HOMErap/exec}
 export ndate=${ndate:-/nwprod/util/exec/ndate}
 export XLFRTEOPTS="unit_vars=yes"
@@ -106,6 +107,23 @@ ln -s ${PARMrap}/rap_cntrl.parm fort.14
 ln -s ./itag fort.19
 ln -s ./griddef.out fort.110
 cp ${PARMrap}/rap_run_ETAMPNEW_DATA eta_micro_lookup.dat
+cp ${CRTM}/SpcCoeff/Big_Endian/imgr_g11.SpcCoeff.bin imgr_g11.SpcCoeff.bin
+cp ${CRTM}/SpcCoeff/Big_Endian/imgr_g12.SpcCoeff.bin imgr_g12.SpcCoeff.bin
+cp ${CRTM}/SpcCoeff/Big_Endian/amsre_aqua.SpcCoeff.bin amsre_aqua.SpcCoeff.bin
+cp ${CRTM}/SpcCoeff/Big_Endian/tmi_trmm.SpcCoeff.bin tmi_trmm.SpcCoeff.bin
+cp ${CRTM}/SpcCoeff/Big_Endian/ssmi_f15.SpcCoeff.bin ssmi_f15.SpcCoeff.bin
+cp ${CRTM}/SpcCoeff/Big_Endian/ssmis_f20.SpcCoeff.bin ssmis_f20.SpcCoeff.bin
+cp ${CRTM}/SpcCoeff/Big_Endian/ssmis_f17.SpcCoeff.bin ssmis_f17.SpcCoeff.bin
+cp ${CRTM}/TauCoeff/Big_Endian/imgr_g11.TauCoeff.bin imgr_g11.TauCoeff.bin
+cp ${CRTM}/TauCoeff/Big_Endian/imgr_g12.TauCoeff.bin imgr_g12.TauCoeff.bin
+cp ${CRTM}/TauCoeff/Big_Endian/amsre_aqua.TauCoeff.bin amsre_aqua.TauCoeff.bin
+cp ${CRTM}/TauCoeff/Big_Endian/tmi_trmm.TauCoeff.bin tmi_trmm.TauCoeff.bin
+cp ${CRTM}/TauCoeff/Big_Endian/ssmi_f15.TauCoeff.bin ssmi_f15.TauCoeff.bin
+cp ${CRTM}/TauCoeff/Big_Endian/ssmis_f20.TauCoeff.bin ssmis_f20.TauCoeff.bin
+cp ${CRTM}/TauCoeff/Big_Endian/ssmis_f17.TauCoeff.bin ssmis_f17.TauCoeff.bin
+cp ${CRTM}/CloudCoeff/Big_Endian/CloudCoeff.bin CloudCoeff.bin
+cp ${CRTM}/AerosolCoeff/Big_Endian/AerosolCoeff.bin AerosolCoeff.bin
+cp ${CRTM}/EmisCoeff/Big_Endian/EmisCoeff.bin EmisCoeff.bin
 
 cat > itag <<EOF
 wrfoutd01
