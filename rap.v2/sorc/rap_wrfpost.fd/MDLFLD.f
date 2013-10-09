@@ -814,9 +814,12 @@
                ENDDO
                ENDDO
                ID(1:25) = 0
+               ID(02)=130
                ID(11) = L
                if(grib=="grib1" )then
                  ID(1:25) = 0
+                 ID(02)=130
+                 ID(11) = L
                  CALL GRIBIT(IGET(754),L,GRID1,IM,JM)
                else if(grib=="grib2" )then
                  cfld=cfld+1
