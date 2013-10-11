@@ -331,8 +331,8 @@ subroutine inventory_wrf_binary_file(in_unit,ifswap,wrfges,nrecs, &
         endif
      end do
 
-     if(lenrec==2048_i_long) write(6,*)' irecs,hdrbuf(2),int_dom_ti_char,int_field=', &
-                                       irecs,hdrbuf(2),int_dom_ti_char,int_field
+!     if(lenrec==2048_i_long) write(6,*)' irecs,hdrbuf(2),int_dom_ti_char,int_field=', &
+!                                       irecs,hdrbuf(2),int_dom_ti_char,int_field
      if(lenrec==2048_i_long.and.   &
         (hdrbuf(2) == int_dom_ti_char .or. hdrbuf(2) == int_field .or.  &
          hdrbuf(2) == int_dom_ti_real .or. hdrbuf(2) == int_dom_ti_integer)) then
@@ -359,7 +359,7 @@ subroutine inventory_wrf_binary_file(in_unit,ifswap,wrfges,nrecs, &
                     datahandle,element,dumstr,strdata,loccode)
            varname_all(irecs)=trim(element)
            datestr_all(irecs)=trim(strdata)
-           write(6,*)' irecs,varname,datestr = ',irecs,trim(varname_all(irecs)),trim(datestr_all(irecs))
+!           write(6,*)' irecs,varname,datestr = ',irecs,trim(varname_all(irecs)),trim(datestr_all(irecs))
 
         else if(hdrbuf(2) == int_dom_ti_real) then
 
@@ -367,14 +367,14 @@ subroutine inventory_wrf_binary_file(in_unit,ifswap,wrfges,nrecs, &
                    datahandle,element,rdata,count,loccode)
           varname_all(irecs)=trim(element)
 !          datestr_all(irecs)=trim(strdata)
-          write(6,*)' irecs,varname,datestr = ',irecs,trim(varname_all(irecs)),rdata(1:count)
+!          write(6,*)' irecs,varname,datestr = ',irecs,trim(varname_all(irecs)),rdata(1:count)
         else if(hdrbuf(2) == int_dom_ti_integer) then
 
           call int_get_ti_header_integer(hdrbuf,hdrbufsize,inttypesize,typesize, &
                    datahandle,element,idata,count,loccode)
           varname_all(irecs)=trim(element)
 !          datestr_all(irecs)=trim(strdata)
-          write(6,*)' irecs,varname,datestr = ',irecs,trim(varname_all(irecs)),idata(1:count)
+!          write(6,*)' irecs,varname,datestr = ',irecs,trim(varname_all(irecs)),idata(1:count)
         else
            call int_get_write_field_header(hdrbuf,hdrbufsize,typesize, &
               datahandle,datestr,varname,fieldtype, &
@@ -384,8 +384,8 @@ subroutine inventory_wrf_binary_file(in_unit,ifswap,wrfges,nrecs, &
            datestr_all(irecs)=trim(datestr)
            memoryorder_all(irecs)=trim(memoryorder)
            domainend_all(1:3,irecs)=domainend(1:3)
-           write(6,*)' irecs,datestr,domend,varname = ', &
-                 irecs,trim(datestr_all(irecs)),domainend_all(1:3,irecs),trim(varname_all(irecs))
+!           write(6,*)' irecs,datestr,domend,varname = ', &
+!                 irecs,trim(datestr_all(irecs)),domainend_all(1:3,irecs),trim(varname_all(irecs))
 
         end if
 
@@ -616,8 +616,8 @@ subroutine retrieve_field(in_unit,ifswap,wrfges,out,start_block,end_block,start_
 
   open(in_unit,file=trim(wrfges),access='direct',recl=lrecl)
 
-  write(6,*)'RETRIEVE_FIELD:  start_block,end_block,s_,e_byte=',&
-       start_block,end_block,start_byte,end_byte
+!  write(6,*)'RETRIEVE_FIELD:  start_block,end_block,s_,e_byte=',&
+!       start_block,end_block,start_byte,end_byte
   ii=0
   do k=start_block,end_block
      read(in_unit,rec=k,iostat=ierr)buf

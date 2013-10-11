@@ -147,10 +147,10 @@ subroutine update_SNOWICE_binary_mass(ifswap,snowiceRR, xland, nlon, nlat)
   fractional_seaice=0
   if ( fractional_seaice == 0 ) then
     xice_threshold = 0.5
-    write(*,*) ' do not use fraction sea ice'
+    if(mype==0) write(*,*) ' do not use fraction sea ice'
   else if ( fractional_seaice == 1 ) then
     xice_threshold = 0.02
-    write(*,*) ' use fraction sea ice'
+    if(mype==0) write(*,*) ' use fraction sea ice'
   endif
 !  
 
@@ -164,19 +164,19 @@ subroutine update_SNOWICE_binary_mass(ifswap,snowiceRR, xland, nlon, nlat)
 ! Check for valid input file
   read(iunit,iostat=status_hdr)hdrbuf
   if(status_hdr /= 0) then
-     write(6,*)'update_SNOWICE_binary_mass:  problem with = ',&
+     if(mype==0) write(6,*)'update_SNOWICE_binary_mass:  problem with = ',&
           trim(fileName),', Status = ',status_hdr
      stop 74
   endif
   close(iunit)
-  write(*,*) 'hdrbuf', (hdrbuf(1:20))
+  if(mype==0) write(*,*) 'hdrbuf', (hdrbuf(1:20))
 
 
 !
 !  inventory background file
 !
   call count_recs_wrf_binary_file(iunit,ifswap, trim(fileName), nrecs)
-  write(*,*) 'number of records in ',trim(fileName), '=', nrecs
+  if(mype==0) write(*,*) 'number of records in ',trim(fileName), '=', nrecs
 
   allocate(datestr_all(nrecs),varname_all(nrecs),domainend_all(3,nrecs))
   allocate(memoryorder_all(nrecs))
@@ -212,10 +212,10 @@ subroutine update_SNOWICE_binary_mass(ifswap,snowiceRR, xland, nlon, nlat)
       stop 1234
   endif
 
-   write(*,*) datestr_all(index)
+  if(mype==0)  write(*,*) datestr_all(index)
   read(datestr_all(index),'(i4,1x,i2,1x,i2,1x,i2,1x,i2,1x,i2)') iyear,imonth,iday,ihour,iminute,isecond
-  write(6,*)' precipiation and snow data from background file at time:'
-  write(6,*)' iy,m,d,h,m,s=',iyear,imonth,iday,ihour,iminute,isecond
+  if(mype==0) write(6,*)' precipiation and snow data from background file at time:'
+  if(mype==0) write(6,*)' iy,m,d,h,m,s=',iyear,imonth,iday,ihour,iminute,isecond
 
   if(trim(memoryorder_all(index))=='XZY') then
      nlon_regional=domainend_all(1,index)
@@ -246,7 +246,7 @@ subroutine update_SNOWICE_binary_mass(ifswap,snowiceRR, xland, nlon, nlat)
       stop 234
   endif
 
-  write(6,*)' nlon,lat,sig_regional=',nlon_regional,nlat_regional,nsig_regional
+  if(mype==0) write(6,*)' nlon,lat,sig_regional=',nlon_regional,nlat_regional,nsig_regional
   allocate(snow(nlon_regional,nlat_regional))
   allocate(snowh(nlon_regional,nlat_regional))
   allocate(snowc(nlon_regional,nlat_regional))
@@ -274,7 +274,7 @@ subroutine update_SNOWICE_binary_mass(ifswap,snowiceRR, xland, nlon, nlat)
   field3=0.0
   
 if(1==1) then   ! use 1st level atmosphere temperature
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   VarName='T'
   call retrieve_index(index,VarName,varname_all,nrecs)
   if(index < 0) then
@@ -292,16 +292,16 @@ if(1==1) then   ! use 1st level atmosphere temperature
   if (ierr /= 0) then
      print*,"Error reading ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: read in ',VarName
+     if(mype==0) write(6,*)' MPIIO: read in ',VarName
      if(trim(memoryorder_all(index))=='XZY') then
         surftemp(:,:)=field3(:,1,:) + 300.0
      else
         surftemp(:,:)=field3(:,:,1) + 300.0
      endif
   end if
-  write(6,*)' max,min temp=',maxval(surftemp),minval(surftemp)
+  if(mype==0) write(6,*)' max,min temp=',maxval(surftemp),minval(surftemp)
 
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   VarName='P'
   call retrieve_index(index,VarName,varname_all,nrecs)
   if(index < 0) then
@@ -318,7 +318,7 @@ if(1==1) then   ! use 1st level atmosphere temperature
   if (ierr /= 0) then
      print*,"Error reading ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: read in ',VarName
+     if(mype==0) write(6,*)' MPIIO: read in ',VarName
      if(trim(memoryorder_all(index))=='XZY') then
         precip(:,:)=field3(:,1,:)
      else
@@ -326,7 +326,7 @@ if(1==1) then   ! use 1st level atmosphere temperature
      endif
   end if
 
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   VarName='PB'
   call retrieve_index(index,VarName,varname_all,nrecs)
   if(index < 0) then
@@ -343,7 +343,7 @@ if(1==1) then   ! use 1st level atmosphere temperature
   if (ierr /= 0) then
      print*,"Error reading ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: read in ',VarName
+     if(mype==0) write(6,*)' MPIIO: read in ',VarName
      if(trim(memoryorder_all(index))=='XZY') then
         precip(:,:)=precip(:,:)+field3(:,1,:)
      else
@@ -351,11 +351,11 @@ if(1==1) then   ! use 1st level atmosphere temperature
      endif
   end if
   surftemp=surftemp*(precip/P0)**RCP
-  write(6,*)' max,min surface pressure =',maxval(precip),minval(precip)
-  write(6,*)' max,min surface temp (K)=',maxval(surftemp),minval(surftemp)
+  if(mype==0) write(6,*)' max,min surface pressure =',maxval(precip),minval(precip)
+  if(mype==0) write(6,*)' max,min surface temp (K)=',maxval(surftemp),minval(surftemp)
 endif
 !
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   VarName='TSK'
   call retrieve_index(index,VarName,varname_all,nrecs)
   if(index < 0) then
@@ -372,12 +372,12 @@ endif
   if (ierr /= 0) then
      print*,"Error reading ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: read in ',VarName
+     if(mype==0) write(6,*)' MPIIO: read in ',VarName
      tskin=field2
   end if
-  write(6,*)' max,min skin temp (K)=',maxval(tskin),minval(tskin)
+  if(mype==0) write(6,*)' max,min skin temp (K)=',maxval(tskin),minval(tskin)
 !
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   VarName='SOILT1'
   call retrieve_index(index,VarName,varname_all,nrecs)
   if(index < 0) then
@@ -394,12 +394,12 @@ endif
   if (ierr /= 0) then   
      print*,"Error reading ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: read in ',VarName
+     if(mype==0) write(6,*)' MPIIO: read in ',VarName
      tsnow=field2
   end if
-  write(6,*)' max,min snow temp (K)=',maxval(tsnow),minval(tsnow)
+  if(mype==0) write(6,*)' max,min snow temp (K)=',maxval(tsnow),minval(tsnow)
 !
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   precip=0
   VarName='QRAIN'
   call retrieve_index(index,VarName,varname_all,nrecs)
@@ -417,7 +417,7 @@ endif
   if (ierr /= 0) then
      print*,"Error reading ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: read in ',VarName
+     if(mype==0) write(6,*)' MPIIO: read in ',VarName
      if(trim(memoryorder_all(index))=='XZY') then
         precip(:,:)=field3(:,1,:) 
      else
@@ -425,10 +425,12 @@ endif
      endif
   end if
 
+  if(mype==0) then
   DO k=1,nsig_regional
     write(6,*)' max,min QRAIN=',k, maxval(field3(:,k,:)),minval(field3(:,k,:))
   ENDDO
-  write(6,*) '================================================='
+  endif
+  if(mype==0) write(6,*) '================================================='
   VarName='QSNOW'
   call retrieve_index(index,VarName,varname_all,nrecs)
   if(index < 0) then
@@ -445,18 +447,20 @@ endif
   if (ierr /= 0) then
      print*,"Error reading ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: read in ',VarName
+     if(mype==0) write(6,*)' MPIIO: read in ',VarName
      if(trim(memoryorder_all(index))=='XZY') then
         precip(:,:)=precip(:,:)+field3(:,1,:) 
      else
         precip(:,:)=precip(:,:)+field3(:,:,1) 
      endif
   end if
+  if(mype==0) then
   DO k=1,nsig_regional
     write(6,*)' max,min QSNOW=',k, maxval(field3(:,k,:)),minval(field3(:,k,:))
   ENDDO
+  endif
 
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   VarName='QGRAUP'
   call retrieve_index(index,VarName,varname_all,nrecs)
   if(index < 0) then
@@ -473,19 +477,21 @@ endif
   if (ierr /= 0) then
      print*,"Error reading ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: read in ',VarName
+     if(mype==0) write(6,*)' MPIIO: read in ',VarName
      if(trim(memoryorder_all(index))=='XZY') then
         precip(:,:)=precip(:,:)+field3(:,1,:) 
      else
         precip(:,:)=precip(:,:)+field3(:,:,1) 
      endif
   end if
+  if(mype==0) then
   DO k=1,nsig_regional
     write(6,*)' max,min QGRAUP=',k, maxval(field3(:,k,:)),minval(field3(:,k,:))
   ENDDO
-  write(6,*)' max,min precip=',maxval(precip(:,:)),minval(precip(:,:))
+  endif
+  if(mype==0) write(6,*)' max,min precip=',maxval(precip(:,:)),minval(precip(:,:))
 
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   VarName='SNOW'
   call retrieve_index(index,VarName,varname_all,nrecs)
   if(index < 0) then
@@ -502,12 +508,12 @@ endif
   if (ierr /= 0) then
      print*,"Error reading ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: read in ',VarName
+     if(mype==0) write(6,*)' MPIIO: read in ',VarName
      snow=field2                
   end if
-  write(6,*)' max,min SNOW=',maxval(field2),minval(field2)
+  if(mype==0) write(6,*)' max,min SNOW=',maxval(field2),minval(field2)
 
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   VarName='SNOWH'
   call retrieve_index(index,VarName,varname_all,nrecs)
   if(index < 0) then
@@ -524,12 +530,12 @@ endif
   if (ierr /= 0) then
      print*,"Error reading ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: read in ',VarName
+     if(mype==0) write(6,*)' MPIIO: read in ',VarName
      snowh=field2                  
   end if
-  write(6,*)' max,min SNOWH=',maxval(field2),minval(field2)
+  if(mype==0) write(6,*)' max,min SNOWH=',maxval(field2),minval(field2)
 
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   VarName='SNOWC'
   call retrieve_index(index,VarName,varname_all,nrecs)
   if(index < 0) then
@@ -546,12 +552,12 @@ endif
   if (ierr /= 0) then
      print*,"Error reading ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: read in ',VarName
+     if(mype==0) write(6,*)' MPIIO: read in ',VarName
      snowc=field2                  
   end if
-  write(6,*)' max,min SNOWC=',maxval(field2),minval(field2)
+  if(mype==0) write(6,*)' max,min SNOWC=',maxval(field2),minval(field2)
 
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   VarName='SEAICE'
   call retrieve_index(index,VarName,varname_all,nrecs)
   if(index < 0) then
@@ -568,12 +574,12 @@ endif
   if (ierr /= 0) then
      print*,"Error reading ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: read in ',VarName
+     if(mype==0) write(6,*)' MPIIO: read in ',VarName
      seaice=field2                  
   end if
-  write(6,*)' max,min SEAICE=',maxval(field2),minval(field2)
+  if(mype==0) write(6,*)' max,min SEAICE=',maxval(field2),minval(field2)
 
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   VarName='SMOIS'
   call retrieve_index(index,VarName,varname_all,nrecs)
   if(index < 0) then
@@ -612,7 +618,7 @@ endif
   if (ierr /= 0) then
      print*,"Error reading ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: read in ',VarName ! use soil mositure to find water =1 water
+     if(mype==0) write(6,*)' MPIIO: read in ',VarName ! use soil mositure to find water =1 water
      if(trim(memoryorder_all(index))=='XZY') then
         landmask_soilmoisture1(:,:)=field3(:,1,:)
         do k=1,nsig_regional
@@ -626,12 +632,14 @@ endif
      endif
   end if
 
+  if(mype==0) then 
   do k=1,nsig_regional
     write(6,*)' max,min SMOIS=',k, &
             maxval(soilmoisture(:,:,k)),minval(soilmoisture(:,:,k))
   enddo
+  endif
 !
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   VarName='TSLB'
   call retrieve_index(index,VarName,varname_all,nrecs)
   if(index < 0) then
@@ -670,7 +678,7 @@ endif
   if (ierr /= 0) then
      print*,"Error reading ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: read in ',VarName ! use soil mositure to find water =1 water   
+     if(mype==0) write(6,*)' MPIIO: read in ',VarName ! use soil mositure to find water =1 water   
      if(trim(memoryorder_all(index))=='XZY') then
         do k=1,nsig_regional
           soiltemp(:,:,k)=field3(:,k,:)
@@ -682,11 +690,13 @@ endif
      endif
   end if
 
+  if(mype==0) then
   do k=1,nsig_regional
     write(6,*)' max,min TSLB=',k, maxval(soiltemp(:,:,k)),minval(soiltemp(:,:,k))
   enddo
+  endif
 
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   VarName='XLAND'
   call retrieve_index(index,VarName,varname_all,nrecs)
   if(index < 0) then
@@ -703,12 +713,12 @@ endif
   if (ierr /= 0) then
      print*,"Error reading ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: read in ',VarName
+     if(mype==0) write(6,*)' MPIIO: read in ',VarName
      xland_rr=field2                  
   end if
-  write(6,*)' max,min XLAND=',maxval(field2),minval(field2)
+  if(mype==0) write(6,*)' max,min XLAND=',maxval(field2),minval(field2)
 
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   VarName='LANDMASK'
   call retrieve_index(index,VarName,varname_all,nrecs)
   if(index < 0) then
@@ -725,12 +735,12 @@ endif
   if (ierr /= 0) then
      print*,"Error reading ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: read in ',VarName
+     if(mype==0) write(6,*)' MPIIO: read in ',VarName
      landmask=field2                  
   end if
-  write(6,*)' max,min LANDMASK=',maxval(field2),minval(field2)
+  if(mype==0) write(6,*)' max,min LANDMASK=',maxval(field2),minval(field2)
 
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   VarName='LU_INDEX'
   call retrieve_index(index,VarName,varname_all,nrecs)
   if(index < 0) then
@@ -747,12 +757,12 @@ endif
   if (ierr /= 0) then
      print*,"Error reading ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: read in ',VarName
+     if(mype==0) write(6,*)' MPIIO: read in ',VarName
      lu_index=field2                  
   end if
-  write(6,*)' max,min LU_INDEX=',maxval(field2),minval(field2)
+  if(mype==0) write(6,*)' max,min LU_INDEX=',maxval(field2),minval(field2)
 
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   VarName='IVGTYP'
   call retrieve_index(index,VarName,varname_all,nrecs)
   if(index < 0) then
@@ -766,12 +776,12 @@ endif
   if (ierr /= 0) then
      print*,"Error reading ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: read in ',VarName
+     if(mype==0) write(6,*)' MPIIO: read in ',VarName
      ivgtyp=ifield2                  
   end if
-  write(6,*)' max,min IVGTYP=',maxval(ifield2),minval(ifield2)
+  if(mype==0) write(6,*)' max,min IVGTYP=',maxval(ifield2),minval(ifield2)
 
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   VarName='ISLTYP'
   call retrieve_index(index,VarName,varname_all,nrecs)
   if(index < 0) then
@@ -785,11 +795,11 @@ endif
   if (ierr /= 0) then
      print*,"Error reading ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: read in ',VarName
+     if(mype==0) write(6,*)' MPIIO: read in ',VarName
      isltyp=ifield2                  
   end if
-  write(6,*)' max,min ISLTYP=',maxval(ifield2),minval(ifield2)
-  write(6,*) '================================================='
+  if(mype==0) write(6,*)' max,min ISLTYP=',maxval(ifield2),minval(ifield2)
+  if(mype==0) write(6,*) '================================================='
   call MPI_BARRIER(mpi_comm_world,ierror)
 
 !
@@ -812,8 +822,8 @@ endif
 !      if(precip(i,j) < 1.0e-12 .and. surftemp(i,j) > 280.0 ) then   ! make sure 
 !      if(precip(i,j) < 1.0e-12 .and. surftemp(i,j) > 276.0 ) then   ! make sure 
       if(precip(i,j) < 1.0e-12) then   ! make sure 
-        write(6,*) 'trim snow', &
-                    i,j,snow(i,j),precip(i,j),surftemp(i,j),snowiceRR(i,j)
+!        write(6,*) 'trim snow', &
+!                    i,j,snow(i,j),precip(i,j),surftemp(i,j),snowiceRR(i,j)
        numtrimsnow=numtrimsnow+1
         snow(i,j) = 0.0
         snowh(i,j) = 0.0
@@ -823,8 +833,8 @@ endif
 !tgs snow building
       if(snowiceRR(i,j) > 1.0e-12 .and. snow(i,j) == 0.0 ) then   ! under forecast snow ?      
       if(surftemp(i,j) < 278.0 ) then
-         write(6,*) 'build snow',  &
-                     i,j,snow(i,j),precip(i,j),surftemp(i,j),snowiceRR(i,j)
+!         write(6,*) 'build snow',  &
+!                     i,j,snow(i,j),precip(i,j),surftemp(i,j),snowiceRR(i,j)
        numbuildsnow=numbuildsnow+1
         snow(i,j) = 2.5
         snowh(i,j) = 0.025
@@ -840,9 +850,9 @@ endif
   ENDDO
   ENDDO
 
-  write(*,*) 'SUMMARY on snow trim/build:'
-  write(*,*) 'grid point with trimmed snow: ', numtrimsnow
-  write(*,*) 'grid point with built snow: ', numbuildsnow
+  if(mype==0)  write(*,*) 'SUMMARY on snow trim/build:'
+  if(mype==0)  write(*,*) 'grid point with trimmed snow: ', numtrimsnow
+  if(mype==0)  write(*,*) 'grid point with built snow: ', numbuildsnow
 
 !
 !  replace seaice and xland
@@ -920,14 +930,14 @@ if(1==1) then  ! turn off , use GFS sea ice
 ! make sure landmask and xland are consistent for land
              landmask(i,j)=1.
              xland_rr(i,j)=1.
-        if(i.eq.350.and.j.eq.250)print *,'land after check', &
-                              i,j,landmask(i,j),xland_rr(i,j)
+!        if(i.eq.350.and.j.eq.250)print *,'land after check', &
+!                              i,j,landmask(i,j),xland_rr(i,j)
     endif
   ENDDO
   ENDDO
-  write(*,*) 'SUMMARY on seaice:'
-  write(*,*) 'grid point from old seaice into water: ', num_seaice2water
-  write(*,*) 'grid point from old water  into seaice: ', num_water2seaice
+  if(mype==0) write(*,*) 'SUMMARY on seaice:'
+  if(mype==0) write(*,*) 'grid point from old seaice into water: ', num_seaice2water
+  if(mype==0) write(*,*) 'grid point from old water  into seaice: ', num_water2seaice
 endif
 !
 !  get rid of snow on water
@@ -952,11 +962,11 @@ endif
 !
 !           update mass core binary file with snow,snowh,snowc
 !
-  write(6,*) ' ================== '
-  write(6,*) ' trim snow and replace ice '
-  write(6,*) ' ================== '
+  if(mype==0) write(6,*) ' ================== '
+  if(mype==0) write(6,*) ' trim snow and replace ice '
+  if(mype==0) write(6,*) ' ================== '
      
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   deallocate(field3)
   VarName='SMOIS'
   call retrieve_index(index,VarName,varname_all,nrecs)
@@ -989,12 +999,12 @@ endif
   if(trim(memoryorder_all(index))=='XZY') then
         do k=1,nsig_regional
           field3(:,k,:)=soilmoisture(:,:,k)
-    write(6,*)' max,min SMOIS=',k, maxval(field3(:,k,:)),minval(field3(:,k,:))
+    if(mype==0) write(6,*)' max,min SMOIS=',k, maxval(field3(:,k,:)),minval(field3(:,k,:))
         enddo
   else
         do k=1,nsig_regional
           field3(:,:,k)=soilmoisture(:,:,k)
-    write(6,*)' max,min SMOIS=',k, maxval(field3(:,:,k)),minval(field3(:,:,k))
+    if(mype==0) write(6,*)' max,min SMOIS=',k, maxval(field3(:,:,k)),minval(field3(:,:,k))
         enddo
   endif
 
@@ -1007,13 +1017,13 @@ endif
   if (ierr /= 0) then
      print*,"Error writing ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: write out ',VarName
-     write(6,*)' max,min=',maxval(field3),minval(field3)
+     if(mype==0) write(6,*)' MPIIO: write out ',VarName
+     if(mype==0) write(6,*)' max,min=',maxval(field3),minval(field3)
   end if
 
   call MPI_BARRIER(mpi_comm_world,ierror)
 
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   deallocate(field3)
   VarName='TSLB'
   call retrieve_index(index,VarName,varname_all,nrecs)
@@ -1046,12 +1056,12 @@ endif
   if(trim(memoryorder_all(index))=='XZY') then
         do k=1,nsig_regional
           field3(:,k,:)=soiltemp(:,:,k)
-    write(6,*)' max,min soil temp=',k, maxval(field3(:,k,:)),minval(field3(:,k,:))
+    if(mype==0) write(6,*)' max,min soil temp=',k, maxval(field3(:,k,:)),minval(field3(:,k,:))
         enddo
   else
         do k=1,nsig_regional
           field3(:,:,k)=soiltemp(:,:,k)
-    write(6,*)' max,min soil temp=',k, maxval(field3(:,:,k)),minval(field3(:,:,k))
+    if(mype==0) write(6,*)' max,min soil temp=',k, maxval(field3(:,:,k)),minval(field3(:,:,k))
         enddo
   endif
 
@@ -1064,13 +1074,13 @@ endif
   if (ierr /= 0) then
      print*,"Error writing ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: write out ',VarName
-     write(6,*)' max,min=',maxval(field3),minval(field3)
+     if(mype==0) write(6,*)' MPIIO: write out ',VarName
+     if(mype==0) write(6,*)' max,min=',maxval(field3),minval(field3)
   end if
 
   call MPI_BARRIER(mpi_comm_world,ierror)
 
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   field2=seaice
   VarName='SEAICE'
   call retrieve_index(index,VarName,varname_all,nrecs)
@@ -1087,12 +1097,12 @@ endif
   if (ierr /= 0) then
      print*,"Error writing ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: write out ',VarName
-     write(6,*)' max,min=',maxval(field2),minval(field2)
+     if(mype==0) write(6,*)' MPIIO: write out ',VarName
+     if(mype==0) write(6,*)' max,min=',maxval(field2),minval(field2)
   end if
 
   call MPI_BARRIER(mpi_comm_world,ierror)
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   field2=snowc
   VarName='SNOWC'
   call retrieve_index(index,VarName,varname_all,nrecs)
@@ -1109,12 +1119,12 @@ endif
   if (ierr /= 0) then
      print*,"Error writing ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: write out ',VarName
-     write(6,*)' max,min=',maxval(field2),minval(field2)
+     if(mype==0) write(6,*)' MPIIO: write out ',VarName
+     if(mype==0) write(6,*)' max,min=',maxval(field2),minval(field2)
   end if
 
   call MPI_BARRIER(mpi_comm_world,ierror)
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   field2=snowh
   VarName='SNOWH'
   call retrieve_index(index,VarName,varname_all,nrecs)
@@ -1131,12 +1141,12 @@ endif
   if (ierr /= 0) then
      print*,"Error writing ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: write out ',VarName
-     write(6,*)' max,min=',maxval(field2),minval(field2)
+     if(mype==0) write(6,*)' MPIIO: write out ',VarName
+     if(mype==0) write(6,*)' max,min=',maxval(field2),minval(field2)
   end if
 
   call MPI_BARRIER(mpi_comm_world,ierror)
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   field2=snow
   VarName='SNOW'
   call retrieve_index(index,VarName,varname_all,nrecs)
@@ -1153,13 +1163,13 @@ endif
   if (ierr /= 0) then
      print*,"Error writing ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: write out ',VarName
-     write(6,*)' max,min=',maxval(field2),minval(field2)
+     if(mype==0) write(6,*)' MPIIO: write out ',VarName
+     if(mype==0) write(6,*)' max,min=',maxval(field2),minval(field2)
   end if
 
   call MPI_BARRIER(mpi_comm_world,ierror)
 
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   field2=tskin
   VarName='TSK'
   call retrieve_index(index,VarName,varname_all,nrecs)
@@ -1176,13 +1186,13 @@ endif
   if (ierr /= 0) then
      print*,"Error writing ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: write out ',VarName
-     write(6,*)' max,min=',maxval(field2),minval(field2)
+     if(mype==0) write(6,*)' MPIIO: write out ',VarName
+     if(mype==0) write(6,*)' max,min=',maxval(field2),minval(field2)
   end if
 
   call MPI_BARRIER(mpi_comm_world,ierror)
 
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   field2=tsnow
   VarName='SOILT1'
   call retrieve_index(index,VarName,varname_all,nrecs)
@@ -1199,13 +1209,13 @@ endif
   if (ierr /= 0) then
      print*,"Error writing ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: write out ',VarName
-     write(6,*)' max,min=',maxval(field2),minval(field2)
+     if(mype==0) write(6,*)' MPIIO: write out ',VarName
+     if(mype==0) write(6,*)' max,min=',maxval(field2),minval(field2)
   end if
   
   call MPI_BARRIER(mpi_comm_world,ierror)
 
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   field2=landmask
   VarName='LANDMASK'
   call retrieve_index(index,VarName,varname_all,nrecs)
@@ -1222,12 +1232,12 @@ endif
   if (ierr /= 0) then
      print*,"Error writing ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: write out ',VarName
-     write(6,*)' max,min=',maxval(field2),minval(field2)
+     if(mype==0) write(6,*)' MPIIO: write out ',VarName
+     if(mype==0) write(6,*)' max,min=',maxval(field2),minval(field2)
   end if
 
   call MPI_BARRIER(mpi_comm_world,ierror)
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   field2=xland_rr
   VarName='XLAND'
   call retrieve_index(index,VarName,varname_all,nrecs)
@@ -1244,12 +1254,12 @@ endif
   if (ierr /= 0) then
      print*,"Error writing ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: write out ',VarName
-     write(6,*)' max,min=',maxval(field2),minval(field2)
+     if(mype==0) write(6,*)' MPIIO: write out ',VarName
+     if(mype==0) write(6,*)' max,min=',maxval(field2),minval(field2)
   end if
 
   call MPI_BARRIER(mpi_comm_world,ierror)
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   field2=lu_index
   VarName='LU_INDEX'
   call retrieve_index(index,VarName,varname_all,nrecs)
@@ -1266,12 +1276,12 @@ endif
   if (ierr /= 0) then
      print*,"Error writing ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: write out ',VarName
-     write(6,*)' max,min=',maxval(field2),minval(field2)
+     if(mype==0) write(6,*)' MPIIO: write out ',VarName
+     if(mype==0) write(6,*)' max,min=',maxval(field2),minval(field2)
   end if
 
   call MPI_BARRIER(mpi_comm_world,ierror)
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   ifield2=isltyp
   VarName='ISLTYP'
   call retrieve_index(index,VarName,varname_all,nrecs)
@@ -1285,12 +1295,12 @@ endif
   if (ierr /= 0) then
      print*,"Error writing ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: write out ',VarName
-     write(6,*)' max,min=',maxval(ifield2),minval(ifield2)
+     if(mype==0) write(6,*)' MPIIO: write out ',VarName
+     if(mype==0) write(6,*)' max,min=',maxval(ifield2),minval(ifield2)
   end if
 
   call MPI_BARRIER(mpi_comm_world,ierror)
-  write(6,*) '================================================='
+  if(mype==0) write(6,*) '================================================='
   ifield2=ivgtyp
   VarName='IVGTYP'
   call retrieve_index(index,VarName,varname_all,nrecs)
@@ -1304,8 +1314,8 @@ endif
   if (ierr /= 0) then
      print*,"Error writing ", VarName," using MPIIO"
   else
-     write(6,*)' MPIIO: write out ',VarName
-     write(6,*)' max,min=',maxval(ifield2),minval(ifield2)
+     if(mype==0) write(6,*)' MPIIO: write out ',VarName
+     if(mype==0) write(6,*)' max,min=',maxval(ifield2),minval(ifield2)
   end if
 
   call MPI_BARRIER(mpi_comm_world,ierror)

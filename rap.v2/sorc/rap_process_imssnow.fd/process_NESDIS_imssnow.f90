@@ -177,7 +177,7 @@ SUBROUTINE map2RR(f,maskims,kgds_src,kpds_src,xlandRR,nlonRR,nlatRR,xlonRR,ylatR
   real, parameter           :: undefined_value = -1.0
 
 !
-  print *,'NESDIS grid info: kgds_src', kgds_src
+!  print *,'NESDIS grid info: kgds_src', kgds_src
 
     DO j=1,nlatRR
     DO i=1,nlonRR
@@ -537,7 +537,7 @@ SUBROUTINE GET_RR_GRID(ifswap,xlon,ylat,nlon,nlat,xland)
   close(iunit)
 
   call count_recs_wrf_binary_file(iunit, ifswap,trim(fileName), nrecs)
-        write(*,*) 'nrecs: ', nrecs
+!  write(*,*) 'nrecs: ', nrecs
 
   allocate(datestr_all(nrecs),varname_all(nrecs),domainend_all(3,nrecs))
   allocate(memoryorder_all(nrecs))
@@ -588,7 +588,7 @@ SUBROUTINE GET_RR_GRID(ifswap,xlon,ylat,nlon,nlat,xland)
   call retrieve_field(iunit,ifswap,trim(filename),field2,start_block(index+1),end_block(index+1),&
                                start_byte(index+1),end_byte(index+1))
   xland=field2
-  write(6,*)' MPIIO: landmask, max, min=', maxval(xland),minval(xland)
+!  write(6,*)' MPIIO: landmask, max, min=', maxval(xland),minval(xland)
 
 !                  XLAT
   call retrieve_index(index,'XLAT_M',varname_all,nrecs)
@@ -597,14 +597,14 @@ SUBROUTINE GET_RR_GRID(ifswap,xlon,ylat,nlon,nlat,xland)
                                start_byte(index+1),end_byte(index+1))
 
   ylat=field2
-  write(6,*)' MPIIO: max,min XLAT(:,1)=',&
-       maxval(ylat(:,1)),minval(ylat(:,1))
-  write(6,*)' MPIIO: max,min XLAT(1,:)=',&
-       maxval(ylat(1,:)),minval(ylat(1,:))
-  write(6,*)' MPIIO: xlat(1,1),xlat(nlon,1)=',&
-       ylat(1,1),ylat(nlon_regional,1)
-  write(6,*)' MPIIO: xlat(1,nlat),xlat(nlon,nlat)=', &
-       ylat(1,nlat_regional),ylat(nlon_regional,nlat_regional)
+!  write(6,*)' MPIIO: max,min XLAT(:,1)=',&
+!       maxval(ylat(:,1)),minval(ylat(:,1))
+!  write(6,*)' MPIIO: max,min XLAT(1,:)=',&
+!       maxval(ylat(1,:)),minval(ylat(1,:))
+!  write(6,*)' MPIIO: xlat(1,1),xlat(nlon,1)=',&
+!       ylat(1,1),ylat(nlon_regional,1)
+!  write(6,*)' MPIIO: xlat(1,nlat),xlat(nlon,nlat)=', &
+!       ylat(1,nlat_regional),ylat(nlon_regional,nlat_regional)
 
 !                  XLONG
   call retrieve_index(index,'XLONG_M',varname_all,nrecs)
@@ -612,14 +612,14 @@ SUBROUTINE GET_RR_GRID(ifswap,xlon,ylat,nlon,nlat,xland)
   call retrieve_field(iunit,ifswap,trim(filename),field2,start_block(index+1),end_block(index+1),&
                                start_byte(index+1),end_byte(index+1))
   xlon=field2
-  write(6,*)' MPIIO: max,min XLONG(:,1)=',&
-       maxval(xlon(:,1)),minval(xlon(:,1))
-  write(6,*)' MPIIO: max,min XLONG(1,:)=',&
-       maxval(xlon(1,:)),minval(xlon(1,:))
-  write(6,*)' MPIIO: xlong(1,1),xlong(nlon,1)=',&
-       xlon(1,1),xlon(nlon_regional,1)
-  write(6,*)' MPIIO: xlong(1,nlat),xlong(nlon,nlat)=', &
-       xlon(1,nlat_regional),xlon(nlon_regional,nlat_regional)
+!  write(6,*)' MPIIO: max,min XLONG(:,1)=',&
+!       maxval(xlon(:,1)),minval(xlon(:,1))
+!  write(6,*)' MPIIO: max,min XLONG(1,:)=',&
+!       maxval(xlon(1,:)),minval(xlon(1,:))
+!  write(6,*)' MPIIO: xlong(1,1),xlong(nlon,1)=',&
+!       xlon(1,1),xlon(nlon_regional,1)
+!  write(6,*)' MPIIO: xlong(1,nlat),xlong(nlon,nlat)=', &
+!       xlon(1,nlat_regional),xlon(nlon_regional,nlat_regional)
 !
   close(iunit)
   deallocate(field2)
