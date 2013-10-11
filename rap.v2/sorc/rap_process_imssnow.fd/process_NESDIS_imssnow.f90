@@ -113,7 +113,7 @@ PROGRAM process_NESDIS_imssnow
 !
 !  trim snow cover field based on NESDIS snow cover data
 !
-  call update_SNOWICE_binary_mass(ifswap,snowiceRR, xlandRR, nlonRR, nlatRR,xlandIMS)
+  call update_SNOWICE_binary_mass(ifswap,snowiceRR, xlandRR, nlonRR, nlatRR)
 !
 
 END PROGRAM process_NESDIS_imssnow
