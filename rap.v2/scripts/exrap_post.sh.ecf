@@ -139,15 +139,46 @@ EOF
   export pgm;. prep_step
 
   startmsg
-  mpirun.lsf ${EXECrap}/rap_wrfpost >> wrfpost.out 
+  mpirun.lsf ${EXECrap}/rap_wrfpost >> $DATA/$pgmout 2>errfile 
   err=$?;export err ;err_chk
 
   mv WRFNAT.GrbF* $COMOUT/rap.${cycle}.wrfnat${fhr}.tm00
   mv WRFPRS.GrbF* $COMOUT/rap.${cycle}.wrfprs${fhr}.tm00
+  echo done >$FCSTDIR/rappost.done${fhr}
 
-echo done >$FCSTDIR/rappost.done${fhr}
+# use post-DFI analysis file to generate extra analysis for EMC 
+#   initialization applications
+if [ ${fhr} -eq ${time_analysis} ]; then
+  rm wrfoutd01
+  fcstfile=${FCSTDIR}/wrfout_d01_${timestr}
+  echo 'use post-DFI file ',${fcstfile}
+  cp ${fcstfile} wrfoutd01
 
-  postmsg $jlogfile "RAP POST done for F${fhr}"
+cat > itag <<EOF
+wrfoutd01
+binarympiio
+${timestr}
+${CORE}
+${SPLNUM}
+${SPL}
+${VALIDTIMEUNITS}
+EOF
 
+rm -f fort.*
+ln -s ${PARMrap}/rap_cntrl.parm fort.14
+ln -s ./itag fort.19
+ln -s ./griddef.out fort.110
+
+  pgm=rap_wrfpost
+  export pgm;. prep_step
+
+  startmsg
+  mpirun.lsf ${EXECrap}/rap_wrfpost >> $DATA/$pgmout 2>errfile 
+  err=$?;export err ;err_chk
+
+  mv WRFPRS.GrbF* $COMOUT/rap.${cycle}.wrfprsdf${fhr}.tm00
+fi
+
+postmsg $jlogfile "RAP POST done for F${fhr}"
 echo EXITING $0
 exit

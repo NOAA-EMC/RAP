@@ -113,7 +113,7 @@ ln -sf input1${fhr}.prd      fort.621
 
 ${EXECrap}/rap_prdgen > prdgen.pout${fhr}
 export err=$?; 
-##err_chk
+err_chk
 
 # native level output
 cp ${COMIN}/rap.t${cyc}z.wrfnat${fhr}.tm00 EGRD3D${fhr}.tm00
@@ -131,7 +131,7 @@ ln -sf input2${fhr}.prd      fort.621
 
 ${EXECrap}/rap_prdgen > prdgen.bout${fhr}
 export err=$?; 
-##err_chk
+err_chk
 
 # 200 Puerto Rico 221 full domain and 242 AK grids
 
@@ -149,8 +149,27 @@ ln -sf $FIXrap/rap_wgt_242   fort.23
 ln -sf input3${fhr}.prd      fort.621
 
 ${EXECrap}/rap_prdgen > prdgen.akout${fhr}
+export err=$?
+err_chk
+
+# process post-dfi 32 km file for internal use
+if [ $fhr -eq 00 ]; then
+cp ${COMIN}/rap.t${cyc}z.wrfprsdf${fhr}.tm00 EGDAWP${fhr}.tm00
+cat >input4${fhr}.prd <<EOF5
+EGDAWP${fhr}.tm00
+$fhr
+EOF5
+
+rm -f fort.*
+ln -sf ${PARMrap}/rap_master3dfi.ctl    fort.10
+ln -sf $FIXrap/rap_wgt_221   fort.21
+ln -sf input4${fhr}.prd      fort.621
+
+${EXECrap}/rap_prdgen > prdgen.dfiout${fhr}
 export err=$?;
-# #err_chk
+err_chk
+cp rap.AWIP32DFI${fhr} $COMOUT/rap.t${cyc}z.awip32f${fhr}df
+fi
 
 echo "End of product generator section"
 echo "Start to process subfields"
@@ -231,7 +250,7 @@ if [ $fhr -lt 3 -a $fhr3 -eq 99 ]; then
     ${EXECrap}/rap_subflds_130 <<EOF >> subflds${fhr}.out13p
 $fhr 99 99
 EOF
-export err=$?; #err_chk
+export err=$?; err_chk
 elif [ $fhr -le 3 -a $fhr3 -ne 99 ]; then
     ln -sf RAP13PRS1     fort.13
     ln -sf RAP13PRS1I    fort.14
@@ -241,7 +260,7 @@ elif [ $fhr -le 3 -a $fhr3 -ne 99 ]; then
     ${EXECrap}/rap_subflds_130 <<EOF >> subflds${fhr}.out13p
 $fhr 99 $fhr3
 EOF
-export err=$?; #err_chk
+export err=$?; err_chk
 elif [ $mod -eq 0 ]; then
     ln -sf RAP13PRS1     fort.13
     ln -sf RAP13PRS1I    fort.14
@@ -251,7 +270,7 @@ elif [ $mod -eq 0 ]; then
     ${EXECrap}/rap_subflds_130 <<EOF >> subflds${fhr}.out13p
 $fhr $fhr3 99
 EOF
-export err=$?; #err_chk
+export err=$?; err_chk
 else
     ln -sf RAP13PRS1     fort.13
     ln -sf RAP13PRS1I    fort.14
@@ -263,7 +282,7 @@ else
     ${EXECrap}/rap_subflds_130 <<EOF >> subflds${fhr}.out13p
 $fhr $fhrpcp $fhr3
 EOF
-export err=$?; #err_chk
+export err=$?; err_chk
 fi
 
    if [ $fhr -gt 3 ]; then
@@ -349,7 +368,7 @@ if [ $fhr -lt 3 -a $fhr3 -eq 99 ]; then
     ${EXECrap}/rap_subflds_252 <<EOF >> subflds${fhr}.out20p
 $fhr 99 99
 EOF
-export err=$?; #err_chk
+export err=$?; err_chk
 elif [ $fhr -le 3 -a $fhr3 -ne 99 ]; then
     ln -sf RAP20PRS1     fort.13
     ln -sf RAP20PRS1I    fort.14
@@ -359,7 +378,7 @@ elif [ $fhr -le 3 -a $fhr3 -ne 99 ]; then
     ${EXECrap}/rap_subflds_252 <<EOF >> subflds${fhr}.out20p
 $fhr 99 $fhr3
 EOF
-export err=$?; #err_chk
+export err=$?; err_chk
 elif [ $mod -eq 0 ]; then
     ln -sf RAP20PRS1     fort.13
     ln -sf RAP20PRS1I    fort.14
@@ -369,7 +388,7 @@ elif [ $mod -eq 0 ]; then
     ${EXECrap}/rap_subflds_252 <<EOF >> subflds${fhr}.out20p
 $fhr $fhr3 99
 EOF
-export err=$?; #err_chk
+export err=$?; err_chk
 else
     ln -sf RAP20PRS1     fort.13
     ln -sf RAP20PRS1I    fort.14
@@ -381,7 +400,7 @@ else
     ${EXECrap}/rap_subflds_252 <<EOF >> subflds${fhr}.out20p
 $fhr $fhrpcp $fhr3
 EOF
-export err=$?; #err_chk
+export err=$?; err_chk
 fi
 
    if [ $fhr -gt 3 ]; then
@@ -467,7 +486,7 @@ if [ $fhr -lt 3 -a $fhr3 -eq 99 ]; then
     ${EXECrap}/rap_subflds_236 <<EOF >> subflds${fhr}.out40p
 $fhr 99 99
 EOF
-export err=$?; #err_chk
+export err=$?; err_chk
 elif [ $fhr -le 3 -a $fhr3 -ne 99 ]; then 
     ln -sf RAP40PRS1     fort.13
     ln -sf RAP40PRS1I    fort.14
@@ -477,7 +496,7 @@ elif [ $fhr -le 3 -a $fhr3 -ne 99 ]; then
     ${EXECrap}/rap_subflds_236 <<EOF >> subflds${fhr}.out40p
 $fhr 99 $fhr3
 EOF
-export err=$?; #err_chk
+export err=$?; err_chk
 elif [ $mod -eq 0 ]; then
     ln -sf RAP40PRS1     fort.13
     ln -sf RAP40PRS1I    fort.14
@@ -487,7 +506,7 @@ elif [ $mod -eq 0 ]; then
     ${EXECrap}/rap_subflds_236 <<EOF >> subflds${fhr}.out40p
 $fhr $fhr3 99
 EOF
-export err=$?; #err_chk
+export err=$?; err_chk
 else
     ln -sf RAP40PRS1     fort.13
     ln -sf RAP40PRS1I    fort.14
@@ -499,7 +518,7 @@ else
     ${EXECrap}/rap_subflds_236 <<EOF >> subflds${fhr}.out40p
 $fhr $fhrpcp $fhr3
 EOF
-export err=$?; #err_chk
+export err=$?; err_chk
 fi
 
    if [ $fhr -gt 3 ]; then
@@ -581,7 +600,7 @@ $GRBINDEX RAP13NAT2 RAP13NAT2I
     ${EXECrap}/rap_subflds_130 <<EOF >> subflds${fhr}.out13b
 $fhrb $fhrpcp 99
 EOF
-export err=$?; #err_chk
+export err=$?; err_chk
 
 if [ $mod -eq 1 ]; then
    $WGRIB RAP13NAT1 | grep -v kpds5=65:kpds6=1:kpds7=0:TR=4 | $WGRIB RAP13NAT1 -i -grib -o RAP13NAT1A
@@ -629,7 +648,7 @@ $GRBINDEX RAP20NAT2 RAP20NAT2I
     ${EXECrap}/rap_subflds_252 <<EOF >> subflds${fhr}.out20b
 $fhrb $fhrpcp 99
 EOF
-export err=$?; #err_chk
+export err=$?; err_chk
 
 if [ $mod -eq 1 ]; then
    $WGRIB RAP20NAT1 | grep -v kpds5=65:kpds6=1:kpds7=0:TR=4 | $WGRIB RAP20NAT1 -i -grib -o RAP20NAT1A
@@ -707,7 +726,7 @@ $GRBINDEX RAPAK2 RAPAK2I
     ${EXECrap}/rap_subflds_242 <<EOF >> subflds${fhr}.outak
 $fhrb $fhrpcp 99
 EOF
-export err=$?; #err_chk
+export err=$?; err_chk
 cp AKextra1.${fhr}  extraAK
     $WGRIB RAPAK1 | grep -v kpds5=65:kpds6=1:kpds7=0:TR=4 | $WGRIB RAPAK1 -i -grib -o RAPAK1B 
    cat AKextra1.${fhr} >> RAPAK1B
@@ -729,7 +748,7 @@ if [ $fhr -le 1 ]; then
     ${EXECrap}/rap_subflds_242 <<EOF >> subflds${fhr}.outak
 $fhrb $fhrpcp 99
 EOF
-export err=$?; #err_chk
+export err=$?; err_chk
 
  $WGRIB RAPAK1 | grep -v kpds5=62 | $WGRIB RAPAK1 -i -grib -o RAPAK1A
  $WGRIB RAPAK1A | grep -v kpds5=63 | $WGRIB RAPAK1A -i -grib -o RAPAK1B
@@ -765,7 +784,7 @@ $GRBINDEX RAP322 RAP322I
     ${EXECrap}/rap_subflds_221 <<EOF >> subflds${fhr}.out32
 $fhrb $fhrpcp 99
 EOF
-export err=$?; #err_chk
+export err=$?; err_chk
 
    $WGRIB RAP321 | grep -v kpds5=65:kpds6=1:kpds7=0:TR=4 | $WGRIB RAP321 -i -grib -o RAP321B 
    cat 32extra1.${fhr} >> RAP321B
@@ -787,7 +806,7 @@ if [ $fhr -le 1 ]; then
     ${EXECrap}/rap_subflds_221 <<EOF >> subflds${fhr}.out32
 $fhrb $fhrpcp 99
 EOF
-export err=$?; #err_chk
+export err=$?; err_chk
 
  $WGRIB RAP321 | grep -v kpds5=62 | $WGRIB RAP321 -i -grib -o RAP321A
  $WGRIB RAP321A | grep -v kpds5=63 | $WGRIB RAP321A -i -grib -o RAP321B
@@ -821,7 +840,7 @@ $GRBINDEX RAPPR2 RAPPR2I
     ${EXECrap}/rap_subflds_200 <<EOF >> subflds${fhr}.outpr
 $fhr $fhrpcp
 EOF
-export err=$?; #err_chk
+export err=$?; err_chk
 
    cp RAPPR1 RAPPR1B
    cat PRextra1.${fhr} >> RAPPR1B
@@ -843,7 +862,7 @@ else
     ${EXECrap}/rap_subflds_200 <<EOF >> subflds${fhr}.outpr
 $fhr $fhrpcp
 EOF
-export err=$?; #err_chk
+export err=$?; err_chk
 
  $WGRIB RAPPR1 | grep -v kpds5=62 | $WGRIB RAPPR1 -i -grib -o RAPPR1A
  $WGRIB RAPPR1A | grep -v kpds5=63 | $WGRIB RAPPR1A -i -grib -o RAPPR1B
