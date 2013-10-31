@@ -165,7 +165,7 @@ ${VALIDTIMEUNITS}
 EOF
 
 rm -f fort.*
-ln -s ${PARMrap}/rap_cntrl.parm fort.14
+ln -s ${PARMrap}/rap_cntrldfi.parm fort.14
 ln -s ./itag fort.19
 ln -s ./griddef.out fort.110
 
