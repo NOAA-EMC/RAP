@@ -2537,10 +2537,14 @@ c20080701        print*,'MP_PHYSICS= ',imp_physics
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
      +  IM,1,JM,1,IM,JS,JE,1)
 
-
       VarName='HGT'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
      +  IM,1,JM,1,IM,JS,JE,1)
+
+      DO N=1,NUMSTA
+        RES(N)=1.0
+        FIS(N)=DUMMY(IHINDX(N),JHINDX(N))*G
+      ENDDO
 
       VarName='TSK'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
