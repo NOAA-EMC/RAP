@@ -274,11 +274,11 @@ write(*,*) mype, 'deal with mosaic'
                ref2=mscValue(ip+1,jp)
                ref3=mscValue(ip+1,jp+1)
                ref4=mscValue(ip,jp+1)
-               if(ref1 > -500.0 .and. ref2 > -500.0 .and.  &
-                  ref3 > -500.0 .and. ref4 > -500.0 ) then
+               if(ref1 > -90.0 .and. ref2 > -90.0 .and.  &
+                  ref3 > -90.0 .and. ref4 > -90.0 ) then
                   ref3d(i,j,k)=(ref1*w1+ref2*w2+ref3*w3+ref4*w4)
-               elseif(ref1 > -5000.0 .and. ref2 > -5000.0 .and.  &
-                  ref3 > -5000.0 .and. ref4 > -5000.0 ) then
+               elseif(ref1 > -900.0 .and. ref2 > -900.0 .and.  &
+                  ref3 > -900.0 .and. ref4 > -900.0 ) then
                   ref3d(i,j,k)=-99.0   ! clear
                else
                   ref3d(i,j,k)=-999.0  ! no observation
