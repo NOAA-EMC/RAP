@@ -66,7 +66,7 @@ timeform=${wyr}"-"${wmn}"-"${wdy}"_"${whr}":00:00"
 timeformold=${oyr}"-"${omn}"-"${ody}"_"${ohr}":00:00"
 
 # already have the wrfout file copied in as wrfoutd01
-cp wrfoutd01 wrfoutd01_${timeform}
+cp ${FCSTDIR}/wrfout_d01_${timeform} wrfoutd01_${timeform}
 if [ $fhr -eq 0 ]; then
 cp ${RAPGES_SFC}/wrfoutd01_${ohr} wrfoutd01_${timeformold} 
 else
@@ -74,12 +74,13 @@ cp ${FCSTDIR}/wrfout_d01_${timeformold} wrfoutd01_${timeformold}
 fi
 
 OLDOUTFIL=wrfoutd01_${timeformold}
+time_analysis='00'
 
 # use pre-DFI file for 00-hr data
 if [ ${fhr} -eq ${time_analysis} ]; then
-  fcstfile=${FCSTDIR}/wrfinput_d01
+  fcstfile=${FCSTDIR}/wrfoutd01
   cp $fcstfile .
-  OUTFIL=wrfinput_d01
+  OUTFIL=wrfoutd01
 else
   OUTFIL=wrfoutd01_${timeform}
   cp ${FCSTDIR}/wrfout_d01_${timeform} .
@@ -106,6 +107,7 @@ datestr=`date`
 echo about to run program at $datestr
 
 mpirun.lsf ${EXECrap}/rap_wrfbufr  >> $pgmout 2>errfile
+export err=$?; err_chk
 
 mv profilm.c1.tm00 profilm.c1.f${fhr}
 
