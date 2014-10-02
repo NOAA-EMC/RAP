@@ -4,9 +4,27 @@
 # Runs RAP Postprocessing out to 18 hours
 ########################################
 
-#$SMSBIN/smsinit $LOADL_STEP_ID 
-
 set -xa
+
+######################################################
+# The following two variable could be defined in the
+# loadleveler submission script (the sms script), if
+# not they will take the default values which is set
+# for the NCO running enviroment
+#######################################################
+export RUN_ENVIR=${RUN_ENVIR:-prod}
+export SENDECF=${SENDECF:-YES}
+
+###############################################################
+# This block can be modified for different Production test
+# environment. This is used for operational testings
+###############################################################
+if [ "$RUN_ENVIR" = prod -a $envir != prod ]; then
+  export jlogfile=${jlogfile:-/com/logs/${envir}/jlogfile}
+  #export SENDDBN=NO
+fi
+
+
 # #### 08/25/1999 ###################
 # SET SHELL PROCESSING VARIABLES
 # ###################################
@@ -16,14 +34,14 @@ date
 # obtain unique process id (pid) and make temp directories
 #
 export pid=$$
-export DATA=/tmpnwprd/${job}.${pid}
+export DATA=/tmpnwprd1/${job}.${pid}
 mkdir $DATA
 cd $DATA 
 
 ####################################
 # File To Log Msgs
 ####################################
-export jlogfile=/com/logs/jlogfiles/jlogfile.${job}.${pid}
+export jlogfile=${jlogfile:-/com/logs/jlogfiles/jlogfile.${job}.${pid}}
 
 ####################################
 # Determine Job Output Name on System
@@ -34,16 +52,15 @@ export pgmout="OUTPUT.${pid}"
 
 export cycle=t${cyc}z 
 
-export SENDCOM=YES
-export SENDDBN=YES
-export SENDECF=YES
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
 
 #
 # Set up model and cycle specific variables
 #
 export NET=rap
 export RUN=rap
-# export model_ver=v1.0.8
 export fend=18
 export finc=1
 export fstart=00
@@ -62,8 +79,6 @@ export utilscript=/nwprod/util/ush
 export utilities=/nwprod/util/ush
 export utilexec=/nwprod/util/exec
 
-#export PDY=20121218
-#export PDY=20130222
 # Run setup to initialize working directory and utility scripts
 sh $utilscript/setup.sh
 
@@ -71,9 +86,9 @@ sh $utilscript/setup.sh
 sh $utilscript/setpdy.sh
 . PDY
 
-export com=/com/${NET}/${envir}
-export COMIN=/com/${NET}/${envir}/${RUN}.${PDY}
-export COMOUT=/com/nawips/${envir}/${RUN}.${PDY}
+export com=${com:-/com/${NET}/${envir}}
+export COMIN=${COMIN:-/com/${NET}/${envir}/${RUN}.${PDY}}
+export COMOUT=${COMOUT:-/com/nawips/${envir}/${RUN}.${PDY}}
 
 if [ ! -f $COMOUT ] ; then
   mkdir -p -m 775 $COMOUT
@@ -84,132 +99,84 @@ env
 export HOMErap=${HOMErap:-/nw${envir}/${NET}.${model_ver}}
 export SCRIPTSrap=${SCRIPTSrap:-$HOMErap/scripts}
 export GEMPAKrap=${GEMPAKrap:-$HOMErap/gempak}
-export NAGRIB_TABLE=$GEMPAKrap/fix/nagrib.tbl    #XXW 
-
-DATAHOLD=$DATA
+export NAGRIB_TABLE=${NAGRIB_TABLE:-$GEMPAKrap/fix/nagrib.tbl}
 
 ########################################################
 # RAP40
 ########################################################
-export DATA=$DATAHOLD/rap
-mkdir -p $DATA
-cd $DATA
+mkdir -p $DATA/rap
 
-cp $GEMPAKrap/fix/rap_ncepgrib2.tbl ncepgrib2.tbl
-cp $GEMPAKrap/fix/rap_wmogrib2.tbl wmogrib2.tbl
-cp $GEMPAKrap/fix/rap_vcrdgrib1.tbl vcrdgrib1.tbl
-
-# Run setup to initialize working directory and utility scripts
-sh $utilscript/setup.sh
+cp $GEMPAKrap/fix/rap_ncepgrib2.tbl $DATA/rap/ncepgrib2.tbl
+cp $GEMPAKrap/fix/rap_wmogrib2.tbl $DATA/rap/wmogrib2.tbl
+cp $GEMPAKrap/fix/rap_vcrdgrib1.tbl $DATA/rap/vcrdgrib1.tbl
 
 export RUN=rap
 export GRIB=awp236pgrbf
 export DBN_ALERT_TYPE=RAP_GEMPAK
 
-$SCRIPTSrap/exnawips_rap.sh.ecf > $DATAHOLD/rap.out 2>&1 &
+echo "$SCRIPTSrap/exrap_nawips.sh.ecf $RUN $GRIB $DBN_ALERT_TYPE $EXT" >>poescript
 
 
 ########################################################
 # RAP20
 ########################################################
-export DATA=$DATAHOLD/rap20
-mkdir -p $DATA
-cd $DATA
+mkdir -p $DATA/rap20
 
-cp $GEMPAKrap/fix/rap_ncepgrib2.tbl ncepgrib2.tbl
-cp $GEMPAKrap/fix/rap_wmogrib2.tbl wmogrib2.tbl
-cp $GEMPAKrap/fix/rap_vcrdgrib1.tbl vcrdgrib1.tbl
-
-# Run setup to initialize working directory and utility scripts
-sh $utilscript/setup.sh
+cp $GEMPAKrap/fix/rap_ncepgrib2.tbl $DATA/rap20/ncepgrib2.tbl
+cp $GEMPAKrap/fix/rap_wmogrib2.tbl $DATA/rap20/wmogrib2.tbl
+cp $GEMPAKrap/fix/rap_vcrdgrib1.tbl $DATA/rap20/vcrdgrib1.tbl
 
 export RUN=rap20
 export GRIB=awp252pgrbf
 export DBN_ALERT_TYPE=RAP20_GEMPAK
 
-$SCRIPTSrap/exnawips_rap.sh.ecf > $DATAHOLD/rap20.out 2>&1 &
+echo "$SCRIPTSrap/exrap_nawips.sh.ecf $RUN $GRIB $DBN_ALERT_TYPE $EXT" >>poescript
 
 
 ########################################################
 # RAP13
 ########################################################
-export DATA=$DATAHOLD/rap13
-mkdir -p $DATA
-cd $DATA
+mkdir -p $DATA/rap13
 
-cp $GEMPAKrap/fix/rap13_g2varswmo2.tbl g2varswmo2.tbl
-cp $GEMPAKrap/fix/rap13_g2varsncep1.tbl g2varsncep1.tbl
-cp $GEMPAKrap/fix/rap13_g2vcrdncep1.tbl g2vcrdncep1.tbl
-
-# Run setup to initialize working directory and utility scripts
-sh $utilscript/setup.sh
+cp $GEMPAKrap/fix/rap13_g2varswmo2.tbl $DATA/rap13/g2varswmo2.tbl
+cp $GEMPAKrap/fix/rap13_g2varsncep1.tbl $DATA/rap13/g2varsncep1.tbl
+cp $GEMPAKrap/fix/rap13_g2vcrdncep1.tbl $DATA/rap13/g2vcrdncep1.tbl
 
 export EXT=.grib2
 export RUN=rap13
 export GRIB=awp130pgrbf
 export DBN_ALERT_TYPE=RAP13_GEMPAK
 
-$SCRIPTSrap/exnawips_rap.sh.ecf > $DATAHOLD/rap13.out 2>&1 &
+echo "$SCRIPTSrap/exrap_nawips.sh.ecf $RUN $GRIB $DBN_ALERT_TYPE $EXT" >>poescript
 
 ########################################################
 # RAP32
 ########################################################
-export DATA=$DATAHOLD/rap32
-mkdir -p $DATA
-cd $DATA
+mkdir -p $DATA/rap32
 
-cp $GEMPAKrap/fix/rap13_g2varswmo2.tbl g2varswmo2.tbl
-cp $GEMPAKrap/fix/rap13_g2varsncep1.tbl g2varsncep1.tbl
-cp $GEMPAKrap/fix/rap13_g2vcrdncep1.tbl g2vcrdncep1.tbl
-
-# Run setup to initialize working directory and utility scripts
-#sh $utilscript/setup.sh
+cp $GEMPAKrap/fix/rap13_g2varswmo2.tbl $DATA/rap32/g2varswmo2.tbl
+cp $GEMPAKrap/fix/rap13_g2varsncep1.tbl $DATA/rap32/g2varsncep1.tbl
+cp $GEMPAKrap/fix/rap13_g2vcrdncep1.tbl $DATA/rap32/g2vcrdncep1.tbl
 
 export EXT=.grib2
 export RUN=rap32
 export GRIB=awip32f
 export DBN_ALERT_TYPE=RAP32_GEMPAK
 
-$SCRIPTSrap/exnawips_rap.sh.ecf > $DATAHOLD/rap32.out 2>&1 &
+echo "$SCRIPTSrap/exrap_nawips.sh.ecf $RUN $GRIB $DBN_ALERT_TYPE $EXT" >>poescript
 
-wait
+cat poescript
 
-cd $DATAHOLD
-set +x
-echo "######################################"
-echo "  RAP.OUT "
-echo "######################################"
-set -x
-cat rap.out
+chmod 775 $DATA/poescript
+export MP_PGMMODEL=mpmd
+export MP_CMDFILE=$DATA/poescript
 
-set +x
-echo "######################################"
-echo "  RAP20.OUT "
-echo "######################################"
-set -x
-cat rap20.out
+# Execute the script.
 
-set +x
-echo "######################################"
-echo "  RAP13.OUT "
-echo "######################################"
-set -x
-cat rap13.out
+mpirun.lsf
+export err=$?; err_chk
 
-set +x
-echo "######################################"
-echo "  RAP32.OUT "
-echo "######################################"
-set -x
-cat rap32.out
-
-export DATA=$DATAHOLD
-
-cat $pgmout
-
-cd /tmpnwprd
+cd /tmpnwprd1
 rm -rf $DATA
 
 date
-
-#$SMSBIN/smscomplete

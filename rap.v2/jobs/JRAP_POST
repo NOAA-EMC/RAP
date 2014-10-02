@@ -22,8 +22,6 @@ export SENDECF=${SENDECF:-YES}
 export NET=${NET:-rap}
 export RUN=${RUN:-rap}
 export model=${model:-rap}
-#export model_ver=${model_ver:-v1.0.8}
-#export envir=prod
 
 ###############################################################
 # This block can be modified for different Production test
@@ -32,13 +30,14 @@ export model=${model:-rap}
 if [ "$RUN_ENVIR" = prod -a $envir != prod ]; then
   export jlogfile=${jlogfile:-/com/logs/${envir}/jlogfile}
   export DBNROOT=/nwprod/spa_util/fakedbn
+  export SENDDBN=NO
 fi
 
 #####################################################################################
 # This block is for Developer's test run:
 # Run config file to get input parameters
 # This config file should define the following variables
-# DATA_IN: Location of working directory, default to /tmpnwprd
+# DATA_IN: Location of working directory, default to /tmpnwprd1
 # SENDECF: If the job is to be running using ECF, default to YES
 # SENDDBN: Set to NO for developers, default to YES
 # COM_IN:  Directory for input files, default to /com/$NET/${envir}
@@ -54,11 +53,6 @@ then
   export DATA_IN=${DATA_IN:-/ptmp/$userid}
 fi
 
-#if [ $SENDECF = YES ]
-#then
-  #$SMSBIN/smsinit $LOADL_STEP_ID
-#fi
-
 export PS4='$SECONDS + '
 date
 
@@ -66,7 +60,7 @@ date
 # obtain unique process id (pid) and make temp directory
 ####################################
 export pid=$$
-export DATA_IN=${DATA_IN:-/tmpnwprd}
+export DATA_IN=${DATA_IN:-/tmpnwprd1}
 export DATA=$DATA_IN/rap_post_${envir}_${cyc}_f${fhr}
 rm -rf $DATA
 mkdir -p $DATA
@@ -109,15 +103,6 @@ export USHrap=${USHrap:-${HOMErap}/ush}
 export utilscript=${utilscript:-/nwprod/util/ush}
 export utilexec=${utilexec:-/nwprod/util/exec}
 
-#########  Canned DATA test  #################################
-#export PDY=20121218
-#export PDY=20130222
-#export gespath=/nwges_canned/${envir}
-#export COMGFS=${COMGFS:-/com_canned/gfs/prod}
-#export gespath=/nwges_p6/${envir}
-export COMGFS=${COMGFS:-/com/gfs/prod}
-###############################################################
-
 ###############################################################
 # Run setup to initialize working directory and utility scripts
 ###############################################################
@@ -137,6 +122,7 @@ export COM_OUT=${COM_OUT:-/com/${NET}/${envir}}
 export COM=${COM:-${COM_IN}}
 export COMIN=${COMIN:-${COM_IN}/${RUN}.${PDY}}
 export COMOUT=${COMOUT:-${COM_OUT}/${RUN}.${PDY}}
+export COMGFS=${COMGFS:-/com/gfs/prod}
 
 mkdir -m 775 -p $COMOUT 
 
@@ -162,7 +148,7 @@ ${RAP_POSTSH:-$HOMErap/scripts/exrap_post.sh.ecf}
 cat $pgmout
 
 msg="ENDED NORMALLY."
-#postmsg "$jlogfile" "$msg"
+postmsg "$jlogfile" "$msg"
 
 ##############################
 # Remove the Temporary working directory

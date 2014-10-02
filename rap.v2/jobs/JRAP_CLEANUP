@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/ksh
 set -xa
 
 ########################################
@@ -27,13 +27,14 @@ export model=${model:-rap}
 ###############################################################
 if [ "$RUN_ENVIR" = prod -a $envir != prod ]; then
   export jlogfile=${jlogfile:-/com/logs/${envir}/jlogfile}
+  export SENDDBN=NO
 fi
 
 #####################################################################################
 # This block is for Developer's test run:
 # Run config file to get input parameters
 # This config file should define the following variables
-# DATA_IN: Location of working directory, default to /tmpnwprd
+# DATA_IN: Location of working directory, default to /tmpnwprd1
 # SENDECF: If the job is to be running using ECF, default to YES
 # SENDDBN: Set to NO for developers, default to YES
 # COM_IN:  Directory for input files, default to /com/$NET/${envir}
@@ -49,11 +50,6 @@ then
   export DATA_IN=${DATA_IN:-/ptmp/$userid}
 fi
 
-#if [ $SENDECF = YES ]
-#then
-  #$SMSBIN/smsinit $LOADL_STEP_ID
-#fi
-
 export PS4='$SECONDS + '
 date
 
@@ -61,7 +57,7 @@ date
 # obtain unique process id (pid) and make temp directory
 ####################################
 export pid=$$
-export DATA_IN=${DATA_IN:-/tmpnwprd}
+export DATA_IN=${DATA_IN:-/tmpnwprd1}
 export DATA=$DATA_IN/${job}.${pid}
 mkdir -p $DATA
 cd $DATA
@@ -110,9 +106,6 @@ export utilexec=${utilexec:-/nwprod/util/exec}
 ###############################################################
 sh $utilscript/setup.sh
 
-#export PDY=20121218
-#export PDY=20130222
-
 ###########################################
 # Run setpdy and initialize PDY variables
 ###########################################
@@ -148,21 +141,18 @@ endfhr=18
 
 shh=$cyc
 
-typeset -Z2 fhr
-
 FCSTDIR=$DATA_IN/rap_fcst_${envir}_${cyc}
 
 while [ $fhr -le $endfhr ]
 do
+   typeset -Z2 fhr
    if [ -s $FCSTDIR/fcstdone${fhr}.${shh} -a \
         -s $FCSTDIR/rappost.done${fhr} -a \
         -s $FCSTDIR/rapprdgen.done${fhr} ]
    then
        echo "found $fhr"
-#    else
-#       err_exit "NOT ALL THE DONE FILES EXIST IN $DATA.  WILL NOT REMOVE THE NAM_FCST TMP DIR!"
-    fi
-  let fhr=fhr+1
+   fi
+   let fhr=fhr+1
 done
 
 cat $pgmout
@@ -180,7 +170,9 @@ if [ ${RM_TMPDIR:-YES} = YES ] ; then
   fhr=00
   while [ $fhr -le $endfhr ]
   do
+    typeset -Z2 fhr
     rm -rf $DATA_IN/rap_post_${envir}_${cyc}_f${fhr}
+    rm -rf $DATA_IN/rap_wrfbufr_${envir}_${cyc}_f${fhr}
     rm -rf $DATA_IN/rap_prdgen_${envir}_${cyc}_f${fhr}
     let fhr=fhr+1
   done
@@ -189,5 +181,3 @@ if [ ${RM_TMPDIR:-YES} = YES ] ; then
 fi
 
 date
-
-# if [ $SENDECF = YES ]; then #$SMSBIN/smscomplete; fi

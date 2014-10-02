@@ -22,13 +22,14 @@ export SENDECF=${SENDECF:-YES}
 export NET=${NET:-rap}
 export RUN=${RUN:-rap}
 export model=${model:-rap}
-export model_ver=${model_ver:-v1.0.8}
+export model_ver=${model_ver:-v2.0.0}
 
 ###############################################################
 # This block can be modified for different Production test
 # environment. This is used for operational testings
 ###############################################################
 if [ "$RUN_ENVIR" = prod -a $envir != prod ]; then
+  export SENDDBN=NO
   export jlogfile=${jlogfile:-/com/logs/${envir}/jlogfile}
   export DBNROOT=/nwprod/spa_util/fakedbn
 fi
@@ -37,7 +38,7 @@ fi
 # This block is for Developer's test run:
 # Run config file to get input parameters
 # This config file should define the following variables
-# DATA_IN: Location of working directory, default to /tmpnwprd
+# DATA_IN: Location of working directory, default to /tmpnwprd1
 # SENDECF: If the job is to be running using ECF, default to YES
 # SENDDBN: Set to NO for developers, default to YES
 # COM_IN:  Directory for input files, default to /com/$NET/${envir}
@@ -53,11 +54,6 @@ then
   export DATA_IN=${DATA_IN:-/ptmp/$userid}
 fi
 
-#if [ $SENDECF = YES ]
-#then
-  #$SMSBIN/smsinit $LOADL_STEP_ID
-#fi
-
 export PS4='$SECONDS + '
 date
 
@@ -65,8 +61,7 @@ date
 # obtain unique process id (pid) and make temp directory
 ####################################
 export pid=$$
-export DATA_IN=${DATA_IN:-/tmpnwprd}
-#export DATA=$DATA_IN/rap_process_${envir}_${cyc}
+export DATA_IN=${DATA_IN:-/tmpnwprd1}
 export DATA=$DATA_IN/${job}.${pid}
 rm -rf $DATA
 mkdir -p $DATA
@@ -115,8 +110,6 @@ export utilexec=${utilexec:-/nwprod/util/exec}
 ###############################################################
 sh $utilscript/setup.sh
 
-#export PDY=20121218
-#export PDY=20130222
 ###########################################
 # Run setpdy and initialize PDY variables
 ###########################################
@@ -128,7 +121,6 @@ sh $utilscript/setpdy.sh
 ##############################################
 export COM_IN=${COM_IN:-/com/${NET}/${envir}}
 export COM_OUT=${COM_OUT:-/com/${NET}/${envir}}
-export COM_RAD=${COM_RAD:-/com/hourly/prod}
 
 export COM=${COM:-COM_IN}
 export COMIN=${COMIN:-${COM_IN}/${RUN}.${PDY}}
@@ -136,7 +128,6 @@ export COMOUT=${COMOUT:-${COM_OUT}/${RUN}.${PDY}}
 
 mkdir -m 775 -p $COMOUT 
 
-# export COMRAD=${COMRAD:-/com_p6/hourly/prod}
 export COMRAD=${COMRAD:-/com/hourly/prod}
 ##############################################
 # Define GES directories
@@ -162,8 +153,6 @@ postmsg "$jlogfile" "$msg"
 # Remove the Temporary working directory
 ##############################
 cd $DATA_IN
-if [ ${RM_TMPDIR:-YES} = NO ] ; then rm -rf $DATA ; fi
+if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
 
 date
-
-# if [ $SENDECF = YES ]; then #$SMSBIN/smscomplete; fi

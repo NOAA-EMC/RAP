@@ -13,8 +13,6 @@ set -xa
 #######################################################
 export RUN_ENVIR=${RUN_ENVIR:-prod}
 export SENDECF=${SENDECF:-YES}
-# export envir=prod
-# export model_ver=v1.0.8
 
 ###################################
 # Specify NET and RUN Name and model
@@ -30,13 +28,14 @@ export model=${model:-rap}
 if [ "$RUN_ENVIR" = prod -a $envir != prod ]; then
   export jlogfile=${jlogfile:-/com/logs/${envir}/jlogfile}
   export DBNROOT=/nwprod/spa_util/fakedbn
+  export SENDDBN=NO
 fi
 
 #####################################################################################
 # This block is for Developer's test run:
 # Run config file to get input parameters
 # This config file should define the following variables
-# DATA_IN: Location of working directory, default to /tmpnwprd
+# DATA_IN: Location of working directory, default to /tmpnwprd1
 # SENDECF: If the job is to be running using ECF, default to YES
 # SENDDBN: Set to NO for developers, default to YES
 # COM_IN:  Directory for input files, default to /com/$NET/${envir}
@@ -59,7 +58,7 @@ date
 # obtain unique process id (pid) and make temp directory
 ####################################
 export pid=$$
-export DATA_IN=${DATA_IN:-/tmpnwprd}
+export DATA_IN=${DATA_IN:-/tmpnwprd1}
 export DATA=$DATA_IN/rap_anl_${envir}_${cyc}
 mkdir -p $DATA
 cd $DATA
@@ -90,7 +89,6 @@ export SENDDBN=${SENDDBN:-YES}
 ####################################
 # Specify Execution Areas
 ####################################
-#export HOMErap=${HOMErap:-/nw${envir}/rap.${model_ver}}
 export HOMErap=${HOMErap:-/nw${envir}/${NET}.${model_ver}}
 export EXECrap=${EXECrap:-${HOMErap}/exec}
 export FIXrap=${FIXrap:-${HOMErap}/fix}
@@ -103,12 +101,6 @@ export USHrap=${USHrap:-${HOMErap}/ush}
 export utilscript=${utilscript:-/nwprod/util/ush}
 export utilexec=${utilexec:-/nwprod/util/exec}
 
-#########  Canned DATA test  #################################
-#export PDY=20121218
-#export PDY=20130222
-#export COM_IN=/com_canned/${NET}/${envir}
-#export PREPDIR=/com_canned/rap/${envir}
-#export COMGFS=${COMGFS:-/com_canned/gfs/prod}
 export COM_IN=/com/${NET}/${envir}
 export PREPDIR=/com/rap/${envir}
 export COMGFS=${COMGFS:-/com/gfs/prod}
@@ -156,6 +148,7 @@ env
 ########################################################
 # Execute the script.
 ${RAP_ANALSH:-$HOMErap/scripts/exrap_analysis.sh.ecf}
+export err=$?; err_chk
 ########################################################
 
 cat $pgmout

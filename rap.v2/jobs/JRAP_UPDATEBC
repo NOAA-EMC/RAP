@@ -22,13 +22,13 @@ export SENDECF=${SENDECF:-YES}
 export NET=${NET:-rap}
 export RUN=${RUN:-rap}
 export model=${model:-rap}
-# export model_ver=v1.0.8
 
 ###############################################################
 # This block can be modified for different Production test
 # environment. This is used for operational testings
 ###############################################################
 if [ "$RUN_ENVIR" = prod -a $envir != prod ]; then
+  export SENDDBN=NO
   export jlogfile=${jlogfile:-/com/logs/${envir}/jlogfile}
   export DBNROOT=/nwprod/spa_util/fakedbn
 fi
@@ -37,7 +37,7 @@ fi
 # This block is for Developer's test run:
 # Run config file to get input parameters
 # This config file should define the following variables
-# DATA_IN: Location of working directory, default to /tmpnwprd
+# DATA_IN: Location of working directory, default to /tmpnwprd1
 # SENDECF: If the job is to be running using ECF, default to YES
 # SENDDBN: Set to NO for developers, default to YES
 # COM_IN:  Directory for input files, default to /com/$NET/${envir}
@@ -53,11 +53,6 @@ then
   export DATA_IN=${DATA_IN:-/ptmp/$userid}
 fi
 
-#if [ $SENDECF = YES ]
-#then
-  #$SMSBIN/smsinit $LOADL_STEP_ID
-#fi
-
 export PS4='$SECONDS + '
 date
 
@@ -65,7 +60,7 @@ date
 # obtain unique process id (pid) and make temp directory
 ####################################
 export pid=$$
-export DATA_IN=${DATA_IN:-/tmpnwprd}
+export DATA_IN=${DATA_IN:-/tmpnwprd1}
 export DATA=$DATA_IN/rap_anl_${envir}_${cyc}
 mkdir -p $DATA
 cd $DATA
@@ -108,19 +103,6 @@ export USHrap=${USHrap:-${HOMErap}/ush}
 export utilscript=${utilscript:-/nwprod/util/ush}
 export utilexec=${utilexec:-/nwprod/util/exec}
 
-#########  Canned DATA test  #################################
-#export PDY=20121218
-#export PDY=20130222
-#export COM_IN=/com_canned/${NET}/${envir}
-#export gespath=/nwges_canned/${envir}
-#export COMGFS=${COMGFS:-/com_canned/gfs/prod}
-#export COM_RAD=${COM_RAD:-/com_canned/hourly/prod}
-#export COM_IN=/com_p6/${NET}/${envir}
-#export gespath=/nwges_p6/${envir}
-export COMGFS=${COMGFS:-/com/gfs/prod}
-export COM_RAD=${COM_RAD:-/com/hourly/prod}
-###############################################################
-
 ###############################################################
 # Run setup to initialize working directory and utility scripts
 ###############################################################
@@ -134,11 +116,10 @@ sh $utilscript/setpdy.sh
 ##############################################
 # Define COM directories
 ##############################################
-#export COM_IN=${COM_IN:-/com_p6/${NET}/${envir}}
-#export COM_OUT=${COM_OUT:-/com_p6/${NET}/${envir}}
 export COM_IN=${COM_IN:-/com/${NET}/${envir}}
 export COM_OUT=${COM_OUT:-/com/${NET}/${envir}}
 export COM_RAD=${COM_RAD:-/com/hourly/prod}
+export COMGFS=${COMGFS:-/com/gfs/prod}
 
 export COM=${COM:-${COM_IN}}
 export COMIN=${COMIN:-${COM_IN}/${RUN}.${PDY}}
@@ -176,5 +157,3 @@ cd $DATA_IN
 if [ ${RM_TMPDIR:-NO} = YES ] ; then rm -rf $DATA ; fi
 
 date
-
-#if [ $SENDECF = YES ]; then #$SMSBIN/smscomplete; fi

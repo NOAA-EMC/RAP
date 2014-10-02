@@ -20,7 +20,6 @@ export SENDECF=${SENDECF:-YES}
 export NET=${NET:-rap}
 export RUN=${RUN:-rap}
 export model=${model:-rap}
-#export model_ver=v1.0.8
 
 ###############################################################
 # This block can be modified for different Production test
@@ -28,14 +27,14 @@ export model=${model:-rap}
 ###############################################################
 if [ "$RUN_ENVIR" = prod -a $envir != prod ]; then
   export jlogfile=${jlogfile:-/com/logs/${envir}/jlogfile}
-  export DBNROOT=/com/pmb/wx11xw/fakedbn
+  #export SENDDBN=NO
 fi
 
 #####################################################################################
 # This block is for Developer's test run:
 # Run config file to get input parameters
 # This config file should define the following variables
-# DATA_IN: Location of working directory, default to /tmpnwprd
+# DATA_IN: Location of working directory, default to /tmpnwprd1
 # SENDECF: If the job is to be running using ECF, default to YES
 # SENDDBN: Set to NO for developers, default to YES
 # COM_IN:  Directory for input files, default to /com/$NET/${envir}
@@ -51,11 +50,6 @@ then
   export DATA_IN=${DATA_IN:-/ptmp/$userid}
 fi
 
-#if [ $SENDECF = YES ]
-#then
-  #$SMSBIN/smsinit $LOADL_STEP_ID
-#fi
-
 export PS4='$SECONDS + '
 date
 
@@ -63,7 +57,7 @@ date
 # obtain unique process id (pid) and make temp directory
 ####################################
 export pid=$$
-export DATA_IN=${DATA_IN:-/tmpnwprd}
+export DATA_IN=${DATA_IN:-/tmpnwprd1}
 export DATA=$DATA_IN/${job}.${pid}
 mkdir -p $DATA
 cd $DATA
@@ -105,10 +99,6 @@ export USHrap=${USHrap:-${HOMErap}/ush}
 export utilscript=${utilscript:-/nwprod/util/ush}
 export utilexec=${utilexec:-/nwprod/util/exec}
 
-#export PDY=20121218
-#export PDY=20130222
-#export gespath=/nwges_canned/${envir}
-#export gespath=/nwges/${envir}
 ###############################################################
 # Run setup to initialize working directory and utility scripts
 ###############################################################
@@ -158,8 +148,6 @@ postmsg "$jlogfile" "$msg"
 # Remove the Temporary working directory
 ##############################
 cd $DATA_IN
-#if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
+if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
 
 date
-
-# if [ $SENDECF = YES ]; then #$SMSBIN/smscomplete; fi
