@@ -282,10 +282,9 @@ export pgm=rap_wrfarw
 
 mpirun.lsf ${EXECrap}/$pgm < namelist.input
 export err=$?
+err_chk
 
 cp rsl.out.0000 ${COMOUT}/rap_p.t${cyc}z.rslout
-
-#err_chk
 
 msg="JOB $job FOR RAP_FORECAST HAS COMPLETED NORMALLY"
 postmsg "$jlogfile" "$msg"

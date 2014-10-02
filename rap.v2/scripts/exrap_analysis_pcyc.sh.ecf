@@ -9,6 +9,10 @@
 # 2011-10-01  M Hu / G Manikin / J Zhu
 # 2013-01-10  G Manikin - adapted for WCOSS
 # 2013-05-30  M Hu / G Manikin - use EnKF
+# 2014-09-30  G Manikin - point to look-alike EnKF files that are being made as part
+#                         of the GFS upgrade, as there is insufficient time to test the
+#                         impact of using the new higher-resolution EnKF files 
+#                           
 
 set -x
 
@@ -288,7 +292,7 @@ stampcycle=`date -d "${CYCSTART_TIME}" +%s`
 minHourDiff=100
 loops="06 09"
 for loop in $loops; do
-  for timelist in `ls ${ENKF_FCST}/enkf.*/*/sfg_*_fhr${loop}s_mem080`; do
+  for timelist in `ls ${ENKF_FCST}/enkf.*/*/sfg_*_fhr${loop}s_mem080_t254`; do
     availtime=`basename ${timelist} | cut -d'_' -f2`
     AVAIL_TIME=`echo "${availtime}" | sed 's/\([[:digit:]]\{2\}\)$/ \1/'`
     AVAIL_TIME=`date -d "${AVAIL_TIME}"`
@@ -308,7 +312,7 @@ for loop in $loops; do
     fi
   done
 done
-ls ${ENKF_FCST}/enkf.${EYYYYMMDD}/${EHH}/${enkfcstname}_* > filelist
+ls ${ENKF_FCST}/enkf.${EYYYYMMDD}/${EHH}/${enkfcstname}_*t254 > filelist
 
 nummem=70
 beta1_inv=1.0

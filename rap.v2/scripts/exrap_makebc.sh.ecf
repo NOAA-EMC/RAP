@@ -105,22 +105,22 @@ YYYYMMDDHH=${start_year}-${start_month}-${start_day}_00
 start_gfs_fcst_time=00
 end_gfs_fcst_time=${FCST_LENGTH}
 
-cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2f00 .
-cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2f03 .
-cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2f06 .
-cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2f09 .
-cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2f12 .
-cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2f15 .
-cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2f18 .
-cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2f21 .
-cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2f24 .
-cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2f27 .
-cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2f30 .
-cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2f33 .
-cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2f36 .
+cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2.0p50.f000 .            
+cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2.0p50.f003 .            
+cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2.0p50.f006 .            
+cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2.0p50.f009 .            
+cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2.0p50.f012 .            
+cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2.0p50.f015 .            
+cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2.0p50.f018 .            
+cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2.0p50.f021 .            
+cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2.0p50.f024 .            
+cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2.0p50.f027 .            
+cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2.0p50.f030 .            
+cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2.0p50.f033 .            
+cp ${COMGFS}/gfs.${start_ymd}/gfs.t${start_hour}z.pgrb2.0p50.f036 .
 
-grib_files_temp=`ls -1 gfs.t${start_hour}z.pgrb2f[0-4]? | sort`
-grib_files=`ls -1 gfs.t${start_hour}z.pgrb2f[0-4]? | sort`
+grib_files_temp=`ls -1 gfs.t${start_hour}z.pgrb2.0p50.f0[0-4]? | sort`
+grib_files=`ls -1 gfs.t${start_hour}z.pgrb2.0p50.f0[0-4]? | sort`
 ngribfiles=0
 
 for file in ${grib_files_temp}; do
@@ -250,7 +250,7 @@ export pgm=rap_ungrib
 #. prep_step
 
 $EXECrap/rap_ungrib > ungrib.out
-#export  err=$?;err_chk
+export  err=$?;err_chk
 
 rm SST
 ln -s sst:${YYYYMMDDHH}  SST
@@ -463,7 +463,7 @@ fi
 
 # Run metgrid
 mpirun.lsf ${EXECrap}/rap_metgrid > metgrid.out
-#export err=$?; err_chk
+export err=$?; err_chk
 
 echo "metgrid completed successfully at `${DATE}`"
 

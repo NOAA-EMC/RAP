@@ -68,7 +68,7 @@ timeformold=${oyr}"-"${omn}"-"${ody}"_"${ohr}":00:00"
 # already have the wrfout file copied in as wrfoutd01
 cp ${FCSTDIR}/wrfout_d01_${timeform} wrfoutd01_${timeform}
 if [ $fhr -eq 0 ]; then
-cp ${RAPGES_SFC}/wrfoutd01_${ohr} wrfoutd01_${timeformold} 
+cp ${RAPGES_SFC}/wrfout_d01_${ohr} wrfoutd01_${timeformold} 
 else
 cp ${FCSTDIR}/wrfout_d01_${timeformold} wrfoutd01_${timeformold} 
 fi
@@ -78,7 +78,7 @@ time_analysis='00'
 
 # use pre-DFI file for 00-hr data
 if [ ${fhr} -eq ${time_analysis} ]; then
-  fcstfile=${FCSTDIR}/wrfoutd01
+  fcstfile=${POSTDIR}/wrfoutd01
   cp $fcstfile .
   OUTFIL=wrfoutd01
 else

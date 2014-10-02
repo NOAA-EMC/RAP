@@ -146,7 +146,7 @@ EOF
   mv WRFPRS.GrbF* $COMOUT/rap.${cycle}.wrfprs${fhr}.tm00
   echo done >$FCSTDIR/rappost.done${fhr}
 
-# use post-DFI analysis file to generate extra analysis for EMC 
+# use post-DFI analysis file to generate extra analyses for EMC 
 #   initialization applications
 if [ ${fhr} -eq ${time_analysis} ]; then
   rm wrfoutd01
@@ -177,6 +177,7 @@ ln -s ./griddef.out fort.110
   err=$?;export err ;err_chk
 
   mv WRFPRS.GrbF* $COMOUT/rap.${cycle}.wrfprsdf${fhr}.tm00
+  mv WRFNAT.GrbF* $COMOUT/rap.${cycle}.wrfnatdf${fhr}.tm00
 fi
 
 postmsg $jlogfile "RAP POST done for F${fhr}"

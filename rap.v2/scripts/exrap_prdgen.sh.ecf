@@ -169,6 +169,28 @@ ${EXECrap}/rap_prdgen > prdgen.dfiout${fhr}
 export err=$?;
 err_chk
 cp rap.AWIP32DFI${fhr} $COMOUT/rap.t${cyc}z.awip32f${fhr}df
+
+#13 km native
+cp ${COMIN}/rap.t${cyc}z.wrfnatdf${fhr}.tm00 EGDAWP${fhr}.tm00
+cat >input5${fhr}.prd <<EOF5
+EGDAWP${fhr}.tm00
+$fhr
+EOF5
+
+rm -f fort.*
+ln -sf ${PARMrap}/rap_master2dfi.ctl    fort.10
+ln -sf $FIXrap/rap_wgt_130  fort.21
+ln -sf input5${fhr}.prd      fort.621
+
+${EXECrap}/rap_prdgen > prdgen.dfi2out${fhr}
+export err=$?;
+err_chk
+cp rap.AWP130DFI${fhr} $COMOUT/rap.t${cyc}z.awp130bgrbf${fhr}df 
+
+ if [ $SENDDBN = YES ]; then
+   $DBNROOT/bin/dbn_alert MODEL RAP_ANL_RADAR $job $COMOUT/rap.t${cyc}z.awp130bgrbf${fhr}df
+ fi
+
 fi
 
 echo "End of product generator section"
