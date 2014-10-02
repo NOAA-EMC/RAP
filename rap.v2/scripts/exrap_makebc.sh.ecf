@@ -124,7 +124,7 @@ grib_files=`ls -1 gfs.t${start_hour}z.pgrb2.0p50.f0[0-4]? | sort`
 ngribfiles=0
 
 for file in ${grib_files_temp}; do
-    file_time=`echo ${file} | cut -c46-47`
+    file_time=`echo ${file} | cut -c23-24`
     if [[ "${file_time}" -ge "${start_gfs_fcst_time}" ]]; then
     if [[ "${file_time}" -le "${end_gfs_fcst_time}" ]]; then
         gribfiles[${ngribfiles}]=${file}
