@@ -124,7 +124,7 @@
       real(r_kind),dimension(im,jsta:jend):: tb1,tb2,tb3,tb4
       real(r_kind),allocatable :: tb(:,:,:)
       real,dimension(im,jm):: grid1,grid2
-      real sun_zenith,sun_azimuth, dpovg
+      real sun_zenith,sun_azimuth, dpovg,sun_zenith_rad
       real sat_zenith
       real q_conv   !bsf
       real,parameter:: constoz = 604229.0_r_kind 
@@ -205,12 +205,13 @@
 ! Initialize ozone to zeros for WRF NMM and ARW for now
        if (MODELNAME == 'NMM' .OR. MODELNAME == 'NCAR' .OR. MODELNAME == 'RAPR')o3=0.0
 ! Compute solar zenith angle for GFS
-       if (MODELNAME /= 'NMM')then
+       if (MODELNAME == 'GFS')then
         jdn=iw3jdn(idat(3),idat(1),idat(2))
 	do j=jsta,jend
 	 do i=1,im
 	  call zensun(jdn,float(idat(4)),gdlat(i,j),gdlon(i,j)       &
      &	    ,pi,sun_zenith,sun_azimuth)
+          sun_zenith_rad=sun_zenith/rtd
           czen(i,j)=cos(sun_zenith)
 	 end do
 	end do
