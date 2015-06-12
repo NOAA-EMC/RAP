@@ -1,0 +1,43 @@
+# makefile for nssl_porcess
+#! /bin/sh -v
+
+# Define the fortran compiler and options
+
+WRFPATH    = /nwprod2/wrf_shared.v1.1.1/
+FC       = mpfort -g -traceback
+CPP      = /lib/cpp -P
+ARCH     =
+CPPFLAGS =  -DLINUX -Dfunder -DFortranByte=char -DFortranInt=int -DFortranLlong='long long' -D_UNDERSCORE
+NWPLIBS =/nwprod2/lib -lbufr_d_64
+
+INCLD=  -I${NETCDF}/include
+LIBS =  -L${NWPLIBS} \
+        $(WRFPATH)/external/io_int/libwrfio_int.a $(WRFPATH)/frame/module_machine.o \
+        ${WRFPATH}/frame/pack_utils.o \
+        -L${NETCDF}/lib -lnetcdf
+
+# cio
+OBJS = kinds.o constants.o module_debug.o gridmod_gsi_map_utils.o \
+       misc_definitions_module.o constants_module.o module_map_utils.o \
+       write_bufr_NASALaRC.o process_NASALaRC_cloud.o \
+       netCDFsub.o netCDFsub_geo.o cio.o
+
+all: hrrr_process_cloud
+
+hrrr_process_cloud: ${OBJS}
+	${FC} -o hrrr_process_cloud ${FLAGS} ${OBJS} ${LIBS} 
+
+
+.SUFFIXES : .F90 .f90 .f .c .o
+
+.F90.o :
+	${FC} ${FLAGS} ${INCLD} -c $<
+
+.f90.o :
+	${FC} ${FLAGS} ${INCLD} -c $<
+
+.c.o :
+	${CC} ${CPPFLAGS} -c $<
+
+clean:
+	/bin/rm -f *.o *.exe *.mod hrrr_process_cloud
