@@ -1,0 +1,5 @@
+ &steps
+  miter=2,
+  niter(1)=10,niter(2)=10
+ /     
+

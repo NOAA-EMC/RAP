@@ -1,0 +1,7 @@
+gsdcldana_main.o : gsdcldana_main.f90 gsdcldana_gsimod.o
+gsdcldana_gsimod.o : gsdcldana_gsimod.F90 gsdcldana_gsisub.o
+gsdcldana_gsisub.o : gsdcldana_gsisub.F90 gsdcldana_glbsoi.o gsdcldana_write_all.o
+gsdcldana_write_all.o : gsdcldana_write_all.F90 gsdcldana_regional_io.o
+gsdcldana_glbsoi.o : gsdcldana_glbsoi.f90 gsdcldana_observer.o
+gsdcldana_observer.o : gsdcldana_observer.F90 gsdcldana_read_obs.o
+

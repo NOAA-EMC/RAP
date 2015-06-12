@@ -1,0 +1,35 @@
+#!/bin/csh -f
+
+if ( ! -e configure.gsi ) then
+	echo "Do 'configure' first"
+	exit ( 1 ) 
+endif
+
+if      ( ${#argv} == 0 ) then
+	set names	=	( lib gsi )
+	set NAMES	=	( LIB GSI )
+else
+        echo "*****"
+        echo " "
+	echo "Unrecognized compile target $1."
+        echo " "
+        echo " or just run compile with no target to build everything."
+        echo " "
+        echo "*****"
+        exit(1)
+endif
+
+echo " "
+if ( ${#argv} == 0 ) then
+	echo "**** Compiling GSI and all libs ****"
+else
+	echo "**** No arguments are needed... Compiling GSI and all libs ****"
+endif
+echo " "
+
+mkdir -p ./lib
+mkdir -p ./include
+
+( make -i -f makefile all )
+
+exit(0)

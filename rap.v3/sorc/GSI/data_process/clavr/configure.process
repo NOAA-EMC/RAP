@@ -1,0 +1,15 @@
+
+WRFDIR=/scratch1/portfolios/BMC/wrfruc/mhu/rapid_refresh/trunk/WRFV3.3.1
+FC   = ifort -free 
+CC  = cc
+FLAGS= -O3 -fp-model precise -assume byterecl -fpe0 -g -traceback $(LDFLAGS) -DLINUX ## -convert big_endian
+CPPFLAGS =  -D_UNDERSCORE -DLINUX -Dfunder -DFortranByte=char -DFortranInt=int -DFortranLlong='long long'
+GSILIBS =/scratch1/portfolios/BMC/wrfruc/phofmann/GSI_exps/rh_bias/GSI/lib -lw3_i4r8 -lbacio -lbufr_i4r8
+
+## WRFDIR=/meso/save/wx23mh/rapid_refresh/trunk_r314/WRFV3.2
+## FC  = mpxlf95_r  -qfree=f90
+## CC  = xlc_r
+## FLAGS= -qarch=auto -O3 -qmaxmem=-1 -qfullpath -qdbg -qstrict -q64 -qsmp=noauto
+## CPPFLAGS =  -DFortranByte=char -DFortranInt=int -DFortranLlong='long long' -DIBM4 -DVERBOSE -q64 -C -qfullpath
+## GSILIBS =/nwprod/lib -lw3_4 -lbacio_4
+

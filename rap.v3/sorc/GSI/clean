@@ -1,0 +1,33 @@
+#!/bin/csh -f
+
+set TOUCH = ORIG
+if ( ! -e configure.gsi ) then
+	touch configure.gsi
+	set TOUCH = TOUCH
+endif
+
+set nonomatch
+
+(make -i clean )
+
+
+
+if ( "$1" == '-a' ) then
+	/bin/rm -rf ./netcdf_links
+	( make -i clean >& /dev/null )
+	if ( -e configure.gsi ) then
+		/bin/cp configure.gsi configure.gsi.backup
+		/bin/rm -f configure.gsi
+                /bin/rm -rf ./include
+                /bin/rm -rf ./lib
+	endif
+#	The nuclear option
+	find . -name \*.exe -exec \rm {} \; 
+	find . -name \*.o -exec \rm {} \; 
+	find . -name \*.a -exec \rm {} \; 
+	find . -name \*.mod -exec \rm {} \; 
+endif
+
+if ( ( $TOUCH == TOUCH ) && ( -e configure.gsi ) ) then
+	/bin/rm -f configure.gsi
+endif

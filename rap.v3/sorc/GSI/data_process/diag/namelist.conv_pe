@@ -1,0 +1,8 @@
+ &iosetup
+  dirname='/mnt/lfs0/projects/wrfruc/mhu/RR13V32/DOMAINS/wrfrr13_cycle/2010061612/gsiprd',
+  outfilename='diag_results',
+  numpe=64,
+  nloop=1,3,
+  $iosetup
+ /     
+
