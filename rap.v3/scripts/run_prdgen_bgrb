@@ -1,0 +1,140 @@
+#!/bin/ksh --login
+#
+#BSUB -oo /ptmp/Geoffrey.Manikin/output/rap_prdgentest
+#BSUB -eo /ptmp/Geoffrey.Manikin/output/rap_prdgentest
+#BSUB -J rap_prdgen_f00_02
+#BSUB -n 1
+#BSUB -R span[ptile=1]
+#BSUB -W 00:10
+#BSUB -q "dev"
+#BSUB -x
+#
+#
+# EXPORT list here
+export OMP_NUM_THREADS=1 
+export MP_TASK_AFFINITY=cpu:1
+set -x
+
+export envir=prod
+export RUN_ENVIR=prod
+export cyc=23
+export fhr=01
+export job=rap_prdgen_f00_02
+export group_name=meso
+export PDY=20130320
+
+export DATA=/ptmp/Geoffrey.Manikin/runprdgen
+mkdir $DATA
+rm /ptmp/Geoffrey.Manikin/runprdgen/*
+cd $DATA
+
+export utilexec=${utilexec:-/nwprod/util/exec}
+export ndate=${ndate:-$utilexec/ndate}
+export GRBINDEX=${GRBINDEX:-$utilexec/grbindex}
+export WGRIB=${WGRIB:-$utilexec/wgrib}
+export CNVGRIB=${CNVGRIB:-$utilexec/cnvgrib}
+export WGRIB2=${WGRIB2:-$utilexec/wgrib2}
+
+# Set up some constants
+export HOMErap=${HOMErap:-/meso/save/Geoffrey.Manikin/nwprod/rap.v1.0.9}
+#export HOMErap=${HOMErap:-/nwprod/rap.v1.0.8}
+export PARMrap=${PARMrap:-$HOMErap/parm}
+export FIXrap=${FIXrap:-$HOMErap/fix}
+export EXECrap=${EXECrap:-$HOMErap/exec}
+export ndate=${ndate:-/nwprod/util/exec/ndate}
+export DATA_IN=/tmpnwprd
+#export COMIN=/com/rap/prod/rap.${PDY}
+export COMIN=/ptmp/Geoffrey.Manikin/hold2
+export XLFRTEOPTS="unit_vars=yes"
+
+# Print out times
+START_TIME=$PDY$cyc
+
+echo "   START TIME = ${START_TIME}"
+echo "    fhr = ${fhr}"
+
+POST_TIME=`$ndate +${fhr} $START_TIME`
+YYYY=`echo ${POST_TIME} | cut -c1-4`
+MM=`echo ${POST_TIME} | cut -c5-6`
+DD=`echo ${POST_TIME} | cut -c7-8`
+yy=`echo ${POST_TIME} | cut -c3-4`
+#cyc=`echo ${START_TIME} | cut -c9-10`
+#fhr=${fhr}
+
+let mod=${fhr}%3
+let fhr3=${fhr}-3
+let fhr2=${fhr}-2
+let fhr1=${fhr}-1
+let fhrb=${fhr}+80
+if [ ${fhr} -lt 3 ]; then
+  let fhr3=00
+fi
+
+typeset -Z2 fhr3 fhr2 fhr1 fhrb
+
+COMINPRDG3=$DATA_IN/rap_prdgen_${envir}_${cyc}_f${fhr3}
+COMINPRDG2=$DATA_IN/rap_prdgen_${envir}_${cyc}_f${fhr2}
+COMINPRDG1=$DATA_IN/rap_prdgen_${envir}_${cyc}_f${fhr1}
+COMINPRDG0=$DATA_IN/rap_prdgen_${envir}_${cyc}_f00
+
+echo $fhr3 $fhr2 $mod
+POST_TIME=`$ndate +${fhr} $START_TIME`
+vtime="`$ndate -1 ${START_TIME}`"
+echo vtime = $vtime
+ymdm1=`echo $vtime | cut -c1-8`
+cycm1=`echo $vtime | cut -c9-10`
+export COMIN1=${COM_IN}/rap.${ymdm1}
+echo $COMIN1
+
+vtime="`${ndate} -2 ${START_TIME}`"
+echo vtime = $vtime
+ymdm2=`echo $vtime | cut -c1-8`
+cycm2=`echo $vtime | cut -c9-10`
+export COMIN2=${COM_IN}/rap.${ymdm2}
+echo $COMIN2
+
+vtime="`${ndate} -3 ${START_TIME}`"
+echo vtime = $vtime
+ymdm3=`echo $vtime | cut -c1-8`
+cycm3=`echo $vtime | cut -c9-10`
+export COMIN3=${COM_IN}/rap.${ymdm3}
+
+vtime="`${ndate} -4 ${START_TIME}`"
+echo vtime = $vtime
+ymdm4=`echo $vtime | cut -c1-8`
+cycm4=`echo $vtime | cut -c9-10`
+export COMIN4=${COM_IN}/rap.${ymdm4}
+
+vtime="`${ndate} -5 ${START_TIME}`"
+echo vtime = $vtime
+ymdm5=`echo $vtime | cut -c1-8`
+cycm5=`echo $vtime | cut -c9-10`
+export COMIN5=${COM_IN}/rap.${ymdm5}
+
+# pressure level output
+cp ${COMIN}/rap.t${cyc}z.wrfprs${fhr}.tm00 EGDAWP${fhr}.tm00
+cat >input1${fhr}.prd <<EOF5
+EGDAWP${fhr}.tm00
+$fhr
+EOF5
+
+# native level output
+cp ${COMIN}/rap.t${cyc}z.wrfnat${fhr}.tm00 EGRD3D${fhr}.tm00
+cat >input2${fhr}.prd <<EOF5
+EGRD3D${fhr}.tm00
+$fhr
+EOF5
+
+rm -f fort.*
+ln -sf ${PARMrap}/rap_master2.ctl    fort.10
+ln -sf $FIXrap/rap_wgt_130   fort.21
+ln -sf $FIXrap/rap_wgt_236   fort.22
+ln -sf $FIXrap/rap_wgt_252   fort.23
+ln -sf input2${fhr}.prd      fort.621
+
+${EXECrap}/rap_prdgen > prdgen.bout${fhr}
+
+   cp rap.bgrb13${fhr} rap_${ymdh}f0${fhr} 
+
+echo done > rapprdgen.done${fhr}
+exit

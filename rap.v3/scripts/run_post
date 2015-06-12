@@ -1,0 +1,113 @@
+#!/bin/ksh --login
+#
+#BSUB -oo /ptmpp1/Corey.Guastini/output/rap_posttest
+#BSUB -eo /ptmpp1/Corey.Guastini/output/rap_posttest
+#BSUB -J rap_post_f03_15
+#BSUB -n 16
+#BSUB -R span[ptile=16]
+#BSUB -W 00:10
+#BSUB -q "dev"
+#BSUB -x
+#BSUB -a poe
+#
+#
+# EXPORT list here
+export MP_SHARED_MEMORY=YES
+export MEMORY_AFFINITY=MCM
+
+set -x
+
+export envir=prod
+export RUN_ENVIR=prod
+export cyc=15
+export fhr=03
+export job=rap_post_f03_15
+export group_name=meso
+export PDY=20141212
+
+export DATA=/ptmpp1/Corey.Guastini/runpost
+mkdir $DATA
+cd $DATA
+
+# Set up some constants
+export HOMErap=${HOMErap:-/meso/save/Corey.Guastini/nwprod/rap.v2.0.0}
+export PARMrap=${PARMrap:-$HOMErap/parm}
+export FIXrap=${FIXrap:-$HOMErap/fix}
+export EXECrap=${EXECrap:-$HOMErap/exec}
+export CRTM=${CRTM:-/nwprod/fix/crtm_2.0.5}
+export ndate=${ndate:-/nwprod/util/exec/ndate}
+export FCSTDIR=/ptmpp1/Corey.Guastini/input
+export XLFRTEOPTS="unit_vars=yes"
+
+START_TIME=$PDY$cyc
+echo $START_TIME >STARTTIME
+
+# Set up some constants
+export CORE=RAPR
+export OUTTYP=binarympiio
+export MP_BINDPROC=NO
+
+###############################################################
+
+SPLNUM=47
+SPL=2.,5.,7.,10.,20.,30.\
+,50.,70.,75.,100.,125.,150.,175.,200.,225.\
+,250.,275.,300.,325.,350.,375.,400.,425.,450.\
+,475.,500.,525.,550.,575.,600.,625.,650.\
+,675.,700.,725.,750.,775.,800.,825.,850.\
+,875.,900.,925.,950.,975.,1000.,1013.2
+
+POST_TIME=`$ndate +${fhr} $START_TIME`
+YYYY=`echo ${POST_TIME} | cut -c1-4`
+MM=`echo ${POST_TIME} | cut -c5-6`
+DD=`echo ${POST_TIME} | cut -c7-8`
+HH=`echo ${POST_TIME} | cut -c9-10`
+yy=`echo ${POST_TIME} | cut -c3-4`
+timestr=${YYYY}-${MM}-${DD}_${HH}:00:00
+
+rm -f fort.*
+ln -s ${PARMrap}/rap_cntrl.parm fort.14
+ln -s ./itag fort.19
+ln -s ./griddef.out fort.110
+cp ${PARMrap}/rap_run_ETAMPNEW_DATA eta_micro_lookup.dat
+cp ${PARMrap}/rap_run_ETAMPNEW_DATA eta_micro_lookup.dat
+cp ${CRTM}/SpcCoeff/Big_Endian/imgr_g11.SpcCoeff.bin imgr_g11.SpcCoeff.bin
+cp ${CRTM}/SpcCoeff/Big_Endian/imgr_g12.SpcCoeff.bin imgr_g12.SpcCoeff.bin
+cp ${CRTM}/SpcCoeff/Big_Endian/amsre_aqua.SpcCoeff.bin amsre_aqua.SpcCoeff.bin
+cp ${CRTM}/SpcCoeff/Big_Endian/tmi_trmm.SpcCoeff.bin tmi_trmm.SpcCoeff.bin
+cp ${CRTM}/SpcCoeff/Big_Endian/ssmi_f15.SpcCoeff.bin ssmi_f15.SpcCoeff.bin
+cp ${CRTM}/SpcCoeff/Big_Endian/ssmis_f20.SpcCoeff.bin ssmis_f20.SpcCoeff.bin
+cp ${CRTM}/SpcCoeff/Big_Endian/ssmis_f17.SpcCoeff.bin ssmis_f17.SpcCoeff.bin
+cp ${CRTM}/TauCoeff/Big_Endian/imgr_g11.TauCoeff.bin imgr_g11.TauCoeff.bin
+cp ${CRTM}/TauCoeff/Big_Endian/imgr_g12.TauCoeff.bin imgr_g12.TauCoeff.bin
+cp ${CRTM}/TauCoeff/Big_Endian/amsre_aqua.TauCoeff.bin amsre_aqua.TauCoeff.bin
+cp ${CRTM}/TauCoeff/Big_Endian/tmi_trmm.TauCoeff.bin tmi_trmm.TauCoeff.bin
+cp ${CRTM}/TauCoeff/Big_Endian/ssmi_f15.TauCoeff.bin ssmi_f15.TauCoeff.bin
+cp ${CRTM}/TauCoeff/Big_Endian/ssmis_f20.TauCoeff.bin ssmis_f20.TauCoeff.bin
+cp ${CRTM}/TauCoeff/Big_Endian/ssmis_f17.TauCoeff.bin ssmis_f17.TauCoeff.bin
+cp ${CRTM}/CloudCoeff/Big_Endian/CloudCoeff.bin CloudCoeff.bin
+cp ${CRTM}/AerosolCoeff/Big_Endian/AerosolCoeff.bin AerosolCoeff.bin
+cp ${CRTM}/EmisCoeff/Big_Endian/EmisCoeff.bin EmisCoeff.bin
+
+fcstfile=${FCSTDIR}/wrfout_d01_${timestr}
+cp ${fcstfile} wrfoutd01
+
+cat > itag <<EOF
+wrfoutd01
+binarympiio
+${timestr}
+${CORE}
+${SPLNUM}
+${SPL}
+${VALIDTIMEUNITS}
+EOF
+
+  pgm=rap_wrfpost
+#  export pgm;. prep_step
+
+#  startmsg
+  mpirun.lsf ${EXECrap}/rap_wrfpost >> post.out
+#  err=$?;export err ;err_chk
+
+echo EXITING $0
+exit

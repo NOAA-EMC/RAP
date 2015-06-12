@@ -1,0 +1,111 @@
+#!/bin/ksh --login
+#
+#BSUB -oo /ptmp/Geoffrey.Manikin/output/rap_wrfbufrtest
+#BSUB -eo /ptmp/Geoffrey.Manikin/output/rap_wrfbufrtest
+#BSUB -J rap_post_f03_12
+#BSUB -n 1
+#BSUB -R span[ptile=1]
+#BSUB -W 00:10
+#BSUB -q "dev"
+#BSUB -x
+#BSUB -a poe
+#
+#
+# EXPORT list here
+export MP_SHARED_MEMORY=YES
+export MEMORY_AFFINITY=MCM
+
+set -x
+
+export envir=prod
+export RUN_ENVIR=prod
+export cyc=12
+export fhr=03
+export job=rap_wrfbufr_f03_12
+export group_name=meso
+export PDY=20130814
+
+export DATA=/ptmp/Geoffrey.Manikin/runwrfbufr
+mkdir $DATA
+cd $DATA
+
+# Set up some constants
+export HOMErap=${HOMErap:-/meso/save/Geoffrey.Manikin/nwprod/rap.v2.0.0}
+export PARMrap=${PARMrap:-$HOMErap/parm}
+export FIXrap=${FIXrap:-$HOMErap/fix}
+export EXECrap=${EXECrap:-$HOMErap/exec}
+export ndate=${ndate:-/nwprod/util/exec/ndate}
+export FCSTDIR=/ptmp/Geoffrey.Manikin/rap_fcst_prod_${cyc}
+export XLFRTEOPTS="unit_vars=yes"
+
+START_TIME=$PDY$cyc
+echo $START_TIME >STARTTIME
+
+# Set up some constants
+export CORE=RAPR
+export OUTTYP=binarympiio
+export MP_BINDPROC=NO
+
+# make the profile data for the sounding post
+
+cp ${FIXrap}/rap_profdat .
+OUTTYP=binary
+model=RAPR
+NFILE=1
+INCR=01
+CYCLE1=`/nwprod/util/exec/ndate -1 $START_TIME`
+date=`/nwprod/util/exec/ndate $fhr $START_TIME`
+
+wyr=`echo $date | cut -c1-4`
+wmn=`echo $date | cut -c5-6`
+wdy=`echo $date | cut -c7-8`
+whr=`echo $date | cut -c9-10`
+
+let fhrold="$fhr - 1"
+dateold=`/nwprod/util/exec/ndate $fhrold $START_TIME`
+
+oyr=`echo $dateold | cut -c1-4`
+omn=`echo $dateold | cut -c5-6`
+ody=`echo $dateold | cut -c7-8`
+ohr=`echo $dateold | cut -c9-10`
+
+timeform=${wyr}"-"${wmn}"-"${wdy}"_"${whr}":00:00"
+timeformold=${oyr}"-"${omn}"-"${ody}"_"${ohr}":00:00"
+
+OLDOUTFIL=wrfout_d01_${timeformold}
+
+# use pre-DFI file for 00-hr data
+if [ ${fhr} -eq ${time_analysis} ]; then
+  fcstfile=${FCSTDIR}/wrfinput_d01
+  cp $fcstfile .
+  OUTFIL=wrfinput_d01
+else
+  OUTFIL=wrfout_d01_${timeform}
+fi
+
+cp ${FCSTDIR}/$OUTFIL .
+cp ${FCSTDIR}/$OLDOUTFIL .
+
+cat > itag <<EOF
+$OUTFIL
+$model
+$OUTTYP
+$START_TIME
+$NFILE
+$INCR
+${fhr}
+$OLDOUTFIL
+EOF
+
+ln -s itag              fort.11
+ln -s $DATA/rap_profdat  fort.18
+ln -s $DATA/profilm.c1.tm00 fort.79
+datestr=`date`
+echo about to run program at $datestr
+
+mpirun.lsf ${EXECrap}/rap_wrfbufr  >> wrfbufr.out
+
+mv profilm.c1.tm00 profilm.c1.f${fhr}
+
+echo EXITING $0
+exit

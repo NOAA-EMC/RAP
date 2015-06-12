@@ -1,0 +1,52 @@
+#!/bin/sh
+
+set -x
+
+msg="JOB $job HAS BEGUN"
+postmsg "$jlogfile" "$msg"
+
+cd $DATA
+rm $DATA/poescript
+typeset -Z2 fhr
+
+################################################################
+# Create a script to be poe'd
+#
+#  Note:  The number of scripts to be run MUST match the number
+#  of total_tasks set in the sms script, or the job will fail.
+#
+################################################################
+
+for script in `cat $FIXgempak/rap_meta`
+   do
+     eval "echo $script" >> $DATA/poescript
+done
+
+
+num=`cat $DATA/poescript |wc -l` 
+
+while [ $num -lt $numproc ] ; do
+   echo "hostname" >>poescript
+   num=`expr $num + 1`
+done
+
+chmod 775 $DATA/poescript
+export MP_PGMMODEL=mpmd
+export MP_CMDFILE=$DATA/poescript
+
+# Execute the script.
+
+poe
+
+#####################################################################
+# GOOD RUN
+set +x
+echo "**************JOB RAP_META COMPLETED NORMALLY on the IBM-SP"
+echo "**************JOB RAP_META COMPLETED NORMALLY on the IBM-SP"
+echo "**************JOB RAP_META COMPLETED NORMALLY on the IBM-SP"
+set -x
+#####################################################################
+
+echo EXITING $0
+exit
+#

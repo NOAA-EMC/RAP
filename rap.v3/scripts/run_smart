@@ -1,0 +1,144 @@
+#!/bin/ksh --login
+#
+#BSUB -oo /ptmp/Geoffrey.Manikin/output/rap_smart12z
+#BSUB -eo /ptmp/Geoffrey.Manikin/output/rap_smart12z
+#BSUB -J rap_smart_12
+#BSUB -n 1 
+#BSUB -R span[ptile=1]
+#BSUB -W 00:20
+#BSUB -q dev
+#BSUB -x
+#BSUB -a poe
+#
+set -xa
+
+mkdir -p /ptmp/Geoffrey.Manikin/smarttest2
+rm /ptmp/Geoffrey.Manikin/smarttest2/*
+cd /ptmp/Geoffrey.Manikin/smarttest2
+
+export tmmark=tm00
+export cyc=12
+export fhr=02
+
+export GRBINDEX=${GRBINDEX:-/nwprod/util/exec/grbindex}
+export FIXnam=${FIXnam:-/nwprod/fix}
+export PARMnam=${PARMnam:-/nwprod/parm}
+export COMIN=${COMIN:-/com/rap/prod/rap.20130829/}
+export COMOUT=${COMOUT:-/ptmp/Geoffrey.Manikin/com/rap/prod/rap.20131004}
+export FIXrap=${FIXrap:-/meso/save/Geoffrey.Manikin/nwprod/rap.v2.0.0/fix}
+export PARMrap=${PARMrap:-/meso/save/Geoffrey.Manikin/nwprod/rap.v2.0.0/parm}
+#export EXECrap=${EXECrap:-/nwprod/rap.v2.0.0/exec}
+export EXECrap=${EXECrap:-/meso/save/Geoffrey.Manikin/nwprod/rap.v2.0.0/exec}
+
+cp ${COMIN}/rap.t${cyc}z.wrfnat${fhr}.tm00 WRFNAT${fhr}.tm00
+$GRBINDEX WRFNAT${fhr}.tm00 WRFNAT${fhr}i.tm00
+
+cp ${PARMrap}/rap_mastersmart.ctl master${fhr}.ctl
+cp ${FIXrap}/rap_smarttopoconus2p5.grb TOPONDFDCS
+cp ${FIXrap}/rap_smartmaskconus2p5.grb LANDNDFDCS
+$GRBINDEX TOPONDFDCS TOPONDFDCSI
+$GRBINDEX LANDNDFDCS LANDNDFDCSI
+
+cp ${FIXnam}/nam_smarttopoak3.grb TOPONDFDAK
+cp ${FIXnam}/nam_smartmaskak3.grb LANDNDFDAK
+$GRBINDEX TOPONDFDAK TOPONDFDAKI
+$GRBINDEX LANDNDFDAK LANDNDFDAKI
+
+cp $FIXnam/nam_smarttopopr.grb TOPONDFDPR
+cp $FIXnam/nam_smartmaskpr.grb LANDNDFDPR
+$GRBINDEX TOPONDFDPR TOPONDFDPRI
+$GRBINDEX LANDNDFDPR LANDNDFDPRI
+
+cp ${FIXrap}/rap_smarttopoajn.grb TOPONDFDAJN
+cp ${FIXrap}/rap_smartmaskajn.grb LANDNDFDAJN
+/nwprod/util/exec/grbindex TOPONDFDAJN TOPONDFDAJNI
+/nwprod/util/exec/grbindex LANDNDFDAJN LANDNDFDAJNI
+
+cat >input${fhr}.prd <<EOF5
+WRFNAT${fhr}.tm00
+$fhr
+EOF5
+
+export pgm=rap_prdgen
+ln -sf master${fhr}.ctl         fort.10
+ln -sf ${FIXrap}/rap_wgt_91     fort.21
+ln -sf ${FIXrap}/rap_wgt_187    fort.22
+ln -sf ${FIXrap}/rap_wgt_189    fort.23
+ln -sf ${FIXrap}/rap_wgt_195    fort.24
+ln -sf input${fhr}.prd          fort.621
+${EXECrap}/rap_prdgen > prdgen.out${fhr}
+
+echo 'complete prdgen'
+
+mv rap.NDFDCS${fhr}.tm00 rap.NDFDCSf${fhr}
+$GRBINDEX rap.NDFDCSf${fhr} rap.NDFDCSf${fhr}I
+
+cp /com/date/t${cyc}z DATE
+
+export pgm=rap_smartinit_conus
+
+ln -sf rap.NDFDCSf${fhr}     fort.11
+ln -sf rap.NDFDCSf${fhr}I    fort.12
+ln -sf TOPONDFDCS            fort.46
+ln -sf TOPONDFDCSI           fort.47
+ln -sf LANDNDFDCS            fort.48
+ln -sf LANDNDFDCSI           fort.49
+ln -sf RAPCS${fhr}.tm00      fort.70
+$EXECrap/rap_smartinit_conus <<EOF >> smartinitcs.out${fhr}
+$fhr
+$cyc
+EOF
+cp RAPCS${fhr}.tm00 $COMOUT/rap.t${cyc}z.smartrapconus${fhr}
+
+mv rap.NDFDAK${fhr}.tm00 rap.NDFDAKf${fhr}
+$GRBINDEX rap.NDFDAKf${fhr} rap.NDFDAKf${fhr}I
+
+export pgm=rap_smartinit_ak
+
+ln -sf rap.NDFDAKf${fhr}     fort.11
+ln -sf rap.NDFDAKf${fhr}I    fort.12
+ln -sf TOPONDFDAK            fort.46
+ln -sf TOPONDFDAKI           fort.47
+ln -sf LANDNDFDAK            fort.48
+ln -sf LANDNDFDAKI           fort.49
+ln -sf RAPAK${fhr}.tm00      fort.70
+$EXECrap/rap_smartinit_ak <<EOF >> smartinitiak.out${fhr}
+$fhr
+$cyc
+EOF
+
+cp RAPAK${fhr}.tm00 $COMOUT/rap.t${cyc}z.smartrapak${fhr}
+
+mv rap.NDFDPR${fhr}.tm00 rap.NDFDPRf${fhr}
+$GRBINDEX rap.NDFDPRf${fhr} rap.NDFDPRf${fhr}I
+
+ln -sf rap.NDFDPRf${fhr}     fort.11
+ln -sf rap.NDFDPRf${fhr}I    fort.12
+ln -sf TOPONDFDPR            fort.46
+ln -sf TOPONDFDPRI           fort.47
+ln -sf LANDNDFDPR            fort.48
+ln -sf LANDNDFDPRI           fort.49
+ln -sf RAPPR${fhr}.tm00      fort.70
+$EXECrap/rap_smartinit_pr <<EOF >> smartinitipr.out${fhr}
+$fhr
+$cyc
+EOF
+cp RAPPR${fhr}.tm00 $COMOUT/rap.t${cyc}z.smartrappr${fhr}
+
+mv rap.NDFDAJN${fhr}.tm00 rap.NDFDAJNf${fhr}
+/nwprod/util/exec/grbindex rap.NDFDAJNf${fhr} rap.NDFDAJNf${fhr}I
+
+ln -sf rap.NDFDAJNf${fhr}     fort.11
+ln -sf rap.NDFDAJNf${fhr}I    fort.12
+ln -sf TOPONDFDAJN            fort.46
+ln -sf TOPONDFDAJNI           fort.47
+ln -sf LANDNDFDAJN            fort.48
+ln -sf LANDNDFDAJNI           fort.49
+ln -sf RAPAJN${fhr}.tm00      fort.70 
+$EXECrap/rap_smartinit_ajn <<EOF >> smartinitiajn.out${fhr}
+$fhr
+$cyc
+EOF
+
+cp RAPAJN${fhr}.tm00 $COMOUT/rap.t${cyc}z.smartrapajn${fhr}
+exit

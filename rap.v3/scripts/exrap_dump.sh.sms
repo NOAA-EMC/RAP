@@ -1,0 +1,965 @@
+
+################################################################################
+echo "------------------------------------------------------------------------"
+echo "exrap_dump.sh.sms - Rapid Refresh Full and Partial Cycle Dump processing"
+echo "------------------------------------------------------------------------"
+echo "History: Oct 13 2011 - Original script."
+################################################################################
+
+set -xau
+
+# set some variables if they have not already been set
+
+set +u
+
+# JOB_NUMBER = 1 indicates the prepbufr dump job.
+# JOB_NUMBER = 2 indicates the non-prepbufr dump job.
+# JOB_NUMBER not present indicates dump BOTH prepbufr and non-prepbufr data.
+# ------------------------------------------------------------------------
+# Dump group #1 (non-pb) = 1bamua 1bamub 1bhrs3 1bhrs4 1bmhs
+#                          airsev radwnd lghtng esamua eshrs3 esamub esmhs
+#                          lgycld
+# Dump group #2 (pb) = vadwnd satwnd adpupa
+# Dump group #3 (pb) = proflr rassda sfcshp adpsfc wndsat ascatt
+# Dump group #4 (pb) = msonet gpsipw
+# Dump group #5 (pb) = aircft aircar goesnd
+# Dump group #6 (non-pb) = nexrad
+# Dump group #7 STATUS FILE
+# ------------------------------------------------------------------------
+
+#VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+# The settings below are based on a future change when the DUMP job will dump
+#  only types that go into PREPBUFR and the DUMP2 job will dump only types that
+#  do not go into PREPBUFR.  This will speed up the DUMP + PREP processing.
+# Although the logic is in place to now do this (see below), for now we will
+#  continue to run only a DUMP job which will dump ALL types (no DUMP2 job) -
+#  since JOB_NUMBER is not imported to this script, the logic below will dump
+#  all types ...
+# -----------------------------------------------------------------------------
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+if [ -n "$JOB_NUMBER" ]; then
+set -u
+   if [ $JOB_NUMBER = 2 ]; then
+      dump_ind=DUMP2
+      DUMP_group1=${DUMP_group1:-"YES"}
+      DUMP_group2=${DUMP_group2:-"NO"}
+      DUMP_group3=${DUMP_group3:-"NO"}
+      DUMP_group4=${DUMP_group4:-"NO"}
+      DUMP_group5=${DUMP_group5:-"NO"}
+      DUMP_group6=${DUMP_group6:-"YES"}
+   else
+      dump_ind=DUMP
+      DUMP_group1=${DUMP_group1:-"NO"}
+      DUMP_group2=${DUMP_group2:-"YES"}
+      DUMP_group3=${DUMP_group3:-"YES"}
+      DUMP_group4=${DUMP_group4:-"YES"}
+      DUMP_group5=${DUMP_group5:-"YES"}
+      DUMP_group6=${DUMP_group6:-"NO"}
+   fi
+else
+   dump_ind=DUMP
+   DUMP_group1=${DUMP_group1:-"YES"}
+   DUMP_group2=${DUMP_group2:-"YES"}
+   DUMP_group3=${DUMP_group3:-"YES"}
+   DUMP_group4=${DUMP_group4:-"YES"}
+   DUMP_group5=${DUMP_group5:-"YES"}
+   DUMP_group6=${DUMP_group6:-"YES"}
+fi
+
+
+# send extra output of DUMP2 for monitoring purposes.
+set +u
+if [ -n "$JOB_NUMBER" ]; then
+   [ $JOB_NUMBER = 2 ]  && export PS4='$SECONDS + '
+fi
+set -u
+
+# Make sure we are in the $DATA directory
+cd $DATA
+
+msg="HAS BEGUN on `hostname`"
+$DATA/postmsg "$jlogfile" "$msg"
+ 
+cat break > $pgmout
+
+export dumptime=`cut -c7-16 ncepdate`
+
+RUN_uc=$(echo $RUN | tr [a-z] [A-Z])
+tmmark_uc=$(echo $tmmark | tr [a-z] [A-Z])
+
+msg="$RUN_uc ANALYSIS TIME IS $PDY$cyc"
+$DATA/postmsg "$jlogfile" "$msg"
+
+set +x
+echo
+echo "CENTER DATA DUMP DATE-TIME FOR $tmmark_uc $RUN_uc IS $dumptime"
+echo
+set -x
+ 
+export COMSP=$COMOUT/$RUN.${cycle}.
+ 
+if [ "$PROCESS_GRIBFLDS" = 'YES' ]; then
+
+###################################
+#  copy imssnow from $TANK_GRIBFLDS
+###################################
+
+   imssnow=$TANK_GRIBFLDS/$PDY/wgrbbul/imssnow96.grb
+   imssold=$TANK_GRIBFLDS/$PDYm1/wgrbbul/imssnow96.grb
+
+   if [ -s $imssnow ]; then
+      cp $imssnow ${COMSP}imssnow
+      msg="todays IMS snow grib file located and copied to /com"
+      $DATA/postmsg "$jlogfile" "$msg"
+   elif [ -s $imssold ]; then
+      cp $imssold ${COMSP}imssnow
+      msg="**todays IMS snow grib file not located - copy 1-day old file"
+      $DATA/postmsg "$jlogfile" "$msg"
+   else
+      set +x
+      echo " "
+      echo " ##########################################"
+      echo " cannot locate IMS snow grib file "
+      echo " ##########################################"
+      echo " "
+      set -x
+      echo "no imssnow data availble for RAP" | mail geoffrey.manikin@noaa.gov
+      msg="**CANNOT LOCATE IMS SNOW GRIB FILE"
+      $DATA/postmsg "$jlogfile" "$msg"
+   fi
+
+#  endif loop $PROCESS_GRIBFLDS
+fi
+
+
+echo "=======> Dump group 1 (thread_1) not executed." > $DATA/1.out
+echo "=======> Dump group 2 (thread_2) not executed." > $DATA/2.out
+echo "=======> Dump group 3 (thread_3) not executed." > $DATA/3.out
+echo "=======> Dump group 4 (thread_4) not executed." > $DATA/4.out
+echo "=======> Dump group 5 (thread_5) not executed." > $DATA/5.out
+echo "=======> Dump group 6 (thread_6) not executed." > $DATA/6.out
+
+err1=0
+err2=0
+err3=0
+err4=0
+err5=0
+err6=0
+if [ "$PROCESS_DUMP" = 'YES' ]; then
+
+##################################
+##################################
+#  The data "dump" script for TM00
+##################################
+##################################
+
+msg="START THE $tmmark_uc $RUN_uc DATA $dump_ind CENTERED ON $dumptime"
+$DATA/postmsg "$jlogfile" "$msg"
+
+#----------------------------------------------------------------
+cat<<\EOF>thread_1; chmod +x thread_1
+set -uax
+
+cd $DATA
+
+{ echo
+set +x
+echo "********************************************************************"
+echo Script thread_1
+echo Executing on node  `hostname`
+echo Starting time: `date`
+echo "********************************************************************"
+echo
+set -x
+
+export STATUS=NO
+export DUMP_NUMBER=1
+
+#==========================================================================
+# Dump # 1 : 1BAMUA, 1BAMUB, 1BMHS,  1BHRS3, 1BHRS4, AIRSEV, RADWND, LGHTNG
+#              (1)     (1)    (1)      (1)     (1)     (1)     (2)     (2)
+#            ESAMUA, ESHRS3, ESAMUB, ESMHS,  LGYCLD
+#              (1)     (1)     (1)     (1)     (1)
+#             TOTAL NUMBER OF SUBTYPES = 15
+#=========================================================================
+ 
+# Time window -0.50 to +0.50 hours for LGHTNG for full and partial cycle runs
+DTIM_earliest_lghtng=${DTIM_earliest_lghtng:-"-0.50"}
+DTIM_latest_lghtng=${DTIM_latest_lghtng:-"+0.50"}
+
+# Time window -0.50 to +0.50 hours for LGYCLD for full and partial cycle runs
+DTIM_earliest_lgycld=${DTIM_earliest_lgycld:-"-0.50"}
+DTIM_latest_lgycld=${DTIM_latest_lgycld:-"+0.50"}
+
+if [ "$RUN" = 'rap_p' ]; then
+
+#  ===> For RUN = rap_p -- partial cycle runs
+#       -------------------------------------
+
+   def_time_window_1=1.0 # default time window for dump 1 is -1.0 to +1.0 hours
+
+# Time window is -1.00 to +0.99 hours for 1BAMUA, 1BAMUB, 1BMHS, 1BHRS3, 1BHRS4
+#  (note: time window increased over +/- 0.5 hr standard to get more data)
+   DTIM_latest_1bamua=${DTIM_latest_1bamua:-"+0.99"}      # earliest is default
+     DTIM_latest_1bamub=${DTIM_latest_1bamub:-"+0.99"}    # earliest is default
+   DTIM_latest_1bmhs=${DTIM_latest_1bmhs:-"+0.99"}        # earliest is default
+     DTIM_latest_1bhrs3=${DTIM_latest_1bhrs3:-"+0.99"}    # earliest is default
+   DTIM_latest_1bhrs4=${DTIM_latest_1bhrs4:-"+0.99"}      # earliest is default
+
+# Time window is -1.00 to +0.99 hours for AIRSEV
+#  (note: time window increased over +/- 0.5 hr standard to get more data)
+   DTIM_latest_airsev=${DTIM_latest_airsev:-"+0.99"}      # earliest is default
+
+# Time window is -0.75 to +0.75 hours for RADWND
+#  (note: time window increased over +/- 0.5 hr standard because BUFR subsets
+#         can be split into 500 "level" pieces each 1-min later to avoid being
+#         tossed by duplicate check DUPRAD)
+   DTIM_earliest_radwnd=${DTIM_earliest_radwnd:-"-0.75"}
+   DTIM_latest_radwnd=${DTIM_latest_radwnd:-"+0.75"}
+
+# Time window is -0.50 to +0.49 hours for ESAMUA, ESHRS3, ESAMUB, ESMHS
+   DTIM_earliest_esamua=${DTIM_earliest_esamua:-"-0.50"}
+   DTIM_latest_esamua=${DTIM_latest_esamua:-"+0.49"}
+     DTIM_earliest_eshrs3=${DTIM_earliest_eshrs3:-"-0.50"}
+     DTIM_latest_eshrs3=${DTIM_latest_eshrs3:-"+0.49"}
+   DTIM_earliest_esamub=${DTIM_earliest_esamub:-"-0.50"}
+   DTIM_latest_esamub=${DTIM_latest_esamub:-"+0.49"}
+     DTIM_earliest_esmhs=${DTIM_earliest_esmhs:-"-0.50"}
+     DTIM_latest_esmhs=${DTIM_latest_esmhs:-"+0.49"}
+
+else
+
+#  ===> For RUN = rap -- full cycle runs
+#       --------------------------------
+
+   def_time_window_1=3.0 # default time window for dump 1 is -3.0 to +3.0 hours
+
+# Time window is -3.00 to +2.99 hours for 1BAMUA, 1BAMUB, 1BMHS, 1BHRS3, 1BHRS4
+#  (note: time window increased over +/- 0.5 hr standard to get more data)
+   DTIM_latest_1bamua=${DTIM_latest_1bamua:-"+2.99"}      # earliest is default
+     DTIM_latest_1bamub=${DTIM_latest_1bamub:-"+2.99"}    # earliest is default
+   DTIM_latest_1bmhs=${DTIM_latest_1bmhs:-"+2.99"}        # earliest is default
+     DTIM_latest_1bhrs3=${DTIM_latest_1bhrs3:-"+2.99"}    # earliest is default
+   DTIM_latest_1bhrs4=${DTIM_latest_1bhrs4:-"+2.99"}      # earliest is default
+
+# Time window is -3.00 to +2.99 hours for AIRSEV
+#  (note: time window increased over +/- 0.5 hr standard to get more data)
+   DTIM_latest_airsev=${DTIM_latest_airsev:-"+2.99"}      # earliest is default
+
+# Time window is -1.00 to +1.00 hours for RADWND
+#  (note: time window increased over +/- 0.75 hr standard to get more data)
+   DTIM_earliest_radwnd=${DTIM_earliest_radwnd:-"-1.00"}
+   DTIM_latest_radwnd=${DTIM_latest_radwnd:-"+1.00"}
+
+# Time window is -1.00 to +1.00 hours for ESAMUA, ESHRS3, ESAMUB, ESMHS
+#  (note: time window increased over +/- 0.5 hr standard to get more data)
+   DTIM_earliest_esamua=${DTIM_earliest_esamua:-"-1.00"}
+   DTIM_latest_esamua=${DTIM_latest_esamua:-"+1.00"}
+     DTIM_earliest_eshrs3=${DTIM_earliest_eshrs3:-"-1.00"}
+     DTIM_latest_eshrs3=${DTIM_latest_eshrs3:-"+1.00"}
+   DTIM_earliest_esamub=${DTIM_earliest_esamub:-"-1.00"}
+   DTIM_latest_esamub=${DTIM_latest_esamub:-"+1.00"}
+     DTIM_earliest_esmhs=${DTIM_earliest_esmhs:-"-1.00"}
+     DTIM_latest_esmhs=${DTIM_latest_esmhs:-"+1.00"}
+
+fi
+
+$ushscript_dump/bufr_dump_obs.sh $dumptime ${def_time_window_1} 1 1bamua \
+ 1bamub 1bmhs 1bhrs3 1bhrs4 airsev radwnd lghtng esamua eshrs3 esamub esmhs \
+ lgycld
+error1=$?
+echo "$error1" > $DATA/error1
+
+set +x
+echo "********************************************************************"
+echo Script thread_1
+echo Finished executing on node  `hostname`
+echo Ending time  : `date`
+echo "********************************************************************"
+set -x
+} > $DATA/1.out 2>&1
+EOF
+
+#----------------------------------------------------------------
+cat<<\EOF>thread_2; chmod +x thread_2
+set -uax
+
+cd $DATA
+
+{ echo
+set +x
+echo "********************************************************************"
+echo Script thread_2
+echo Executing on node  `hostname`
+echo Starting time: `date`
+echo "********************************************************************"
+echo
+set -x
+
+export STATUS=NO
+export DUMP_NUMBER=2
+
+#==========================================================================
+# Dump # 2 : VADWND, SATWND, ADPUPA
+#              (1)    (11)     (6)
+#            -- TOTAL NUMBER OF SUBTYPES = 18
+#==========================================================================
+
+# Skip all Indian satellite winds in SATWND (not in domain)
+
+export SKIP_005021=YES
+export SKIP_005022=YES
+export SKIP_005023=YES
+
+# Time window -1.00 to +1.00 hours for ADPUPA for full and partial cycle runs
+#  (note: time window increased over +/- 0.5 hr standard to get more data)
+DTIM_earliest_adpupa=${DTIM_earliest_adpupa:-"-1.00"}
+DTIM_latest_adpupa=${DTIM_latest_adpupa:-"+1.00"}
+
+# Time window -1.50 to +1.49 hours for EUMETSAT SATWND for full and partial
+#  cycle runs
+#  (note: SATWND needs at least 1.25-hr window radius because some report times
+#         can be cycle time minus 1:15)
+DTIM_earliest_005064=${DTIM_earliest_005064:-"-1.50"}
+DTIM_latest_005064=${DTIM_latest_005064:-"+1.49"}
+  DTIM_earliest_005065=${DTIM_earliest_005065:-"-1.50"}
+  DTIM_latest_005065=${DTIM_latest_005065:-"+1.49"}
+DTIM_earliest_005066=${DTIM_earliest_005066:-"-1.50"}
+DTIM_latest_005066=${DTIM_latest_005066:-"+1.49"}
+
+if [ "$RUN" = 'rap_p' ]; then
+
+#  ===> For RUN = rap_p -- partial cycle runs
+#       -------------------------------------
+
+   def_time_window_2=1.5 # default time window for dump 2 is -1.5 to +1.5 hours
+
+# Time window is -0.50 to +0.50 hours for VADWND
+   DTIM_earliest_vadwnd=${DTIM_earliest_vadwnd:-"-0.50"}
+   DTIM_latest_vadwnd=${DTIM_latest_vadwnd:-"+0.50"}
+
+# Time window is -1.50 to +1.50 hours for NON-EUMETSAT SATWND (default)
+#  (note: SATWND needs at least 1.25-hr window radius because some report times
+#         can be cycle time minus 1:15)
+
+
+else
+
+#  ===> For RUN = rap -- full cycle runs
+#       --------------------------------
+
+   if [ $cyc -eq 00 -o $cyc -eq 12 ]; then
+      def_time_window_2=1.5  # default time window for dump 2 is -1.5 to +1.5
+                             # hours for 00 or 12z
+   else
+      def_time_window_2=2.5  # default time window for dump 2 is -2.5 to +2.5
+                             # hours for all other cycles
+   fi
+
+# Time window is -1.00 to +1.00 hours for VADWND
+#  (note: time window increased over +/- 0.5 hr standard to get more data)
+   DTIM_earliest_vadwnd=${DTIM_earliest_vadwnd:-"-1.00"}
+   DTIM_latest_vadwnd=${DTIM_latest_vadwnd:-"+1.00"}
+
+# Time window is -1.50 to +1.50 hours for NON-EUMETSAT SATWND at 00 or 12z
+#  (default)
+#  (note: SATWND needs at least 1.25-hr window radius because some report times
+#         can be cycle time minus 1:15)
+
+# Time window is -2.50 to +2.50 hours for NON-EUMETSAT SATWND at all other
+#  cycles (default)
+#  (note: SATWND needs at least 1.25-hr window radius because some report times
+#         can be cycle time minus 1:15)
+#  (note: time window increased to allow 01, 07, 13, 19Z dumps to get some data)
+
+fi
+
+$ushscript_dump/bufr_dump_obs.sh $dumptime ${def_time_window_2} 1 vadwnd \
+ satwnd adpupa
+error2=$?
+echo "$error2" > $DATA/error2
+
+set +x
+echo "********************************************************************"
+echo Script thread_2
+echo Finished executing on node  `hostname`
+echo Ending time  : `date`
+echo "********************************************************************"
+set -x
+} > $DATA/2.out 2>&1
+EOF
+
+#----------------------------------------------------------------
+cat<<\EOF>thread_3; chmod +x thread_3
+set -uax
+
+cd $DATA
+
+{ echo
+set +x
+echo "********************************************************************"
+echo Script thread_3
+echo Executing on node  `hostname`
+echo Starting time: `date`
+echo "********************************************************************"
+echo
+set -x
+
+export STATUS=NO
+export DUMP_NUMBER=3
+
+#========================================================================
+# Dump # 3 : PROFLR, RASSDA, SFCSHP, ADPSFC, WNDSAT, ASCATT
+#              (3)     (1)     (5)     (3)     (1)     (1)
+#            -- TOTAL NUMBER OF SUBTYPES = 14
+#========================================================================
+
+# Skip Japanese profiler reports in PROFLR (not in domain)
+
+export SKIP_002013=YES
+
+# Skip mobile synoptic reports in ADPSFC (not in domain)
+
+export SKIP_000002=YES
+
+def_time_window_3=0.5 # default time window for dump 3 is -0.5 to +0.5 hours
+
+# Time window -1.50 to +1.50 hours for PROFLR for full and partial cycle runs
+#  (note: time window increased over +/- 0.5 hr standard to improve
+#         PREPOBS_PROFCQC performance, it will be winnowed back down to
+#         -0.50 to +0.50 hours in output from PREPOBS_PROFCQC)
+DTIM_earliest_proflr=${DTIM_earliest_proflr:-"-1.50"}
+DTIM_latest_proflr=${DTIM_latest_proflr:-"+1.50"}
+
+# Time window -0.50 to +0.50 hours for RASSDA, SFCSHP, ADPSFC for full and
+#  partial cycle runs (default)
+
+if [ "$RUN" = 'rap_p' ]; then
+
+#  ===> For RUN = rap_p -- partial cycle runs
+#       -------------------------------------
+
+# Time window is -0.50 to +0.50 hours for ASCATT, WNDSAT (default)
+
+   dummy=idum  # dummy entry since nothing in this if-block
+
+else
+
+#  ===> For RUN = rap -- full cycle runs
+#       --------------------------------
+
+# Time window is -2.00 to +2.00 hours for ASCATT, WNDSAT
+#  (note: time window increased over +/- 0.5 hr standard to get more data)
+   DTIM_earliest_wndsat=${DTIM_earliest_wndsat:-"-2.00"}
+   DTIM_latest_wndsat=${DTIM_latest_wndsat:-"+2.00"}
+     DTIM_earliest_ascatt=${DTIM_earliest_ascatt:-"-2.00"}
+     DTIM_latest_ascatt=${DTIM_latest_ascatt:-"+2.00"}
+
+fi
+
+$ushscript_dump/bufr_dump_obs.sh $dumptime ${def_time_window_3} 1 proflr \
+ rassda sfcshp adpsfc wndsat ascatt
+error3=$?
+echo "$error3" > $DATA/error3
+
+set +x
+echo "********************************************************************"
+echo Script thread_3
+echo Finished executing on node  `hostname`
+echo Ending time  : `date`
+echo "********************************************************************"
+set -x
+} > $DATA/3.out 2>&1
+EOF
+
+#----------------------------------------------------------------
+cat<<\EOF>thread_4; chmod +x thread_4
+set -uax
+
+cd $DATA
+
+{ echo
+set +x
+echo "********************************************************************"
+echo Script thread_4
+echo Executing on node  `hostname`
+echo Starting time: `date`
+echo "********************************************************************"
+echo
+set -x
+
+export STATUS=NO
+export DUMP_NUMBER=4
+
+#============================================================================
+# Dump # 4 : MSONET, GPSIPW -- TOTAL NUMBER OF SUBTYPES = 31
+#             (30)     (1)
+#============================================================================
+
+def_time_window_4=0.5 # default time window for dump 4 is -0.5 to +0.5 hours
+
+# Time window -1.00 to -0.50 hours for GPSIPW for full and partial cycle runs
+#  (note: GPSIPW uses only xx15 UTC data from 45-min ago; xx45 UTC data are not
+#         as numerous and not as good of quality)
+DTIM_earliest_gpsipw=${DTIM_earliest_gpsipw:-"-1.00"}
+DTIM_latest_gpsipw=${DTIM_latest_gpsipw:-"-0.50"}
+
+# Time window -0.50 to +0.50 hours for MSONET for full and partial cycle runs
+#  (default)
+
+
+$ushscript_dump/bufr_dump_obs.sh $dumptime ${def_time_window_4} 1 msonet gpsipw
+error4=$?
+echo "$error4" > $DATA/error4
+
+set +x
+echo "********************************************************************"
+echo Script thread_4
+echo Finished executing on node  `hostname`
+echo Ending time  : `date`
+echo "********************************************************************"
+set -x
+} > $DATA/4.out 2>&1
+EOF
+#----------------------------------------------------------------
+cat<<\EOF>thread_5; chmod +x thread_5
+set -uax
+
+cd $DATA
+
+{ echo
+set +x
+echo "********************************************************************"
+echo Script thread_5
+echo Executing on node  `hostname`
+echo Starting time: `date`
+echo "********************************************************************"
+echo
+set -x
+
+export STATUS=NO
+export DUMP_NUMBER=5
+
+#===========================================================================
+# Dump # 5 : AIRCFT, AIRCAR, GOESND -- TOTAL NUMBER OF SUBTYPES = 10
+#              (6)     (2)     (2)
+#===========================================================================
+
+export LALO=0  # GLOBAL dumps here (AIRCFT and AIRCAR dumped globally to
+               # improve PREPOBS_PREPACQC track-check performance; GOESND
+               # dumped globally to allow job to run much quicker w/o the need
+               # for geographical filtering (all GOES reports are in expanded
+               # NAM domain anyway)
+
+def_time_window_5=3.25 # default time window for dump 5 is -3.25 to +3.25 hours
+
+
+# Time window -3.25 to +3.25 hours for AIRCFT and AIRCAR for full and partial
+#  cycle runs (default)
+#  {note: time window increased to improve PREPOBS_PREPACQC track-check
+#         performance; time window will be winnowed down to +/- 1.00 hours in
+#         output from PREPOBS_PREPACQC (for full and partial cycle runs), and
+#         geographical domain will be limited to north of 20S latitude)
+
+
+# Time window -1.25 to -0.01 hours for GOESND cloud (only) for full and partial
+#  cycle runs
+#  (note: going back -1.25 hours is necessary to gather a complete set of
+#         GOES-E information, while the cutting off at -0.01 hours avoids a
+#         duplication of GOES-W data from the next input dataset time)
+DTIM_earliest_003002=${DTIM_earliest_003002:-"-1.25"}
+DTIM_latest_003002=${DTIM_latest_003002:-"-0.01"}
+
+if [ "$RUN" = 'rap_p' ]; then
+
+#  ===> For RUN = rap_p -- partial cycle runs
+#       -------------------------------------
+
+# Time window is -0.50 to +0.50 hours for GOESND soundings/radiances (only)
+   DTIM_earliest_003003=${DTIM_earliest_003003:-"-0.50"}
+   DTIM_latest_003003=${DTIM_latest_003003:-"+0.50"}
+
+else
+
+#  ===> For RUN = rap -- full cycle runs
+#       --------------------------------
+
+# Time window is -1.00 to +1.00 hours for GOESND soundings/radiances (only)
+#  (note: time window increased over +/- 0.5 hr standard to get more data)
+   DTIM_earliest_003003=${DTIM_earliest_003003:-"-1.00"}
+   DTIM_latest_003003=${DTIM_latest_003003:-"+1.00"}
+
+fi
+
+$ushscript_dump/bufr_dump_obs.sh $dumptime ${def_time_window_5} 1 aircft \
+ aircar goesnd
+error5=$?
+echo "$error5" > $DATA/error5
+
+set +x
+echo "********************************************************************"
+echo Script thread_5
+echo Finished executing on node  `hostname`
+echo Ending time  : `date`
+echo "********************************************************************"
+set -x
+} > $DATA/5.out 2>&1
+EOF
+
+#----------------------------------------------------------------
+cat<<\EOF>thread_6; chmod +x thread_6
+set -uax
+
+cd $DATA
+
+{ echo
+set +x
+echo "********************************************************************"
+echo Script thread_6
+echo Executing on node  `hostname`
+echo Starting time: `date`
+echo "********************************************************************"
+echo
+set -x
+
+export STATUS=NO
+export DUMP_NUMBER=6
+
+#===========================================================================
+# Dump # 6 : NEXRAD -- TOTAL NUMBER OF SUBTYPES = 4
+#              (4)
+#===========================================================================
+
+export LALO=0  # GLOBAL dumps here (NEXRAD dumped globally to allow job to run
+               # much quicker w/o the need for geographical filtering (all
+               # radar reports are over CONUS anyway)
+
+def_time_window_6=0.5 # default time window for dump 6 is -0.5 to +0.5 hours
+
+# Time window -0.50 to +0.49 hours for NEXRAD for full and partial cycle runs
+DTIM_latest_nexrad=${DTIM_latest_nexrad:-"+0.49"}         # earliest is default
+
+# NEXRAD tanks are hourly
+# Process only those hourly tanks w/i requested dump center cycle time window
+
+SKIP_006010=YES # radial wind  00Z
+SKIP_006011=YES # radial wind  01Z
+SKIP_006012=YES # radial wind  02Z
+SKIP_006013=YES # radial wind  03Z
+SKIP_006014=YES # radial wind  04Z
+SKIP_006015=YES # radial wind  05Z
+SKIP_006016=YES # radial wind  06Z
+SKIP_006017=YES # radial wind  07Z
+SKIP_006018=YES # radial wind  08Z
+SKIP_006019=YES # radial wind  09Z
+SKIP_006020=YES # radial wind  10Z
+SKIP_006021=YES # radial wind  11Z
+SKIP_006022=YES # radial wind  12Z
+SKIP_006023=YES # radial wind  13Z
+SKIP_006024=YES # radial wind  14Z
+SKIP_006025=YES # radial wind  15Z
+SKIP_006026=YES # radial wind  16Z
+SKIP_006027=YES # radial wind  17Z
+SKIP_006028=YES # radial wind  18Z
+SKIP_006029=YES # radial wind  19Z
+SKIP_006030=YES # radial wind  20Z
+SKIP_006031=YES # radial wind  21Z
+SKIP_006032=YES # radial wind  22Z
+SKIP_006033=YES # radial wind  23Z
+
+SKIP_006040=YES # reflectivity 00Z
+SKIP_006041=YES # reflectivity 01Z
+SKIP_006042=YES # reflectivity 02Z
+SKIP_006043=YES # reflectivity 03Z
+SKIP_006044=YES # reflectivity 04Z
+SKIP_006045=YES # reflectivity 05Z
+SKIP_006046=YES # reflectivity 06Z
+SKIP_006047=YES # reflectivity 07Z
+SKIP_006048=YES # reflectivity 08Z
+SKIP_006049=YES # reflectivity 09Z
+SKIP_006050=YES # reflectivity 10Z
+SKIP_006051=YES # reflectivity 11Z
+SKIP_006052=YES # reflectivity 12Z
+SKIP_006053=YES # reflectivity 13Z
+SKIP_006054=YES # reflectivity 14Z
+SKIP_006055=YES # reflectivity 15Z
+SKIP_006056=YES # reflectivity 16Z
+SKIP_006057=YES # reflectivity 17Z
+SKIP_006058=YES # reflectivity 18Z
+SKIP_006059=YES # reflectivity 19Z
+SKIP_006060=YES # reflectivity 20Z
+SKIP_006061=YES # reflectivity 21Z
+SKIP_006062=YES # reflectivity 22Z
+SKIP_006063=YES # reflectivity 23Z
+
+if [ $cyc -eq 00 ]; then   # (23.50 - 00.49 Z)
+   unset SKIP_006033 # radial wind  23Z
+   unset SKIP_006010 # radial wind  00Z
+###unset SKIP_006063 # reflectivity 23Z
+###unset SKIP_006040 # reflectivity 00Z
+elif [ $cyc -eq 01 ]; then   # (00.50 - 01.49 Z)
+   unset SKIP_006010 # radial wind  00Z
+   unset SKIP_006011 # radial wind  01Z
+###unset SKIP_006040 # reflectivity 00Z
+###unset SKIP_006041 # reflectivity 01Z
+elif [ $cyc -eq 02 ]; then   # (01.50 - 02.49 Z)
+   unset SKIP_006011 # radial wind  01Z
+   unset SKIP_006012 # radial wind  02Z
+###unset SKIP_006041 # reflectivity 01Z
+###unset SKIP_006042 # reflectivity 02Z
+elif [ $cyc -eq 03 ]; then   # (02.50 - 03.49 Z)
+   unset SKIP_006012 # radial wind  02Z
+   unset SKIP_006013 # radial wind  03Z
+###unset SKIP_006042 # reflectivity 02Z
+###unset SKIP_006043 # reflectivity 03Z
+elif [ $cyc -eq 04 ]; then   # (03.50 - 04.49 Z)
+   unset SKIP_006013 # radial wind  03Z
+   unset SKIP_006014 # radial wind  04Z
+###unset SKIP_006043 # reflectivity 03Z
+###unset SKIP_006044 # reflectivity 04Z
+elif [ $cyc -eq 05 ]; then   # (04.50 - 05.49 Z)
+   unset SKIP_006014 # radial wind  04Z
+   unset SKIP_006015 # radial wind  05Z
+###unset SKIP_006044 # reflectivity 04Z
+###unset SKIP_006045 # reflectivity 05Z
+elif [ $cyc -eq 06 ]; then   # (05.50 - 06.49 Z)
+   unset SKIP_006015 # radial wind  05Z
+   unset SKIP_006016 # radial wind  06Z
+###unset SKIP_006045 # reflectivity 05Z
+###unset SKIP_006046 # reflectivity 06Z
+elif [ $cyc -eq 07 ]; then   # (06.50 - 07.49 Z)
+   unset SKIP_006016 # radial wind  06Z
+   unset SKIP_006017 # radial wind  07Z
+###unset SKIP_006046 # reflectivity 06Z
+###unset SKIP_006047 # reflectivity 07Z
+elif [ $cyc -eq 08 ]; then   # (07.50 - 08.49 Z)
+   unset SKIP_006017 # radial wind  07Z
+   unset SKIP_006018 # radial wind  08Z
+###unset SKIP_006047 # reflectivity 07Z
+###unset SKIP_006048 # reflectivity 08Z
+elif [ $cyc -eq 09 ]; then   # (08.50 - 09.49 Z)
+   unset SKIP_006018 # radial wind  08Z
+   unset SKIP_006019 # radial wind  09Z
+###unset SKIP_006048 # reflectivity 08Z
+###unset SKIP_006049 # reflectivity 09Z
+elif [ $cyc -eq 10 ]; then   # (09.50 - 10.49 Z)
+   unset SKIP_006019 # radial wind  09Z
+   unset SKIP_006020 # radial wind  10Z
+###unset SKIP_006049 # reflectivity 09Z
+###unset SKIP_006050 # reflectivity 10Z
+elif [ $cyc -eq 11 ]; then   # (10.50 - 11.49 Z)
+   unset SKIP_006020 # radial wind  10Z
+   unset SKIP_006021 # radial wind  11Z
+###unset SKIP_006050 # reflectivity 10Z
+###unset SKIP_006051 # reflectivity 11Z
+elif [ $cyc -eq 12 ]; then   # (11.50 - 12.49 Z)
+   unset SKIP_006021 # radial wind  11Z
+   unset SKIP_006022 # radial wind  12Z
+###unset SKIP_006051 # reflectivity 11Z
+###unset SKIP_006052 # reflectivity 12Z
+elif [ $cyc -eq 13 ]; then   # (12.50 - 13.49 Z)
+   unset SKIP_006022 # radial wind  12Z
+   unset SKIP_006023 # radial wind  13Z
+###unset SKIP_006052 # reflectivity 12Z
+###unset SKIP_006053 # reflectivity 13Z
+elif [ $cyc -eq 14 ]; then   # (13.50 - 14.49 Z)
+   unset SKIP_006023 # radial wind  13Z
+   unset SKIP_006024 # radial wind  14Z
+###unset SKIP_006053 # reflectivity 13Z
+###unset SKIP_006054 # reflectivity 14Z
+elif [ $cyc -eq 15 ]; then   # (14.50 - 15.49 Z)
+   unset SKIP_006024 # radial wind  14Z
+   unset SKIP_006025 # radial wind  15Z
+###unset SKIP_006054 # reflectivity 14Z
+###unset SKIP_006055 # reflectivity 15Z
+elif [ $cyc -eq 16 ]; then   # (15.50 - 16.49 Z)
+   unset SKIP_006025 # radial wind  15Z
+   unset SKIP_006026 # radial wind  16Z
+###unset SKIP_006055 # reflectivity 15Z
+###unset SKIP_006056 # reflectivity 16Z
+elif [ $cyc -eq 17 ]; then   # (16.50 - 17.49 Z)
+   unset SKIP_006026 # radial wind  16Z
+   unset SKIP_006027 # radial wind  17Z
+###unset SKIP_006056 # reflectivity 16Z
+###unset SKIP_006057 # reflectivity 17Z
+elif [ $cyc -eq 18 ]; then   # (17.50 - 18.49 Z)
+   unset SKIP_006027 # radial wind  17Z
+   unset SKIP_006028 # radial wind  18Z
+###unset SKIP_006057 # reflectivity 17Z
+###unset SKIP_006058 # reflectivity 18Z
+elif [ $cyc -eq 19 ]; then   # (18.50 - 19.49 Z)
+   unset SKIP_006028 # radial wind  18Z
+   unset SKIP_006029 # radial wind  19Z
+###unset SKIP_006058 # reflectivity 18Z
+###unset SKIP_006059 # reflectivity 19Z
+elif [ $cyc -eq 20 ]; then   # (19.50 - 20.49 Z)
+   unset SKIP_006029 # radial wind  19Z
+   unset SKIP_006030 # radial wind  20Z
+###unset SKIP_006059 # reflectivity 19Z
+###unset SKIP_006060 # reflectivity 20Z
+elif [ $cyc -eq 21 ]; then   # (20.50 - 21.49 Z)
+   unset SKIP_006030 # radial wind  20Z
+   unset SKIP_006031 # radial wind  21Z
+###unset SKIP_006060 # reflectivity 20Z
+###unset SKIP_006061 # reflectivity 21Z
+elif [ $cyc -eq 22 ]; then   # (21.50 - 22.49 Z)
+   unset SKIP_006031 # radial wind  21Z
+   unset SKIP_006032 # radial wind  22Z
+###unset SKIP_006061 # reflectivity 21Z
+###unset SKIP_006062 # reflectivity 22Z
+elif [ $cyc -eq 23 ]; then   # (22.50 - 23.49 Z)
+   unset SKIP_006032 # radial wind  22Z
+   unset SKIP_006033 # radial wind  23Z
+###unset SKIP_006062 # reflectivity 22Z
+###unset SKIP_006063 # reflectivity 23Z
+fi
+
+$ushscript_dump/bufr_dump_obs.sh $dumptime ${def_time_window_6} 1 nexrad
+error6=$?
+echo "$error6" > $DATA/error6
+
+set +x
+echo "********************************************************************"
+echo Script thread_6
+echo Finished executing on node  `hostname`
+echo Ending time  : `date`
+echo "********************************************************************"
+set -x
+} > $DATA/6.out 2>&1
+EOF
+
+#----------------------------------------------------------------
+
+[ $DUMP_group1 = YES ]  &&  thread_1 &
+[ $DUMP_group2 = YES ]  &&  thread_2 &
+[ $DUMP_group3 = YES ]  &&  thread_3 &
+[ $DUMP_group4 = YES ]  &&  thread_4 &
+[ $DUMP_group5 = YES ]  &&  thread_5 &
+[ $DUMP_group6 = YES ]  &&  thread_6 &
+
+wait
+
+cat $DATA/1.out $DATA/2.out $DATA/3.out $DATA/4.out $DATA/5.out $DATA/6.out
+[ -s $DATA/error1 ] && err1=`cat $DATA/error1`
+[ -s $DATA/error2 ] && err2=`cat $DATA/error2`
+[ -s $DATA/error3 ] && err3=`cat $DATA/error3`
+[ -s $DATA/error4 ] && err4=`cat $DATA/error4`
+[ -s $DATA/error5 ] && err5=`cat $DATA/error5`
+[ -s $DATA/error6 ] && err6=`cat $DATA/error6`
+
+
+#===============================================================================
+
+export STATUS=YES
+export DUMP_NUMBER=7
+$ushscript_dump/bufr_dump_obs.sh $dumptime 3.00 1 null
+
+
+#  endif loop $PROCESS_DUMP
+fi
+
+
+#====================================================
+#====================================================
+
+if [ "$err1" -gt '5' -o "$err2" -gt '5' -o "$err3" -gt '5' -o \
+     "$err4" -gt '5' -o "$err5" -gt '5' -o "$err6" -gt '5' ]; then
+   for n in $err1 $err2 $err3 $err4 $err5 $err6
+   do
+      if [ "$n" -gt '5' ]; then
+         if [ "$n" -ne '11' -a "$n" -ne '22' ]; then
+
+## fatal error in dumping of BUFR obs. files
+
+            set +x
+echo
+echo " ###################################################### "
+echo " --> > 22 RETURN CODE FROM DATA DUMP, $err1, $err2, $err3, $err4, \
+$err5, $err6 "
+echo " --> @@ F A T A L   E R R O R @@   --  ABNORMAL EXIT    "
+echo " ###################################################### "
+echo
+            set -x
+            $DATA/err_exit
+            exit 9
+         fi
+      fi
+   done
+
+## a status code of 11 or 22 from dumping of BUFR obs. files
+## is non-fatal but still worth noting
+
+   set +x
+   echo
+   echo " ###################################################### "
+   echo " --> > 5 RETURN CODE FROM DATA DUMP, $err1, $err2, $err3, $err4, \
+$err5, $err6 "
+   echo " --> NOT ALL DATA DUMP FILES ARE COMPLETE - CONTINUE    "
+   echo " ###################################################### "
+   echo
+   set -x
+fi
+
+grep -q "004.004 in data group aircar for .............-.........\
+.... HAS      0 REPORTS" ${COMSP}status.$tmmark.bufr_d
+err_grep1=$?
+grep -q "004.007 in data group aircar for .............-.........\
+.... HAS      0 REPORTS" ${COMSP}status.$tmmark.bufr_d
+err_grep2=$?
+if [ $err_grep1 -eq 0 -a $err_grep2 -eq 0 ]; then
+   msg="***WARNING: NO ACARS data from either ARINC (004.004) or AFWA \
+(004.007), run assimilation without any ACARS data"
+   $DATA/postmsg "$jlogfile" "$msg"
+fi
+
+if [ $SENDDBN = YES ]; then
+   if [ -s ${COMSP}1bamua.tm00.bufr_d ]; then
+    $DBNROOT/bin/dbn_alert MODEL RAP_BUFR_1bamua $job ${COMSP}1bamua.tm00.bufr_d
+   fi
+   if [ -s ${COMSP}1bamub.tm00.bufr_d ]; then
+    $DBNROOT/bin/dbn_alert MODEL RAP_BUFR_1bamub $job ${COMSP}1bamub.tm00.bufr_d
+   fi
+   if [ -s ${COMSP}1bhrs3.tm00.bufr_d ]; then
+    $DBNROOT/bin/dbn_alert MODEL RAP_BUFR_1bhrs3 $job ${COMSP}1bhrs3.tm00.bufr_d
+   fi
+   if [ -s ${COMSP}1bhrs4.tm00.bufr_d ]; then
+    $DBNROOT/bin/dbn_alert MODEL RAP_BUFR_1bhrs4 $job ${COMSP}1bhrs4.tm00.bufr_d
+   fi
+   if [ -s ${COMSP}1bmhs.tm00.bufr_d ]; then
+    $DBNROOT/bin/dbn_alert MODEL RAP_BUFR_1bmhs $job ${COMSP}1bmhs.tm00.bufr_d
+   fi
+   if [ -s ${COMSP}airsev.tm00.bufr_d ]; then
+    $DBNROOT/bin/dbn_alert MODEL RAP_BUFR_airsev $job ${COMSP}airsev.tm00.bufr_d
+   fi
+   if [ -s ${COMSP}goesnd.tm00.bufr_d ]; then
+    $DBNROOT/bin/dbn_alert MODEL RAP_BUFR_goesnd $job ${COMSP}goesnd.tm00.bufr_d
+   fi
+   if [ -s ${COMSP}radwnd.tm00.bufr_d ]; then
+    $DBNROOT/bin/dbn_alert MODEL RAP_BUFR_radwnd $job ${COMSP}radwnd.tm00.bufr_d
+   fi
+fi
+
+
+# GOOD RUN
+set +x
+echo " "
+echo " ****** PROCESSING COMPLETED NORMALLY"
+echo " ****** PROCESSING COMPLETED NORMALLY"
+echo " ****** PROCESSING COMPLETED NORMALLY"
+echo " ****** PROCESSING COMPLETED NORMALLY"
+echo " "
+set -x
+
+
+# save standard output
+cat break $pgmout break > allout
+cat allout
+# rm allout
+ 
+sleep 10
+
+msg='ENDED NORMALLY.'
+$DATA/postmsg "$jlogfile" "$msg"
+
+################## END OF SCRIPT #######################

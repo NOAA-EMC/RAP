@@ -1,0 +1,95 @@
+#!/bin/ksh -l
+################################################################################
+####  UNIX Script Documentation Block
+#                      .                                             .
+# Script name:         rap_process_cloudlight.sh.sms
+# Script description:  runs Langley cloud processing and lightning processing
+#
+# Author:        Ming Hu / Geoff Manikin   Org: EMC          Date: 2011-08-24
+#
+# Script history log:
+# 2011-08-24  M Hu / G Manikin
+#
+
+set -x
+
+cd $DATA
+
+# Set up some constants
+export HOMErap=${HOMErap:-/meso/save/Corey.Guastini/nwprod/rap.v3.0.0}
+export PARMrap=${PARMrap:-$HOMErap/parm}
+export FIXrap=${FIXrap:-$HOMErap/fix}
+export EXECrap=${EXECrap:-$HOMErap/exec}
+export ndate=${ndate:-/nwprod/util/exec/ndate}
+
+#START_TIME=`cat STARTTIME`
+START_TIME=$PDY$cyc
+echo $START_TIME >STARTTIME
+
+# Compute date & time components for the analysis time
+ymd=`echo ${START_TIME} | cut -c1-8`
+ymdh=`echo ${START_TIME} | cut -c1-10`
+hh=`echo ${START_TIME} | cut -c9-10`
+YYYYJJJHH00=`date +"%Y%j%H00" -d "${ymd} ${hh}"`
+YYYYMMDDHH=`date +"%Y%m%d%H" -d "${ymd} ${hh}"`
+YYYY=`date +"%Y" -d "${ymd} ${hh}"`
+MM=`date +"%m" -d "${ymd} ${hh}"`
+DD=`date +"%d" -d "${ymd} ${hh}"`
+HH=`date +"%H" -d "${ymd} ${hh}"`
+mm=`date +"%M" -d "${ymd} ${hh}"`
+
+cp ${PARMrap}/rap_prepobs.bufrtable  ./prepobs_prep.bufrtable
+cp ${FIXrap}/rap_geo_em.d01.nc ./geo_em.d01.nc
+
+### Process Cloud
+cp $COM_IN/rap.${ymd}/rap.t${cyc}z.lgycld.tm00.bufr_d NASA_LaRC_cloud.bufr 
+#$EXECrap/rap_ssrc < rap.t${cyc}z.lgycld.tm00.bufr_d > NASA_LaRC_cloud.bufr
+
+echo ${ymdh} > ./nasaLaRC_cycle_date
+
+## Run Process Cloud
+export pgm=$EXECrap/rap_process_cloud
+#. prep_step
+
+#startmsg
+#poe $pgm >> $pgmout 2>errfile
+mpirun.lsf $pgm > process_cloud.out
+#export err=$?;err_chk
+
+if [ $SENDCOM = YES ]
+then
+  cp NASALaRCCloudInGSI.bufr $COMOUT/rap.t${cyc}z.nasacloud.bufr
+fi
+
+### Process Lightning
+cp $COM_IN/rap.${ymd}/rap.t${cyc}z.lghtng.tm00.bufr_d ./rap.t${cyc}z.lghtng.tm00.bufr_d
+ln -s rap.t${cyc}z.lghtng.tm00.bufr_d lghtngbufr
+
+echo ${ymdh} > ./lightning_cycle_date
+
+cat << EOF > lightning.namelist
+ &SETUP
+  analysis_time = ${START_TIME},
+  trange_start=-10.0,
+  trange_end=10.0,
+ /
+EOF
+
+## Run Process Lightning
+export pgm=$EXECrap/rap_process_lightning
+
+#startmsg
+#poe $pgm >> $pgmout 2>errfile
+mpirun.lsf $pgm > process_lightning.out
+#export err=$?;err_chk
+
+if [ $SENDCOM = YES ]
+then
+  cp LightningInGSI.bufr $COMOUT/rap.t${cyc}z.lghtng.bufr
+fi
+
+msg="JOB $job FOR RAP_PREP HAS COMPLETED NORMALLY"
+#postmsg "$jlogfile" "$msg"
+
+exit 0
+

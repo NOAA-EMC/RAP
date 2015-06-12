@@ -1,0 +1,106 @@
+#!/bin/ksh --login
+#
+#BSUB -oo /ptmp/Geoffrey.Manikin/output/rap_prdgentest
+#BSUB -eo /ptmp/Geoffrey.Manikin/output/rap_prdgentest
+#BSUB -J rap_prdgen_f00_17
+#BSUB -n 1
+#BSUB -R span[ptile=1]
+#BSUB -W 00:10
+#BSUB -q "dev"
+#BSUB -x
+#
+#
+export OMP_NUM_THREADS=1 
+set -x
+
+export envir=prod
+export RUN_ENVIR=prod
+export cyc=17
+export fhr=00
+export job=rap_prdgen_f00_17
+export group_name=meso
+export PDY=20130319
+
+export DATA=/ptmp/Geoffrey.Manikin/runprdgen
+mkdir $DATA
+rm /ptmp/Geoffrey.Manikin/runprdgen/*
+cd $DATA
+
+export utilexec=${utilexec:-/nwprod/util/exec}
+export ndate=${ndate:-$utilexec/ndate}
+export GRBINDEX=${GRBINDEX:-$utilexec/grbindex}
+export WGRIB=${WGRIB:-$utilexec/wgrib}
+export CNVGRIB=${CNVGRIB:-$utilexec/cnvgrib}
+export WGRIB2=${WGRIB2:-$utilexec/wgrib2}
+
+# Set up some constants
+#export HOMErap=${HOMErap:-/meso/save/Geoffrey.Manikin/nwprod/rap.v1.0.7}
+export HOMErap=${HOMErap:-/nwprod/rap.v1.0.8}
+export PARMrap=${PARMrap:-$HOMErap/parm}
+export FIXrap=${FIXrap:-$HOMErap/fix}
+export EXECrap=${EXECrap:-$HOMErap/exec}
+export ndate=${ndate:-/nwprod/util/exec/ndate}
+export COMIN=/com/rap/prod/rap.${PDY}
+
+# Print out times
+START_TIME=$PDY$cyc
+
+echo "   START TIME = ${START_TIME}"
+echo "    fhr = ${fhr}"
+
+POST_TIME=`$ndate +${fhr} $START_TIME`
+YYYY=`echo ${POST_TIME} | cut -c1-4`
+MM=`echo ${POST_TIME} | cut -c5-6`
+DD=`echo ${POST_TIME} | cut -c7-8`
+yy=`echo ${POST_TIME} | cut -c3-4`
+
+# pressure level output
+cp ${COMIN}/rap.t${cyc}z.wrfprs${fhr}.tm00 EGDAWP${fhr}.tm00
+cat >input1${fhr}.prd <<EOF5
+EGDAWP${fhr}.tm00
+$fhr
+EOF5
+
+rm -f fort.*
+ln -sf ${PARMrap}/rap_master1.ctl    fort.10
+ln -sf $FIXrap/rap_wgt_130   fort.21
+ln -sf $FIXrap/rap_wgt_236   fort.22
+ln -sf $FIXrap/rap_wgt_252   fort.23
+ln -sf input1${fhr}.prd      fort.621
+
+${EXECrap}/rap_prdgen > prdgen.pout${fhr}
+
+# native level output
+cp ${COMIN}/rap.t${cyc}z.wrfnat${fhr}.tm00 EGRD3D${fhr}.tm00
+cat >input2${fhr}.prd <<EOF5
+EGRD3D${fhr}.tm00
+$fhr
+EOF5
+
+rm -f fort.*
+ln -sf ${PARMrap}/rap_master2.ctl    fort.10
+ln -sf $FIXrap/rap_wgt_130   fort.21
+ln -sf $FIXrap/rap_wgt_236   fort.22
+ln -sf $FIXrap/rap_wgt_252   fort.23
+ln -sf input2${fhr}.prd      fort.621
+
+${EXECrap}/rap_prdgen > prdgen.bout${fhr}
+
+# 200 Puerto Rico 221 full domain and 242 AK grids
+
+cat >input3${fhr}.prd <<EOF5
+EGDAWP${fhr}.tm00
+$fhr
+EOF5
+
+rm -f fort.*
+ln -sf ${PARMrap}/rap_master3.ctl    fort.10
+ln -sf $FIXrap/rap_wgt_200   fort.21
+ln -sf $FIXrap/rap_wgt_221   fort.22
+ln -sf $FIXrap/rap_wgt_242   fort.23
+ln -sf input3${fhr}.prd      fort.621
+
+${EXECrap}/rap_prdgen > prdgen.akout${fhr}
+
+echo "End of product generator section"
+exit

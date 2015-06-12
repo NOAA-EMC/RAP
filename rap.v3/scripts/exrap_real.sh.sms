@@ -1,0 +1,34 @@
+#!/bin/ksh -l
+################################################################################
+####  UNIX Script Documentation Block
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+
+set -x
+cd $DATA
+
+##########################################################
+# Run the REAL code to generate the BC and Input files
+##########################################################
+for HH in 00 03 06 09 12
+do 
+   $USHrap/rap_real_wpsdfi_bd.sh $HH
+done
+
+cd $DATA/tar
+tar -cvf rap.t${cyc}z.makebc.tar *
+cp rap.t${cyc}z.makebc.tar $COMOUT/.
+
+msg="JOB $job FOR RAP_MAKEBC HAS COMPLETED NORMALLY"
+postmsg "$jlogfile" "$msg"
+
+exit 0

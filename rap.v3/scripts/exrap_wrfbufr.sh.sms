@@ -1,0 +1,117 @@
+#!/bin/ksh -l
+################################################################################
+####  UNIX Script Documentation Block
+#                      .                                             .
+# Script name:         exrap_wrfbufr.sh
+# Script description:  Run rap wrfbufr jobs
+#
+# Author:      G Manikin / M Hu    EMC/GSD         Date: 2011-09-15
+#
+# Abstract: This script runs the RAP wrfbufr jobs for the 18-h RAP forecast
+#
+# Script history log:
+# 2111-09-15  G Manikin / M Hu  -- new script 
+#
+
+set -xa
+cd $DATA 
+
+msg="$job HAS BEGUN"
+postmsg $jlogfile "$msg"
+
+# fhr is passed from the SMS script
+fhr=$fhr
+
+# Set up some constants
+export HOMErap=${HOMErap:-/meso/save/Corey.Guastini/nwprod/rap.v3.0.0}
+export PARMrap=${PARMrap:-$HOMErap/parm}
+export FIXrap=${FIXrap:-$HOMErap/fix}
+export EXECrap=${EXECrap:-$HOMErap/exec}
+export ndate=${ndate:-/nwprod/util/exec/ndate}
+export XLFRTEOPTS="unit_vars=yes"
+
+export RAPGES_FCYC=${RAPGES_FCYC:-$gespath/rap/rapges}
+export RAPGES_SFC=${RAPGES_SFC:-$gespath/rap/rapges_sfc}
+
+START_TIME=$PDY$cyc
+echo $START_TIME >STARTTIME
+
+# Set up some constants
+export CORE=RAPR
+export OUTTYP=netcdf
+
+cp ${FIXrap}/rap_profdat .
+OUTTYP=netcdf
+model=RAPR
+NFILE=1
+INCR=01
+CYCLE1=`/nwprod/util/exec/ndate -1 $START_TIME`
+date=`/nwprod/util/exec/ndate $fhr $START_TIME`
+
+wyr=`echo $date | cut -c1-4`
+wmn=`echo $date | cut -c5-6`
+wdy=`echo $date | cut -c7-8`
+whr=`echo $date | cut -c9-10`
+
+let fhrold="$fhr - 1"
+dateold=`/nwprod/util/exec/ndate $fhrold $START_TIME`
+
+oyr=`echo $dateold | cut -c1-4`
+omn=`echo $dateold | cut -c5-6`
+ody=`echo $dateold | cut -c7-8`
+ohr=`echo $dateold | cut -c9-10`
+
+timeform=${wyr}"-"${wmn}"-"${wdy}"_"${whr}"_00_00"
+timeformold=${oyr}"-"${omn}"-"${ody}"_"${ohr}"_00_00"
+
+# already have the wrfout file copied in as wrfoutd01
+cp wrfoutd01 wrfoutd01_${timeform}
+if [ $fhr -eq 0 ]; then
+cp ${RAPGES_SFC}/wrfout_d01_${ohr} wrfoutd01_${timeformold} 
+else
+cp ${FCSTDIR}/wrfout_d01_${timeformold} wrfoutd01_${timeformold} 
+fi
+
+OLDOUTFIL=wrfoutd01_${timeformold}
+time_analysis='00'
+
+# use pre-DFI file for 00-hr data
+if [ ${fhr} -eq ${time_analysis} ]; then
+  fcstfile=${FCSTDIR}/wrfinput_d01
+  cp $fcstfile .
+  OUTFIL=wrfinput_d01
+else
+  OUTFIL=wrfoutd01_${timeform}
+  cp ${FCSTDIR}/wrfout_d01_${timeform} .
+fi
+
+cat > itag <<EOF
+$OUTFIL
+$model
+$OUTTYP
+$START_TIME
+$NFILE
+$INCR
+${fhr}
+$OLDOUTFIL
+EOF
+
+ln -s itag              fort.11
+ln -s $DATA/rap_profdat  fort.18
+ln -s $DATA/profilm.c1.tm00 fort.79
+
+#./startmsg
+
+datestr=`date`
+echo about to run program at $datestr
+
+# mpirun.lsf ${EXECrap}/rap_wrfbufr  >> $pgmout 2>errfile
+ mpirun.lsf ${EXECrap}/rap_wrfbufr  >> wrfbufr.out
+
+mv profilm.c1.tm00 profilm.c1.f${fhr}
+
+#echo done >$FCSTDIR/rappost.done${fhr}
+  postmsg $jlogfile "RAP POST done for F${fhr}"
+
+echo EXITING $0
+exit

@@ -1,0 +1,234 @@
+#!/bin/ksh -l
+################################################################################
+####  UNIX Script Documentation Block
+#                      .                                             .
+# Script name:         exrap_post.sh
+# Script description:  Run rap post jobs
+#
+# Author:      G Manikin / M Hu    EMC/GSD         Date: 2011-09-15
+#
+# Abstract: This script runs the RAP post jobs for the 18-h RAP forecast
+#
+# Script history log:
+# 2111-09-15  G Manikin / M Hu  -- new script 
+#
+
+set -xa
+cd $DATA 
+
+msg="$job HAS BEGUN"
+postmsg $jlogfile "$msg"
+
+# fhr is passed from the SMS script
+fhr=$fhr
+
+# Set up some constants
+export HOMErap=${HOMErap:-/meso/save/Corey.Guastini/nwprod/rap.v3.0.0}
+export PARMrap=${PARMrap:-$HOMErap/parm}
+export FIXrap=${FIXrap:-$HOMErap/fix}
+export CRTM=${CRTM:-/nwprod/fix/crtm_2.0.5}
+export EXECrap=${EXECrap:-$HOMErap/exec}
+export ndate=${ndate:-/nwprod/util/exec/ndate}
+export XLFRTEOPTS="unit_vars=yes"
+export WGRIB2=${WGRIB2:-$utilexec/wgrib2}
+export RAPGES_FCYC=${RAPGES_FCYC:-$gespath/rap/rapges}
+export RAPGES_SFC=${RAPGES_SFC:-$gespath/rap/rapges_sfc}
+
+START_TIME=$PDY$cyc
+echo $START_TIME >STARTTIME
+
+# Set up some constants
+export CORE=RAPR
+export OUTTYP=netcdf
+export MP_BINDPROC=NO
+#export LD_PRELOAD=/u/James.A.Abeles/mpi_trace_linux_x86_64/shared/libmpitrace.so
+
+###############################################################
+
+sleep 30
+SPLNUM=47
+SPL=2.,5.,7.,10.,20.,30.\
+,50.,70.,75.,100.,125.,150.,175.,200.,225.\
+,250.,275.,300.,325.,350.,375.,400.,425.,450.\
+,475.,500.,525.,550.,575.,600.,625.,650.\
+,675.,700.,725.,750.,775.,800.,825.,850.\
+,875.,900.,925.,950.,975.,1000.,1013.2
+
+icnt=1
+  while [ $icnt -lt 1000 ]
+  do
+    POST_TIME=`$ndate +${fhr} $START_TIME`
+    YYYY=`echo ${POST_TIME} | cut -c1-4`
+    MM=`echo ${POST_TIME} | cut -c5-6`
+    DD=`echo ${POST_TIME} | cut -c7-8`
+    HH=`echo ${POST_TIME} | cut -c9-10`
+    yy=`echo ${POST_TIME} | cut -c3-4`
+    timestr=${YYYY}-${MM}-${DD}_${HH}:00:00
+    timestr2=${YYYY}-${MM}-${DD}_${HH}_00_00
+
+    if [ -s $FCSTDIR/wrfout_d01_${timestr2} ]
+    then
+      sleep 30
+      break
+    else
+      icnt=$((icnt + 1))
+      sleep 5
+    fi
+    if [ $icnt -ge 180 ]
+    then
+      msg="ABORTING after 15 minutes of waiting for RAP FCST F${fhr} to end."
+      err_exit $msg
+    fi
+  done
+
+# copy wrfout file to guess directory for use by later cycles
+#  cp $FCSTDIR/wrfoutd01_${timestr} ${RAPGES_FCYC}/.
+  cp $FCSTDIR/wrfout_d01_${timestr2} ${RAPGES_FCYC}/rap_${START_TIME}f0${fhr}
+
+##  save files for surface cycle in case of RAP crash
+timeHH=${HH}
+cp ${FCSTDIR}/wrfout_d01_${timestr2} ${RAPGES_SFC}/wrfout_d01_${timeHH}
+fcstfile=${FCSTDIR}/wrfout_d01_${timestr2}
+cp ${fcstfile} wrfoutd01
+
+# use pre-DFI analysis file for posting
+time_analysis='00'
+if [ ${fhr} -eq ${time_analysis} ]; then
+  fcstfile=${FCSTDIR}/wrfinput_d01
+  echo 'use GSI analysis',${fcstfile}
+  cp ${fcstfile} wrfinput_d01
+  cp ${FCSTDIR}/wrfout_analyzed_d01 wrfout_analyzed_d01
+  mpirun.lsf ${EXECrap}/rap_update_fields >> update_fields.out 
+#  ${EXECrap}/rap_update_height >> $pgmout 2> errfile
+  cp wrfinput_d01 wrfoutd01
+  export err=$?; err_chk
+fi
+
+rm -f fort.*
+ln -s ${PARMrap}/rap_cntrl.parm fort.14
+ln -s ./itag fort.19
+ln -s ./griddef.out fort.110
+cp ${PARMrap}/rap_run_ETAMPNEW_DATA eta_micro_lookup.dat
+ln -s ${CRTM}/SpcCoeff/Big_Endian/imgr_g11.SpcCoeff.bin imgr_g11.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/imgr_g12.SpcCoeff.bin imgr_g12.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/imgr_g13.SpcCoeff.bin imgr_g13.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/imgr_g15.SpcCoeff.bin imgr_g15.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/imgr_mt1r.SpcCoeff.bin imgr_mt1r.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/imgr_mt2.SpcCoeff.bin imgr_mt2.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/amsre_aqua.SpcCoeff.bin amsre_aqua.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/tmi_trmm.SpcCoeff.bin tmi_trmm.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/ssmi_f13.SpcCoeff.bin ssmi_f13.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/ssmi_f14.SpcCoeff.bin ssmi_f14.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/ssmi_f15.SpcCoeff.bin ssmi_f15.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/ssmis_f16.SpcCoeff.bin ssmis_f16.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/ssmis_f17.SpcCoeff.bin ssmis_f17.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/ssmis_f18.SpcCoeff.bin ssmis_f18.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/ssmis_f19.SpcCoeff.bin ssmis_f19.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/ssmis_f20.SpcCoeff.bin ssmis_f20.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/seviri_m10.SpcCoeff.bin seviri_m10.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/v.seviri_m10.SpcCoeff.bin v.seviri_m10.SpcCoeff.bin
+ln -s ${FIXrap}/imgr_insat3d.SpcCoeff.bin imgr_insat3d.SpcCoeff.bin
+
+ln -s ${CRTM}/TauCoeff/Big_Endian/imgr_g11.TauCoeff.bin imgr_g11.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/imgr_g12.TauCoeff.bin imgr_g12.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/imgr_g13.TauCoeff.bin imgr_g13.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/imgr_g15.TauCoeff.bin imgr_g15.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/imgr_mt1r.TauCoeff.bin imgr_mt1r.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/imgr_mt2.TauCoeff.bin imgr_mt2.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/amsre_aqua.TauCoeff.bin amsre_aqua.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/tmi_trmm.TauCoeff.bin tmi_trmm.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/ssmi_f13.TauCoeff.bin ssmi_f13.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/ssmi_f14.TauCoeff.bin ssmi_f14.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/ssmi_f15.TauCoeff.bin ssmi_f15.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/ssmis_f16.TauCoeff.bin ssmis_f16.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/ssmis_f17.TauCoeff.bin ssmis_f17.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/ssmis_f18.TauCoeff.bin ssmis_f18.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/ssmis_f19.TauCoeff.bin ssmis_f19.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/ssmis_f20.TauCoeff.bin ssmis_f20.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/seviri_m10.TauCoeff.bin seviri_m10.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/ODAS/Big_Endian/v.seviri_m10.TauCoeff.bin v.seviri_m10.TauCoeff.bin
+ln -s ${FIXrap}/imgr_insat3d.TauCoeff.bin imgr_insat3d.TauCoeff.bin
+
+ln -s ${CRTM}/CloudCoeff/Big_Endian/CloudCoeff.bin CloudCoeff.bin
+ln -s ${CRTM}/AerosolCoeff/Big_Endian/AerosolCoeff.bin AerosolCoeff.bin
+ln -s ${CRTM}/EmisCoeff/Big_Endian/EmisCoeff.bin EmisCoeff.bin
+
+cat > itag <<EOF
+wrfoutd01
+netcdf
+${timestr}
+${CORE}
+${SPLNUM}
+${SPL}
+${VALIDTIMEUNITS}
+EOF
+
+  pgm=rap_wrfpost
+#  export pgm;. prep_step
+
+#  startmsg
+  mpirun.lsf ${EXECrap}/rap_wrfpost >> wrfpost.out 
+#  err=$?;export err ;err_chk
+
+#    mv WRFNAT.GrbF${fhr} $COMOUT/rap.${cycle}.wrfnat${fhr}.tm00
+#    mv WRFPRS.GrbF${fhr} $COMOUT/rap.${cycle}.wrfprs${fhr}.tm00
+
+    mv WRFNAT${fhr}.tm00 $COMOUT/rap.${cycle}.wrfnat${fhr}.tm00
+    mv WRFPRS${fhr}.tm00 $COMOUT/rap.${cycle}.wrfprs${fhr}.tm00
+    $utilexec/copygb -g "130" -x $COMOUT/rap.${cycle}.wrfnat${fhr}.tm00 $COMOUT/rap.${cycle}.awp130bgrbf${fhr}
+    $utilexec/copygb -g "130" -x $COMOUT/rap.${cycle}.wrfprs${fhr}.tm00 $COMOUT/rap.${cycle}.awp130pgrbf${fhr}
+    $utilexec/cnvgrib -g12 $COMOUT/rap.${cycle}.awp130bgrbf${fhr} $COMOUT/rap.${cycle}.awp130bgrbf${fhr}.grib2
+    $WGRIB2 ${COMOUT}/rap.${cycle}.awp130bgrbf${fhr}.grib2 -s >${COMOUT}/rap.${cycle}.awp130bgrbf${fhr}.grib2_idx
+
+# use post-DFI analysis file to generate extra analysis for EMC 
+#   initialization applications
+if [ ${fhr} -eq ${time_analysis} ]; then
+  rm wrfoutd01
+  echo 'use post-DFI file ',${fcstfile}
+  fcstfile=${FCSTDIR}/wrfout_d01_${timestr2}
+  cp ${fcstfile} wrfoutd01
+#  export err=$?; err_chk
+
+rm -f fort.*
+ln -s ${PARMrap}/rap_cntrldfi.parm fort.14
+ln -s ./itag fort.19
+ln -s ./griddef.out fort.110
+
+cat > itag <<EOF
+wrfoutd01
+netcdf
+${timestr}
+${CORE}
+${SPLNUM}
+${SPL}
+${VALIDTIMEUNITS}
+EOF
+
+  pgm=rap_wrfpost
+#  export pgm;. prep_step
+
+#  startmsg
+  mpirun.lsf ${EXECrap}/rap_wrfpost >> wrfpost2.out
+#  err=$?;export err ;err_chk
+
+#    mv WRFPRS.GrbF${fhr} $COMOUT/rap.${cycle}.wrfprs${fhr}.tm00
+    mv WRFPRS${fhr}.tm00 $COMOUT/rap.${cycle}.wrfprsdf${fhr}.tm00
+    mv WRFNAT${fhr}.tm00 $COMOUT/rap.${cycle}.wrfnatdf${fhr}.tm00
+    $utilexec/copygb -g "130" -x $COMOUT/rap.${cycle}.wrfnatdf${fhr}.tm00 $COMOUT/rap.${cycle}.awp130bgrbf${fhr}df
+fi
+
+echo done >$FCSTDIR/rappost.done${fhr}
+bsub < /meso/save/Corey.Guastini/nwprod/rap.v3.0.0/sms/wrfbufr/jrap_wrfbufr_f${fhr}_${cyc}.bsub
+#if [ fhr -eq 00 ]
+    then
+#bsub < /meso/save/Corey.Guastini/nwprod/rap.v3.0.0/sms/prdgen/jrap_prdgen_f${fhr}_${cyc}.bsub
+    else
+#sleep 180
+#bsub < /meso/save/Corey.Guastini/nwprod/rap.v3.0.0/sms/prdgen/jrap_prdgen_f${fhr}_${cyc}.bsub
+#fi
+
+#echo done >$FCSTDIR/rappost.done${fhr}
+  postmsg $jlogfile "RAP POST done for F${fhr}"
+
+echo EXITING $0
+exit
