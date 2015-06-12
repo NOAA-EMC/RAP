@@ -1,0 +1,7 @@
+cc -c -O0 -DLINUX bacio.c
+In file included from bacio.c:21:
+clib.h:14:1: warning: "LINUX" redefined
+<command line>:4:1: warning: this is the location of the previous definition
+ar -ruv   ../libw3.a bacio.o
+a - bacio.o
+rm -f bacio.o
