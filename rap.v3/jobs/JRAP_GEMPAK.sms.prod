@@ -1,0 +1,215 @@
+#!/bin/sh
+
+########################################
+# Runs RAP Postprocessing out to 18 hours
+########################################
+
+$SMSBIN/smsinit $LOADL_STEP_ID 
+
+set -xa
+# #### 08/25/1999 ###################
+# SET SHELL PROCESSING VARIABLES
+# ###################################
+export PS4='$SECONDS + ' 
+date
+# 
+# obtain unique process id (pid) and make temp directories
+#
+export pid=$$
+#export DATA=/tmpnwprd/${job}.${pid}
+export DATA=/ptmp/Corey.Guastini/${job}.${pid}
+mkdir $DATA
+cd $DATA 
+
+####################################
+# File To Log Msgs
+####################################
+export jlogfile=/com/logs/jlogfile
+
+####################################
+# Determine Job Output Name on System
+####################################
+export outid="LL$job"
+export jobid="${outid}.o${pid}"
+export pgmout="OUTPUT.${pid}"
+
+export cycle=t${cyc}z 
+
+export SENDCOM=YES
+export SENDDBN=YES
+export SENDSMS=YES
+
+#
+# Set up model and cycle specific variables
+#
+export NET=rap
+export RUN=rap
+export model_ver=v1.0.7
+export fend=18
+export finc=1
+export fstart=00
+export model=rap
+export EXT=""
+
+#
+# Now set up GEMPAK/NTRANS environment
+#
+. /nwprod/gempak/.gempak
+
+###################################
+# Set up the UTILITIES
+###################################
+export utilscript=/nwprod/util/ush
+export utilities=/nwprod/util/ush
+export utilexec=/nwprod/util/exec
+
+# Run setup to initialize working directory and utility scripts
+sh $utilscript/setup.sh
+
+# Run setpdy and initialize PDY variables
+sh $utilscript/setpdy.sh
+. PDY
+PDY=20121218
+
+export com=/ptmp/Corey.Guastini/com/${NET}/${envir}
+export COMIN=/ptmp/Corey.Guastini/com/${NET}/${envir}/${RUN}.${PDY}
+export COMOUT=/ptmp/Corey.Guastini/com/nawips/${envir}/${RUN}.${PDY}
+
+if [ ! -f $COMOUT ] ; then
+  mkdir -p -m 775 $COMOUT
+fi
+
+env
+
+export HOMErap=${HOMErap:-/meso/save/Corey.Guastini/nw${envir}/${NET}.${model_ver}}
+export SCRIPTSrap=${SCRIPTSrap:-$HOMErap/scripts}
+export GEMPAKrap=${GEMPAKrap:-$HOMErap/gempak}
+export NAGRIB_TABLE=$GEMPAKrap/fix/nagrib.tbl    #XXW 
+
+DATAHOLD=$DATA
+
+########################################################
+# RAP40
+########################################################
+export DATA=$DATAHOLD/rap
+mkdir -p $DATA
+cd $DATA
+
+cp $GEMPAKrap/fix/rap_ncepgrib2.tbl ncepgrib2.tbl
+cp $GEMPAKrap/fix/rap_wmogrib2.tbl wmogrib2.tbl
+cp $GEMPAKrap/fix/rap_vcrdgrib1.tbl vcrdgrib1.tbl
+
+# Run setup to initialize working directory and utility scripts
+sh $utilscript/setup.sh
+
+export RUN=rap
+export GRIB=awp236pgrbf
+export DBN_ALERT_TYPE=RAP_GEMPAK
+
+$SCRIPTSrap/exnawips_rap.sh.sms > $DATAHOLD/rap.out 2>&1 &
+
+
+########################################################
+# RAP20
+########################################################
+export DATA=$DATAHOLD/rap20
+mkdir -p $DATA
+cd $DATA
+
+cp $GEMPAKrap/fix/rap_ncepgrib2.tbl ncepgrib2.tbl
+cp $GEMPAKrap/fix/rap_wmogrib2.tbl wmogrib2.tbl
+cp $GEMPAKrap/fix/rap_vcrdgrib1.tbl vcrdgrib1.tbl
+
+# Run setup to initialize working directory and utility scripts
+sh $utilscript/setup.sh
+
+export RUN=rap20
+export GRIB=awp252pgrbf
+export DBN_ALERT_TYPE=RAP20_GEMPAK
+
+$SCRIPTSrap/exnawips_rap.sh.sms > $DATAHOLD/rap20.out 2>&1 &
+
+
+########################################################
+# RAP13
+########################################################
+export DATA=$DATAHOLD/rap13
+mkdir -p $DATA
+cd $DATA
+
+cp $GEMPAKrap/fix/rap13_g2varswmo2.tbl g2varswmo2.tbl
+cp $GEMPAKrap/fix/rap13_g2varsncep1.tbl g2varsncep1.tbl
+cp $GEMPAKrap/fix/rap13_g2vcrdncep1.tbl g2vcrdncep1.tbl
+
+# Run setup to initialize working directory and utility scripts
+sh $utilscript/setup.sh
+
+export EXT=.grib2
+export RUN=rap13
+export GRIB=awp130pgrbf
+export DBN_ALERT_TYPE=RAP13_GEMPAK
+
+$SCRIPTSrap/exnawips_rap.sh.sms > $DATAHOLD/rap13.out 2>&1 &
+
+########################################################
+# RAP32
+########################################################
+export DATA=$DATAHOLD/rap32
+mkdir -p $DATA
+cd $DATA
+
+cp $GEMPAKrap/fix/rap13_g2varswmo2.tbl g2varswmo2.tbl
+cp $GEMPAKrap/fix/rap13_g2varsncep1.tbl g2varsncep1.tbl
+cp $GEMPAKrap/fix/rap13_g2vcrdncep1.tbl g2vcrdncep1.tbl
+
+# Run setup to initialize working directory and utility scripts
+#sh $utilscript/setup.sh
+
+export EXT=.grib2
+export RUN=rap32
+export GRIB=awip32f
+export DBN_ALERT_TYPE=RAP32_GEMPAK
+
+$SCRIPTSrap/exnawips_rap.sh.sms > $DATAHOLD/rap32.out 2>&1 &
+
+wait
+
+cd $DATAHOLD
+set +x
+echo "######################################"
+echo "  RAP.OUT "
+echo "######################################"
+set -x
+cat rap.out
+
+set +x
+echo "######################################"
+echo "  RAP20.OUT "
+echo "######################################"
+set -x
+cat rap20.out
+
+set +x
+echo "######################################"
+echo "  RAP13.OUT "
+echo "######################################"
+set -x
+cat rap13.out
+
+set +x
+echo "######################################"
+echo "  RAP32.OUT "
+echo "######################################"
+set -x
+cat rap32.out
+
+export DATA=$DATAHOLD
+
+cat $pgmout
+
+cd /tmpnwprd
+rm -rf $DATA
+
+date
+
+$SMSBIN/smscomplete
