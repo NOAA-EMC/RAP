@@ -1,8 +1,0 @@
- &iosetup
-  dirname='/mnt/lfs0/projects/wrfruc/mhu/temp/check_gsi_surface/2010101612/gsiprd_old',
-  outfilename='diag_results',
-  ndate=10101612,
-  nloop=1,0,1,0,0
-  $iosetup
- /     
-

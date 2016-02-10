@@ -1,8 +1,0 @@
-ifort -o convert_BE_old2new.exe -I../../include convert_BE_old2new.f90
-ifort -o tune_BE.exe -I../../include tune_BE.f90
-ifort -o conver_BE_endian.exe -I../../include conver_BE_endian.f90
-ifort -o RemapVertical_regional_BE.exe -I../../include RemapVertical_regional_BE.f90
-ifort -o convert_be2ncl.exe -I../../include convert_be2ncl.f90
-ifort -o check_diff_rr_be.exe -I../../include check_diff_rr_be.f90
-
-

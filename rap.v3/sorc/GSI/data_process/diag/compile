@@ -1,2 +1,0 @@
-ifort -o read_diag_rad.exe -traceback -I../../include  read_diag_rad.f90
-ifort -o read_diag_conv.exe -traceback -I../../include  read_diag_conv.f90
