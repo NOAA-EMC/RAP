@@ -1,0 +1,183 @@
+set -x
+module purge
+
+module load /nwpara2/modulefiles/RAP/v3.0.0
+
+module list
+
+sleep 1
+
+export BASE=`pwd`
+
+##############################
+
+cd ${BASE}/rap_wrf.fd/WRFV3.6
+./clean -aa
+./clean -a
+./clean
+cp configure.wrf.optim configure.wrf
+./compile em_real
+cp main/real.exe ${BASE}/../exec/rap_real
+cp main/wrf.exe ${BASE}/../exec/rap_wrfarw
+
+##############################
+
+module unload PNetCDF/1.2.0
+cd ${BASE}/rap_wrf.fd/WRFV3.6_serialnetcdf_noomp
+./clean -aa
+./clean -a
+./clean
+cp configure.wrf.optim configure.wrf
+./compile em_real
+
+##############################
+
+cd ${BASE}/rap_update_bc.fd
+make clean
+make
+
+##############################
+
+cd ${BASE}/rap_wrf.fd/WPSV3.6
+./clean -aa
+./clean -a
+./clean
+cp configure.wps.optim configure.wps
+./compile
+cp ungrib/src/ungrib.exe ${BASE}/../exec/rap_ungrib
+cp metgrid/src/metgrid.exe ${BASE}/../exec/rap_metgrid
+
+##############################
+
+cd ${BASE}/rap_wrfpost.fd
+make clean
+make
+
+##############################
+
+module purge
+module load /nwpara2/modulefiles/RAP/v3.0.0.da
+module list
+
+cd ${BASE}/rap_gsi.fd
+make clean
+cd ${BASE}/rap_gsi.fd/gsdcloud
+make clean
+make
+cd ${BASE}/rap_gsi.fd
+make
+make install
+make library
+
+##############################
+
+cd ${BASE}/rap_process_enkf.fd
+make clean
+make
+make install
+ 
+##############################
+
+cd ${BASE}/rap_full_cycle_surface.fd
+make clean
+make
+
+##############################
+
+cd ${BASE}/rap_process_cloud.fd
+make clean
+make
+
+##############################
+
+cd ${BASE}/rap_process_imssnow.fd
+make clean
+make
+
+##############################
+
+cd ${BASE}/rap_process_mosaic.fd
+make clean
+make
+
+##############################
+
+cd ${BASE}/rap_process_sst.fd
+make clean
+make
+
+##############################
+
+cd ${BASE}/rap_process_lightning.fd
+make clean
+make
+
+##############################
+
+cd ${BASE}/rap_update_fields.fd
+make clean
+make
+
+##############################
+
+cd ${BASE}/rap_subflds_g2.fd
+make clean
+make
+
+##############################
+
+cd ${BASE}/rap_sndp.fd
+make clean
+make 
+
+##############################
+
+cd ${BASE}/rap_wrfbufr.fd
+make clean
+make
+
+##############################
+
+cd ${BASE}/rap_stnmlist.fd
+make clean
+make
+
+##############################
+
+cd ${BASE}/rap_smartinitconus.fd
+make clean
+make
+
+##############################
+
+cd ${BASE}/rap_smartinitajn.fd
+make clean
+make
+
+##############################
+
+cd ${BASE}/rap_smartinitak.fd
+make clean
+make
+
+##############################
+
+cd ${BASE}/rap_smartinit_hi.fd
+make clean
+make
+
+##############################
+
+cd ${BASE}/rap_smartinit_pr.fd
+make clean
+make
+
+##############################
+
+cd ${BASE}/rap_wgrib2.cd
+make clean
+make
+
+cp ./wgrib2/wgrib2 ${BASE}/../exec/rap_wgrib2
+
+##############################

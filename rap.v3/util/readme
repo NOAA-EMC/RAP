@@ -1,0 +1,12 @@
+The running of the UPP is the same for RAP and HRRR. But this version needs a Post flat file for grib2 output.
+Here is how to generate this Post flat file:
+1) Validate the XML files rap_postcntrl.xml rap_post_avblflds.xml:
+   a) get into util directory
+   b) copy parm/rap_postcntrl.xml and/or parm/rap_post_avblflds.xml into util and modify
+   c) run:
+        xmllint --noout --schema EMC_POST_CTRL_Schema.xsd rap_postcntrl.xml
+        xmllint --noout --schema EMC_POST_Avblflds_Schema.xsd rap_post_avblflds.xml
+2) After validation of the XML files, then use the following perl scripts to make Post flat file:
+   a) run: perl PostXMLPreprocessor.pl rap_postcntrl.xml rap_post_avblflds.xml rap_postxconfig-NT.txt
+   b) remove log file
+   c) replace parm/rap_postcntrl.xml, parm/rap_post_avblflds.xml and parm/rap_postxconfig-NT.txt with these versions (move them)

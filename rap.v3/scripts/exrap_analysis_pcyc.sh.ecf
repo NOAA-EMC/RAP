@@ -1,0 +1,481 @@
+#!/bin/ksh -l
+################################################################################
+####  UNIX Script Documentation Block
+#                      .                                             .
+# Script name:       exrap_analysis_pcyc.sh.ecf
+# Script description:  runs the GSI and boundary update for the RAP partial cycle
+# Author:   Ming Hu / Geoff Manikin / Julia Zhu  Org: EMC          Date: 2011-10-01
+# 2011-10-01  M Hu / G Manikin / J Zhu
+
+set -x
+
+cd $DATA
+
+# Set up some constants
+export HOMErap=${HOMErap:-/nwprod/rap.${ver}}
+export PARMrap=${PARMrap:-$HOMErap/parm}
+export FIXrap=${FIXrap:-$HOMErap/fix}
+export EXECrap=${EXECrap:-$HOMErap/exec}
+export COMGFS=${COMGFS:-/com/gfs/prod}
+export ndate=${ndate:-/nwprod/util/exec/ndate}
+
+# Directory for the CRTM files:
+export FIXcrtm=${FIXcrtm:-/nwprod/fix}
+
+export WPSNAMELIST=namelist.wps
+START_TIME=$PDY$cyc
+echo $START_TIME >STARTTIME
+
+# Compute date & time components for the analysis time
+ymd=`echo ${START_TIME} | cut -c1-8`
+ymdh=`echo ${START_TIME} | cut -c1-10`
+mdh=`echo ${START_TIME} | cut -c5-10`
+hh=`echo ${START_TIME} | cut -c9-10`
+
+# Set up some NCEP loadlevelor environment variables
+export SPINLOOPTIME=10000
+export YIELDLOOPTIME=40000
+export AIXTHREAD_SCOPE=S
+export MALLOCMULTIHEAP=true
+export MEMORY_AFFINITY=MCM
+export BIND_TASKS=YES
+
+export LD_LIBRARY_PATH=/usrx/local/NetCDF/3.6.3/lib
+module load ics
+module load ibmpe
+export MP_EAGER_LIMIT=165536
+export MP_COREFILE_FORMAT=lite
+export MP_EUIDEVELOP=min
+export MP_EUILIB=us
+export MP_MPILIB=mpich2
+
+export MP_LABELIO=yes
+export MP_USE_BULK_XFER=yes
+export MP_SHARED_MEMORY=yes
+
+export MPICH_ALLTOALL_THROTTLE=0
+export KMP_STACKSIZE=1024m
+export MP_TASK_AFFINITY=cpu:2
+export OMP_NUM_THREADS=2
+
+# Set to yes for faster collective ops (mpi_reduce)
+# but may not yield bitwise identical results from
+# run to run when yes.
+export MP_COLLECTIVE_OFFLOAD=yes
+
+# Set up some constants
+export RAPGES_FCYC=${RAPGES_FCYC:-$gespath/rap/rapges}
+export RAPGES_PCYC=${RAPGES_PCYC:-$gespath/rap/rapges_pcyc}
+export RAPGES_SATBIAS=${RAPGES_SATBIAS:-$gespath/rap/rapges_satbias}
+export RAPGES_SFC=${RAPGES_SFC:-$gespath/rap/rapges_sfc}
+export RAPGES_ENKF=${RAPGES_ENKF:-$gespath/rap/rapges_enkf}
+export RAPBC=${RAPBC:-$gespath/rap/rapbc}
+export PREPDIR=${PREPDIR:-/com/${NET}/prod}
+
+# Compute date & time components for the analysis time
+YYYY=`echo ${START_TIME} | cut -c1-4`
+MM=`echo ${START_TIME} | cut -c5-6`
+DD=`echo ${START_TIME} | cut -c7-8`
+HH=`echo ${START_TIME} | cut -c9-10`
+yy=`echo ${START_TIME} | cut -c3-4`
+YYYYMMDDHH=${YYYY}${MM}${DD}${HH}
+YYYYMMDD=${YYYY}${MM}${DD}
+
+# Compute date & time components for the analysis time minus 1 day
+DDm1=`$ndate -24 $START_TIME`
+YMDm1=`echo ${DDm1} | cut -c1-8`
+
+# Create the ram work directory and cd into it
+workdir=$DATA/gsiprd
+rm -rf ${workdir}
+mkdir -p ${workdir}
+cd ${workdir}
+/nwprod/util/ush/setup.sh
+
+logfile=gsi.out
+
+# Bring over background field (it's modified by GSI so we can't link to it)
+time_str=${YYYY}-${MM}-${DD}_${HH}_00_00
+echo " time_str = ${time_str}"
+
+#  check to see if a first guess is available in the pcyc guess directory 
+PCYC_TIME=`$ndate -1 $START_TIME`
+if [ -r ${RAPGES_PCYC}/rap_${PCYC_TIME}f001 ]; then
+   cp ${RAPGES_PCYC}/rap_${PCYC_TIME}f001 ./wrf_inout
+   echo " Cycle ${YYYYMMDDHH}: GSI partially cycled start with rap_${PCYC_TIME}f001"
+fi
+
+# attempt cold start if no guess has been found;  this option will be used
+#   at the start of the partial cycle (03 and 15z);   note that if there is
+#   no pcyc guess available at a cycle time not divisible by 3, there isn't
+#   anything that can be done.   The best hope is to restart the partial cycle
+#   with a cold start at 06 or 18z
+
+if [ ! -r wrf_inout ]; then
+   if [ -r "${RAPBC}/wrfinput_d01_${time_str}" ]; then
+      echo "Cold Start with ${RAPBC}/wrfinput_d01_${time_str} "
+      cp ${RAPBC}/wrfinput_d01_${time_str} ./wrf_inout
+      echo " Cycle ${YYYYMMDDHH}: GSI cold start with wrfout_d01_${time_str}"
+## cycle surface variables
+      if [ -r "${RAPGES_SFC}/wrfout_d01_${HH}" ]; then
+          echo "cycle Surface fields based on ${RAPGES_SFC}/wrfout_d01_${HH} "
+          cp ${RAPGES_SFC}/wrfout_d01_${HH} ./wrfout_d01_save
+          #if [ -r "/gpfs/gd1/emc/meso/save/Ming.Hu/sync_sfc/wrfout_d01_${HH}" ]; then
+          #  cp /gpfs/gd1/emc/meso/save/Ming.Hu/sync_sfc/wrfout_d01_${HH} ./wrfout_d01_save
+          #fi
+           mpirun.lsf ${EXECrap}/rap_full_cycle_surface >> $DATA/$pgmout 2>errfile 
+          export err=$?; err_chk
+      else
+          echo "${RAPGES_SFC}/wrfout_d01_${HH} does not exist!!"
+          echo "WARNING: no surface data cycled for background at ${time_str}!!!!"
+      fi
+   else
+      echo "${RAPBC}/wrfinput_d01_${time_str} does not exist!!"
+      echo "ERROR: no background file for analaysis at ${time_str}!!!!"
+      echo " Cycle ${YYYYMMDDHH}: GSI failed because of no background"
+      err_exit
+   fi
+fi
+
+# Copy cycled satellite radiance bias correction
+  satcounter=1
+  if [[ ${HH} -eq '03' || ${HH} -eq '15' ]]; then
+    partial_or_fullrap=rap
+    partial_or_fullout=out
+  else
+    partial_or_fullrap=rap_p
+    partial_or_fullout=out_p
+  fi
+  while [[ $satcounter -lt 22 ]]; do
+    SAT_TIME=`$ndate -${satcounter} $START_TIME`
+    if [ -r ${RAPGES_SATBIAS}/radstat.${partial_or_fullrap}_${SAT_TIME} ]; then
+      echo " using satellite bias from ${SAT_TIME}"
+      cp ${RAPGES_SATBIAS}/radstat.${partial_or_fullrap}_${SAT_TIME} ./radstat.rap
+      cp ${RAPGES_SATBIAS}/satbias_${partial_or_fullout}_${SAT_TIME} ./satbias_in
+      cp ${RAPGES_SATBIAS}/satbias_pc.${partial_or_fullout}_${SAT_TIME} ./satbias_pc
+      break
+    fi
+    satcounter=` expr $satcounter + 1 `
+  done
+
+# prepbufr section
+ln -s ${PREPDIR}/${RUN}.${YYYYMMDD}/${RUN}.t${HH}z.prepbufr.tm00 ./prepbufr
+
+if [ -r "${PREPDIR}/rap.${YYYYMMDD}/rap.t${HH}z.mosaic.bufr" ]; then
+  ln -s ${PREPDIR}/rap.${YYYYMMDD}/rap.t${HH}z.mosaic.bufr ./refInGSI
+else
+  echo "Warning: Processed Mosaic data not available"
+fi
+
+if [ -r "${PREPDIR}/rap.${YYYYMMDD}/rap.t${HH}z.nasacloud.bufr" ]; then
+  ln -s ${PREPDIR}/rap.${YYYYMMDD}/rap.t${HH}z.nasacloud.bufr ./larcInGSI
+else
+  echo "Warning: Processed Cloud data not available"
+fi
+
+if [ -r "${PREPDIR}/rap.${YYYYMMDD}/rap.t${HH}z.lghtng.bufr" ]; then
+  ln -s ${PREPDIR}/rap.${YYYYMMDD}/rap.t${HH}z.lghtng.bufr ./lghtInGSI
+else
+  echo "Warning: Processed Lightning data not available"
+fi
+
+#add radial velocity data
+if [ -r "${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.radwnd.tm00.bufr_d" ]; then
+  ln -s ${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.radwnd.tm00.bufr_d ./radarbufr
+else
+  echo "Warning: ${PREPDIR}/rap.${YYYYMMDD}/rap_p.t${HH}z.radwnd.tm00.bufr_d is not available"
+fi
+
+if [ -r "${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.nexrad.tm00.bufr_d" ]; then
+  ln -s ${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.nexrad.tm00.bufr_d ./l2rwbufr
+else
+  echo "Warning: ${PREPDIR}/rap.${YYYYMMDD}/rap_p.t${HH}z.nexrad.tm00.bufr_d is not available"
+fi
+
+if [ -r "${PREPDIR}/${RUN}.${YYYYMMDD}/rap_p.t${HH}z.1bamua.tm00.bufr_d" ]; then
+  ln -s ${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.1bamua.tm00.bufr_d ./amsuabufr
+else
+  echo "Warning: ${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.1bamua.tm00.bufr_d is not available
+"
+fi
+
+if [ -r "${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.1bamub.tm00.bufr_d" ]; then
+  ln -s ${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.1bamub.tm00.bufr_d ./amsubbufr
+else
+  echo "Warning: ${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.1bamub.tm00.bufr_d is not available
+"
+fi
+
+if [ -r "${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.1bhrs3.tm00.bufr_d" ]; then
+  ln -s ${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.1bhrs3.tm00.bufr_d ./hirs3bufr
+else
+  echo "Warning: ${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.1bhrs3.tm00.bufr_d is not available
+"
+fi
+
+if [ -r "${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.1bhrs4.tm00.bufr_d" ]; then
+  ln -s ${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.1bhrs4.tm00.bufr_d ./hirs4bufr
+else
+  echo "Warning: ${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.1bhrs4.tm00.bufr_d is not available
+"
+fi
+
+if [ -r "${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.1bmhs.tm00.bufr_d" ]; then
+  ln -s ${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.1bmhs.tm00.bufr_d ./mhsbufr
+else
+  echo "Warning: ${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.1bmhs.tm00.bufr_d is not available"
+fi
+
+#add goes sounder data
+if [ -r "${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.goesnd.tm00.bufr_d" ]; then
+  ln -s ${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.goesnd.tm00.bufr_d ./gsnd1bufr
+else
+  echo "Warning: ${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.goesnd.tm00.bufr_d is not available"
+fi
+
+#add rars data
+if [ -r "${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.esamua.tm00.bufr_d" ]; then
+  ln -s ${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.esamua.tm00.bufr_d ./amsuabufrears
+else
+  echo "Warning: ${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.esamua.tm00.bufr_d is not available"
+fi
+
+if [ -r "${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.esmhs.tm00.bufr_d" ]; then
+  ln -s ${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.esmhs.tm00.bufr_d ./mhsbufrears
+else
+  echo "Warning: ${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.esmhs.tm00.bufr_d is not available"
+fi
+#add SATWND data
+if [ -r "${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.satwnd.tm00.bufr_d" ]; then
+  ln -s ${PREPDIR}/rap_p.${YYYYMMDD}/rap_p.t${HH}z.satwnd.tm00.bufr_d ./satwndbufr
+else
+  echo "Warning: ${PREPDIR}/rap_p.${YYYYMMDD}/rap.t${HH}z.satwnd.tm00.bufr_d is not available"
+fi
+
+# Set fixed files
+#   berror   = forecast model background error statistics
+#   specoef  = CRTM spectral coefficients
+#   trncoef  = CRTM transmittance coefficients
+#   emiscoef = CRTM coefficients for IR sea surface emissivity model
+#   aerocoef = CRTM coefficients for aerosol effects
+#   cldcoef  = CRTM coefficients for cloud effects
+#   satinfo  = text file with information about assimilation of brightness temperatures
+#   satangl  = angle dependent bias correction file (fixed in time)
+#   pcpinfo  = text file with information about assimilation of prepcipitation rates
+#   ozinfo   = text file with information about assimilation of ozone data
+#   errtable = text file with obs error for conventional data (regional only)
+#   convinfo = text file with information about assimilation of conventional data
+#   bufrtable= text file ONLY needed for single obs test (oneobstest=.true.)
+#   bftab_sst= bufr table for sst ONLY needed for sst retrieval (retrieval=.true.)
+
+anavinfo=${FIXrap}/rap_anavinfo_arw_netcdf
+BERROR=${FIXrap}/rap_berror_stats_global
+SATANGL=${FIXrap}/rap_global_satangbias.txt
+SATINFO=${FIXrap}/rap_global_satinfo.txt
+RTMFIX=${FIXcrtm}/crtm_v2.1.3
+
+RTMAERO=${RTMFIX}/AerosolCoeff.bin
+RTMCLDS=${RTMFIX}/CloudCoeff.bin
+RTMEMIS_IRwater=${RTMFIX}/Nalli.IRwater.EmisCoeff.bin
+RTMEMIS_IRice=${RTMFIX}/NPOESS.IRice.EmisCoeff.bin
+RTMEMIS_IRland=${RTMFIX}/NPOESS.IRland.EmisCoeff.bin
+RTMEMIS_IRsnow=${RTMFIX}/NPOESS.IRsnow.EmisCoeff.bin
+RTMEMIS_VISice=${RTMFIX}/NPOESS.VISice.EmisCoeff.bin
+RTMEMIS_VISland=${RTMFIX}/NPOESS.VISland.EmisCoeff.bin
+RTMEMIS_VISsnow=${RTMFIX}/NPOESS.VISsnow.EmisCoeff.bin
+RTMEMIS_VISwater=${RTMFIX}/NPOESS.VISwater.EmisCoeff.bin
+RTMEMIS_MWwater=${RTMFIX}/FASTEM5.MWwater.EmisCoeff.bin
+
+CONVINFO=${FIXrap}/rap_nam_regional_convinfo
+OZINFO=${FIXrap}/rap_global_ozinfo.txt    
+PCPINFO=${FIXrap}/rap_global_pcpinfo.txt
+
+OBERROR=${FIXrap}/rap_nam_errtable.r3dv
+AIRCRAFTREJECTLIST=${FIXrap}/rap_current_bad_aircraft.txt   # aircraft reject list
+SURFACEUSELIST=${FIXrap}/rap_current_mesonet_uselist.txt # mesonet use list
+SURFACEPROVIDERLIST=${FIXrap}/rap_gsd_sfcobs_provider.txt # mesonet network use list
+
+# Fixed fields
+ cp $anavinfo anavinfo
+ cp $BERROR   berror_stats
+# cp $SATANGL  satbias_angle
+ cp $SATINFO  satinfo
+ cp $CONVINFO convinfo
+ cp $OZINFO   ozinfo
+ cp $PCPINFO  pcpinfo
+ cp $OBERROR  errtable
+ cp $AIRCRAFTREJECTLIST current_bad_aircraft
+ cp $SURFACEUSELIST gsd_sfcobs_uselist.txt
+ cp $SURFACEPROVIDERLIST gsd_sfcobs_provider.txt
+
+# 
+#    # CRTM Spectral and Transmittance coefficients
+ln -s $RTMAERO  ./AerosolCoeff.bin
+ln -s $RTMCLDS  ./CloudCoeff.bin
+ln -s $RTMEMIS_IRwater ./Nalli.IRwater.EmisCoeff.bin
+ln -s $RTMEMIS_IRice ./NPOESS.IRice.EmisCoeff.bin
+ln -s $RTMEMIS_IRsnow ./NPOESS.IRsnow.EmisCoeff.bin
+ln -s $RTMEMIS_IRland ./NPOESS.IRland.EmisCoeff.bin
+ln -s $RTMEMIS_VISice ./NPOESS.VISice.EmisCoeff.bin
+ln -s $RTMEMIS_VISland ./NPOESS.VISland.EmisCoeff.bin
+ln -s $RTMEMIS_VISsnow ./NPOESS.VISsnow.EmisCoeff.bin
+ln -s $RTMEMIS_VISwater ./NPOESS.VISwater.EmisCoeff.bin
+ln -s $RTMEMIS_MWwater ./FASTEM5.MWwater.EmisCoeff.bin
+
+# Copy CRTM coefficient files based on entries in satinfo file
+for file in `awk '{if($1!~"!"){print $1}}' ./satinfo | sort | uniq` ;do
+   ln -s ${RTMFIX}/${file}.SpcCoeff.bin ./
+   ln -s ${RTMFIX}/${file}.TauCoeff.bin ./
+done
+
+# Only need this file for single obs test
+ bufrtable=${PARMrap}/rap_prepobs.bufrtable
+ cp $bufrtable ./prepobs_prep.bufrtable
+
+## 
+## Link to pre-processed GFS EnKF forecast members
+##
+for mem in `ls ${RAPGES_ENKF}/enspreproc_arw_mem???`
+do
+  memname=`basename ${mem}`
+  ln -s ${mem} ${memname}
+done
+
+ls enspreproc_arw_mem??? > filelist
+
+# Determine if hybrid option is available
+beta1_inv=1.0
+ifhyb=.false.
+nummem=`more filelist | wc -l`
+nummem=$((nummem - 3 ))
+if [[ ${nummem} -eq 80 ]]; then
+  echo "Do hybrid with ${memname}"
+  beta1_inv=0.25
+  ifhyb=.true.
+  echo " Cycle ${YYYYMMDDHH}: GSI hybrid uses ${memname} with n_ens=${nummem}"
+fi
+
+# Set some parameters for use by the GSI executable and to build the namelist
+export JCAP=62
+export LEVS=60
+export DELTIM=${DELTIM:-$((3600/($JCAP/20)))}
+ndatrap=62
+grid_ratio=2
+cloudanalysistype=5
+ifsoilnudge=.true.
+
+# Build the GSI namelist on-the-fly
+. ${PARMrap}/rap_gsiparm.anl.sh
+cat << EOF > gsiparm.anl
+$gsi_namelist
+EOF
+
+# cp ${FIXrap}/rap_ndas.t06z.satbias.tm03 ./satbias_in
+## satellite bias correction
+if [ -r radstat.rap ]; then
+  listdiag=`tar xvf radstat.rap | cut -d' ' -f2 | grep _ges`
+  for type in $listdiag; do
+       diag_file=`echo $type | cut -d',' -f1`
+       fname=`echo $diag_file | cut -d'.' -f1`
+       date=`echo $diag_file | cut -d'.' -f2`
+       gunzip $diag_file
+       fnameanl=$(echo $fname|sed 's/_ges//g')
+       mv $fname.$date $fnameanl
+  done
+  mv radstat.rap radstat.rap.for_this_cycle
+fi
+
+export pgm=rap_gsi
+. prep_step
+
+startmsg
+mpirun.lsf ${EXECrap}/rap_gsi < gsiparm.anl >> $DATA/$pgmout 2>errfile 
+export err=$?; err_chk
+
+# Loop over first and last outer loops to generate innovation
+# diagnostic files for indicated observation types (groups)
+#
+# NOTE:  Since we set miter=2 in GSI namelist SETUP, outer
+#        loop 03 will contain innovations with respect to 
+#        the analysis.  Creation of o-a innovation files
+#        is triggered by write_diag(3)=.true.  The setting
+#        write_diag(1)=.true. turns on creation of o-g
+#        innovation files.
+#
+
+loops="01 03"
+for loop in $loops; do
+
+case $loop in
+  01) string=ges;;
+  03) string=anl;;
+   *) string=$loop;;
+esac
+
+#  Collect diagnostic files for obs types (groups) below
+   listall="hirs2_n14 msu_n14 sndr_g08 sndr_g11 sndr_g11 sndr_g12 sndr_g13 sndr_g08_prep sndr_g11_prep sndr_g12_prep sndr_g13_prep sndrd1_g11 sndrd2_g11 sndrd3_g11 sndrd4_g11 sndrd1_g15 sndrd2_g15 sndrd3_g15 sndrd4_g15 sndrd1_g13 sndrd2_g13 sndrd3_g13 sndrd4_g13 hirs3_n15 hirs3_n16 hirs3_n17 amsua_n15 amsua_n16 amsua_n17 amsua_n18 amsua_n19 amsua_metop-a amsua_metop-b amsub_n15 amsub_n16 amsub_n17 hsb_aqua airs_aqua amsua_aqua imgr_g08 imgr_g11 imgr_g12 pcp_ssmi_dmsp pcp_tmi_trmm conv sbuv2_n16 sbuv2_n17 sbuv2_n18 omi_aura ssmi_f13 ssmi_f14 ssmi_f15 hirs4_n18 hirs4_metop-a mhs_n18 mhs_n19 mhs_metop-a mhs_metop-b amsre_low_aqua amsre_mid_aqua amsre_hig_aqua ssmis_las_f16 ssmis_uas_f16 ssmis_img_f16 ssmis_env_f16 iasi_metop-a"
+   for type in $listall; do
+      count=`ls pe*.${type}_${loop}* | wc -l`
+      if [[ $count -gt 0 ]]; then
+         `cat pe*.${type}_${loop}* > diag_${type}_${string}.${YYYYMMDDHH}`
+      fi
+   done
+done
+
+##tar diag files for next cycle run for enhanced radiance bias correction 
+tar -cvzf radstat.rap *diag*ges*.${YYYYMMDDHH}
+mv ./radstat.rap radstat.rap_p_${YYYYMMDDHH}
+cp ./radstat.rap_p_${YYYYMMDDHH} ${RAPGES_SATBIAS}/
+
+mv ./satbias_out satbias_out_p_${YYYYMMDDHH}
+cp ./satbias_out_p_${YYYYMMDDHH} ${RAPGES_SATBIAS}/
+
+mv ./satbias_pc.out satbias_pc.out_p_${YYYYMMDDHH}
+cp ./satbias_pc.out_p_${YYYYMMDDHH} ${RAPGES_SATBIAS}/
+
+export err=$?; err_chk
+
+cp gsiparm.anl gsiparm.anl_var
+mv fort.201 fit_p1
+mv fort.202 fit_w1
+mv fort.203 fit_t1
+mv fort.204 fit_q1
+mv fort.205 fit_pw1
+mv fort.206 fit_oz1
+mv fort.207 fit_rad1
+mv fort.208 fit_pcp1
+mv fort.209 fit_rw1
+mv fort.213 fit_sst1
+
+cat fit_p1 fit_w1 fit_t1 fit_q1 fit_pw1 fit_rad1 fit_rw1 > ${COMOUT}/rap.t${cyc}z.fits.${tmmark}
+cat fort.210 fort.211 fort.212 fort.214 fort.215 fort.217 fort.220 > ${COMOUT}/rap.t${cyc}z.fits2.${tmmark}
+
+# cp satbias_out ${COMOUT}/rap.t${cyc}z.satbias.${tmmark}
+
+ndatrap=67
+grid_ratio=1
+cloudanalysistype=6
+ifhyb=.false.
+ifsoilnudge=.true.
+
+mv sigf03 sigf03_step1
+mv siganl sigf03
+
+# Build the GSI namelist on-the-fly
+. ${PARMrap}/rap_gsiparm.anl.sh
+cat << EOF > gsiparm.anl
+$gsi_namelist
+EOF
+
+export pgm=rap_gsi
+startmsg
+mpirun.lsf ${EXECrap}/rap_gsi < gsiparm.anl >> $DATA/$pgmout 2>errfile
+export err$?; err_chk
+
+cp gsiparm.anl gsiparm.anl_cloud
+cp wrf_inout ${COMOUT}/rap.t${cyc}z.wrf_inout_pcyc
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+
+exit 0

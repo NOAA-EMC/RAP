@@ -1,0 +1,56 @@
+#BSUB -J %E%rap_realtime_gempak
+#BSUB -o /com/output/%ENVIR%/today/rap_realtime_gempak_%CYC%.o%J
+#BSUB -e /com/output/%ENVIR%/today/rap_realtime_gempak_%CYC%.o%J
+#BSUB -L /bin/sh
+#BSUB -q prod_serv
+#BSUB -cwd /tmpnwprd
+#BSUB -W 00:45
+#BSUB -R "rusage[mem=1000]" -R "affinity[core]"
+#BSUB -R "span[ptile=8]"
+#BSUB -n 16
+#BSUB -a poe
+#BSUB -P %PROJ%
+
+
+%include <head.h>
+
+set -x
+export envir=%ENVIR%
+export cyc=%CYC%
+export NET=rap
+
+export job=rap_realtime_gempak_${cyc}
+export output=/com/output/${envir}/today/rap_realtime_gempak_${cyc}
+export error=/com/output/${envir}/today/rap_realtime_gempak_${cyc}
+
+# CALL executable job script here
+
+# versions file for Rapid Refresh model $model_ver
+VERSION_FILE=/nw${envir}/versions/rap.ver
+if [ -f $VERSION_FILE ]; then
+  . $VERSION_FILE
+else
+  ecflow_client --abort
+  exit
+fi
+
+/nw${envir}/rap.${model_ver}/jobs/JHRLY_REALTIME_GEMPAK
+
+if [ $? -ne 0 ]; then
+  ecflow_client --abort
+  exit
+fi
+
+%include <tail.h>
+%manual
+######################################################################
+# PURPOSE:  To read the hourly and its monthly mean data dump counts and compares
+#           to the monthly averages.
+######################################################################
+
+######################################################################
+# Job specific troubleshooting instructions:
+#  see generic troubleshoot manual page
+#
+######################################################################
+%end
