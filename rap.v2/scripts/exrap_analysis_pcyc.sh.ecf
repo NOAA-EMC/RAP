@@ -292,7 +292,7 @@ stampcycle=`date -d "${CYCSTART_TIME}" +%s`
 minHourDiff=100
 loops="06 09"
 for loop in $loops; do
-  for timelist in `ls ${ENKF_FCST}/enkf.*/*/sfg_*_fhr${loop}s_mem080_t254`; do
+  for timelist in `ls -l ${ENKF_FCST}/enkf.*/*/sfg_*_fhr${loop}s_mem080_t254 |grep 100796456 |awk '{print $9}'`; do
     availtime=`basename ${timelist} | cut -d'_' -f2`
     AVAIL_TIME=`echo "${availtime}" | sed 's/\([[:digit:]]\{2\}\)$/ \1/'`
     AVAIL_TIME=`date -d "${AVAIL_TIME}"`

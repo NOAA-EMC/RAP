@@ -15,9 +15,6 @@ cd $DATA
 
 export PS4='SNDP $SECONDS + '
 
-#export EXECnam=${EXECnam:-/nwprod/nam.v2.2.0/exec}
-export EXECnam=${EXECnam:-/nwprod/exec}
-
 cp $PARMrap/rap_bufr.tbl .
 cp $PARMrap/rap_modtop.parm .
 cp $PARMrap/rap_sndp.parm.mono sndp.parm 
@@ -77,9 +74,9 @@ EOF
    ln -sf $DATA/class1.bufr fort.20
    export DIRD=${DATA}/bufr.${cycle}/bufr
 
-  pgm=nam_stnmlist
+  pgm=rap_stnmlist
   startmsg
-  $EXECnam/nam_stnmlist < stnmlist_input >> $pgmout 2> errfile
+  $EXECrap/rap_stnmlist < stnmlist_input >> $pgmout 2> errfile
   err=$?;export err ;err_chk
 
 # Tar and gzip the individual bufr files and send them to /com

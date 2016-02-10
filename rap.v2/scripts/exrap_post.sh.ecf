@@ -30,6 +30,7 @@ export PARMrap=${PARMrap:-$HOMErap/parm}
 export FIXrap=${FIXrap:-$HOMErap/fix}
 export CRTM=${CRTM:-/nwprod/fix/crtm_2.0.5}
 export EXECrap=${EXECrap:-$HOMErap/exec}
+export CNVGRIB=${CNVGRIB:-$utilexec/cnvgrib}
 export ndate=${ndate:-/nwprod/util/exec/ndate}
 export XLFRTEOPTS="unit_vars=yes"
 
@@ -145,6 +146,17 @@ EOF
   mv WRFNAT.GrbF* $COMOUT/rap.${cycle}.wrfnat${fhr}.tm00
   mv WRFPRS.GrbF* $COMOUT/rap.${cycle}.wrfprs${fhr}.tm00
   echo done >$FCSTDIR/rappost.done${fhr}
+
+  if [ $SENDDBN = YES ]; then
+    grib1=rap.${cycle}.wrfnat${fhr}.tm00
+    grib2=rap.${cycle}.wrfnat${fhr}.tm00.grib2
+    grib3=rap.${cycle}.wrfprs${fhr}.tm00
+    grib4=rap.${cycle}.wrfprs${fhr}.tm00.grib2
+    $CNVGRIB -g12 -p40 ${COMOUT}/$grib1 ${COMOUT}/$grib2
+    $CNVGRIB -g12 -p40 ${COMOUT}/$grib3 ${COMOUT}/$grib4
+    $DBNROOT/bin/dbn_alert MODEL RAP_NAT $job $COMOUT/rap.${cycle}.wrfnat${fhr}.tm00.grib2
+    $DBNROOT/bin/dbn_alert MODEL RAP_PRS $job $COMOUT/rap.${cycle}.wrfprs${fhr}.tm00.grib2
+  fi
 
 # use post-DFI analysis file to generate extra analyses for EMC 
 #   initialization applications

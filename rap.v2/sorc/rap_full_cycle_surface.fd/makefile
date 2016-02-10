@@ -3,7 +3,7 @@
 
 # Define the fortran compiler and options
 
-NETCDFPATH = /u/wx20rv/lib_tmp/netcdf/lib
+#NETCDFPATH = /u/wx20rv/lib_tmp/netcdf/lib
 FC       = mpfort -g -traceback
 CPP      = /lib/cpp -P
 ARCH     =
