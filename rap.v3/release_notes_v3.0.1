@@ -1,0 +1,89 @@
+
+
+Release Notes:  RAP v3.0.0
+
+v3.0.0 - released February 9, 2016
+Now uses WRF Version 3.6
+Uses updated version of GSI, and hybrid assimilation is now weighted more heavily
+Uses updated version of post processor code
+Major scientific changes to address warm, dry bias present in RAP version 2
+Forecasts extended to 21 hours
+Expanded domain to essentially match NAM
+Upgrade being made concurrently with HRRRv2
+Added capability to restart stalled forecast
+output changes
+all output now in grib2 format 
+no longer uses prdgen to generate the various output grids;  all done now via wgrib2
+addition of new Hawaii-area grid (243)
+large number of new parameters in all output files
+Puerto Rico output now sent to AWIPS
+elimination of 2-hr bucket accumulations of precipitation and snow, except in files sent to AWIPS
+all output now available to f21
+expanded CONUS smartinit grid and switch to consensus terrain and land mask files
+new Hawaii smartinit output
+
+      compute resource information
+still runs every hour, but now to f21
+forecast job changes from 18 nodes (16 tasks/node)  to 40 nodes (24 tasks/node)
+analysis job changes from 8 nodes (8 tasks/node) to 10 nodes (8 tasks/node)
+all post processor jobs change from 1 node (16 tasks/node) to 2 nodes (16 tasks/node)
+history file format changed from binary to parallel netcdf
+single cycle runtime changes from 32 to 42 minutes
+runtime changes from 16 to 20 minutes for forecast job and from 5 to 9 minutes for analysis
+disk space used per day changes from 1250G to 900G
+       Data retention for files in /com and /nwges under prod/para/test environments
+asking to maintain current retention of data in /com2 and /nwges in prod and recommend same retention for parallel.    asking to retain one extra day of /com2/nawips/prod/rap*
+
+        new executables
+                 o    rap_process_lightning
+                 o    rap_process_enkf
+                 o    rap_smartinit_hi
+                 o    rap_subflds_g2
+                 o    rap_update_fields
+                 o    rap_ssrc
+                 o    rap_wgrib2
+		
+
+
+        eliminated executables
+                 o    rap_prdgen
+                 o    rap_subflds_*
+                 o    rap_update_height
+
+        new jobs
+                 o   JRAP_PROCESS_ENKF (run for 00,06,12,18 EnKF cycles);  run as a separate job (just like makebc);  the jobs should be run at +7:15 after the cycle time - i.e. the 12z EnKF processing  job should be run at 1915z
+                 o   JRAP_FORECAST_RESTART (run as needed to revive a stalled forecast job)
+
+        eliminated jobs
+                 o   JRAP_PRDGEN
+                 o   JRAP_PRDGENMGR
+    
+       pre-implementation testing requirements
+need to test RTMA/URMA upgrade concurrently
+need to test NARRE-TL upgrade concurrently
+need to test obsproc upgrade concurrently
+need to run parallel HRRR simultaneously
+need to test verification updates (mainly for new forecast hours)
+changes required for hysplt_rap2arl  which must be tested
+small SREF changes needed to use grib2 RAP output
+30-day evaluation will be required
+suggested evaluators - AWC,SPC,WPC, all NWS Regions, FAA
+please obtain initial guess files from the developers
+
+       Dissemination info
+output should be placed into /com2/rap/para, pcom2/para, and /com/nawips/para
+output should be placed on ftp server
+request that all gempak output be transferred to DEVWCOSS as well as all awp130pgrb, awip32, and awp242 grib2 files as well as prepbufr files
+code is proprietary, and restricted data is used but is not disseminated
+
+       Archive to HPSS
+                 o     no changes recommended for RAP data on hpss      
+
+
+
+
+V3.0.1 - Released February 17, 2016
+Modified makefiles to use proper format for library paths
+Changed analysis script to take advantage of the longer forecast length such that it can now go back further to look for first guess if needed
+increased number of tasks in forecast jobs
+
