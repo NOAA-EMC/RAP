@@ -20,9 +20,11 @@ MASS     =
 
 WRFPATH    = ${BASE}/rap_wrf.fd/WRFV3.6_serialnetcdf_noomp
 
-INCLD = -I${NETCDF}/include
+INCLD = ${NETCDF_INCLUDE}
 
-LIBS =  ${NETCDF}/lib/libnetcdf.a \
+NETCDF_LIB = ${NETCDF}/lib/libnetcdf.a
+
+LIBS =  ${NETCDF_LIB} \
         $(WRFPATH)/external/io_netcdf/libwrfio_nf.a
 
 OBJS = da_module_couple_uv.o da_netcdf_interface.o

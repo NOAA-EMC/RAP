@@ -1,16 +1,15 @@
-# makefile for lightning_porcess
+# makefile for lightning_process
 #! /bin/sh -v
 
 # Define the fortran compiler and options
-WRFPATH    = /nwprod/sorc/wrf_shared.fd
+WRFPATH    = /nwprod/sorc/wrf_shared.v1.1.0
 FC       = mpfort -g -traceback
 CPP      = /lib/cpp -P
 ARCH     =
 CPPFLAGS =  -DLINUX -Dfunder -DFortranByte=char -DFortranInt=int -DFortranLlong='long long' -D_UNDERSCORE
-NWPLIBS =/nwprod/lib -lw3emc_4 -lw3nco_4 -lbufr_d_64
-
-INCLD=  -I${NETCDF}/include
-LIBS =  -L${NWPLIBS} -L${NETCDF}/lib -lnetcdf
+NWPLIBS = ${W3EMC_LIB4} ${W3NCO_LIB4} ${BUFR_LIBd}
+INCLD=  ${NETCDF_INCLUDE}
+LIBS =  ${NWPLIBS} ${NETCDF_LDFLAGS_F}
 
 OBJS = kinds.o constants.o Check_Lightning_QC.o netCDFsub_geo.o cio.o \
        read_lightning_bufr.o module_debug.o misc_definitions_module.o \

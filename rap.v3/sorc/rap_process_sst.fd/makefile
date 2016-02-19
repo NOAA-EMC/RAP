@@ -7,14 +7,13 @@ FC       = mpfort -g -traceback
 CPP      = /lib/cpp -P
 ARCH     =
 CPPFLAGS =  -DLINUX -Dfunder -DFortranByte=char -DFortranInt=int -DFortranLlong='long long' -D_UNDERSCORE
-NWPLIBS =/nwprod/lib -lw3emc_4 -lw3nco_4 -lbacio_4 
+NWPLIBS = ${W3EMC_LIB4} ${W3NCO_LIB4} ${BACIO_LIB4}
 
-WRFPATH    = /nwprod/sorc/wrf_shared.fd
-W3FLAGS = -I/nwprod/lib/incmod/w3emc_v2.0.3_4
-INCLD= -I${NETCDF}/include -I$(WRFPATH)/frame
+WRFPATH    = /nwprod/sorc/wrf_shared.v1.1.0
+INCLD= ${NETCDF_INCLUDE} -I$(WRFPATH)/frame
 LIBS =  -L${NWPLIBS} \
         $(WRFPATH)/external/io_netcdf/libwrfio_nf.a ${WRFPATH}/frame/pack_utils.o \
-        -L${NETCDF}/lib -lnetcdf
+        ${NETCDF_LDFLAGS_F}
 
 OBJS = kinds.o process_SST.o sst14k.o sstGlobal2RR.o netCDFsub_geo.o update_SST_netcdf_mass.o
 

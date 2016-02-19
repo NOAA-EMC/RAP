@@ -113,7 +113,7 @@ fi
 PCYC_TIME=`$ndate -1 $START_TIME`
 if [[ ! -r ${RAPGES_PCYC}/rap_${PCYC_TIME}f001 &&  ! -r ${RAPBC}/wrfinput_d01_${time_str} ]]; then
     counter=1
-    while [[ $counter -lt 19 ]]; do
+    while [[ $counter -lt 22 ]]; do
      counterhr=$counter
      typeset -Z2 counterhr
      FCYC_TIME=`$ndate -${counter} $START_TIME`
@@ -149,7 +149,7 @@ fi
 
 if [ ! -r wrf_inout ]; then
     counter=1
-    while [[ $counter -lt 19 ]]; do
+    while [[ $counter -lt 22 ]]; do
      counterhr=$counter
      typeset -Z2 counterhr
      FCYC_TIME=`$ndate -${counter} $START_TIME`

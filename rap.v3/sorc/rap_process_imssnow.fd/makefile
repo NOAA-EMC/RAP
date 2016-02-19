@@ -1,21 +1,20 @@
-# makefile for nssl_porcess
+# makefile for process_imssnow
 #! /bin/sh -v
 
 # Define the fortran compiler and options
 
-WRFPATH=/nwprod/sorc/wrf_shared.fd
-## NETCDFPATH = /u/wx20rv/lib_tmp/netcdf/lib
-NETCDFPATH = /usrx/local/NetCDF/3.6.3/lib
+WRFPATH=/nwprod/sorc/wrf_shared.v1.1.0
 FC       = mpfort -g -traceback
 CPP      = /lib/cpp -P
 ARCH     =
 CPPFLAGS =  -DLINUX -Dfunder -DFortranByte=char -DFortranInt=int -DFortranLlong='long long' -D_UNDERSCORE
-NWPLIBS =/nwprod/lib -lip_4 -lsp_4 -lw3nco_4 -lbacio_4
+NWPLIBS = ${IP_LIB4} ${SP_LIB4} ${W3NCO_LIB4} ${BACIO_LIB4}
+NETCDF_LIB = ${NETCDF}/lib/libnetcdf.a
 
-INCLD=  -I${NETCDF}/include -I$(WRFPATH)/frame
-LIBS =  -L${NWPLIBS} \
+INCLD=  ${NETCDF_INCLUDE} -I$(WRFPATH)/frame
+LIBS =  ${NWPLIBS} \
         $(WRFPATH)/external/io_netcdf/libwrfio_nf.a ${WRFPATH}/frame/pack_utils.o \
-        -L${NETCDF}/lib -lnetcdf
+        ${NETCDF_LDFLAGS_F} 
 
 OBJS = kinds.o netCDFsub_geo.o update_SNOWICE_netcdf_mass.o
 

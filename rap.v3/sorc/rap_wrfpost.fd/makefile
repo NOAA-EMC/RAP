@@ -16,40 +16,10 @@ DEBUG    = -g
 
 CFLAGS =  -DLINUX -Dfunder -DFortranByte=char -DFortranInt=int -DFortranLlong='long long'
 #
-# Now the hard part. NCEPPOST needs 19 libraries, WOW!!!!!
-#
 
-SFCIO_VER=v1.0.0
-NEMSIO_VER=v2.2.1
-BACIO_VER=v2.0.1
-SIGIO_VER=v1.0.1
 WRF_VER=v1.1.0
-G2_VER=v2.5.0
-G2TMPL_VER=v1.3.0
-JASPER_VER=v1.900.1
-PNG_VER=v1.2.44
-Z_VER=v1.2.6
-XMLPARSE_VER=v2.0.0
-GFSIO_VER=v1.1.0
-IP_VER=v2.0.0
-SP_VER=v2.0.1
-W3EMC_VER=v2.2.0
-W3NCO_VER=v2.0.6
-CRTM_VER=v2.0.6
-
-SFCIO_INC4  = -I/nwprod/lib/sfcio/$(SFCIO_VER)/incmod/sfcio_$(SFCIO_VER)_4
-SFCIO_LIB4  = /nwprod/lib/sfcio/$(SFCIO_VER)/libsfcio_${SFCIO_VER}_4.a
-
-NEMSIO_INC  = -I/nwprod/lib/nemsio/$(NEMSIO_VER)/incmod/nemsio_$(NEMSIO_VER)
-NEMSIO_LIB  = /nwprod/lib/nemsio/$(NEMSIO_VER)/libnemsio_$(NEMSIO_VER).a
-
-BACIO_LIB4  = /nwprod/lib/bacio/$(BACIO_VER)/libbacio_$(BACIO_VER)_4.a
-
-SIGIO_INC4  = -I/nwprod/lib/sigio/$(SIGIO_VER)/incmod/sigio_$(SIGIO_VER)_4
-SIGIO_LIB4  = /nwprod/lib/sigio/$(SIGIO_VER)/libsigio_$(SIGIO_VER)_4.a
-
 WRFPATH    = /nwprod/sorc/wrf_shared.$(WRF_VER)
-WRF_INC    = -I$(WRFPATH)/external/io_quilt -I$(WRFPATH)/frame
+WRF_INC    = $(WRFPATH)/external/io_quilt -I$(WRFPATH)/frame
 WRF_LIB    = $(WRFPATH)/main/libwrflib.a  \
              $(WRFPATH)/frame/pack_utils.o  \
              $(WRFPATH)/frame/module_internal_header_util.o \
@@ -61,51 +31,25 @@ WRF_LIB    = $(WRFPATH)/main/libwrflib.a  \
              $(WRFPATH)/external/RSL_LITE/librsl_lite.a
 
 
-G2_INC4     = -I/nwprod/lib/g2/$(G2_VER)/incmod/g2_$(G2_VER)_4
-G2TMPL_INC  = -I/nwprod/lib/g2tmpl/$(G2TMPL_VER)/incmod/g2tmpl
-G2_LIB4     = /nwprod/lib/g2/$(G2_VER)/libg2_$(G2_VER)_4.a
-G2TMPL_LIB  = /nwprod/lib/g2tmpl/$(G2TMPL_VER)/libg2tmpl.a
-JASPER_LIB  = /nwprod/lib/jasper/$(JASPER_VER)/libjasper_$(JASPER_VER).a
-PNG_LIB     = /nwprod/lib/png/$(PNG_VER)/libpng.a
-Z_LIB       = /nwprod/lib/z/$(Z_VER)/libz_$(Z_VER).a
-
-XMLPARSE_INC    = -I/nwprod/lib/xmlparse/$(XMLPARSE_VER)/incmod/xmlparse_$(XMLPARSE_VER)
-XMLPARSE_LIB    = /nwprod/lib/xmlparse/$(XMLPARSE_VER)/libxmlparse_$(XMLPARSE_VER).a
-
-GFSIO_INC4  = -I/nwprod/lib/gfsio/$(GFSIO_VER)/incmod/gfsio_$(GFSIO_VER)_4
-GFSIO_LIB4  = /nwprod/lib/gfsio/$(GFSIO_VER)/libgfsio_$(GFSIO_VER)_4.a
-
-IP_LIB4     = /nwprod/lib/ip/$(IP_VER)/libip_$(IP_VER)_4.a
-
-#SP_LIB     = /gpfs/gp1/u/James.R.Taft/NWPROD/lib/libsp_4.v0001.a
-SP_LIB4     = /nwprod/lib/sp/$(SP_VER)/libsp_$(SP_VER)_4.a
-
-W3EMC_INC4     = -I/nwprod/lib/w3emc/$(W3EMC_VER)/incmod/w3emc_$(W3EMC_VER)_4
-W3EMC_LIB4     = /nwprod/lib/w3emc/$(W3EMC_VER)/libw3emc_$(W3EMC_VER)_4.a
-W3NCO_LIB4     = /nwprod/lib/w3nco/$(W3NCO_VER)/libw3nco_$(W3NCO_VER)_4.a
-
-CRTM_INC   = -I/nwprod/lib/crtm/$(CRTM_VER)/incmod/crtm_$(CRTM_VER)
-CRTM_LIB   = /nwprod/lib/crtm/$(CRTM_VER)/libcrtm_$(CRTM_VER).a
-
-NETCDFPATH = /usrx/local/NetCDF/3.6.3
+NETCDFPATH = ${NETCDF}
 NETCDF_LIB = $(NETCDFPATH)/lib/libnetcdf.a
-NETCDF_INC = -I$(NETCDFPATH)/include
+NETCDF_INC = $(NETCDFPATH_INCLUDE)
 
 #
 # Assemble Options
 #
 FFLAGS   = $(OPTS) $(FREE) $(TRAPS) $(DEBUG) \
-           $(WRF_INC) \
-           $(XMLPARSE_INC) \
-           $(G2_INC4) \
-           $(G2TMPL_INC) \
-           $(NEMSIO_INC) \
-           $(GFSIO_INC4) \
-           $(SIGIO_INC4) \
-           $(SFCIO_INC4) \
-           $(W3EMC_INC4) \
-           $(CRTM_INC) \
-           $(NETCDF_INC)
+           -I$(WRF_INC) \
+           -I$(XMLPARSE_INC) \
+           -I$(G2_INC4) \
+           -I$(G2TMPL_INC) \
+           -I$(NEMSIO_INC) \
+           -I$(GFSIO_INC4) \
+           -I$(SIGIO_INC4) \
+           -I$(SFCIO_INC4) \
+           -I$(W3EMC_INC4) \
+           -I$(CRTM_INC) \
+            $(NETCDF_INC)
 
 LIBS     = $(WRF_LIB) \
            $(XMLPARSE_LIB) \

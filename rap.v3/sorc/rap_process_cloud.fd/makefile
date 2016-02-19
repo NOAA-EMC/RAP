@@ -3,17 +3,17 @@
 
 # Define the fortran compiler and options
 
-WRFPATH    = /nwprod/sorc/wrf_shared.fd
+WRFPATH    = /nwprod/sorc/wrf_shared.v1.1.0
 FC       = mpfort -g -traceback
 CPP      = /lib/cpp -P
 ARCH     =
 CPPFLAGS =  -DLINUX -Dfunder -DFortranByte=char -DFortranInt=int -DFortranLlong='long long' -D_UNDERSCORE
-NWPLIBS =/nwprod/lib -lbufr_d_64
+NWPLIBS = ${BUFR_LIB4} 
 
-INCLD=  -I${NETCDF}/include -I$(WRFPATH)/frame
-LIBS =  -L${NWPLIBS} \
+INCLD= ${NETCDF_INCLUDE} -I$(WRFPATH)/frame
+LIBS = ${NWPLIBS} \
         $(WRFPATH)/external/io_netcdf/libwrfio_nf.a ${WRFPATH}/frame/pack_utils.o \
-        -L${NETCDF}/lib -lnetcdf
+        ${NETCDF_LDFLAGS_F}
 # cio
 OBJS = kinds.o constants.o module_debug.o gridmod_gsi_map_utils.o \
        misc_definitions_module.o constants_module.o module_map_utils.o \

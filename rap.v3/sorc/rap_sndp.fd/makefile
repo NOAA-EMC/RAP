@@ -19,7 +19,7 @@ OBJS=	BFRHDR.o BFRIZE.o CALHEL.o CALWXT.o SMIX.o SNDPST_EM.o VAP.o \
 FC =            ifort -openmp -convert big_endian -g -traceback
 LDFLAGS = 
 CMD = ../../exec/rap_sndp
-LIBS =            -L/nwprod/lib -lbufr_v10.2.3_4_64
+LIBS = ${BUFR_LIB4}
 
 # Lines from here on down should not need to be changed.  They are the
 # actual rules which make uses to build a.out.

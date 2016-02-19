@@ -37,7 +37,7 @@ TARGET = ../../exec/rap_wrfbufr
 # CPP, Compiler, and Linker Options
 #
 
-NETLIB   = /usrx/local/NetCDF/3.6.3/lib
+NETCDF_LIB = ${NETCDF}/lib/libnetcdf.a
 
 FC       = mpfort 
 CPP      = /lib/cpp -P
@@ -51,11 +51,7 @@ PROFILE  =
 DEBUG    = # -g # -traceback -fpe0 -ftrapuv # -check all
 MEM      =
 MAP      =
-ESSL     =
-MASS     =
 
-W3FLAGS = -I/nwprod/lib
-NEMSIOFLAG = -I/nwprod/lib/incmod/nemsio
 WRFLIB    = ./wrflibs/libwrflib.a  \
             ./wrflibs/pack_utils.o  \
             ./wrflibs/libfftpack.a \
@@ -70,14 +66,14 @@ SEARCH   =
 #
 # Assemble Options
 #
-FFLAGS   = $(OPTS) $(LIST) $(TRAPS) $(PROFILE) $(DEBUG) $(W3FLAGS) $(NEMSIOFLAG)
-FFLAGST  = $(OPTS) $(LIST) $(FREE) $(TRAPS) $(PROFILE) $(DEBUG) $(W3FLAGS) $(W3FLAGS) $(NEMSIOFLAG)
+FFLAGS   = $(OPTS) $(LIST) $(TRAPS) $(PROFILE) $(DEBUG) $(WRFFLAGS) -I$(NEMSIO_INC)
+FFLAGST  = $(OPTS) $(LIST) $(FREE) $(TRAPS) $(PROFILE) $(DEBUG) $(WRFFLAGS) -I$(NEMSIO_INC)
 LDFLAGS  = $(MEM) $(MAP) $(SMP) $(PROFILE)
-LIBS     = $(ESSL) $(MASS) $(SEARCH) $(WRFLIB) \
-           -L/nwprod/lib/nemsio -lnemsio \
-           -L/nwprod/lib \
-           -lw3emc_4 -lw3nco_4 -lbacio_4 \
-           -L${NETLIB} -lnetcdf
+LIBS     = $(WRFLIB) \
+           $(NEMSIO_LIB) \
+           ${W3EMC_LIB4} ${W3NCO_LIB4} ${BACIO_LIB4} \
+           ${NETCDF_LDFLAGS}
+
 #
 #
 # free-format object files

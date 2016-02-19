@@ -3,24 +3,21 @@
 
 # Define the fortran compiler and options
 
-WRFPATH    = /nwprod/sorc/wrf_shared.fd
+WRFPATH    = /nwprod/sorc/wrf_shared.v1.1.0
 FC       = mpfort -g 
 CPP      = /lib/cpp -P
 ARCH     =
 FLAGS    = -O3 -fp-model precise -assume byterecl -fpe0 -DLINUX
 CPPFLAGS =  -DLINUX -Dfunder -DFortranByte=char -DFortranInt=int -DFortranLlong='long long' -D_UNDERSCORE
-NWPLIBS =/nwprod/lib -lbufr_d_64 -lg2tmpl -lg2_4 -ljasper -lpng -lz -lbacio_4 -lw3emc_v2.0.3_4
+NWPLIBS = ${BUFR_LIBd}
 
-INCLD=  -I${NETCDF}/include -I$(WRFPATH)/frame \
-        -I/nwprod/lib/incmod/g2_4 -I/nwprod/lib/incmod/g2tmpl
-LIBS =  -L${NWPLIBS} \
-        $(WRFPATH)/external/io_netcdf/libwrfio_nf.a \
-        ${WRFPATH}/frame/pack_utils.o \
-        -L${NETCDF}/lib -lnetcdf
+INCLD=  ${NETCDF_INCLUDE} -I$(WRFPATH)/frame
+LIBS =  ${NWPLIBS} \
+        $(WRFPATH)/external/io_netcdf/libwrfio_nf.a ${WRFPATH}/frame/pack_utils.o \
+        ${NETCDF_LDFLAGS_F} 
 
 OBJS = kinds.o constants.o write_bufr_ref.o process_NSSL_mosaic.o \
-       netCDFsub.o netCDFsub_geo.o read_nssl_binary.o \
-       read_grib2_mod.o read_ncep_binary.o
+       netCDFsub.o netCDFsub_geo.o read_nssl_binary.o
 
 all: process_mosaic
 

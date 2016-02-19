@@ -44,8 +44,8 @@ CPP      = /lib/cpp -P
 FFLAGS   = $(OPTS) $(LIST) $(TRAPS) $(PROFILE) $(DEBUG) $(WRFFLAGS)
 FFLAGST  = $(OPTS) $(LIST) $(FREE) $(TRAPS) $(PROFILE) $(DEBUG) $(WRFFLAGS)
 LDFLAGS  = $(MEM) $(MAP) $(SMP) $(PROFILE)
-LIBS     = $(ESSL) $(MASS) $(SEARCH) $(WRFLIB) \
-            -L/nwprod/lib -lw3nco_4 -lbacio_4 
+LIBS = ${G2TMPL_LIB} ${G2_LIB4} ${JASPER_LIB} ${PNG_LIB} ${Z_LIB} ${IP_LIB4} ${W3NCO_LIB4} ${W3EMC_LIB4} ${BACIO_LIB4}
+INC = ${G2_INC4} -I${G2TMPL_INC}
 CMD =	        ../../exec/rap_smartinit_pr
 PROFLIB =	-lprof
 

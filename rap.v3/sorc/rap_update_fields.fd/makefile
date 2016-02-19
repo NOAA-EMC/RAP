@@ -18,16 +18,14 @@ MAP      =
 ESSL     =
 MASS     =
 
-W3FLAGS = -I/nwprod/lib/incmod/w3emc_v2.0.3_4
-NEMSIOFLAG = -I/nwprod/lib/incmod/nemsio
-WRFPATH    = /nwprod/sorc/wrf_shared.fd
-NWPLIBS =/nwprod/lib -lw3_4 -lbacio_4 
+WRFPATH    = /nwprod/sorc/wrf_shared.v1.1.0
+NWPLIBS = ${W3EMC_LIB4} ${W3NCO_LIB4} ${BACIO_LIB4}
 
-INCLD= -I${NETCDF}/include -I$(WRFPATH)/frame
+INCLD= ${NETCDF_INCLUDE} -I$(WRFPATH)/frame
 
-LIBS =  \
+LIBS =  ${NWPLIBS} \
        $(WRFPATH)/external/io_netcdf/libwrfio_nf.a ${WRFPATH}/frame/pack_utils.o \
-       -L${NETCDF}/lib -lnetcdf
+       ${NETCDF_LDFLAGS_F} 
 
 OBJS = kinds.o
 
