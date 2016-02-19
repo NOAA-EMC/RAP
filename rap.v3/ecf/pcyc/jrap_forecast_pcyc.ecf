@@ -5,7 +5,7 @@
 #BSUB -q prod
 #BSUB -L /bin/sh
 #BSUB -P %PROJ%
-#BSUB -n 960
+#BSUB -n 1200 
 #BSUB -R "span[ptile=24]"
 #BSUB -W 00:40
 #BSUB -x

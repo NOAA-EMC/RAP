@@ -10,8 +10,8 @@ PROJ = RAP-T2O
 #BSUB -o  /com/output/para/today/rap_forecast_00.o%J
 #BSUB -e  /com/output/para/today/rap_forecast_00.o%J
 #BSUB -cwd /tmpnwprd
-#BSUB -n 320 #288
-#BSUB -R "span[ptile=16]"
+#BSUB -n 1200
+#BSUB -R "span[ptile=24]"
 #BSUB -q prod
 #BSUB -L /bin/sh
 #BSUB -W 00:45

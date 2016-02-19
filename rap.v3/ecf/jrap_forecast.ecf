@@ -2,7 +2,7 @@
 #BSUB -o  /com/output/%ENVIR%/today/rap_forecast_%CYC%.o%J
 #BSUB -e  /com/output/%ENVIR%/today/rap_forecast_%CYC%.o%J
 #BSUB -cwd /tmpnwprd
-#BSUB -n 960
+#BSUB -n 1200
 #BSUB -R "span[ptile=24]"
 #BSUB -q prod
 #BSUB -L /bin/sh
