@@ -2,13 +2,13 @@
 ################################################################################
 ####  UNIX Script Documentation Block
 #                      .                                             .
-# Script name:         exrap_fcst.restart.sh.ecf
-# Script description:  restarts the forecast job for the RAP
+# Script name:         exrap_fcst.sh.sms
+# Script description:  runs the forecast job for the RAP
 #
-# Author:  Curtis Alexander / Corey Guastini   Org: EMC     Date: 2016-01-25
+# Author:  Ming Hu / Geoff Manikin / Julia Zhu   Org: EMC     Date: 2011-08-24
 #
 # Script history log:
-# 2016-01-25  C Alexander / C Guastini
+# 2011-08-24  M Hu / G Manikin / J Zhu
 #
 
 . /usrx/local/Modules/default/init/ksh
@@ -32,18 +32,9 @@ export MP_EUIDEVELOP=min
 export MP_SINGLE_THREAD=no
 export MP_USE_BULK_XFER=yes
 # Set up some constants
-export HOMErap=${HOMErap:-/nwprod/rap.${ver}}
-export PARMrap=${PARMrap:-$HOMErap/parm}
-export FIXrap=${FIXrap:-$HOMErap/fix}
-export EXECrap=${EXECrap:-$HOMErap/exec}
 export ndate=${ndate:-/nwprod/util/exec/ndate}
 
-# Set input directory (working directory for failed forecast)
-export FCSTPROD="/ptmpd1/Corey.Guastini/rap_fcst_prod_17"
-
-# Set output directory (preferably different from input)
-export DATA="/ptmpd1/Corey.Guastini/restart_17"
-mkdir $DATA
+# Set output directory
 cd $DATA
 # Copy boundary file into DATA
 cp ${FCSTPROD}/wrfbdy_d01 ${DATA}
@@ -65,16 +56,15 @@ filecount=$(($lasthour + 1))
 
 # Copy fcstdone and wrfout files already completed
 fcstdonelist=`ls ${FCSTPROD}/fcstdone* | head -n ${filecount}`
-wrfoutlist=`ls ${FCSTPROD}/wrfout_d01* | head -n ${filecount}`
+wrfoutlist=`ls ${FCSTPROD}/wrfout* | head -n ${filecount}`
 lastwrfout=`ls ${wrfoutlist} | tail -n 1`
 lastwrfoutname=`basename ${lastwrfout}`
 cp -pr ${fcstdonelist} ${DATA}
-cp -pr ${wrfoutlist} ${DATA}
+cp ${FCSTPROD}/${lastwrfoutname} ${DATA}/.
 
 # Set softlink to wrfinput
 mv ${DATA}/${lastwrfoutname} ${DATA}/${lastwrfoutname}_output
 ln -sf ${DATA}/${lastwrfoutname}_output ${DATA}/wrfinput_d01
-
 # Set new START_TIME
 DATE=/bin/date
 ORIG_START_TIME="${YYYY}${MM}${DD} ${HH}"
@@ -337,7 +327,7 @@ mv ${WRF_NAMELIST}.new ${WRF_NAMELIST}
 export pgm=rap_wrfarw
 . prep_step
 
-mpirun.lsf ${EXECrap}/$pgm < namelist.input
+mpirun.lsf ${EXECrap}/$pgm < namelist.input >> $DATA/$pgmout 2>errfile
 export err=$?
 
 # Change wrfout metadata to original START_TIME
@@ -345,6 +335,7 @@ for wrfout in `ls wrfout_d01_*`
 do
   ncatted -O -h -a START_DATE,global,o,c,"${ORIG_START_TIME_STRING}" ${wrfout}
   ncatted -O -h -a SIMULATION_START_DATE,global,o,c,"${ORIG_START_TIME_STRING}" ${wrfout}
+  mv ${wrfout} ${FCSTPROD}/.
 done
 
 # Rename fcstdone files to format from original START_TIME
@@ -353,14 +344,14 @@ do
    NEWFF=`echo ${fcstdone} | cut -c 9-10`
    NEWMM=`echo ${fcstdone} | cut -c 11-12`
    typeset -Z2 FF=$(($NEWFF + $lasthour))
-   mv ${fcstdone} fcstdone${FF}${NEWMM}.${HH}
+   mv ${fcstdone} ${FCSTPROD}/fcstdone${FF}${NEWMM}.${HH}
 done
 
 cp rsl.out.0000 ${COMOUT}/rap.t${cyc}z.rslout
 
 err_chk
 
-msg="JOB $job FOR RAP_FORECAST HAS COMPLETED NORMALLY"
+msg="JOB $job FOR RAP_FORECAST_RESTART HAS COMPLETED NORMALLY"
 postmsg "$jlogfile" "$msg"
 
 exit 0
