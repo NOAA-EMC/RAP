@@ -9,15 +9,16 @@ CPP      = /lib/cpp -P
 ARCH     =
 FLAGS    = -O3 -fp-model precise -assume byterecl -fpe0 -DLINUX
 CPPFLAGS =  -DLINUX -Dfunder -DFortranByte=char -DFortranInt=int -DFortranLlong='long long' -D_UNDERSCORE
-NWPLIBS = ${BUFR_LIBd}
+NWPLIBS = ${BUFR_LIBd} ${G2TMPL_LIB} ${G2_LIB4} ${JASPER_LIB} ${PNG_LIB} ${Z_LIB} ${BACIO_LIB4} ${W3EMC_LIB4}
 
-INCLD=  ${NETCDF_INCLUDE} -I$(WRFPATH)/frame
+INCLD=  ${NETCDF_INCLUDE} -I$(WRFPATH)/frame -I${G2_INC4} -I${G2TMPL_INC}
 LIBS =  ${NWPLIBS} \
         $(WRFPATH)/external/io_netcdf/libwrfio_nf.a ${WRFPATH}/frame/pack_utils.o \
         ${NETCDF_LDFLAGS_F} 
 
 OBJS = kinds.o constants.o write_bufr_ref.o process_NSSL_mosaic.o \
-       netCDFsub.o netCDFsub_geo.o read_nssl_binary.o
+          netCDFsub.o netCDFsub_geo.o read_nssl_binary.o \
+          read_grib2_mod.o read_ncep_binary.o
 
 all: process_mosaic
 
