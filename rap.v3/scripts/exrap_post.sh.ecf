@@ -23,17 +23,7 @@ postmsg $jlogfile "$msg"
 fhr=$fhr
 
 # Set up some constants
-export HOMErap=${HOMErap:-/nwprod/rap.${ver}}
-export PARMrap=${PARMrap:-$HOMErap/parm}
-export PARMutil=${PARMutil:-$HOMErap/util/parm}
-export FIXrap=${FIXrap:-$HOMErap/fix}
-export CRTM=${CRTM:-/nwprod/fix/crtm_2.0.5}
-export EXECrap=${EXECrap:-$HOMErap/exec}
-export ndate=${ndate:-/nwprod/util/exec/ndate}
 export XLFRTEOPTS="unit_vars=yes"
-export WGRIB2=${WGRIB2:-$HOMErap/exec/rap_wgrib2}
-export RAPGES_FCYC=${RAPGES_FCYC:-$gespath/rap/rapges}
-export RAPGES_SFC=${RAPGES_SFC:-$gespath/rap/rapges_sfc}
 
 START_TIME=$PDY$cyc
 echo $START_TIME >STARTTIME
@@ -42,7 +32,6 @@ echo $START_TIME >STARTTIME
 export CORE=RAPR
 export OUTTYP=netcdf
 export MP_BINDPROC=NO
-#export LD_PRELOAD=/u/James.A.Abeles/mpi_trace_linux_x86_64/shared/libmpitrace.so
 
 ###############################################################
 
@@ -62,7 +51,7 @@ export SPL=2.,5.,7.,10.,20.,30.\
 icnt=1
   while [ $icnt -lt 1000 ]
   do
-    POST_TIME=`$ndate +${fhr} $START_TIME`
+    POST_TIME=`$NDATE +${fhr} $START_TIME`
     YYYY=`echo ${POST_TIME} | cut -c1-4`
     MM=`echo ${POST_TIME} | cut -c5-6`
     DD=`echo ${POST_TIME} | cut -c7-8`
@@ -90,9 +79,11 @@ icnt=1
 #  cp $FCSTDIR/wrfoutd01_${timestr} ${RAPGES_FCYC}/.
   cp $FCSTDIR/wrfout_d01_${timestr2} ${RAPGES_FCYC}/rap_${START_TIME}f0${fhr}
 
-##  save files for surface cycle in case of RAP crash
+##  save sfc files for partial cycle initialization and restart purposes
 timeHH=${HH}
-cp ${FCSTDIR}/wrfout_d01_${timestr2} ${RAPGES_SFC}/wrfout_d01_${timeHH}
+if [ ${fhr} -lt 19 ]; then
+  cp ${FCSTDIR}/wrfout_d01_${timestr2} ${RAPGES_SFC}/wrfout_d01_${timeHH}
+fi
 fcstfile=${FCSTDIR}/wrfout_d01_${timestr2}
 cp ${fcstfile} wrfoutd01
 
@@ -193,8 +184,8 @@ EOF
 
   if [ $SENDDBN = YES ]
     then
-    $DBNROOT/bin/dbn_alert MODEL RAP_NAT $job $COMOUT/rap.${cycle}.wrfnat${fhr}.tm00.grib2
-    $DBNROOT/bin/dbn_alert MODEL RAP_PRS $job $COMOUT/rap.${cycle}.wrfprs${fhr}.tm00.grib2
+    $DBNROOT/bin/dbn_alert MODEL RAP_NAT $job $COMOUT/rap.${cycle}.wrfnatf${fhr}.grib2
+    $DBNROOT/bin/dbn_alert MODEL RAP_PRS $job $COMOUT/rap.${cycle}.wrfprsf${fhr}.grib2
   fi
 
 # use post-DFI analysis file to generate extra analysis for EMC 
@@ -293,7 +284,7 @@ do
 
          # Move grid to final location and index
          mv tmpuv_${grid}.grib2 ${COMOUT}/rap.${cycle}.awp${grid}bgrbf${fhr}df
-         ${WGRIB2} ${COMOUT}/rap.${cycle}.awp${grid}bgrbf${fhr}df -s > ${COMOUT}/rap.${cycle}.awp${grid}bgrbf${fhr}df_idx
+         ${WGRIB2} ${COMOUT}/rap.${cycle}.awp${grid}bgrbf${fhr}df -s > ${COMOUT}/rap.${cycle}.awp${grid}bgrbf${fhr}df.idx
 
           if [ $SENDDBN = YES ]
            then
@@ -330,36 +321,54 @@ do
           then
            if [[ ${leveltype} = "nat" ]]; then
              mv tmpuv_${grid}.grib2 ${COMOUT}/rap.${cycle}.awp${grid}bgrbf${fhr}.grib2
-             ${WGRIB2} ${COMOUT}/rap.${cycle}.awp${grid}bgrbf${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awp${grid}bgrbf${fhr}.grib2_idx
+             ${WGRIB2} ${COMOUT}/rap.${cycle}.awp${grid}bgrbf${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awp${grid}bgrbf${fhr}.grib2.idx
                if [ $SENDDBN = YES ]
                  then
+                  fil=awp${grid}bgrb
                   case $fil in
                    awp130bgrb)  ALERT_TYPE=RAP_NG13_GB2;;
                    awp252bgrb)  ALERT_TYPE=RAP_NG20_GB2;;
                   esac
 
                  $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE} $job $COMOUT/rap.${cycle}.awp${grid}bgrbf${fhr}.grib2
-                 $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE}_WIDX $job $COMOUT/rap.${cycle}.awp${grid}bgrbf${fhr}.grib2_idx
+                 $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE}_WIDX $job $COMOUT/rap.${cycle}.awp${grid}bgrbf${fhr}.grib2.idx
                fi  # SENDBN
            else
              mv tmpuv_${grid}.grib2 ${COMOUT}/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2
-             ${WGRIB2} ${COMOUT}/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2_idx 
+             ${WGRIB2} ${COMOUT}/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2.idx 
 # complicated!!   only want to send pgrb alerts if FHR is not 3,6,9,12,15,18,21   Othwerwise, we still
 #    need to tack on 3-hr buckets generated in the mkawp ush script and will alert then
-             if [ $fhr -eq 06 -o $fhr -eq 09 -o $fhr -eq 12 -o $fhr -eq 15 -o \
-                $fhr -eq 18 -o $fhr -eq 21 ] ; then
+             if [ $fhr -ne 06 -a $fhr -ne 09 -a $fhr -ne 12 -a $fhr -ne 15 -a \
+                $fhr -ne 18 -a $fhr -ne 21 ] ; then
                if [ $SENDDBN = YES ]
                  then
+                  fil=awp${grid}pgrb
                   case $fil in
-                   awp130pgrb)  ALERT_TYPE=RAP_PG13_GB2;;
-                   awp252pgrb)  ALERT_TYPE=RAP_PG20_GB2;;
-                   awp236pgrb)  ALERT_TYPE=RAP_PG40_GB2;;
+                   awp252pgrb)  ALERT_TYPE=RAP_PG20_GB2
+                      $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE} $job $COMOUT/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2
+                      $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE}_WIDX $job $COMOUT/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2.idx
+                      ;;
+                   awp236pgrb)  ALERT_TYPE=RAP_PG40_GB2
+                      $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE} $job $COMOUT/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2
+                      $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE}_WIDX $job $COMOUT/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2.idx
+                      ;;
                   esac
-
-                 $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE} $job $COMOUT/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2
-                 $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE}_WIDX $job $COMOUT/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2_idx
                fi  # SENDBN
               fi  #fhr check
+
+             if [ $fhr -eq 00 -o $fhr -eq 01 -o $fhr -eq 02 -o $fhr -eq 03 -o \
+                  $fhr -eq 04 -o $fhr -eq 07 -o $fhr -eq 10 -o $fhr -eq 13 -o \
+                  $fhr -eq 16 -o $fhr -eq 19 ] ; then
+                if [ $SENDDBN = YES ]
+                  then
+                     if [ $grid -eq 130 ]  
+                      then
+                      ALERT_TYPE=RAP_PG13_GB2 
+                      $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE} $job $COMOUT/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2
+                      $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE}_WIDX $job $COMOUT/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2.idx
+                     fi
+                 fi
+              fi
 
            fi   # leveltype
          fi   # SENDCOM
@@ -412,25 +421,23 @@ do
     ic=0
 # 221 grids have different naming convention (awip32), so need separate loop
     if [ $grid -ne 221 ] ; then
-    $utilexec/grb2index ${COMOUT}/rap.t${cyc}z.awp${grid}f${fhr3}.grib2 rap.t${cyc}z.awp${grid}f${fhr3}.grib2.idxbin
-    while [ ! -r rap.t${cyc}z.awp${grid}f${fhr3}.grib2.idxbin -o \
-            ! -r $COMOUT/rap.t${cyc}z.awp${grid}f${fhr3}.grib2 ] ; do
+    while [ ! -r $FCSTDIR/postdone_${grid}_f${fhr3}_${cyc}] ; do
       let ic=ic+1
       if [ $ic -gt 180 ] ; then
         err_exit "F$fhr SUB PROCESSING GIVING UP AFTER 45 MINUTES WAITING FOR F$fhr3 files"
       fi
       sleep 15
     done
+    $GRB2INDEX ${COMOUT}/rap.t${cyc}z.awp${grid}f${fhr3}.grib2 rap.t${cyc}z.awp${grid}f${fhr3}.grib2.idxbin
     else
-    $utilexec/grb2index ${COMOUT}/rap.t${cyc}z.awip32f${fhr3}.grib2 awip32f${fhr3}.grib2.idxbin
-    while [ ! -r awip32f${fhr3}.grib2.idxbin -o \
-            ! -r $COMOUT/rap.t${cyc}z.awip32f${fhr3}.grib2 ] ; do
+    while [ ! -r $FCSTDIR/postdone_221_f${fhr3}_${cyc}] ; do
       let ic=ic+1
       if [ $ic -gt 180 ] ; then
         err_exit "F$fhr SUB PROCESSING GIVING UP AFTER 45 MINUTES WAITING FOR F$fhr3 files"
       fi
       sleep 15
     done
+    $GRB2INDEX ${COMOUT}/rap.t${cyc}z.awip32f${fhr3}.grib2 awip32f${fhr3}.grib2.idxbin
     fi   # end 221 test
 
 # start grid processing
@@ -438,7 +445,7 @@ do
     echo 'process ' ${grid}
     if [ ${grid} -eq 221 ] ; then
      cp tmpuv_${grid}.grib2 awip32f${fhr}.grib2
-     $utilexec/grb2index tmpuv_${grid}.grib2 awip32f${fhr}.grib2.idxbin
+     $GRB2INDEX tmpuv_${grid}.grib2 awip32f${fhr}.grib2.idxbin
      cp $COMOUT/rap.t${cyc}z.awip32f${fhr3}.grib2 awip32f${fhr3}.grib2
  
      IARW=0
@@ -467,23 +474,22 @@ EOF
      cat weasd221.${fhr} >> awip32f${fhr}.grib2 
      cat graupel221.${fhr} >> awip32f${fhr}.grib2 
 
-     if test "$SENDCOM" = 'YES'
-       then
+     if  [ $SENDCOM = YES ]; then
        mv awip32f${fhr}.grib2 ${COMOUT}/rap.${cycle}.awip32f${fhr}.grib2
-       ${WGRIB2} ${COMOUT}/rap.${cycle}.awip32f${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awip32f${fhr}.grib2_idx
+       ${WGRIB2} ${COMOUT}/rap.${cycle}.awip32f${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awip32f${fhr}.grib2.idx
 
        if [ $SENDDBN = YES ]
-         then
-         ALERT_TYPE=RAP_FULL32_GB2;;
-         $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE} $job $COMOUT/$grib2
-         $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE}_WIDX $job $COMOUT/$grib2_idx
+       then
+         ALERT_TYPE=RAP_FULL32_GB2
+         $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE} $job $COMOUT/rap.${cycle}.awip32f${fhr}.grib2
+         $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE}_WIDX $job $COMOUT/rap.${cycle}.awip32f${fhr}.grib2.idx
        fi
      fi     
 
 #  process 200 242 243
     else
      cp tmpuv_${grid}.grib2 awp${grid}f${fhr}.grib2
-     $utilexec/grb2index tmpuv_${grid}.grib2 awp${grid}f${fhr}.grib2.idxbin
+     $GRB2INDEX tmpuv_${grid}.grib2 awp${grid}f${fhr}.grib2.idxbin
      cp $COMOUT/rap.t${cyc}z.awp${grid}f${fhr3}.grib2 awp${grid}f${fhr3}.grib2
      cp rap.t${cyc}z.awp${grid}f${fhr3}.grib2.idxbin awp${grid}f${fhr3}.grib2.idxbin
 
@@ -521,46 +527,63 @@ EOF
      cat graupel${grid}.${fhr} >> awp${grid}f${fhr}.grib2
      fi
      mv awp${grid}f${fhr}.grib2 ${COMOUT}/rap.${cycle}.awp${grid}f${fhr}.grib2
-     ${WGRIB2} ${COMOUT}/rap.${cycle}.awp${grid}f${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awp${grid}f${fhr}.grib2_idx
-    fi # end 221 test
-    elif [ ${grid} -eq 221 ] ; then
-      if test "$SENDCOM" = 'YES'
-       then
-        mv tmpuv_${grid}.grib2 ${COMOUT}/rap.${cycle}.awip32f${fhr}.grib2
-        ${WGRIB2} ${COMOUT}/rap.${cycle}.awip32f${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awip32f${fhr}.grib2_idx
-      fi
+     ${WGRIB2} ${COMOUT}/rap.${cycle}.awp${grid}f${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awp${grid}f${fhr}.grib2.idx
       if [ $SENDDBN = YES ]
          then
-         ALERT_TYPE=RAP_FULL32_GB2;;
-         $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE} $job $COMOUT/$grib2
-         $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE}_WIDX $job $COMOUT/$grib2_idx
-      fi
-    else
-      if test "$SENDCOM" = 'YES'
-       mv tmpuv_${grid}.grib2 ${COMOUT}/rap.${cycle}.awp${grid}f${fhr}.grib2
-       ${WGRIB2} ${COMOUT}/rap.${cycle}.awp${grid}f${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awp${grid}f${fhr}.grib2_idx
-      fi
-      if [ $SENDDBN = YES ]
-         then
+          fil=awp${grid}
           case $fil in
            awp243)      ALERT_TYPE=RAP_HI_GB2;;
            awp242)      ALERT_TYPE=RAP_AK11_GB2;;
            awp200)      ALERT_TYPE=RAP_PR16_GB2;;
           esac
 
-         $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE} $job $COMOUT/$grib2
-         $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE}_WIDX $job $COMOUT/$grib2_idx
+         $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE} $job $COMOUT/rap.${cycle}.awp${grid}f${fhr}.grib2
+         $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE}_WIDX $job $COMOUT/rap.${cycle}.awp${grid}f${fhr}.grib2.idx
+      fi
+    fi # end 221 test
+  elif [ ${grid} -eq 221 ] ; then
+      if test "$SENDCOM" = 'YES'
+       then
+        mv tmpuv_${grid}.grib2 ${COMOUT}/rap.${cycle}.awip32f${fhr}.grib2
+        ${WGRIB2} ${COMOUT}/rap.${cycle}.awip32f${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awip32f${fhr}.grib2.idx
+      fi
+      if [ $SENDDBN = YES ]
+         then
+         ALERT_TYPE=RAP_FULL32_GB2
+         $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE} $job $COMOUT/rap.${cycle}.awip32f${fhr}.grib2
+         $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE}_WIDX $job $COMOUT/rap.${cycle}.awip32f${fhr}.grib2.idx
+      fi
+  else
+      if test "$SENDCOM" = 'YES'; then
+       mv tmpuv_${grid}.grib2 ${COMOUT}/rap.${cycle}.awp${grid}f${fhr}.grib2
+       ${WGRIB2} ${COMOUT}/rap.${cycle}.awp${grid}f${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awp${grid}f${fhr}.grib2.idx
+      fi
+      if [ $SENDDBN = YES ]
+         then
+          fil=awp${grid}
+          case $fil in
+           awp243)      ALERT_TYPE=RAP_HI_GB2;;
+           awp242)      ALERT_TYPE=RAP_AK11_GB2;;
+           awp200)      ALERT_TYPE=RAP_PR16_GB2;;
+          esac
+
+         $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE} $job $COMOUT/rap.${cycle}.awp${grid}f${fhr}.grib2
+         $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE}_WIDX $job $COMOUT/rap.${cycle}.awp${grid}f${fhr}.grib2.idx
       fi
   fi # check for 3-hr
+  #alert that grids necessary for making buckets are in final form
+  if [ $fhr -eq 03 -o $fhr -eq 06 -o $fhr -eq 09 -o $fhr -eq 12 -o $fhr -eq 15 -o \
+       $fhr -eq 18 ] ; then
+    echo done >$FCSTDIR/postdone_${grid}_f${fhr}_${cyc}
+  fi
 fi
 done
-
-
-echo done >$FCSTDIR/rappost.done${fhr}
 
 #Now do the AWIPS grid conversion
   $USHrap/rap_mkawp.sh $fhr
 #End of AWIPS grid generation
+
+ecflow_client --event grib_ready
 
 if [ $fhr -gt 0 -a $fhr -lt 7 ]
 then
