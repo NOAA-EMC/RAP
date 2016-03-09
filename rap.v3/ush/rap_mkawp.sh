@@ -15,11 +15,7 @@ set -xa
 
 fhr=$1
 
-export TOCGRIB=${TOCGRIB:-/nwprod/util/exec/tocgrib}
-export TOCGRIB2=${TOCGRIB2:-/nwprod/util/exec/tocgrib2}
-export GRBINDEX=$utilexec/grbindex
-
-run236="00 01 02 03 04 05 06 07 08 09 12"
+run236="00 01 02 03 04 05 06 07 08 09 12 15 18 21"
 if  echo $run236 |grep $fhr;
 then
   # Processing AWIPS 236 grids
@@ -34,7 +30,7 @@ then
   if [ $fhr -eq 06 -o $fhr -eq 09 -o $fhr -eq 12 -o $fhr -eq 15 -o \
        $fhr -eq 18 -o $fhr -eq 21 ] ; then
 
-    $utilexec/grb2index ${COMOUT}/rap.t${cyc}z.awp236pgrbf${fhr}.grib2 rap.t${cyc}z.awp236pgrbf${fhr}.grib2.idxbin
+    $GRB2INDEX ${COMOUT}/rap.t${cyc}z.awp236pgrbf${fhr}.grib2 rap.t${cyc}z.awp236pgrbf${fhr}.grib2.idxbin
     cp ${COMOUT}/rap.t${cyc}z.awp236pgrbf${fhr}.grib2 awp236pgrbf${fhr}.grib2
     let fhr3=fhr-3
     typeset -Z2 fhr3
@@ -43,15 +39,14 @@ then
 # proceeding.
 #
     ic=0
-    $utilexec/grb2index ${COMOUT}/rap.t${cyc}z.awp236pgrbf${fhr3}.grib2 rap.t${cyc}z.awp236pgrbf${fhr3}.grib2.idxbin
-    while [ ! -r rap.t${cyc}z.awp236pgrbf${fhr3}.grib2.idxbin -o \
-            ! -r $COMOUT/rap.t${cyc}z.awp236pgrbf${fhr3}.grib2 ] ; do
+    while [ ! -r $FCSTDIR/postdone_236_f${fhr3}_${cyc}] ; do
       let ic=ic+1
       if [ $ic -gt 180 ] ; then
         err_exit "F$fhr SUB PROCESSING GIVING UP AFTER 45 MINUTES WAITING FOR F$fhr3 files"
       fi
       sleep 15
     done
+    $GRB2INDEX ${COMOUT}/rap.t${cyc}z.awp236pgrbf${fhr3}.grib2 rap.t${cyc}z.awp236pgrbf${fhr3}.grib2.idxbin
 
 # start grid 236 processing
 
@@ -84,12 +79,29 @@ EOF
     cat cprecip236.${fhr} >> awp236pgrbf${fhr}.grib2
     cat weasd236.${fhr} >> awp236pgrbf${fhr}.grib2
     cat graupel236.${fhr} >> awp236pgrbf${fhr}.grib2
-
+  if test "$SENDCOM" = 'YES'
+  then
     cp awp236pgrbf${fhr}.grib2 $COMOUT/rap.${cycle}.awp236pgrbf${fhr}.grib2
+  fi
 # end grid 236 processing
-fi
+  if [ $SENDDBN = YES ]
+    then
+      ALERT_TYPE=RAP_PG40_GB2
 
- $utilexec/cnvgrib -g21 $COMOUT/rap.${cycle}.awp236pgrbf${fhr}.grib2 RAP40PRS
+      $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE} $job $COMOUT/rap.${cycle}.awp236pgrbf${fhr}.grib2
+      $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE}_WIDX $job $COMOUT/rap.${cycle}.awp236pgrbf${fhr}.grib2.idx
+  fi
+fi
+  if [ $fhr -eq 03 -o $fhr -eq 06 -o $fhr -eq 09 -o $fhr -eq 12 -o $fhr -eq 15 -o \
+       $fhr -eq 18 ] ; then
+    echo done >$FCSTDIR/postdone_236_f${fhr}_${cyc}
+  fi
+  
+  if [ $fhr -eq 00 -o $fhr -eq 01 -o $fhr -eq 02 -o $fhr -eq 03 -o $fhr -eq 04 -o \
+       $fhr -eq 05 -o $fhr -eq 06 -o $fhr -eq 07 -o $fhr -eq 08 -o $fhr -eq 09 \
+       -o $fhr -eq 12 ] ; then
+
+ $CNVGRIB -g21 $COMOUT/rap.${cycle}.awp236pgrbf${fhr}.grib2 RAP40PRS
  $GRBINDEX RAP40PRS RAP40PRSI
 
   export FORTREPORTS=unit_vars=yes 
@@ -103,7 +115,7 @@ fi
   if test "$SENDCOM" = 'YES'
   then
     cp xtrn.${cycle}.faarap${fhr} $COMOUT/rap.${cycle}.g236xtrn.f${fhr}
-    cp xtrn.${cycle}.faarap${fhr} $pcom/rap.${cycle}.g236xtrn.f${fhr}
+    cp xtrn.${cycle}.faarap${fhr} $PCOM/rap.${cycle}.g236xtrn.f${fhr}
   fi
   if test "$SENDDBN" = 'YES'
   then
@@ -116,11 +128,12 @@ fi
     then
      if [ fhr -le 03 ]
       then
-       $DBNROOT/bin/dbn_alert GRIB_LOW rap $job $pcom/rap.${cycle}.g236xtrn.f${fhr}
+       $DBNROOT/bin/dbn_alert GRIB_LOW rap $job $PCOM/rap.${cycle}.g236xtrn.f${fhr}
      fi
     else
-       $DBNROOT/bin/dbn_alert GRIB_LOW rap $job $pcom/rap.${cycle}.g236xtrn.f${fhr}
+       $DBNROOT/bin/dbn_alert GRIB_LOW rap $job $PCOM/rap.${cycle}.g236xtrn.f${fhr}
     fi
+  fi
   fi
 fi   # end grid 236 processing
 
@@ -136,7 +149,7 @@ cp ${COMOUT}/rap.t${cyc}z.awp130pgrbf${fhr}.grib2 awp130pgrbf${fhr}.grib2
   if [ $fhr -eq 06 -o $fhr -eq 09 -o $fhr -eq 12 -o $fhr -eq 15 -o \
        $fhr -eq 18 -o $fhr -eq 21 ] ; then
 
-    $utilexec/grb2index ${COMOUT}/rap.t${cyc}z.awp130pgrbf${fhr}.grib2 rap.t${cyc}z.awp130pgrbf${fhr}.grib2.idxbin
+    $GRB2INDEX ${COMOUT}/rap.t${cyc}z.awp130pgrbf${fhr}.grib2 rap.t${cyc}z.awp130pgrbf${fhr}.grib2.idxbin
     let fhr3=fhr-3
     typeset -Z2 fhr3
 #
@@ -144,15 +157,14 @@ cp ${COMOUT}/rap.t${cyc}z.awp130pgrbf${fhr}.grib2 awp130pgrbf${fhr}.grib2
 # proceeding.
 #
     ic=0
-    $utilexec/grb2index ${COMOUT}/rap.t${cyc}z.awp130pgrbf${fhr3}.grib2 rap.t${cyc}z.awp130pgrbf${fhr3}.grib2.idxbin
-    while [ ! -r rap.t${cyc}z.awp130pgrbf${fhr3}.grib2.idxbin -o \
-            ! -r $COMOUT/rap.t${cyc}z.awp130pgrbf${fhr3}.grib2 ] ; do
+    while [ ! -r $FCSTDIR/postdone_130_f${fhr3}_${cyc}] ; do
       let ic=ic+1
       if [ $ic -gt 180 ] ; then
         err_exit "F$fhr SUB PROCESSING GIVING UP AFTER 45 MINUTES WAITING FOR F$fhr3 files"
       fi
       sleep 15
     done
+    $GRB2INDEX ${COMOUT}/rap.t${cyc}z.awp130pgrbf${fhr3}.grib2 rap.t${cyc}z.awp130pgrbf${fhr3}.grib2.idxbin
 
 # start grid 130 processing
 
@@ -185,8 +197,21 @@ EOF
     cat cprecip130.${fhr} >> awp130pgrbf${fhr}.grib2
     cat weasd130.${fhr} >> awp130pgrbf${fhr}.grib2
     cat graupel130.${fhr} >> awp130pgrbf${fhr}.grib2
+  if test "$SENDCOM" = 'YES'
+  then
     cp awp130pgrbf${fhr}.grib2 $COMOUT/rap.${cycle}.awp130pgrbf${fhr}.grib2
+  fi
+  if [ $SENDDBN = YES ]
+    then
+       ALERT_TYPE=RAP_PG13_GB2
+       $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE} $job $COMOUT/rap.${cycle}.awp130pgrbf${fhr}.grib2
+       $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE}_WIDX $job $COMOUT/rap.${cycle}.awp130pgrbf${fhr}.grib2.idx
+  fi  
 fi # 3-hr check
+  if [ $fhr -eq 03 -o $fhr -eq 06 -o $fhr -eq 09 -o $fhr -eq 12 -o $fhr -eq 15 -o \
+       $fhr -eq 18 ] ; then
+    echo done >$FCSTDIR/postdone_130_f${fhr}_${cyc}
+  fi
 
 #######################################################
 # Generate 2-hour precip and snow water equivalent for on-time runs.
@@ -195,7 +220,7 @@ fi # 3-hr check
   if [ $fhr -eq 05 -o $fhr -eq 08 -o $fhr -eq 11 -o $fhr -eq 14 -o \
        $fhr -eq 17 -o $fhr -eq 20 ] ; then
 
-    $utilexec/grb2index ${COMOUT}/rap.t${cyc}z.awp130pgrbf${fhr}.grib2 rap.t${cyc}z.awp130pgrbf${fhr}.grib2.idxbin
+    $GRB2INDEX ${COMOUT}/rap.t${cyc}z.awp130pgrbf${fhr}.grib2 rap.t${cyc}z.awp130pgrbf${fhr}.grib2.idxbin
     let fhr2=fhr-2
     typeset -Z2 fhr2
 #
@@ -203,15 +228,14 @@ fi # 3-hr check
 # proceeding.
 #
     ic=0
-    $utilexec/grb2index ${COMOUT}/rap.t${cyc}z.awp130pgrbf${fhr2}.grib2 rap.t${cyc}z.awp130pgrbf${fhr2}.grib2.idxbin
-    while [ ! -r rap.t${cyc}z.awp130pgrbf${fhr2}.grib2.idxbin -o \
-            ! -r $COMOUT/rap.t${cyc}z.awp130pgrbf${fhr2}.grib2 ] ; do
+    while [ ! -r $FCSTDIR/postdone_130_f${fhr2}_${cyc}] ; do
       let ic=ic+1
       if [ $ic -gt 180 ] ; then
         err_exit "F$fhr SUB PROCESSING GIVING UP AFTER 45 MINUTES WAITING FOR F$fhr2 files"
       fi
       sleep 15
     done
+    $GRB2INDEX ${COMOUT}/rap.t${cyc}z.awp130pgrbf${fhr2}.grib2 rap.t${cyc}z.awp130pgrbf${fhr2}.grib2.idxbin
 
 # start grid 130 processing
 
@@ -230,7 +254,7 @@ fi # 3-hr check
     ln -sf awp130pgrbf${fhr}.grib2       fort.15
     ln -sf awp130pgrbf${fhr}.grib2.idxbin   fort.16
     ln -sf precip130.${fhr}           fort.50
-    ln -sf ncprecip236.${fhr}         fort.51
+    ln -sf ncprecip130.${fhr}         fort.51
     ln -sf cprecip130.${fhr}          fort.52
     ln -sf weasd130.${fhr}            fort.53
     ln -sf graupel130.${fhr}            fort.54
@@ -244,6 +268,16 @@ EOF
     cat cprecip130.${fhr} >> awp130pgrbf${fhr}.grib2
     cat weasd130.${fhr} >> awp130pgrbf${fhr}.grib2
     cat graupel130.${fhr} >> awp130pgrbf${fhr}.grib2
+  if test "$SENDCOM" = 'YES'
+  then
+    cp awp130pgrbf${fhr}.grib2 $COMOUT/rap.${cycle}.awp130pgrbf${fhr}.grib2
+  fi
+  if [ $SENDDBN = YES ]
+    then
+       ALERT_TYPE=RAP_PG13_GB2
+       $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE} $job $COMOUT/rap.${cycle}.awp130pgrbf${fhr}.grib2
+       $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE}_WIDX $job $COMOUT/rap.${cycle}.awp130pgrbf${fhr}.grib2.idx
+  fi  
 fi # 2-hr check
 
 # Processing AWIPS 130 grids
@@ -251,20 +285,8 @@ fi # 2-hr check
   export pgm;. prep_step
   startmsg
 
-  if test "$SENDCOM" = 'YES'
-  then
-    cp awp130pgrbf${fhr}.grib2 $COMOUT/rap.${cycle}.awp130pgrbf${fhr}.grib2
-  fi
-
-  if [ $SENDDBN = YES ]
-    then
-       ALERT_TYPE=RAP_PG13_GB2;;
-       $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE} $job $COMOUT/rap.${cycle}.awp130pgrbf${fhr}.grib2
-       $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE}_WIDX $job $COMOUT/rap.${cycle}.awp130pgrbf${fhr}.grib2_idx
-  fi  
- 
   export FORTREPORTS=unit_vars=yes
-  export FORT11=rap.${cycle}.awp130pgrbf${fhr}.grib2      
+  export FORT11=awp130pgrbf${fhr}.grib2      
   export FORT31="";
   export FORT51=grib2.${cycle}.awprap13f${fhr}   
 
@@ -272,7 +294,7 @@ fi # 2-hr check
   err=$?;export err ;err_chk
   if test "$SENDCOM" = 'YES'
   then
-    cp grib2.${cycle}.awprap13f${fhr} $pcom/grib2.${cycle}.awprap13f${fhr}.$job
+    cp grib2.${cycle}.awprap13f${fhr} $PCOM/grib2.${cycle}.awprap13f${fhr}.$job
   fi
 # GSM  had been sending alerts for all fhr < 13 for every
 #   3rd cycle and all fhr < 10 for all other cycles;  changed
@@ -280,7 +302,7 @@ fi # 2-hr check
   if test "$SENDDBN_NTC" = 'YES'
   then
     # rap130 grib2 files to AWIPS NCF
-     $DBNROOT/bin/dbn_alert NTC_LOW $NET $job $pcom/grib2.${cycle}.awprap13f${fhr}.$job
+     $DBNROOT/bin/dbn_alert NTC_LOW $NET $job $PCOM/grib2.${cycle}.awprap13f${fhr}.$job
   fi
 fi # 130 processing
 
@@ -292,7 +314,7 @@ fi # 130 processing
   if [ $fhr -eq 06 -o $fhr -eq 09 -o $fhr -eq 12 -o $fhr -eq 15 -o \
        $fhr -eq 18 -o $fhr -eq 21 ] ; then
 
-    $utilexec/grb2index ${COMOUT}/rap.t${cyc}z.awp252pgrbf${fhr}.grib2 rap.t${cyc}z.awp252pgrbf${fhr}.grib2.idxbin
+    $GRB2INDEX ${COMOUT}/rap.t${cyc}z.awp252pgrbf${fhr}.grib2 rap.t${cyc}z.awp252pgrbf${fhr}.grib2.idxbin
     cp ${COMOUT}/rap.t${cyc}z.awp252pgrbf${fhr}.grib2 awp252pgrbf${fhr}.grib2
     let fhr3=fhr-3
     typeset -Z2 fhr3
@@ -301,15 +323,14 @@ fi # 130 processing
 # proceeding.
 #
     ic=0
-    $utilexec/grb2index ${COMOUT}/rap.t${cyc}z.awp252pgrbf${fhr3}.grib2 rap.t${cyc}z.awp252pgrbf${fhr3}.grib2.idxbin
-    while [ ! -r rap.t${cyc}z.awp252pgrbf${fhr3}.grib2.idxbin -o \
-            ! -r $COMOUT/rap.t${cyc}z.awp252pgrbf${fhr3}.grib2 ] ; do
+    while [ ! -r $FCSTDIR/postdone_252_f${fhr3}_${cyc}] ; do
       let ic=ic+1
       if [ $ic -gt 180 ] ; then
         err_exit "F$fhr SUB PROCESSING GIVING UP AFTER 45 MINUTES WAITING FOR F$fhr3 files"
       fi
       sleep 15
     done
+    $GRB2INDEX ${COMOUT}/rap.t${cyc}z.awp252pgrbf${fhr3}.grib2 rap.t${cyc}z.awp252pgrbf${fhr3}.grib2.idxbin
 
 # start grid 252 processing
 
@@ -350,19 +371,15 @@ EOF
     fi
 
     if [ $SENDDBN = YES ]; then
-       $DBNROOT/bin/dbn_alert MODEL RAP_PG20_GB2 $job ${COMOUT}/rap.t${cyc}z.awp252pgrbf${fhr}
+       $DBNROOT/bin/dbn_alert MODEL RAP_PG20_GB2 $job ${COMOUT}/rap.t${cyc}z.awp252pgrbf${fhr}.grib2
+       $DBNROOT/bin/dbn_alert MODEL RAP_PG20_GB2_WIDX $job $COMOUT/rap.${cycle}.awp252pgrbf${fhr}.grib2.idx
     fi
 
-  else  # still need to do alerts even if 3-hr bucket processing not done
-   if test "$SENDCOM" = 'YES'
-      then
-       cp awp252pgrbf${fhr}.grib2 $COMOUT/rap.${cycle}.awp252pgrbf${fhr}.grib2
-    fi
-
-    if [ $SENDDBN = YES ]; then
-       $DBNROOT/bin/dbn_alert MODEL RAP_PG20_GB2 $job ${COMOUT}/rap.t${cyc}z.awp252pgrbf${fhr}
-    fi
 fi # end 252 processing
+  if [ $fhr -eq 03 -o $fhr -eq 06 -o $fhr -eq 09 -o $fhr -eq 12 -o $fhr -eq 15 -o \
+       $fhr -eq 18 ] ; then
+    echo done >$FCSTDIR/postdone_252_f${fhr}_${cyc}
+  fi
 
 #process 200
 run200="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21"
@@ -380,4 +397,16 @@ then
   $TOCGRIB2 <$PARMutil/grib2_awprap200f${fhr} >> tocgrib3.out
 
   err=$?;export err ;#err_chk
+  if test "$SENDCOM" = 'YES'
+  then
+    cp grib2.${cycle}.awprap200f${fhr} $PCOM/grib2.${cycle}.awprap200f${fhr}.$job
+  fi
+# GSM  had been sending alerts for all fhr < 13 for every
+#   3rd cycle and all fhr < 10 for all other cycles;  changed
+#   10/9/12 to alert all forecast hours for all cycles  
+  if test "$SENDDBN_NTC" = 'YES'
+  then
+    # rap200 grib2 files to AWIPS NCF
+     $DBNROOT/bin/dbn_alert NTC_LOW $NET $job $PCOM/grib2.${cycle}.awprap200f${fhr}.$job
+  fi
 fi # 200 processing
