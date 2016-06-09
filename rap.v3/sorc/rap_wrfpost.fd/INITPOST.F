@@ -844,8 +844,14 @@
 
       DO J=Jsta,jend
       DO I=1,IM
-              PINT(I,J,LM+1)=DUMMY(I,J)
-              ALPINT(I,J,LM+1)=ALOG(PINT(I,J,LM+1))
+        if((PINT(I,J,lm) - DUMMY(I,J)).ge.0.) then 
+           write(*,*) 'non-monotonic PINT, i,j,lm ', i,j,lm
+           write(*,*)  'PINT: lm,lm+1, PMID: lm', PINT(I,J,LM),DUMMY(I,J), PMID(I,J,LM)
+           DUMMY(I,J)=PMID(I,J,LM)*1.001
+           write(*,*) 'after adjustment-i,j,lm+1 ', i,j,lm+1,DUMMY(I,J)
+        endif
+        PINT(I,J,LM+1)=DUMMY(I,J)
+        ALPINT(I,J,LM+1)=ALOG(PINT(I,J,LM+1))
       ENDDO
       ENDDO
 
@@ -1134,11 +1140,10 @@
 ! Compute 3-D cloud fraction not provided from ARW
         Cloud_def_p = 0.0000001
         do k = 1,lm
-          LL=LM-k+1
           do j = jsta_2l, jend_2u
              do i = 1, im
-               dummy(i,j)=QQW(i,j,ll)
-               dummy2(i,j)=QQI(i,j,ll)
+               dummy(i,j)=QQW(i,j,k)
+               dummy2(i,j)=QQI(i,j,k)
              enddo
           enddo
 
@@ -1150,8 +1155,6 @@
           do i = 1, im
             radius = 30000.
             numr = nint(radius/dxval)
-!            do k = 1,lm
-!             LL=LM-k+1
               totcount = 0.
               cloudcount=0.
               cfr(i,j,k) = 0.
@@ -1180,19 +1183,18 @@
 !LOW
         do j = jsta_2l, jend_2u
           do i = 1, im
-            CFRACL(I,J)=0.
+             CFRACL(I,J)=0.
              CFRACM(I,J)=0.
              CFRACH(I,J)=0.
 
            do k = 1,lm
-             LL=LM-k+1
-              if (PMID(I,J,LL) .ge. PTOP_LOW) then
+              if (PMID(I,J,K) .ge. PTOP_LOW) then
 !LOW
                 CFRACL(I,J)=max(CFRACL(I,J),cfr(i,j,k))
-              elseif (PMID(I,J,LL) .lt. PTOP_LOW .and. PMID(I,J,LL) .ge. PTOP_MID) then
+              elseif (PMID(I,J,K) .lt. PTOP_LOW .and. PMID(I,J,K) .ge. PTOP_MID) then
 !MID
                 CFRACM(I,J)=max(CFRACM(I,J),cfr(i,j,k))
-              elseif (PMID(I,J,LL) .lt. PTOP_MID .and. PMID(I,J,LL) .ge. PTOP_HIGH) then
+              elseif (PMID(I,J,K) .lt. PTOP_MID .and. PMID(I,J,K) .ge. PTOP_HIGH) then
 !HIGH
                 CFRACH(I,J)=max(CFRACH(I,J),cfr(i,j,k))
               endif
@@ -2232,7 +2234,18 @@ endif  ! 1==2
         IM,1,JM,1,IM,JS,JE,1)
        do j = jsta_2l, jend_2u
         do i = 1, im
-            SNO ( i, j ) = dummy ( i, j )
+           if( dummy ( i, j ) <= 5000.0 .and. dummy ( i, j ) >=0.0) then
+              SNO ( i, j ) = dummy ( i, j )
+           elseif( dummy ( i, j ) > 5000.0) then 
+              SNO ( i, j ) = 5000.0
+              write(*,*) 'too large SNOW=',i,j,dummy ( i, j )
+           elseif( dummy ( i, j ) < 0.0 ) then 
+              SNO ( i, j ) = 0.0
+              write(*,*) 'negative SNOW=',i,j,dummy ( i, j )
+           else 
+              SNO ( i, j ) = 0.0
+              write(*,*) 'strange SNOW=',i,j,dummy ( i, j )
+           endif
         end do
        end do
 ! Snow depth
@@ -2241,7 +2254,18 @@ endif  ! 1==2
         IM,1,JM,1,IM,JS,JE,1)
        do j = jsta_2l, jend_2u
         do i = 1, im
-            SI ( i, j ) = dummy ( i, j ) * 1000.
+           if( dummy ( i, j ) <= 50.0 .and. dummy ( i, j ) >=0.0) then
+              SI ( i, j ) = dummy ( i, j ) * 1000.
+           elseif( dummy ( i, j ) > 50.0) then 
+              SI ( i, j ) = 50.0 * 1000.
+              write(*,*) 'too large SNOWH=',i,j,dummy ( i, j )
+           elseif( dummy ( i, j ) < 0.0 ) then 
+              SI ( i, j ) = 0.0
+              write(*,*) 'negative SNOWH=',i,j,dummy ( i, j )
+           else 
+              SI ( i, j ) = 0.0
+              write(*,*) 'strange SNOWH=',i,j,dummy ( i, j )
+           endif
         end do
        end do
 
