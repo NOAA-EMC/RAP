@@ -132,6 +132,9 @@ subroutine update_SNOWICE_netcdf_mass(snowiceRR, xland, luse, nlon, nlat,xlandIM
   real snowsum,snowhsum,snowcsum,tskinsum,tsnowsum,surftempsum,soilt1sum,soilt2sum,soilt3sum
   real rhosn, snowtrimsum, snowbuiltsum
   integer nsoil,ii,jj,itr,jtr,ist,iend,jst,jend,numnb, numbuildmin
+!
+  integer :: iii,jjj,num,numh,i4,j4
+  real    :: newvalue, newvalueh
 
   R = 287.06  ! gas constant JKg-1K-1
   Cp= 1003.5  ! Specific heat capacity  JKg-1K-1
@@ -680,6 +683,7 @@ endif
 !
 !  trim snow
 !
+
   snowtrimsum=0.
   snowbuiltsum=0.
 
@@ -800,7 +804,15 @@ endif
 !tgs 22apr15 - this warning is OK if the GFS background snow is getting trimmed (cold-start).
 ! This warning in the cycled RAP and HRRR indicates a problem.
                 print *,'WARNING in snow build from the neighbor-point trimmed snow '
-                print *,'i,j,snowhtr',i,j,snowhtr
+                print *,'Set snow to min value,j,snowhtr',i,j,snowhtr
+                snow(i,j) = 1.0
+                snowh(i,j) = 1.0/250. ! rhosn=250.,snowh[m]=snow[mm]/rhosn
+                snowc(i,j) = min(1.,snow(i,j)/32.) ! snowc=1 if snow=32mm 
+                tskin(i,j) = min(tskin(i,j),272.)
+                tsnow(i,j) = min(tsnow(i,j),272.)
+                soiltemp(i,j,1) = min(soiltemp(i,j,1),272.)
+                soiltemp(i,j,2) = min(soiltemp(i,j,2),272.5)
+                soiltemp(i,j,3) = min(soiltemp(i,j,3),273.)
               endif
            else
 
@@ -808,8 +820,8 @@ endif
                 if(snowhav > 1.e-12 .and. snowav > 1.e-12) then
                   print *,'build snow based on neighbor points ',numnb
                   rhosn=snowav/snowhav
-                  snowh(i,j) = snow(i,j)/rhosn
                   snow(i,j) = max(1.,snowav)
+                  snowh(i,j) = snow(i,j)/rhosn
                   snowc(i,j) = min(1.,snow(i,j)/32.)
                   tskin(i,j) = min(min(tskinav,tskin(i,j)),272.)
                   tsnow(i,j) = min(min(tsnowav,tsnow(i,j)),272.)
@@ -820,7 +832,15 @@ endif
 !tgs 22apr15 - this warning is OK if the GFS background snow is getting trimmed (cold-start).
 ! This warning in the cycled RAP and HRRR indicates a problem.
                print *,' WARNING in snow build from the neighbors average '
-               print *,'i,j,snowhav,rhosn',i,j,snowhav,rhosn
+               print *,'Set snow to min value - i,j,snowhav,rhosn',i,j,snowhav,rhosn
+                snow(i,j) = 1.0
+                snowh(i,j) = 1.0/250. ! rhosn=250.,snowh[m]=snow[mm]/rhosn
+                snowc(i,j) = min(1.,snow(i,j)/32.) ! snowc=1 if snow=32mm 
+                tskin(i,j) = min(tskin(i,j),272.)
+                tsnow(i,j) = min(tsnow(i,j),272.)
+                soiltemp(i,j,1) = min(soiltemp(i,j,1),272.)
+                soiltemp(i,j,2) = min(soiltemp(i,j,2),272.5)
+                soiltemp(i,j,3) = min(soiltemp(i,j,3),273.)
                 endif
              else
                print *,'set snow to min value'
@@ -846,13 +866,51 @@ endif
 !            snowh(600,494)=50.
 !            snow(600,494) = 20500.
 ! limit snow depth not to exceed 50 m
-!     if(snowh(i,j) > 50.) then
-!   print *,'Huge snow value i,j,snowh(i,j)',i,j,snowh(i,j)
-!            rhosn=snow(i,j)/snowh(i,j)
+     if((snowh(i,j) >= 0. .and. snowh(i,j) <=50.0) .and. (snow(i,j)  <=20000. .and. snow(i,j)  >=0.) ) then
+     elseif(snowh(i,j) < 0. .or. snow(i,j)  < 0.) then
+            snowh(i,j)=0.
+            snow(i,j) = 0.
+     elseif(snowh(i,j) > 50. .or. snow(i,j)  > 20000.) then
+          print *,'Huge snow value i,j,snowh(i,j),snow(i,j)',i,j,snowh(i,j),snow(i,j)
 !            snowh(i,j)=min(50.,snowh(i,j))
-!            snow(i,j) = rhosn*snowh(i,j)
-!   print *,'Corrected snow value i,j,snowh(i,j),snow(i,j)',i,j,snowh(i,j),snow(i,j)
-!     endif
+!            snow(i,j) = min(20000.,snow(i,j))
+             newvalue=0.0
+             newvalueh=0.0
+             num=0
+             numh=0
+             do jjj=j-1,j+1
+             do iii=i-1,i+1
+                write(*,*) iii,jjj,snowh(iii,jjj),snow(iii,jjj)
+                if(iii .ne. i .and. jjj .ne. j) then
+                  i4=min(max(iii,1),nlon)
+                  j4=min(max(jjj,1),nlat)
+                  newvalue=newvalue+snow(i4,j4)
+                  newvalueh=newvalueh+snowh(i4,j4)
+                  num=num+1
+                endif
+             enddo
+             enddo
+             if(num > 0 .and. newvalue < 100000.0 .and. newvalueh < 200.0) then
+                  snow(i,j)=newvalue/num
+                  snowh(i,j)=newvalueh/num
+             else
+                  snow(i,j)=snow(i-1,j-1)
+                  snowh(i,j)=snowh(i-1,j-1)
+             endif
+
+          print *,'Corrected snow value i,j,snowh(i,j),snow(i,j)',i,j,snowh(i,j),snow(i,j)
+     else
+          print *,'===>Error<===: strange point i,j,snowh(i,j),snow(i,j)',i,j,snowh(i,j),snow(i,j)
+          snowh(i,j)=0.0
+          snow(i,j) = 0.0
+     endif
+! check consistency of snow variables after snow trim
+     if((snow(i,j) <= 0..and.snowh(i,j) > 0.) .or. (snowh(i,j) <=0..and.snow(i,j) > 0.)) then
+        print *,'Inconsistency of snow and snowh AFTER snow trim at i,j,snow,snowh', i,j,snow(i,j),snowh(i,j)
+        snow(i,j)  = 0.
+        snowh(i,j) = 0.
+   print *,'Corrected snow and snowh at i,j,snow,snowh',i,j,snow(i,j),snowh(i,j)
+     endif 
   ENDDO
   ENDDO
 
