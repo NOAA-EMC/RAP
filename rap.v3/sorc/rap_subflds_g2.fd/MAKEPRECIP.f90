@@ -159,7 +159,7 @@
         JIDS=-9999
         JPDTN=8
         JPDT=-9999
-        JPDT(2)=9
+        JPDT(2)=8
         JGDTN=-1
         JGDT=-9999
         UNPACK=.true.
