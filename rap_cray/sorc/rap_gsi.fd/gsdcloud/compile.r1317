@@ -1,0 +1,36 @@
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c kinds.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c constants.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c ARPS_cldLib.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c cloudCover_radar.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c mthermo.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c BackgroundCld.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c cloudLWC.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c pcp_mxr_ARPSlib.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c BckgrndCC.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c cloudLayers.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c radar_ref2tten.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c PrecipMxr_radar.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c cloudType.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c read_Lightning_cld.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c PrecipType.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c cloud_saturation.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c read_NESDIS.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c TempAdjust.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c read_Surface.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c adaslib.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c convert_lghtn2ref.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c read_nasalarc_cld.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c build_missing_REFcone.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c get_sfm_1d_gnl.f90
+get_sfm_1d_gnl.f90(240): remark #8291: Recommended relationship between field width 'W' and the number of fractional digits 'D' in this edit descriptor is 'W>=D+7'.
+                       f7.3,' es=',f6.1,' Lv=',e8.3)
+------------------------------------------------^
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c read_radar_ref.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c cloudCover_NESDIS.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c smooth.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c cloudCover_Surface.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c map_ctp.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c vinterp_radar_ref.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c hydro_mxr_thompson.f90
+mpfort -O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone -traceback  -c pbl_height.f90
+ar  rc libgsdcloud.a kinds.o                    constants.o ARPS_cldLib.o              cloudCover_radar.o     mthermo.o BackgroundCld.o            cloudLWC.o             pcp_mxr_ARPSlib.o BckgrndCC.o                cloudLayers.o          radar_ref2tten.o PrecipMxr_radar.o          cloudType.o            read_Lightning_cld.o PrecipType.o               cloud_saturation.o     read_NESDIS.o TempAdjust.o               read_Surface.o adaslib.o                  convert_lghtn2ref.o    read_nasalarc_cld.o build_missing_REFcone.o    get_sfm_1d_gnl.o       read_radar_ref.o cloudCover_NESDIS.o        smooth.o cloudCover_Surface.o       map_ctp.o              vinterp_radar_ref.o hydro_mxr_thompson.o       pbl_height.o

@@ -1,0 +1,51 @@
+##!/bin/ksh --login
+#
+#BSUB -oo /gpfs/hps/ptmp/Corey.Guastini/outputrap/rap_fcst.out12z
+#BSUB -eo /gpfs/hps/ptmp/Corey.Guastini/outputrap/rap_fcst.out12z
+#BSUB -J rap_fcst_12
+#BSUB -W 01:00
+#BSUB -q "dev"
+#BSUB -P RAP-T2O
+#BSUB -M 1800
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1224*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=1800]
+#BSUB -x
+#BSUB -a poe
+#
+# EXPORT list here
+set -x
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+# module load ics
+# module load ibmpe
+# module load NetCDF/4.2/serial
+
+module load prod_util
+module load prod_envir
+
+module list
+
+export MP_LABELIO=yes
+
+export KMP_AFFINITY=disabled
+export OMP_NUM_THREADS=1
+
+export numprocs=1224
+export NTASK=1224
+export PTILE=24
+
+
+export envir=prod
+export RUN_ENVIR=prod
+export cyc=12
+export job=rap_fcst_12
+export group_name=meso
+export COMDATEROOT=/gpfs/hps/nco/ops/com/
+DATE=`cat ${COMDATEROOT}/date/t${cyc}z | cut -c7-14`
+
+. /gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/versions/rap.ver
+# CALL executable job script here
+/gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/rap.${model_ver}/jobs/JRAP_FORECAST.sms.$envir

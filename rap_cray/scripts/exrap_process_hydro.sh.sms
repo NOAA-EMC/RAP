@@ -1,0 +1,216 @@
+#!/bin/ksh -l
+################################################################################
+####  UNIX Script Documentation Block
+#                      .                                             .
+# Script name:         rap_process_hydro.sh.sms
+# Script description:  runs radar mosaic and Langley cloud processing 
+#
+# Author:        Ming Hu / Geoff Manikin   Org: EMC          Date: 2011-08-24
+#
+# Script history log:
+# 2011-08-24  M Hu / G Manikin
+#
+
+set -x
+
+cd $DATA
+
+# Set up some constants
+export HOMErap=${HOMErap:-/gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/rap.v3.0.0}
+export PARMrap=${PARMrap:-$HOMErap/parm}
+export FIXrap=${FIXrap:-$HOMErap/fix}
+export EXECrap=${EXECrap:-$HOMErap/exec}
+export ndate=${ndate:-/nwprod/util/exec/ndate}
+#export HOSTNAME=`/bin/hostname 2>/dev/null`
+# Directory for the Radar Mosaic input files
+export COMRAD=${COMRAD:-/com/hourly/prod}
+# NSSL MOSAIC Data
+export COM_MOSAIC=${COM_MOSAIC:-/gpfs/gp1/nco/ops/dcom/us007003/ldmdata/obs/upperair/mrms}
+
+export MOSAICTILENUM=4
+
+### Process Mosaic
+numtiles=${MOSAICTILENUM}
+
+# Directory for the Radar Mosaic input files
+export COMRAD=${COMRAD:-/com/hourly/prod}
+
+#START_TIME=`cat STARTTIME`
+START_TIME=$PDY$cyc
+echo $START_TIME >STARTTIME
+
+# Compute date & time components for the analysis time
+ymd=`echo ${START_TIME} | cut -c1-8`
+ymdh=`echo ${START_TIME} | cut -c1-10`
+hh=`echo ${START_TIME} | cut -c9-10`
+YYYYJJJHH00=`date +"%Y%j%H00" -d "${ymd} ${hh}"`
+YYYYMMDDHH=`date +"%Y%m%d%H" -d "${ymd} ${hh}"`
+YYYY=`date +"%Y" -d "${ymd} ${hh}"`
+MM=`date +"%m" -d "${ymd} ${hh}"`
+DD=`date +"%d" -d "${ymd} ${hh}"`
+HH=`date +"%H" -d "${ymd} ${hh}"`
+mm=`date +"%M" -d "${ymd} ${hh}"`
+
+bsub < $HOMErap/sms/copy_files
+sleep 150
+cp ${PARMrap}/rap_prepobs.bufrtable  ./prepobs_prep.bufrtable
+cp ${FIXrap}/rap_geo_em.d01.nc ./geo_em.d01.nc
+
+# find NSSL grib2 mosaic files
+COM_MOSAIC_GRIB2=${COM_MOSAIC}/conus/MergedReflectivityQC
+numgrib2_00=`ls ${COM_MOSAIC_GRIB2}/MergedReflectivityQC_*_${YYYY}${MM}${DD}-${HH}00??.grib2.gz | wc -l`
+numgrib2_01=`ls ${COM_MOSAIC_GRIB2}/MergedReflectivityQC_*_${YYYY}${MM}${DD}-${HH}01??.grib2.gz | wc -l`
+numgrib2_02=`ls ${COM_MOSAIC_GRIB2}/MergedReflectivityQC_*_${YYYY}${MM}${DD}-${HH}02??.grib2.gz | wc -l`
+if [ ${numgrib2_00} -eq 33 ]; then
+   cp ${COM_MOSAIC_GRIB2}/MergedReflectivityQC_*_${YYYY}${MM}${DD}-${HH}00??.grib2.gz .
+   ls MergedReflectivityQC_*_${YYYY}${MM}${DD}-${HH}????.grib2.gz > filelist_mrms
+else
+   if [ ${numgrib2_01} -eq 33 ]; then
+      cp ${COM_MOSAIC_GRIB2}/MergedReflectivityQC_*_${YYYY}${MM}${DD}-${HH}01??.grib2.gz .
+      ls MergedReflectivityQC_*_${YYYY}${MM}${DD}-${HH}????.grib2.gz > filelist_mrms
+   else
+      if [ ${numgrib2_02} -eq 33 ]; then
+         cp ${COM_MOSAIC_GRIB2}/MergedReflectivityQC_*_${YYYY}${MM}${DD}-${HH}02??.grib2.gz .
+         ls MergedReflectivityQC_*_${YYYY}${MM}${DD}-${HH}????.grib2.gz > filelist_mrms
+      else
+         echo " No NSSL gribs data available, use NCEP 8 tiles binary"
+         if [ -s filelist_mrms ]; then
+            rm -f filelist_mrms
+         fi
+      fi
+   fi
+fi
+
+if [ -s filelist_mrms ]; then
+   numgrib2=`more filelist_mrms | wc -l`
+   echo "NSSL grib2 file level number = $numgrib2"
+else
+   numgrib2=0
+fi
+
+# Link to the radar data
+if [ $numgrib2 -eq 36 ]; then 
+   gzip -d *.gz
+   numtiles=1
+   rm -f filelist_mrms
+   ls MergedReflectivityQC_*_${YYYY}${MM}${DD}-${HH}????.grib2 > filelist_mrms
+else
+   if [ -s ${COM_MOSAIC}/tile1/mrefl/MREF3D33L.${YYYY}${MM}${DD}.${HH}${mm}00.gz ] && \
+      [ -s ${COM_MOSAIC}/tile2/mrefl/MREF3D33L.${YYYY}${MM}${DD}.${HH}${mm}00.gz ] && \
+      [ -s ${COM_MOSAIC}/tile3/mrefl/MREF3D33L.${YYYY}${MM}${DD}.${HH}${mm}00.gz ] && \
+      [ -s ${COM_MOSAIC}/tile4/mrefl/MREF3D33L.${YYYY}${MM}${DD}.${HH}${mm}00.gz ]; then
+      numtiles=4
+      cp ${COM_MOSAIC}/tile1/mrefl/MREF3D33L.${YYYY}${MM}${DD}.${HH}${mm}00.gz ./mosaic_t1.gz
+      cp ${COM_MOSAIC}/tile2/mrefl/MREF3D33L.${YYYY}${MM}${DD}.${HH}${mm}00.gz ./mosaic_t2.gz
+      cp ${COM_MOSAIC}/tile3/mrefl/MREF3D33L.${YYYY}${MM}${DD}.${HH}${mm}00.gz ./mosaic_t3.gz
+      cp ${COM_MOSAIC}/tile4/mrefl/MREF3D33L.${YYYY}${MM}${DD}.${HH}${mm}00.gz ./mosaic_t4.gz
+      gzip -d *.gz
+   else
+      numtiles=81
+      export MOSAICdir=$COMRAD/radar.${ymdh}
+      ln -s ${MOSAICdir}/tile1/${ymd}_${hh}00.mosaic ./mosaic_t1
+      ln -s ${MOSAICdir}/tile2/${ymd}_${hh}00.mosaic ./mosaic_t2
+      ln -s ${MOSAICdir}/tile3/${ymd}_${hh}00.mosaic ./mosaic_t3
+      ln -s ${MOSAICdir}/tile4/${ymd}_${hh}00.mosaic ./mosaic_t4
+      ln -s ${MOSAICdir}/tile5/${ymd}_${hh}00.mosaic ./mosaic_t5
+      ln -s ${MOSAICdir}/tile6/${ymd}_${hh}00.mosaic ./mosaic_t6
+      ln -s ${MOSAICdir}/tile7/${ymd}_${hh}00.mosaic ./mosaic_t7
+      ln -s ${MOSAICdir}/tile8/${ymd}_${hh}00.mosaic ./mosaic_t8
+   fi
+fi
+
+echo ${ymdh} > ./mosaic_cycle_date
+
+cat << EOF > mosaic.namelist
+ &setup
+  tversion=${numtiles},
+  analysis_time = ${YYYYMMDDHH},
+  dataPath = './',
+ /
+
+EOF
+
+# Run Process_mosaic
+export pgm=$EXECrap/rap_process_mosaic
+#. prep_step
+
+#startmsg
+#poe $pgm >> $pgmout 2>errfile 
+cp ${EXECrap}/rap_process_mosaic .
+runline="aprun -n 36 -N 4 ./rap_process_mosaic"
+$runline > process_mosaic.out
+#mpirun.lsf $pgm > process_mosaic.out
+#export err=$?;err_chk
+
+if [ $SENDCOM = YES ]
+then
+  cp NSSLRefInGSI.bufr $COMOUT/rap.t${cyc}z.mosaic.bufr
+fi
+
+### Process Cloud
+#changed from com_in to com_out
+cp $COM_OUT/rap.${ymd}/rap.t${cyc}z.lgycld.tm00.bufr_d NASA_LaRC_cloud.bufr 
+#$EXECrap/rap_ssrc < rap.t${cyc}z.lgycld.tm00.bufr_d > NASA_LaRC_cloud.bufr
+
+echo ${ymdh} > ./nasaLaRC_cycle_date
+
+## Run Process Cloud
+export pgm=$EXECrap/rap_process_cloud
+#. prep_step
+
+#startmsg
+#poe $pgm >> $pgmout 2>errfile
+cp ${EXECrap}/rap_process_cloud .
+runline="aprun -n 36 -N 4 ./rap_process_cloud"
+$runline > process_cloud.out
+#mpirun.lsf $pgm > process_cloud.out
+#export err=$?;err_chk
+
+if [ $SENDCOM = YES ]
+then
+  cp NASALaRCCloudInGSI.bufr $COMOUT/rap.t${cyc}z.nasacloud.bufr
+fi
+### Process Lightning
+if [ -s $COM_IN/rap.${ymd}/rap.t${cyc}z.lghtng.tm00.bufr_d ]
+then
+  cp $COM_IN/rap.${ymd}/rap.t${cyc}z.lghtng.tm00.bufr_d ./rap.t${cyc}z.lghtng.tm00.bufr_d
+else
+  cp $COM_OUT/rap.${ymd}/rap.t${cyc}z.lghtng.tm00.bufr_d ./rap.t${cyc}z.lghtng.tm00.bufr_d
+  
+  #bsub < $HOMErap/sms/run_lightning_ftp
+  #cp /stmpp2/Corey.Guastini/lightning/rap.t${cyc}z.lghtng.tm00.bufr_d ./rap.t${cyc}z.lghtng.tm00.bufr_d
+fi
+ln -s rap.t${cyc}z.lghtng.tm00.bufr_d lghtngbufr
+
+echo ${ymdh} > ./lightning_cycle_date
+
+cat << EOF > lightning.namelist
+ &SETUP
+  analysis_time = ${START_TIME},
+  trange_start=-10.0,
+  trange_end=10.0,
+ /
+EOF
+
+## Run Process Lightning
+export pgm=$EXECrap/rap_process_lightning
+
+#startmsg
+#poe $pgm >> $pgmout 2>errfile
+cp ${EXECrap}/rap_process_lightning .
+runline="aprun -n 36 -N 4 ./rap_process_lightning"
+$runline > process_lightning.out
+#mpirun.lsf $pgm > process_lightning.out
+#export err=$?;err_chk
+
+if [ $SENDCOM = YES ]
+then
+  cp LightningInGSI.bufr $COMOUT/rap.t${cyc}z.lghtng.bufr
+fi
+
+msg="JOB $job FOR RAP_PREP HAS COMPLETED NORMALLY"
+#postmsg "$jlogfile" "$msg"
+
+#cp ${COMRAP}/rap.t${cyc}z.prepbufr.tm00 $COMOUT/.
+exit 0
+

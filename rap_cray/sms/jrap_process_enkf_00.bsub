@@ -1,0 +1,58 @@
+##!/bin/ksh --login
+#
+#BSUB -oo /gpfs/hps/ptmp/Corey.Guastini/outputrap/rap_process_enkf.out00z
+#BSUB -eo /gpfs/hps/ptmp/Corey.Guastini/outputrap/rap_process_enkf.out00z
+#BSUB -J rap_enkf_00
+#BSUB -W 00:40
+#BSUB -q "dev"
+#BSUB -P RAP-T2O
+#BSUB -M 1800
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 120*{select[craylinux && vnode]span[ptile=12] cu[type=cabinet]}' rusage[mem=1800]
+#BSUB -x
+#BSUB -a poe
+#
+
+##########################################################################
+# Purpose: to run the analysis for the Rapid Refresh Model
+##########################################################################
+
+# EXPORT list here
+export MP_SHARED_MEMORY=YES
+export MEMORY_AFFINITY=MCM
+
+set -x
+module load prod_util
+module load prod_envir
+
+module list
+
+export MP_MPILIB=mpich2
+export KMP_AFFINITY=disabled
+export MP_TASK_AFFINITY=core:1
+export OMP_NUM_THREADS=1
+
+export numprocs=120
+export NTASK=120
+export PTILE=12
+
+export envir=prod
+export RUN_ENVIR=prod
+export cyc=00
+export cycle=t00z
+export job=rap_process_enkf_00
+export group_name=meso
+
+SMSNAME=%SMSNAME% export SMSNAME
+SMSNODE=%SMSNODE% export SMSNODE
+SMSPASS=%SMSPASS% export SMSPASS
+SMS_PROG=%SMS_PROG% export SMS_PROG
+
+SMSBIN=/meso/save/Corey.Guastini/sms/bin export SMSBIN
+
+# CALL executable job script here
+. /gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/versions/rap.ver
+/gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/rap.${model_ver}/jobs/JRAP_PROCESS_ENKF.sms.$envir
+#. /meso/save/Corey.Guastini/nwprod/versions/rap.ver
+#/meso/save/Corey.Guastini/nwprod/rap.${model_ver}/jobs/JRAP_PROCESS_ENKF.sms.$envir
+#/meso/save/Corey.Guastini/nwprod/rap.${model_ver}/scripts/exrap_prep_enkf.sh.sms
+

@@ -1,0 +1,662 @@
+#!/bin/ksh -l
+################################################################################
+####  UNIX Script Documentation Block
+#                      .                                             .
+# Script name:         exrap_post.sh
+# Script description:  Run rap post jobs
+#
+# Author:      G Manikin / M Hu    EMC/GSD         Date: 2011-09-15
+#
+# Abstract: This script runs the RAP post jobs for the 18-h RAP forecast
+#
+# Script history log:
+# 2111-09-15  G Manikin / M Hu  -- new script 
+#
+
+set -xa
+cd $DATA 
+
+msg="$job HAS BEGUN"
+postmsg $jlogfile "$msg"
+
+# fhr is passed from the SMS script
+fhr=$fhr
+
+# Set up some constants
+export HOMErap=${HOMErap:-/meso/save/Corey.Guastini/nwprod/rap.v3.0.0}
+export PARMrap=${PARMrap:-$HOMErap/parm}
+export PARMutil=${PARMutil:-/meso/save/Corey.Guastini/nwprod/rap.v3.0.0/util/parm}
+export FIXrap=${FIXrap:-$HOMErap/fix}
+#export CRTM=${CRTM:-/nwprod/fix/crtm_2.0.5}
+export CRTM=${CRTM:-/gpfs/gp1/nco/ops/nwprod/fix/crtm_2.0.5}
+export EXECrap=${EXECrap:-$HOMErap/exec}
+#export ndate=${ndate:-/nwprod/util/exec/ndate}
+export ndate=${ndate:-/gpfs/hps/nco/ops/nwprod/prod_util.v1.0.4/exec/ndate}
+export XLFRTEOPTS="unit_vars=yes"
+#export WGRIB2=${WGRIB2:-$utilexec/wgrib2}
+export WGRIB2=${WGRIB2:-/gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/rap.v3.0.0/exec/wgrib2}
+#export WGRIB2=${WGRIB2:-/meso/save/Eric.Rogers/utils/wgrib2_wesley_fornam/wgrib2new}
+export RAPGES_FCYC=${RAPGES_FCYC:-$gespath/rap/rapges}
+export RAPGES_SFC=${RAPGES_SFC:-$gespath/rap/rapges_sfc}
+
+START_TIME=$PDY$cyc
+echo $START_TIME >STARTTIME
+
+# Set up some constants
+export CORE=RAPR
+export OUTTYP=netcdf
+export MP_BINDPROC=NO
+#export LD_PRELOAD=/u/James.A.Abeles/mpi_trace_linux_x86_64/shared/libmpitrace.so
+
+###############################################################
+
+sleep 30
+export tmmark=tm00
+export MP_SHARED_MEMORY=yes
+export RSTFNL=${DATA}/
+export COMSP=${DATA}/
+export SPLNUM=47
+export SPL=2.,5.,7.,10.,20.,30.\
+,50.,70.,75.,100.,125.,150.,175.,200.,225.\
+,250.,275.,300.,325.,350.,375.,400.,425.,450.\
+,475.,500.,525.,550.,575.,600.,625.,650.\
+,675.,700.,725.,750.,775.,800.,825.,850.\
+,875.,900.,925.,950.,975.,1000.,1013.2
+
+icnt=1
+  while [ $icnt -lt 1000 ]
+  do
+    POST_TIME=`$ndate +${fhr} $START_TIME`
+    YYYY=`echo ${POST_TIME} | cut -c1-4`
+    MM=`echo ${POST_TIME} | cut -c5-6`
+    DD=`echo ${POST_TIME} | cut -c7-8`
+    HH=`echo ${POST_TIME} | cut -c9-10`
+    yy=`echo ${POST_TIME} | cut -c3-4`
+    timestr=${YYYY}-${MM}-${DD}_${HH}:00:00
+    timestr2=${YYYY}-${MM}-${DD}_${HH}_00_00
+
+    if [ -s $FCSTDIR/wrfout_d01_${timestr2} ]
+    then
+      sleep 30
+      break
+    else
+      icnt=$((icnt + 1))
+      sleep 5
+    fi
+    if [ $icnt -ge 180 ]
+    then
+      msg="ABORTING after 15 minutes of waiting for RAP FCST F${fhr} to end."
+      err_exit $msg
+    fi
+  done
+
+# copy wrfout file to guess directory for use by later cycles
+#  cp $FCSTDIR/wrfoutd01_${timestr} ${RAPGES_FCYC}/.
+  cp $FCSTDIR/wrfout_d01_${timestr2} ${RAPGES_FCYC}/rap_${START_TIME}f0${fhr}
+
+##  save files for surface cycle in case of RAP crash
+timeHH=${HH}
+cp ${FCSTDIR}/wrfout_d01_${timestr2} ${RAPGES_SFC}/wrfout_d01_${timeHH}
+fcstfile=${FCSTDIR}/wrfout_d01_${timestr2}
+cp ${fcstfile} wrfoutd01
+
+# use pre-DFI analysis file for posting
+time_analysis='00'
+if [ ${fhr} -eq ${time_analysis} ]; then
+  fcstfile=${FCSTDIR}/wrfinput_d01
+  echo 'use GSI analysis',${fcstfile}
+  cp ${fcstfile} wrfinput_d01
+  cp ${FCSTDIR}/wrfout_analyzed_d01 wrfout_analyzed_d01
+  cp ${EXECrap}/rap_update_fields .
+  runline="aprun -n 48 -N 24 ./rap_update_fields"
+  $runline >> update_fields.out
+  #mpirun.lsf ${EXECrap}/rap_update_fields >> update_fields.out 
+#  ${EXECrap}/rap_update_height >> $pgmout 2> errfile
+  cp wrfinput_d01 wrfoutd01
+  #export err=$?; err_chk
+fi
+
+rm -f fort.*
+ln -s ${PARMrap}/rap_post_avblflds.xml post_avblflds.xml
+ln -s ${PARMrap}/rap_params_grib2_tbl_new params_grib2_tbl_new
+
+
+#use files without bucket fields for f00 and f01 to avoid duplication
+if [ $fhr -eq 00 -o $fhr -eq 01 ]
+then
+  ln -s ${PARMrap}/rap_postcntrl_anl.xml postcntrl.xml
+  ln -s ${PARMrap}/rap_postxconfig_anl-NT.txt postxconfig-NT.txt
+else
+  ln -s ${PARMrap}/rap_postcntrl.xml postcntrl.xml
+  ln -s ${PARMrap}/rap_postxconfig-NT.txt postxconfig-NT.txt
+fi
+
+
+cp ${PARMrap}/rap_run_ETAMPNEW_DATA eta_micro_lookup.dat
+ln -s ${CRTM}/SpcCoeff/Big_Endian/imgr_g11.SpcCoeff.bin imgr_g11.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/imgr_g12.SpcCoeff.bin imgr_g12.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/imgr_g13.SpcCoeff.bin imgr_g13.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/imgr_g15.SpcCoeff.bin imgr_g15.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/imgr_mt1r.SpcCoeff.bin imgr_mt1r.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/imgr_mt2.SpcCoeff.bin imgr_mt2.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/amsre_aqua.SpcCoeff.bin amsre_aqua.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/tmi_trmm.SpcCoeff.bin tmi_trmm.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/ssmi_f13.SpcCoeff.bin ssmi_f13.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/ssmi_f14.SpcCoeff.bin ssmi_f14.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/ssmi_f15.SpcCoeff.bin ssmi_f15.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/ssmis_f16.SpcCoeff.bin ssmis_f16.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/ssmis_f17.SpcCoeff.bin ssmis_f17.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/ssmis_f18.SpcCoeff.bin ssmis_f18.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/ssmis_f19.SpcCoeff.bin ssmis_f19.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/ssmis_f20.SpcCoeff.bin ssmis_f20.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/seviri_m10.SpcCoeff.bin seviri_m10.SpcCoeff.bin
+ln -s ${CRTM}/SpcCoeff/Big_Endian/v.seviri_m10.SpcCoeff.bin v.seviri_m10.SpcCoeff.bin
+ln -s ${FIXrap}/rap_imgr_insat3d.SpcCoeff.bin imgr_insat3d.SpcCoeff.bin
+
+ln -s ${CRTM}/TauCoeff/Big_Endian/imgr_g11.TauCoeff.bin imgr_g11.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/imgr_g12.TauCoeff.bin imgr_g12.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/imgr_g13.TauCoeff.bin imgr_g13.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/imgr_g15.TauCoeff.bin imgr_g15.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/imgr_mt1r.TauCoeff.bin imgr_mt1r.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/imgr_mt2.TauCoeff.bin imgr_mt2.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/amsre_aqua.TauCoeff.bin amsre_aqua.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/tmi_trmm.TauCoeff.bin tmi_trmm.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/ssmi_f13.TauCoeff.bin ssmi_f13.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/ssmi_f14.TauCoeff.bin ssmi_f14.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/ssmi_f15.TauCoeff.bin ssmi_f15.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/ssmis_f16.TauCoeff.bin ssmis_f16.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/ssmis_f17.TauCoeff.bin ssmis_f17.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/ssmis_f18.TauCoeff.bin ssmis_f18.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/ssmis_f19.TauCoeff.bin ssmis_f19.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/ssmis_f20.TauCoeff.bin ssmis_f20.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/Big_Endian/seviri_m10.TauCoeff.bin seviri_m10.TauCoeff.bin
+ln -s ${CRTM}/TauCoeff/ODAS/Big_Endian/v.seviri_m10.TauCoeff.bin v.seviri_m10.TauCoeff.bin
+ln -s ${FIXrap}/rap_imgr_insat3d.TauCoeff.bin imgr_insat3d.TauCoeff.bin
+
+ln -s ${CRTM}/CloudCoeff/Big_Endian/CloudCoeff.bin CloudCoeff.bin
+ln -s ${CRTM}/AerosolCoeff/Big_Endian/AerosolCoeff.bin AerosolCoeff.bin
+ln -s ${CRTM}/EmisCoeff/Big_Endian/EmisCoeff.bin EmisCoeff.bin
+
+cat > itag <<EOF
+wrfoutd01
+netcdf
+grib2
+${timestr}
+${CORE}
+${SPLNUM}
+${SPL}
+${VALIDTIMEUNITS}
+EOF
+
+  pgm=rap_wrfpost
+#  export pgm;. prep_step
+
+#  startmsg
+  cp ${EXECrap}/rap_wrfpost .
+  runline="aprun -n 48 -N 24 ./rap_wrfpost"
+  $runline >> wrfpost.out
+  #mpirun.lsf ${EXECrap}/rap_wrfpost >> wrfpost.out 
+#  err=$?;export err ;err_chk
+
+#    mv WRFNAT.GrbF${fhr} $COMOUT/rap.${cycle}.wrfnat${fhr}.tm00
+#    mv WRFPRS.GrbF${fhr} $COMOUT/rap.${cycle}.wrfprs${fhr}.tm00
+
+    mv WRFNAT${fhr}.tm00 ${COMOUT}/rap.${cycle}.wrfnatf${fhr}.grib2
+    mv WRFPRS${fhr}.tm00 ${COMOUT}/rap.${cycle}.wrfprsf${fhr}.grib2
+
+# use post-DFI analysis file to generate extra analysis for EMC 
+#   initialization applications
+if [ ${fhr} -eq ${time_analysis} ]; then
+  rm wrfoutd01
+  echo 'use post-DFI file ',${fcstfile}
+  fcstfile=${FCSTDIR}/wrfout_d01_${timestr2}
+  cp ${fcstfile} wrfoutd01
+#  export err=$?; err_chk
+
+rm -f fort.*
+rm -f itag
+
+cat > itag <<EOF
+wrfoutd01
+netcdf
+grib2
+${timestr}
+${CORE}
+${SPLNUM}
+${SPL}
+${VALIDTIMEUNITS}
+EOF
+
+  pgm=rap_wrfpost
+#  export pgm;. prep_step
+
+#  startmsg
+  #mpirun.lsf ${EXECrap}/rap_wrfpost >> wrfpost2.out
+  runline="aprun -n 48 -N 24 ./rap_wrfpost"
+  $runline >> wrfpost.out >> wrfpost2.out
+#  err=$?;export err ;err_chk
+
+
+#    mv WRFPRS.GrbF${fhr} $COMOUT/rap.${cycle}.wrfprs${fhr}.tm00
+    mv WRFPRS${fhr}.tm00 $COMOUT/rap.${cycle}.wrfprsdf${fhr}.grib2
+    mv WRFNAT${fhr}.tm00 $COMOUT/rap.${cycle}.wrfnatdf${fhr}.grib2
+
+#    $utilexec/copygb -g "130" -x $COMOUT/rap.${cycle}.wrfnatdf${fhr}.tm00 $COMOUT/rap.${cycle}.awp130bgrbf${fhr}df
+fi
+
+# Full domain
+# 32 km
+export grid_specs_221="lambert:253:50.000000 214.500000:349:32463.000000 1.000000:277:32463.000000"
+
+# CONUS
+# 2.5 km smart init
+export grid_specs_187="lambert:265:25.000000 233.723448:2345:2539.703000 19.228976:1597:2539.703000"
+# 13 km
+export grid_specs_130="lambert:265:25.000000 233.862000:451:13545.000000 16.281000:337:13545.000000"
+# 20 km
+export grid_specs_252="lambert:265:25.000000 233.862000:301:20318.000000 16.281000:225:20318.000000"
+# 40 km
+export grid_specs_236="lambert:265:25.000000 233.862000:151:40635.000000 16.281000:113:40635.000000"
+
+# Alaska
+export grid_specs_242="nps:225:60.000000 187.000000:553:11250.000000 30.000000:425:11250.000000"
+
+# Hawaii
+export grid_specs_243="latlon 190.0:126:0.400 10.000:101:0.400"
+
+# Puerto Rico
+export grid_specs_200="lambert:253:50.000000 285.720000:108:16232.000000 16.201000:94:16232.000000"
+
+# Loop across all sub-domain grid types
+#for grid in 130 221 187 252 236 242 200
+for leveltype in nat prs
+do
+#for grid in 130 252 236
+#do
+
+   # Load sub-domain grid specification
+   #eval grid_specs=\${grid_specs_${grid}}
+   grid_specs=$grid_specs_130
+   grid=130
+   # Loop across vertical level types
+   #for leveltype in nat prs
+   #do
+
+      # Remove temporary files
+      #rm -f tmp.inv tmp.grib2 tmpuv.grib2 tmp_${grid}.grib2 tmpuv_${grid}.grib2
+
+      # DFI 130 native grid
+      if [[ ${fhr} -eq ${time_analysis} && ${grid} -eq 130 && ${leveltype} = "nat" && -s ${PARMrap}/rap_parmlist_${leveltype}_${grid}.txt ]]; then
+
+         # Create subset of fields to be posted
+         ${WGRIB2} -inv tmp.inv ${COMOUT}/rap.${cycle}.wrf${leveltype}df${fhr}.grib2
+         grep < tmp.inv "`cat ${PARMrap}/rap_parmlist_${leveltype}_${grid}.txt`" | ${WGRIB2} -i ${COMOUT}/rap.${cycle}.wrf${leveltype}df${fhr}.grib2 -grib tmp.grib2
+
+         # Merge vector field records in subset
+         ${WGRIB2} tmp.grib2 -new_grid_vectors "`cat ${PARMrap}/rap_vector_fields.txt`" -submsg_uv tmpuv.grib2
+
+         # Interpolate fields to new grid
+         ${WGRIB2} tmpuv.grib2 -set_bitmap 1 -set_grib_type jpeg -new_grid_winds grid \
+         -new_grid_vectors "`cat ${PARMrap}/rap_vector_fields.txt`" \
+         -new_grid_interpolation bilinear \
+         -if "`cat ${PARMrap}/rap_budget_fields.txt`" -new_grid_interpolation budget -fi \
+         -if "`cat ${PARMrap}/rap_neighbor_fields.txt`" -new_grid_interpolation neighbor -fi \
+         -new_grid ${grid_specs} tmp_${grid}.grib2
+
+         # Merge vector field records
+         ${WGRIB2} tmp_${grid}.grib2 -new_grid_vectors "`cat ${PARMrap}/rap_vector_fields.txt`" -submsg_uv tmpuv_${grid}.grib2
+
+         # Move grid to final location and index
+         mv tmpuv_${grid}.grib2 ${COMOUT}/rap.${cycle}.awp${grid}bgrbf${fhr}df
+         ${WGRIB2} ${COMOUT}/rap.${cycle}.awp${grid}bgrbf${fhr}df -s > ${COMOUT}/rap.${cycle}.awp${grid}bgrbf${fhr}df_idx
+      fi
+
+      # Remove temporary files
+      #rm -f tmp.inv tmp.grib2 tmpuv.grib2 tmp_${grid}.grib2 tmpuv_${grid}.grib2
+
+      #  All other files
+  for grid in 130 252 236
+  do
+    eval grid_specs=\${grid_specs_${grid}}
+      rm -f tmp_${grid}.inv tmp1_${grid}.grib2 tmpuv1_${grid}.grib2 tmp_${grid}.grib2 tmpuv_${grid}.grib2
+      if [[ -s ${PARMrap}/rap_parmlist_${leveltype}_${grid}.txt ]]; then
+
+         # Create subset of fields to be posted
+         ${WGRIB2} -inv tmp_${grid}.inv ${COMOUT}/rap.${cycle}.wrf${leveltype}f${fhr}.grib2 &
+      fi
+    done
+    wait
+
+  for grid in 130 252 236
+  do
+    eval grid_specs=\${grid_specs_${grid}}
+      if [[ -s ${PARMrap}/rap_parmlist_${leveltype}_${grid}.txt ]]; then
+         grep < tmp_${grid}.inv "`cat ${PARMrap}/rap_parmlist_${leveltype}_${grid}.txt`" | ${WGRIB2} -i ${COMOUT}/rap.${cycle}.wrf${leveltype}f${fhr}.grib2 -grib tmp1_${grid}.grib2 &
+      fi
+    done
+    wait
+
+  for grid in 130 252 236
+  do
+    eval grid_specs=\${grid_specs_${grid}}
+      if [[ -s ${PARMrap}/rap_parmlist_${leveltype}_${grid}.txt ]]; then
+
+         # Merge vector field records in subset
+         ${WGRIB2} tmp1_${grid}.grib2 -new_grid_vectors "`cat ${PARMrap}/rap_vector_fields.txt`" -submsg_uv tmpuv1_${grid}.grib2 &
+      fi
+    done
+    wait
+
+
+  for grid in 130 252 236
+  do
+    eval grid_specs=\${grid_specs_${grid}}
+      if [[ -s ${PARMrap}/rap_parmlist_${leveltype}_${grid}.txt ]]; then
+         # Interpolate fields to new grid
+         ${WGRIB2} tmpuv1_${grid}.grib2 -set_bitmap 1 -set_grib_type jpeg -new_grid_winds grid \
+         -new_grid_vectors "`cat ${PARMrap}/rap_vector_fields.txt`" \
+         -new_grid_interpolation bilinear \
+         -if "`cat ${PARMrap}/rap_budget_fields.txt`" -new_grid_interpolation budget -fi \
+         -if "`cat ${PARMrap}/rap_neighbor_fields.txt`" -new_grid_interpolation neighbor -fi \
+         -new_grid ${grid_specs} tmp_${grid}.grib2 &
+      fi
+    done
+    wait
+
+
+  for grid in 130 252 236
+  do
+    eval grid_specs=\${grid_specs_${grid}}
+      if [[ -s ${PARMrap}/rap_parmlist_${leveltype}_${grid}.txt ]]; then
+         # Merge vector field records
+         ${WGRIB2} tmp_${grid}.grib2 -new_grid_vectors "`cat ${PARMrap}/rap_vector_fields.txt`" -submsg_uv tmpuv_${grid}.grib2 &
+      fi
+    done
+    wait
+
+  for grid in 130 252 236
+  do
+    eval grid_specs=\${grid_specs_${grid}}
+      if [[ -s ${PARMrap}/rap_parmlist_${leveltype}_${grid}.txt ]]; then
+         # Move grid to final location and index
+         if [[ ${leveltype} = "nat" ]]; then
+            mv tmpuv_${grid}.grib2 ${COMOUT}/rap.${cycle}.awp${grid}bgrbf${fhr}.grib2
+            ${WGRIB2} ${COMOUT}/rap.${cycle}.awp${grid}bgrbf${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awp${grid}bgrbf${fhr}.grib2_idx
+         else
+            mv tmpuv_${grid}.grib2 ${COMOUT}/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2
+            ${WGRIB2} ${COMOUT}/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2_idx
+         fi   
+      fi
+   done
+done
+      # DFI awip32 grid
+   grid_specs=$grid_specs_221
+   grid=221
+
+      if [[ ${fhr} -eq ${time_analysis} && ${grid} -eq 221 && -s ${PARMrap}/rap_parmlist_${grid}.txt ]]; then
+         rm -f tmp_${grid}.inv tmp1_${grid}.grib2 tmpuv1_${grid}.grib2 tmp_${grid}.grib2 tmpuv_${grid}.grib2
+
+         # Create subset of fields to be posted
+         ${WGRIB2} -inv tmp.inv ${COMOUT}/rap.${cycle}.wrfprsdf${fhr}.grib2
+         grep < tmp.inv "`cat ${PARMrap}/rap_parmlist_${grid}.txt`" | ${WGRIB2} -i ${COMOUT}/rap.${cycle}.wrfprsdf${fhr}.grib2 -grib tmp.grib2
+
+         # Merge vector field records in subset
+         ${WGRIB2} tmp.grib2 -new_grid_vectors "`cat ${PARMrap}/rap_vector_fields.txt`" -submsg_uv tmpuv.grib2
+
+         # Interpolate fields to new grid
+         ${WGRIB2} tmpuv.grib2 -set_bitmap 1 -set_grib_type jpeg -new_grid_winds grid \
+         -new_grid_vectors "`cat ${PARMrap}/rap_vector_fields.txt`" \
+         -new_grid_interpolation bilinear \
+         -if "`cat ${PARMrap}/rap_budget_fields.txt`" -new_grid_interpolation budget -fi \
+         -if "`cat ${PARMrap}/rap_neighbor_fields.txt`" -new_grid_interpolation neighbor -fi \
+         -new_grid ${grid_specs} tmp_${grid}.grib2
+
+         # Merge vector field records
+         ${WGRIB2} tmp_${grid}.grib2 -new_grid_vectors "`cat ${PARMrap}/rap_vector_fields.txt`" -submsg_uv tmpuv_${grid}.grib2
+
+         # Move grid to final location and index
+         mv tmpuv_${grid}.grib2 ${COMOUT}/rap.${cycle}.awip32f${fhr}df.grib2
+         ${WGRIB2} ${COMOUT}/rap.${cycle}.awip32f${fhr}df.grib2 -s > ${COMOUT}/rap.${cycle}.awip32f${fhr}df.grib2_idx
+    fi
+
+
+for grid in 221 242 200 243
+do
+   # Load sub-domain grid specification
+   eval grid_specs=\${grid_specs_${grid}}
+   # Remove temporary files
+   rm -f tmp_${grid}.inv tmp1_${grid}.grib2 tmpuv1_${grid}.grib2 tmp_${grid}.grib2 tmpuv_${grid}.grib2
+   if [[ -s ${PARMrap}/rap_parmlist_${grid}.txt ]]; then
+
+       # Create subset of fields to be posted
+       ${WGRIB2} -inv tmp_${grid}.inv ${COMOUT}/rap.${cycle}.wrfprsf${fhr}.grib2 &
+  fi
+  done
+  wait
+
+for grid in 221 242 200 243
+do
+   # Load sub-domain grid specification
+   eval grid_specs=\${grid_specs_${grid}}
+   if [[ -s ${PARMrap}/rap_parmlist_${grid}.txt ]]; then
+
+       grep < tmp_${grid}.inv "`cat ${PARMrap}/rap_parmlist_${grid}.txt`" | ${WGRIB2} -i ${COMOUT}/rap.${cycle}.wrfprsf${fhr}.grib2 -grib tmp1_${grid}.grib2 &
+   fi
+   done
+   wait
+
+for grid in 221 242 200 243
+do
+   # Load sub-domain grid specification
+   eval grid_specs=\${grid_specs_${grid}}
+   if [[ -s ${PARMrap}/rap_parmlist_${grid}.txt ]]; then
+       # Merge vector field records in subset
+       ${WGRIB2} tmp1_${grid}.grib2 -new_grid_vectors "`cat ${PARMrap}/rap_vector_fields.txt`" -submsg_uv tmpuv1_${grid}.grib2 &
+   fi
+done
+wait
+
+for grid in 221 242 200 243
+do
+   # Load sub-domain grid specification
+   eval grid_specs=\${grid_specs_${grid}}
+   if [[ -s ${PARMrap}/rap_parmlist_${grid}.txt ]]; then
+       # Interpolate fields to new grid
+       ${WGRIB2} tmpuv1_${grid}.grib2 -set_bitmap 1 -set_grib_type jpeg -new_grid_winds grid \
+       -new_grid_vectors "`cat ${PARMrap}/rap_vector_fields.txt`" \
+       -new_grid_interpolation bilinear \
+       -if "`cat ${PARMrap}/rap_budget_fields.txt`" -new_grid_interpolation budget -fi \
+       -if "`cat ${PARMrap}/rap_neighbor_fields.txt`" -new_grid_interpolation neighbor -fi \
+       -new_grid ${grid_specs} tmp_${grid}.grib2 &
+    fi
+done
+wait
+
+for grid in 221 242 200 243
+do
+   # Load sub-domain grid specification
+   eval grid_specs=\${grid_specs_${grid}}
+   if [[ -s ${PARMrap}/rap_parmlist_${grid}.txt ]]; then
+       # Merge vector field records
+       ${WGRIB2} tmp_${grid}.grib2 -new_grid_vectors "`cat ${PARMrap}/rap_vector_fields.txt`" -submsg_uv tmpuv_${grid}.grib2 &
+  fi
+done
+wait
+
+for grid in 221 242 200 243
+do
+   # Load sub-domain grid specification
+   eval grid_specs=\${grid_specs_${grid}}
+#######################################################
+# Generate 3-hour precip, snow, and graupel fields
+#######################################################
+
+  echo 'check for 3-hr'
+  if [ $fhr -eq 06 -o $fhr -eq 09 -o $fhr -eq 12 -o $fhr -eq 15 -o \
+       $fhr -eq 18 -o $fhr -eq 21 ] ; then
+
+    let fhr3=fhr-3
+    typeset -Z2 fhr3
+#
+# Make sure fhr3 prdgen files are available before
+# proceeding.
+#
+    ic=0
+# 221 grids have different naming convention (awip32), so need separate loop
+    if [ $grid -ne 221 ] ; then
+    $utilexec/grb2index ${COMOUT}/rap.t${cyc}z.awp${grid}f${fhr3}.grib2 rap.t${cyc}z.awp${grid}f${fhr3}.grib2.idxbin
+    while [ ! -r rap.t${cyc}z.awp${grid}f${fhr3}.grib2.idxbin -o \
+            ! -r $COMOUT/rap.t${cyc}z.awp${grid}f${fhr3}.grib2 ] ; do
+      let ic=ic+1
+      if [ $ic -gt 180 ] ; then
+        err_exit "F$fhr SUB PROCESSING GIVING UP AFTER 45 MINUTES WAITING FOR F$fhr3 files"
+      fi
+      sleep 15
+    done
+    else
+    $utilexec/grb2index ${COMOUT}/rap.t${cyc}z.awip32f${fhr3}.grib2 awip32f${fhr3}.grib2.idxbin
+    while [ ! -r awip32f${fhr3}.grib2.idxbin -o \
+            ! -r $COMOUT/rap.t${cyc}z.awip32f${fhr3}.grib2 ] ; do
+      let ic=ic+1
+      if [ $ic -gt 180 ] ; then
+        err_exit "F$fhr SUB PROCESSING GIVING UP AFTER 45 MINUTES WAITING FOR F$fhr3 files"
+      fi
+      sleep 15
+    done
+    fi   # end 221 test
+
+# start grid processing
+
+    echo 'process ' ${grid}
+    if [ ${grid} -eq 221 ] ; then
+     cp tmpuv_${grid}.grib2 awip32f${fhr}.grib2
+     $utilexec/grb2index tmpuv_${grid}.grib2 awip32f${fhr}.grib2.idxbin
+     cp $COMOUT/rap.t${cyc}z.awip32f${fhr3}.grib2 awip32f${fhr3}.grib2
+ 
+     IARW=0
+     ISNOW=1
+     pfhr1=${fhr}
+     pfhr2=${fhr3}
+#    export pgm=rap_subflds_g2;. prep_step
+     ln -sf awip32f${fhr3}.grib2      fort.13
+     ln -sf awip32f${fhr3}.grib2.idxbin  fort.14
+     ln -sf awip32f${fhr}.grib2       fort.15
+     ln -sf awip32f${fhr}.grib2.idxbin   fort.16
+     ln -sf precip221.${fhr}           fort.50
+     ln -sf precip221.${fhr}           fort.50
+     ln -sf ncprecip221.${fhr}         fort.51
+     ln -sf cprecip221.${fhr}          fort.52
+     ln -sf weasd221.${fhr}            fort.53
+     ln -sf graupel221.${fhr}          fort.54
+       $EXECrap/rap_subflds_g2 << EOF >> subfld.out
+       $pfhr1 $pfhr2 $IARW $ISNOW
+EOF
+#    export err=$?;err_chk
+
+     cat precip221.${fhr} >> awip32f${fhr}.grib2 
+     cat ncprecip221.${fhr} >> awip32f${fhr}.grib2
+     cat cprecip221.${fhr} >> awip32f${fhr}.grib2 
+     cat weasd221.${fhr} >> awip32f${fhr}.grib2 
+     cat graupel221.${fhr} >> awip32f${fhr}.grib2
+
+     mv awip32f${fhr}.grib2 ${COMOUT}/rap.${cycle}.awip32f${fhr}.grib2
+     ${WGRIB2} ${COMOUT}/rap.${cycle}.awip32f${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awip32f${fhr}.grib2_idx
+#  process 200 242 243
+    else
+     cp tmpuv_${grid}.grib2 awp${grid}f${fhr}.grib2
+     $utilexec/grb2index tmpuv_${grid}.grib2 awp${grid}f${fhr}.grib2.idxbin
+     cp $COMOUT/rap.t${cyc}z.awp${grid}f${fhr3}.grib2 awp${grid}f${fhr3}.grib2
+     cp rap.t${cyc}z.awp${grid}f${fhr3}.grib2.idxbin awp${grid}f${fhr3}.grib2.idxbin
+
+     IARW=0
+     if [ ${grid} -ne 200 ] ; then
+     ISNOW=1
+     else
+     ISNOW=0
+     fi
+     pfhr1=${fhr}
+     pfhr2=${fhr3}
+
+#    export pgm=rap_subflds_g2;. prep_step
+     ln -sf awp${grid}f${fhr3}.grib2      fort.13
+     ln -sf awp${grid}f${fhr3}.grib2.idxbin  fort.14
+     ln -sf awp${grid}f${fhr}.grib2       fort.15
+     ln -sf awp${grid}f${fhr}.grib2.idxbin   fort.16
+     ln -sf precip${grid}.${fhr}           fort.50
+     ln -sf precip${grid}.${fhr}           fort.50
+     ln -sf ncprecip${grid}.${fhr}         fort.51
+     ln -sf cprecip${grid}.${fhr}          fort.52
+     ln -sf weasd${grid}.${fhr}            fort.53
+     ln -sf graupel${grid}.${fhr}          fort.54
+       $EXECrap/rap_subflds_g2 << EOF >> subfld2.out
+       $pfhr1 $pfhr2 $IARW $ISNOW
+EOF
+#    export err=$?;err_chk
+
+     cat precip${grid}.${fhr} >> awp${grid}f${fhr}.grib2
+     cat ncprecip${grid}.${fhr} >> awp${grid}f${fhr}.grib2
+     cat cprecip${grid}.${fhr} >> awp${grid}f${fhr}.grib2
+#  no snow/graupel needed for Puerto Rico
+     if [ ${grid} -ne 200 ] ; then
+     cat weasd${grid}.${fhr} >> awp${grid}f${fhr}.grib2
+     cat graupel${grid}.${fhr} >> awp${grid}f${fhr}.grib2
+     fi
+     mv awp${grid}f${fhr}.grib2 ${COMOUT}/rap.${cycle}.awp${grid}f${fhr}.grib2
+     ${WGRIB2} ${COMOUT}/rap.${cycle}.awp${grid}f${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awp${grid}f${fhr}.grib2_idx
+    fi # end 221 test
+    elif [ ${grid} -eq 221 ] ; then
+      mv tmpuv_${grid}.grib2 ${COMOUT}/rap.${cycle}.awip32f${fhr}.grib2
+      ${WGRIB2} ${COMOUT}/rap.${cycle}.awip32f${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awip32f${fhr}.grib2_idx
+    else
+      mv tmpuv_${grid}.grib2 ${COMOUT}/rap.${cycle}.awp${grid}f${fhr}.grib2
+      ${WGRIB2} ${COMOUT}/rap.${cycle}.awp${grid}f${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awp${grid}f${fhr}.grib2_idx
+
+  fi # check for 3-hr
+done
+  if [ $fhr -eq 03 -o $fhr -eq 06 -o $fhr -eq 09 -o $fhr -eq 12 -o $fhr -eq 15 -o \
+       $fhr -eq 18 ] ; then
+    echo done >$FCSTDIR/postdone_${grid}_f${fhr}_${cyc}
+  fi
+#fi
+#done
+
+#    $utilexec/cnvgrib -g12 $COMOUT/rap.${cycle}.wrfprs${fhr}.tm00 $COMOUT/rap.${cycle}.wrfprs${fhr}.tm00.grib2
+#    $utilexec/cnvgrib -g12 $COMOUT/rap.${cycle}.wrfnat${fhr}.tm00 $COMOUT/rap.${cycle}.wrfnat${fhr}.tm00.grib2
+#    $utilexec/copygb -g "130" -x $COMOUT/rap.${cycle}.wrfnat${fhr}.tm00 $COMOUT/rap.${cycle}.awp130bgrbf${fhr}
+#    $utilexec/copygb -g "130" -x $COMOUT/rap.${cycle}.wrfprs${fhr}.tm00 $COMOUT/rap.${cycle}.awp130pgrbf${fhr}
+#    $utilexec/cnvgrib -g12 $COMOUT/rap.${cycle}.awp130bgrbf${fhr} $COMOUT/rap.${cycle}.awp130bgrbf${fhr}.grib2
+#    $utilexec/cnvgrib -g12 $COMOUT/rap.${cycle}.awp130pgrbf${fhr} $COMOUT/rap.${cycle}.awp130pgrbf${fhr}.grib2
+#    $WGRIB2 ${COMOUT}/rap.${cycle}.awp130bgrbf${fhr}.grib2 -s >${COMOUT}/rap.${cycle}.awp130bgrbf${fhr}.grib2_idx
+    #$utilexec/copygb2 -g "130" -x $COMOUT/rap.${cycle}.wrfprs${fhr}.tm00 $COMOUT/rap.${cycle}.awp130pgrbf${fhr}
+
+echo done >$FCSTDIR/rappost.done${fhr}
+#bsub < /meso/save/Corey.Guastini/nwprod/rap.v3.0.0/sms/wrfbufr/jrap_wrfbufr_f${fhr}_${cyc}.bsub
+
+
+#if [ fhr -eq 00 ]
+    #then
+#bsub < /meso/save/Corey.Guastini/nwprod/rap.v3.0.0/sms/prdgen/jrap_prdgen_f${fhr}_${cyc}.bsub
+    #else
+#sleep 180
+#bsub < /meso/save/Corey.Guastini/nwprod/rap.v3.0.0/sms/prdgen/jrap_prdgen_f${fhr}_${cyc}.bsub
+#fi
+
+#Now do the AWIPS grid conversion
+  $USHrap/rap_mkawp.sh $fhr
+#End of AWIPS grid generation
+
+if [ $fhr -gt 0 -a $fhr -lt 7 ]
+then
+  $USHrap/rap_smartinit.sh $fhr
+fi
+
+#echo done >$FCSTDIR/rappost.done${fhr}
+  postmsg $jlogfile "RAP POST done for F${fhr}"
+
+#if [ $fhr -eq 21 ]
+#then
+#  bsub < $HOMErap/sms/transfer_ftp
+#fi
+
+echo EXITING $0
+exit

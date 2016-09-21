@@ -1,0 +1,154 @@
+#!/bin/ksh -l
+################################################################################
+####  UNIX Script Documentation Block
+#                      .                                             .
+# Script name:       exrap_updatebc_pcyc.sms
+# Script description:  runs the boundary update for the RAP partial cycle
+# Author:   Ming Hu / Geoff Manikin / Julia Zhu  Org: EMC          Date: 2011-10-01
+# 2011-10-01  M Hu / G Manikin / J Zhu
+
+. /usrx/local/Modules/default/init/ksh
+module purge
+module load EnvVars/1.0.0
+module load ics/15.0.3
+module load ibmpe/1.3.0.10
+module load lsf/9.1
+module load NetCDF/3.6.3
+module load PNetCDF/1.2.0
+module load nco/4.2.4
+module load jasper/v1.900.1
+module list
+
+set -x
+
+cd $DATA
+
+# Set up some constants
+export HOMErap=${HOMErap:-/meso/save/Corey.Guastini/nwprod/rap.v3.0.0}
+export PARMrap=${PARMrap:-$HOMErap/parm}
+export FIXrap=${FIXrap:-$HOMErap/fix}
+export EXECrap=${EXECrap:-$HOMErap/exec}
+export ndate=${ndate:-/nwprod/util/exec/ndate}
+
+export WPSNAMELIST=namelist.wps
+START_TIME=$PDY$cyc
+echo $START_TIME >STARTTIME
+
+# Compute date & time components for the analysis time
+ymd=`echo ${START_TIME} | cut -c1-8`
+ymdh=`echo ${START_TIME} | cut -c1-10`
+mdh=`echo ${START_TIME} | cut -c5-10`
+hh=`echo ${START_TIME} | cut -c9-10`
+
+#######################################
+# Process Update BC
+#######################################
+
+# Set up some constants
+export FCST_LENGTH="36"
+export FCST_INTERVAL="3"
+export METGRIDPROC="METGRID_PROC"
+
+# Set up the work directory and cd into it
+workdir=$DATA/adjustbc
+mkdir -p ${workdir}
+cd ${workdir}
+/nwprod/util/ush/setup.sh
+
+START_TIME=`cat ../STARTTIME`
+echo $START_TIME
+
+# Calculate start and end time date strings
+END_TIME=`$ndate +${FCST_LENGTH} $START_TIME`
+syyyy=`echo ${START_TIME} | cut -c1-4`
+smm=`echo ${START_TIME} | cut -c5-6`
+sdd=`echo ${START_TIME} | cut -c7-8`
+shh=`echo ${START_TIME} | cut -c9-10`
+ymd=`echo ${START_TIME} | cut -c1-8`
+#cyc=`echo ${START_TIME} | cut -c9-10`
+#export COMOUT="/com/rap/prod/rap.${ymd}"
+
+eyyyy=`echo ${END_TIME} | cut -c1-4`
+emm=`echo ${END_TIME} | cut -c5-6`
+edd=`echo ${END_TIME} | cut -c7-8`
+ehh=`echo ${END_TIME} | cut -c9-10`
+start_yyyymmdd_hhmmss=${syyyy}-${smm}-${sdd}_${shh}:00:00
+end_yyyymmdd_hhmmss=${eyyyy}-${emm}-${edd}_${ehh}:00:00
+
+# Calculate the forecast interval in seconds
+(( fcst_interval_sec = ${FCST_INTERVAL} * 3600 ))
+
+# Print run parameters
+echo
+echo "START TIME = "${START_TIME}"
+echo "  END TIME = "${END_TIME}"
+echo
+
+ if [ -r ${DATA}/gsiprd/wrf_inout ]; then
+  echo " Initial condition ${DATA}/gsiprd/wrf_inout"
+  cp ${DATA}/gsiprd/wrf_inout wrfinput_d01
+  cp ${DATA}/gsiprd/wrf_inout wrfvar_output
+ else
+   echo "ERROR: ${DATA}/gsiprd/wrf_inout does not exist.  Run will stop."
+   err_exit
+ fi
+
+## boundary condition searching
+currentime=${syyyy}${smm}${sdd}${shh}00
+set -A XX `ls ${RAPBC}/wrfbdy_d01.* | sort -r`
+maxnum=${#XX[*]}
+#bdtime=`echo ${XX[0]} | cut -c41-52`
+bdtime=`echo ${XX[0]} |awk 'BEGIN {FS="/"} {print $NF}'|cut -c12-`
+
+if [[ ${currentime} -ge ${bdtime} ]]; then
+   echo "using latest ${XX[0]} as boundary condition "
+   cp ${XX[0]} wrfbdy_d01
+else
+   nn=1
+   #bdtime=`echo ${XX[$nn]} | cut -c41-52`
+   bdtime=`echo ${XX[$nn]} |awk 'BEGIN {FS="/"} {print $NF}'|cut -c12-`
+   until [[ ${currentime} -ge ${bdtime} || ${nn} -eq ${maxnum} ]];do
+      ((nn += 1))
+       #bdtime=`echo ${XX[$nn]} | cut -c41-52`
+       bdtime=`echo ${XX[$nn]} |awk 'BEGIN {FS="/"} {print $NF}'|cut -c12-`
+   done
+
+   if [[ ${nn} -eq ${maxnum} ]]; then
+        echo " can not find boundary conditions for ${currentime} !!!"
+        err_exit
+   else
+      echo " using old ${XX[$nn]} as boundary condition"
+      cp ${XX[$nn]} wrfbdy_d01
+   fi
+fi
+## end of boundary condition searching
+
+# Get the start and end time components
+start_year=`echo ${START_TIME} | cut -c1-4`
+start_month=`echo ${START_TIME} | cut -c5-6`
+start_day=`echo ${START_TIME} | cut -c7-8`
+start_hour=`echo ${START_TIME} | cut -c9-10`
+start_minute="00"
+start_second="00"
+end_year=`echo ${END_TIME} | cut -c1-4`
+end_month=`echo ${END_TIME} | cut -c5-6`
+end_day=`echo ${END_TIME} | cut -c7-8`
+end_hour=`echo ${END_TIME} | cut -c9-10`
+end_minute="00"
+end_second="00"
+start_YYYYMMDDHHMM=${start_year}${start_month}${start_day}${start_hour}${start_minute}
+
+# update bc
+echo "begin update bc"
+cp ${PARMrap}/rap_update_bc_parame.in parame.in
+ln -s wrfinput_d01  wrfinputd1
+ln -s wrfvar_output wrfvar_out
+mpirun.lsf ${EXECrap}/rap_update_bc  >> updatebc.out 
+export err=$?; err_chk
+
+echo "end update bc"
+
+# copy the updated boundary information file to COMOUT for
+#   use by the subsequent 1-hr forecast
+cp wrfbdy_d01 ${COMOUT}/rap.t${cyc}z.wrfbdy_pcyc
+exit 0

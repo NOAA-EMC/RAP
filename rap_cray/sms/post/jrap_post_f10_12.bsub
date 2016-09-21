@@ -1,0 +1,40 @@
+#!/bin/ksh --login
+#
+#BSUB -oo /ptmpp1/Corey.Guastini/outputrap/rap_post_f10.out12z
+#BSUB -eo /ptmpp1/Corey.Guastini/outputrap/rap_post_f10.out12z
+#BSUB -J rap_post_f10_12
+#BSUB -n 32
+#BSUB -R span[ptile=16]
+#BSUB -W 00:20
+#BSUB -P RAP-T2O
+#BSUB -q devhigh
+#BSUB -x
+#BSUB -a poe
+
+######################################################################
+# Purpose: to run RAP post processing
+######################################################################
+
+# EXPORT list here
+export MP_SHARED_MEMORY=YES
+export MEMORY_AFFINITY=MCM
+
+set -x
+
+export envir=prod
+export RUN_ENVIR=prod
+export cyc=12
+export fhr=10
+export job=rap_post_f10_12
+export group_name=meso
+
+SMSNAME=%SMSNAME% export SMSNAME
+SMSNODE=%SMSNODE% export SMSNODE
+SMSPASS=%SMSPASS% export SMSPASS
+SMS_PROG=%SMS_PROG% export SMS_PROG
+
+SMSBIN=/meso/save/wx22yz/sms/bin export SMSBIN
+
+# CALL executable job script here
+. /meso/save/Corey.Guastini/nwprod/versions/rap.ver
+/meso/save/Corey.Guastini/nwprod/rap.${model_ver}/jobs/JRAP_POST.sms.$envir

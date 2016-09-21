@@ -1,0 +1,14 @@
+mpfort -g -traceback  -I/usrx/local/NetCDF/3.6.3/include -c kinds.f90
+mpfort -g -traceback  -I/usrx/local/NetCDF/3.6.3/include -c constants.f90
+mpfort -g -traceback  -I/usrx/local/NetCDF/3.6.3/include -c Check_Lightning_QC.f90
+mpfort -g -traceback  -I/usrx/local/NetCDF/3.6.3/include -c netCDFsub_geo.f90
+cc -DLINUX -Dfunder -DFortranByte=char -DFortranInt=int -DFortranLlong='long long' -D_UNDERSCORE -c cio.c
+mpfort -g -traceback  -I/usrx/local/NetCDF/3.6.3/include -c read_lightning_bufr.f90
+mpfort -g -traceback  -I/usrx/local/NetCDF/3.6.3/include -c module_debug.F90
+mpfort -g -traceback  -I/usrx/local/NetCDF/3.6.3/include -c misc_definitions_module.f90
+mpfort -g -traceback  -I/usrx/local/NetCDF/3.6.3/include -c constants_module.f90
+mpfort -g -traceback  -I/usrx/local/NetCDF/3.6.3/include -c module_map_utils.f90
+mpfort -g -traceback  -I/usrx/local/NetCDF/3.6.3/include -c gridmod_gsi_map_utils.f90
+mpfort -g -traceback  -I/usrx/local/NetCDF/3.6.3/include -c write_bufr_lght.f90
+mpfort -g -traceback  -I/usrx/local/NetCDF/3.6.3/include -c process_Lightning.f90
+mpfort -g -traceback -o rap_process_lightning  kinds.o constants.o Check_Lightning_QC.o netCDFsub_geo.o cio.o read_lightning_bufr.o module_debug.o misc_definitions_module.o constants_module.o module_map_utils.o gridmod_gsi_map_utils.o write_bufr_lght.o process_Lightning.o -L/nwprod/lib -lw3emc_4 -lw3nco_4 -lbufr_d_64 -L/usrx/local/NetCDF/3.6.3/lib -lnetcdf 
