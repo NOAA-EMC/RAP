@@ -1,0 +1,5 @@
+rap.v3.0.2 - release 09/21/2016
+  Fix 3-h accumulations of total precipitation
+
+sorc file change:
+  /nwprod2/rap.v3.0.2/sorc/rap_subflds_g2.fd/MAKEPRECIP.f90
