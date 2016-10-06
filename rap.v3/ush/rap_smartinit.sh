@@ -16,13 +16,8 @@ fhr=$1
 
 mkdir -p $DATA/smart
 cd $DATA/smart
-/nwprod/util/ush/setup.sh
 
 echo $fhr
-export GRBINDEX=${GRBINDEX:-/nwprod/util/exec/grbindex}
-export GRB2INDEX=${GRB2INDEX:-/nwprod/util/exec/grb2index}
-export WGRIB2=${WGRIB2:-$HOMErap/exec/rap_wgrib2}
-export utilexec=/nwprod/util/exec
 
 cp ${COMOUT}/rap.t${cyc}z.wrfnatf${fhr}.grib2 WRFNAT${fhr}.grib2
 
@@ -48,8 +43,8 @@ $GRBINDEX LANDNDFDHI LANDNDFDHII
 
 cp ${FIXrap}/rap_smarttopoajn.grb TOPONDFDAJN
 cp ${FIXrap}/rap_smartmaskajn.grb LANDNDFDAJN
-/nwprod/util/exec/grbindex TOPONDFDAJN TOPONDFDAJNI
-/nwprod/util/exec/grbindex LANDNDFDAJN LANDNDFDAJNI
+$GRBINDEX TOPONDFDAJN TOPONDFDAJNI
+$GRBINDEX LANDNDFDAJN LANDNDFDAJNI
 
 # smartinit grids
 # CONUS
@@ -79,7 +74,7 @@ eval grid_specs=\${grid_specs_${grid}}
     ${WGRIB2} tmp.grib2 -new_grid_vectors "`cat ${PARMrap}/rap_vector_fields.txt`" -submsg_uv tmpuv.grib2
 
 # Interpolate fields to new grid
-    ${WGRIB2} tmpuv.grib2 -set_bitmap 1 -set_grib_type c3 -new_grid_winds grid \
+    ${WGRIB2} tmpuv.grib2 -set_bitmap 1 -set_grib_type jpeg -new_grid_winds grid \
        -new_grid_vectors "`cat ${PARMrap}/rap_vector_fields.txt`" \
        -new_grid_interpolation bilinear \
        -if "`cat ${PARMrap}/rap_budget_fields.txt`" -new_grid_interpolation budget -fi \
@@ -91,18 +86,18 @@ eval grid_specs=\${grid_specs_${grid}}
 
 # Move grid to final location and index
       mv tmpuv_${grid}.grib2 rap.NDFD${grid}${fhr}
-      ${WGRIB2} rap.NDFD${grid}${fhr} -s > rap.NDFD${grid}${fhr}_idx
+      ${WGRIB2} rap.NDFD${grid}${fhr} -s > rap.NDFD${grid}${fhr}.idx
 
 # Remove temporary files
     rm -f tmp.inv tmp.grib2 tmpuv.grib2 tmp_${grid}.grib2 tmpuv_${grid}.grib2
 done
 
 cp /com/date/t${cyc}z DATE
-$utilexec/cnvgrib -g21 rap.NDFD187${fhr} rap.NDFDCSf${fhr}
-$utilexec/cnvgrib -g21 rap.NDFD189${fhr} rap.NDFDAJNf${fhr}
-$utilexec/cnvgrib -g21 rap.NDFD198${fhr} rap.NDFDAKf${fhr}
-$utilexec/cnvgrib -g21 rap.NDFD196${fhr} rap.NDFDHIf${fhr}
-$utilexec/cnvgrib -g21 rap.NDFD194${fhr} rap.NDFDPRf${fhr}
+$CNVGRIB -g21 rap.NDFD187${fhr} rap.NDFDCSf${fhr}
+$CNVGRIB -g21 rap.NDFD189${fhr} rap.NDFDAJNf${fhr}
+$CNVGRIB -g21 rap.NDFD198${fhr} rap.NDFDAKf${fhr}
+$CNVGRIB -g21 rap.NDFD196${fhr} rap.NDFDHIf${fhr}
+$CNVGRIB -g21 rap.NDFD194${fhr} rap.NDFDPRf${fhr}
 $GRBINDEX rap.NDFDCSf${fhr} rap.NDFDCSf${fhr}I
 $GRBINDEX rap.NDFDAJNf${fhr} rap.NDFDAJNf${fhr}I
 $GRBINDEX rap.NDFDAKf${fhr} rap.NDFDAKf${fhr}I
@@ -125,9 +120,10 @@ $fhr
 $cyc
 EOF
 export err=$?; err_chk
-cp RAPCS${fhr} $COMOUT/rap.t${cyc}z.smartrapconus${fhr}
+$CNVGRIB -g12 RAPCS${fhr} RAPCS${fhr}.grib2
+cp RAPCS${fhr}.grib2 $COMOUT/rap.t${cyc}z.smartrapconusf${fhr}.grib2
 
-mv rap.NDFDAK${fhr} rap.NDFDAKf${fhr}
+#mv rap.NDFDAK${fhr} rap.NDFDAKf${fhr}
 $GRBINDEX rap.NDFDAKf${fhr} rap.NDFDAKf${fhr}I
 
 export pgm=rap_smartinit_ak
@@ -146,9 +142,10 @@ $cyc
 EOF
 
 export err=$?; err_chk
-cp RAPAK${fhr} $COMOUT/rap.t${cyc}z.smartrapak${fhr}
+$CNVGRIB -g12 RAPAK${fhr} RAPAK${fhr}.grib2
+cp RAPAK${fhr}.grib2 $COMOUT/rap.t${cyc}z.smartrapakf${fhr}.grib2
 
-mv rap.NDFDPR${fhr} rap.NDFDPRf${fhr}
+#mv rap.NDFDPR${fhr} rap.NDFDPRf${fhr}
 $GRBINDEX rap.NDFDPRf${fhr} rap.NDFDPRf${fhr}I
 
 export pgm=rap_smartinit_pr
@@ -167,10 +164,11 @@ $cyc
 EOF
 
 export err=$?; err_chk
-cp RAPPR${fhr} $COMOUT/rap.t${cyc}z.smartrappr${fhr}
+$CNVGRIB -g12 RAPPR${fhr} RAPPR${fhr}.grib2
+cp RAPPR${fhr}.grib2 $COMOUT/rap.t${cyc}z.smartrapprf${fhr}.grib2
 
-mv rap.NDFDAJN${fhr} rap.NDFDAJNf${fhr}
-/nwprod/util/exec/grbindex rap.NDFDAJNf${fhr} rap.NDFDAJNf${fhr}I
+#mv rap.NDFDAJN${fhr} rap.NDFDAJNf${fhr}
+$GRBINDEX rap.NDFDAJNf${fhr} rap.NDFDAJNf${fhr}I
 
 ln -sf rap.NDFDAJNf${fhr}     fort.11
 ln -sf rap.NDFDAJNf${fhr}I    fort.12
@@ -184,10 +182,12 @@ $fhr
 $cyc
 EOF
 
-cp RAPAJN${fhr} $COMOUT/rap.t${cyc}z.smartrapajn${fhr}
+export err=$?; err_chk
+$CNVGRIB -g12 RAPAJN${fhr} RAPAJN${fhr}.grib2
+cp RAPAJN${fhr}.grib2 $COMOUT/rap.t${cyc}z.smartrapajnf${fhr}.grib2
 
-mv rap.NDFDHI${fhr} rap.NDFDHIf${fhr}
-/nwprod/util/exec/grbindex rap.NDFDHIf${fhr} rap.NDFDHIf${fhr}I
+#mv rap.NDFDHI${fhr} rap.NDFDHIf${fhr}
+$GRBINDEX rap.NDFDHIf${fhr} rap.NDFDHIf${fhr}I
 
 ln -sf rap.NDFDHIf${fhr}     fort.11
 ln -sf rap.NDFDHIf${fhr}I    fort.12
@@ -201,5 +201,7 @@ $fhr
 $cyc
 EOF
 
-cp RAPHI${fhr} $COMOUT/rap.t${cyc}z.smartraphi${fhr}
+export err=$?; err_chk
+$CNVGRIB -g12 RAPHI${fhr} RAPHI${fhr}.grib2
+cp RAPHI${fhr}.grib2 $COMOUT/rap.t${cyc}z.smartraphif${fhr}.grib2
 exit
