@@ -1,0 +1,5 @@
+rap.v3.0.3 - release 10/6/2016
+  Prevent occasional smartinit crashes due to bad files generated from cnvgrib
+
+ush file change:
+  /nwprod2/rap.v3.0.3/ush/rap_smartinit.sh
