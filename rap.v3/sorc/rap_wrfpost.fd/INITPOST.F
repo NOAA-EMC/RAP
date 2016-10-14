@@ -1783,15 +1783,6 @@ endif  ! 1==2
         end do
        end do
 !       print*,'SST at ',ii,jj,' = ',sst(ii,jj)
-      VarName='THZ0'
-      call getVariable(fileName,DateStr,DataHandle,VarName,DUMMY,        & 
-        IM,1,JM,1,IM,JS,JE,1)
-       do j = jsta_2l, jend_2u
-        do i = 1, im
-            THZ0 ( i, j ) = dummy ( i, j )
-        end do
-       end do
-!       print*,'THZ0 at ',ii,jj,' = ',THZ0(ii,jj)
 !      VarName='QZ0'
 !      call getVariable(fileName,DateStr,DataHandle,VarName,DUMMY,        &
 !        IM,1,JM,1,IM,JS,JE,1)
@@ -1890,6 +1881,16 @@ endif  ! 1==2
         end do
        end do
 !       print*,'THS at ',ii,jj,' = ',THS(ii,jj)
+!     THZ0 not available, so just use THS
+!      VarName='THZ0'
+!      call getVariable(fileName,DateStr,DataHandle,VarName,DUMMY,        & 
+!        IM,1,JM,1,IM,JS,JE,1)
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            THZ0 ( i, j ) = THS ( i, j )
+        end do
+       end do
+!       print*,'THZ0 at ',ii,jj,' = ',THZ0(ii,jj)
 
 !C
 !CMP

@@ -123,8 +123,7 @@
                                 DBZI1,  DBZC1, EGRID6, EGRID7, NLICE1,   &
                                 QI,     QINT,  TT,     PPP,    QV,       &
                                 QCD,    QICE1, QRAIN1, QSNO1,  refl,     &
-                                QG1,    refl1km, refl4km, RH, GUST, NRAIN1, &
-                                Zm10c
+                                QG1,    refl1km, refl4km, RH, GUST, NRAIN1
 !                               T700,   TH700   
 !
       REAL, ALLOCATABLE :: EL(:,:,:),RICHNO(:,:,:) ,PBLRI(:,:),  PBLREGIME(:,:)
@@ -3239,55 +3238,7 @@
         endif
        ENDIF
 
-! RADAR REFLECTIVITY AT -10C LEVEL
-       IF (IGET(912).GT.0) THEN
-         DO J=JSTA,JEND
-         DO I=1,IM
-          Zm10c(I,J)=ZMID(I,J,NINT(LMH(I,J)))
-          DO L=NINT(LMH(I,J)),1,-1
-             IF (T(I,J,L) .LE. 263.15) THEN
-               Zm10c(I,J)= L        !-- Find lowest level where T<-10C
-               EXIT
-             ENDIF
-          ENDDO
-         ENDDO
-         ENDDO
-
-! REFD at -10 C level
 !
-! CRA Use WRF Thompson reflectivity diagnostic from RAPR model output
-!     Use unipost reflectivity diagnostic otherwise
-! Chuang: use Thompson reflectivity direct output for all
-! models 
-! 
-         IF(IMP_PHYSICS.EQ.8 .or. IMP_PHYSICS.EQ.28) THEN 
-!$omp parallel do private(i,j)
-           DO J=JSTA,JEND
-           DO I=1,IM
-             GRID1(I,J)=REF_10CM(I,J,Zm10c(I,J))
-           ENDDO
-           ENDDO
-         ELSE 
-!$omp parallel do private(i,j)
-           DO J=JSTA,JEND
-           DO I=1,IM
-             GRID1(I,J)=DBZ(I,J,Zm10c(I,J))
-           ENDDO
-           ENDDO
-         ENDIF
-
-         CALL BOUND(GRID1,DBZmin,DBZmax)
-
-         if(grib=="grib1" )then
-            ID(1:25) = 0
-            CALL GRIBIT(IGET(912),L,GRID1,IM,JM)
-              else if(grib=="grib2" )then
-                 cfld=cfld+1
-                 fld_info(cfld)%ifld=IAVBLFLD(IGET(912))
-                 fld_info(cfld)%lvl=LVLSXML(L,IGET(912))
-                 datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
-         endif
-       ENDIF
 !     
 !     ASYMPTOTIC AND FREE ATMOSPHERE MASTER LENGTH SCALE (EL), PLUS
 !     GRADIENT RICHARDSON NUMBER.
