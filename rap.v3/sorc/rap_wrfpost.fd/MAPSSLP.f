@@ -52,12 +52,17 @@
 
 ! smooth 700 mb temperature first
        if(MAPTYPE.EQ.6) then
-         dxm=(DXVAL / 360.)*(ERAD*2.*pi)/1000.
+         if(grib=='grib1') then
+            dxm=(DXVAL / 360.)*(ERAD*2.*pi)/1000. ! [m]
+         else if (grib=='grib2') then
+            dxm=(DXVAL / 360.)*(ERAD*2.*pi)/1.d6  ! [mm]
+         endif
        else
          dxm=dxval
        endif
+
        if(grib == 'grib2')then
-         dxm=dxm/1000.0
+         dxm=dxm/1000.0 ! [m]
        endif
 
        IF (SMFLAG) THEN   
@@ -77,6 +82,7 @@
          T700(I,J) = TH700(I,J)*(70000./P1000)**CAPA
           IF (T700(I,J).GT.100.) THEN
            TSFCNEW = T700(I,J)*(PMID(I,J,LM)/70000.)**EXPo
+
 !     effective sfc T based on 700 mb temp
           ELSE
            TSFCNEW = T(I,J,LM)

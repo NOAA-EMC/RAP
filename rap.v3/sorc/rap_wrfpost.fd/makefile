@@ -124,4 +124,4 @@ $(TARGET): $(OBJS)
 
 
 clean:
-	/bin/rm -f  $(TARGET) *.lst *.o *.mod
+	/bin/rm -f *.lst *.o *.mod
