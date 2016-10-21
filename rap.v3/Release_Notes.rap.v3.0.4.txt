@@ -1,0 +1,11 @@
+rap.v3.0.4 - released 10/21/2016
+  Revert to RAPv2/HRRRv1 wind gust calculation method due
+  to too large of values
+
+sorc files changed:
+  /nwprod2/rap.v3.0.4/sorc/rap_wrfpost.fd/ALLOCATE_ALL.f
+  /nwprod2/rap.v3.0.4/sorc/rap_wrfpost.fd/DEALLOCATE.f
+  /nwprod2/rap.v3.0.4/sorc/rap_wrfpost.fd/VRBLS2D_mod.f
+  /nwprod2/rap.v3.0.4/sorc/rap_wrfpost.fd/MDLFLD.f
+  /nwprod2/rap.v3.0.4/sorc/rap_wrfpost.fd/INITPOST.F
+
