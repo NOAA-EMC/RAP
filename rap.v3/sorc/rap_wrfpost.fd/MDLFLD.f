@@ -80,7 +80,7 @@
               qqnr, qqnw, qqnwfa, qqnifa, uh, vh, mcvg, omga, wh, q2, ttnd, rswtt, &
               rlwtt, train, tcucn, o3, rhomid, dpres, el_pbl, pint, icing_gfip, icing_gfis, REF_10CM
       use vrbls2d, only: slp, hbot, htop, cnvcfr, cprate, cnvcfr, &
-              sr, prec, vis, czen, pblh, u10, v10, avgprec, avgcprate, &
+              sr, prec, vis, czen, pblh, pblhgust, u10, v10, avgprec, avgcprate, &
               REF1KM_10CM,REF4KM_10CM,REFC_10CM,REFD_MAX
       use masks, only: lmh, gdlat, gdlon
       use params_mod, only: rd, gi, g, rog, h1, tfrz, d00, dbzmin, d608, small,&
@@ -3239,7 +3239,6 @@
        ENDIF
 
 !
-!     
 !     ASYMPTOTIC AND FREE ATMOSPHERE MASTER LENGTH SCALE (EL), PLUS
 !     GRADIENT RICHARDSON NUMBER.
 !
@@ -3606,7 +3605,7 @@
          DO L=NINT(LMH(I,J)),1,-1
           IF(MODELNAME.EQ.'RAPR') THEN
            HGT=ZMID(I,J,L)
-           PBLHOLD=PBLH(I,J)
+           PBLHOLD=PBLHGUST(I,J)
           ELSE
            HGT=ZINT(I,J,L)
            PBLHOLD=PBLRI(I,J)
@@ -3620,7 +3619,7 @@
 	 if(lpbl(i,j)<1)print*,'zero lpbl',i,j,pblri(i,j),lpbl(i,j)
  101   CONTINUE
        IF(MODELNAME.EQ.'RAPR') THEN
-        CALL CALGUST(LPBL,PBLH,GUST)
+        CALL CALGUST(LPBL,PBLHGUST,GUST)
        ELSE
         CALL CALGUST(LPBL,PBLRI,GUST)
        END IF
