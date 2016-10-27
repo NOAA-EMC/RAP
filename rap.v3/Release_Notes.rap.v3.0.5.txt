@@ -1,0 +1,11 @@
+rap.v3.0.5 - released 10/27/2016
+  Change some GSI code to reinstate amsua_metob-b
+  channels 7-13
+
+sorc and fix files changed:
+  /nwprod2/rap.v3.0.5/sorc/rap_gsi.fd/read_atms.f90
+  /nwprod2/rap.v3.0.5/sorc/rap_gsi.fd/read_bufrtovs.f90
+  /nwprod2/rap.v3.0.5/sorc/rap_gsi.fd/qcmod.f90
+  /nwprod2/rap.v3.0.5/sorc/rap_gsi.fd/setuprad.f90
+  /nwprod2/rap.v3.0.5/fix/rap_global_satinfo.txt
+
