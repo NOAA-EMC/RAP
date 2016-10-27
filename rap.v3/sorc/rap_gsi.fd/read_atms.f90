@@ -1,4 +1,4 @@
-subroutine read_atms(mype,val_tovs,ithin,isfcalc,&
+Subroutine read_atms(mype,val_tovs,ithin,isfcalc,&
      rmesh,jsatid,gstime,infile,lunout,obstype,&
      nread,ndata,nodata,twind,sis, &
      mype_root,mype_sub,npe_sub,mpi_comm_sub)
@@ -26,6 +26,8 @@ subroutine read_atms(mype,val_tovs,ithin,isfcalc,&
 !  2012-03-05  akella  - nst now controlled via coupler
 !  2013-01-26  parrish - change from grdcrd to grdcrd1 (to allow successful debug compile on WCOSS)
 !  2014-01-31  mkim - add iql4crtm and set qval= 0 for all-sky mw data assimilation
+!  2016-10-20  collard - fix to allow monitoring and limited assimilation of
+!                     spectra when key channels are missing.
 !
 !   input argument list:
 !     mype     - mpi task id
@@ -166,6 +168,9 @@ subroutine read_atms(mype,val_tovs,ithin,isfcalc,&
   real(r_double),dimension(n2bhdr):: bfr2bhdr
 
   real(r_kind) cdist,disterr,disterrmax,dlon00,dlat00
+
+  logical :: critical_channels_missing
+
 !**************************************************************************
 ! Initialize variables
 
@@ -543,13 +548,14 @@ subroutine read_atms(mype,val_tovs,ithin,isfcalc,&
 !    Transfer observed brightness temperature to work array.  If any
 !    temperature exceeds limits, reset observation to "bad" value
      iskip=0
+     critical_channels_missing = .false.
      do j=1,nchanl
         if (bt_in(j) < tbmin .or. bt_in(j) > tbmax) then
            iskip = iskip + 1
            
-!          Remove profiles where key channels are bad  
+!          Flag profiles where key channels are bad  
            if((j == ich1 .or. j == ich2 .or. &
-                j == ich16 .or. j == ich17)) iskip = iskip+nchanl
+                j == ich16 .or. j == ich17)) critical_channels_missing = .true.
         endif
      end do
      if (iskip >= nchanl) cycle ObsLoop
@@ -585,6 +591,12 @@ subroutine read_atms(mype,val_tovs,ithin,isfcalc,&
      crit1 = crit1 + rlndsea(isflg) + 10._r_kind*float(iskip) + 0.01_r_kind * abs(zz)
      call checkob(dist1,crit1,itx,iuse)
      if(.not. iuse)cycle ObsLoop
+
+           if (critical_channels_missing) then
+
+              pred=1.0e8_r_kind
+
+           else
 
 !    Set data quality predictor
 !    Simply modify the AMSU-A-Type calculations and use them for all ATMS channels.
@@ -628,7 +640,7 @@ subroutine read_atms(mype,val_tovs,ithin,isfcalc,&
            end if
         end if
      endif
-        
+     endif   
 
 !    Compute "score" for observation.  All scores>=0.0.  Lowest score is "best"
      crit1 = crit1+pred 
