@@ -1,0 +1,17 @@
+rap.v3.0.7 - released 11/2/2016
+  Change terrain file to prevent crashes that occurred
+  in 00z 27 and 28 October 2016 cycles. Also fix a typo
+  in updatebc script for the partial cycle.
+
+fix and scripts files changed:
+  /nwprod2/rap.v3.0.7/fix/rap_geo_em.d01.nc
+  /nwprod2/rap.v3.0.7/scripts/exrap_updatebc_pcyc.sh.ecf
+
+implementation instructions:
+  The rap_geo_em.d01.nc file has to be in place for the 
+  12z makebc job. The 15z partial cycle begins by using
+  a wrfinput file from the 12z makebc job. The terrain fix 
+  is finally introduced into the full cycle at 21z when the
+  first guess from the partial cycle is used in the 21z full
+  cycle analysis.
+
