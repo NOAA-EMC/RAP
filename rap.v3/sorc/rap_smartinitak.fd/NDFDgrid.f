@@ -158,10 +158,10 @@ c  read in 3 km land mask
 
        do j=1,jm
        do i=1,im
-         if (land_rap_ndfd(i,j).eq.17.)
+         if (land_rap_ndfd(i,j).eq.0.)
      1       land_rap_ndfd(i,j) = -1.
 
-         if (land_rap_ndfd(i,j).ne.17..and.
+         if (land_rap_ndfd(i,j).ne.0..and.
      1      land_rap_ndfd(i,j).gt.0.)
      1       land_rap_ndfd(i,j) = 0.10
 

@@ -761,7 +761,7 @@ c land mask
       J = 0
       JPDS = -1
       JPDS(3) = IGDNUM
-      JPDS(5) = 225
+      JPDS(5) = 081
       JPDS(6) = 001
       CALL GETGB(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF,K,
      X           KPDS,KGDS,MASK,GRID,IRET)
