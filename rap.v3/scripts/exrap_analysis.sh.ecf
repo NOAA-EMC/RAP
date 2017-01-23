@@ -7,17 +7,15 @@
 # Author:   Ming Hu / Geoff Manikin / Julia Zhu  Org: EMC          Date: 2011-10-01
 # 2011-10-01  M Hu / G Manikin / J Zhu
 
+. /usrx/local/Modules/default/init/ksh
+
+# Load modules
+module load NetCDF/3.6.3
+
+ulimit -s 512000
 set -x
 
 cd $DATA
-
-# Set up some constants
-export HOMErap=${HOMErap:-/nwprod/rap.${ver}}
-export PARMrap=${PARMrap:-$HOMErap/parm}
-export FIXrap=${FIXrap:-$HOMErap/fix}
-export EXECrap=${EXECrap:-$HOMErap/exec}
-export COMGFS=${COMGFS:-/com/gfs/prod}
-export ndate=${ndate:-/nwprod/util/exec/ndate}
 
 # Directory for the CRTM files:
 export FIXcrtm=${FIXcrtm:-/nwprod/fix}
@@ -33,46 +31,6 @@ mdh=`echo ${START_TIME} | cut -c5-10`
 hh=`echo ${START_TIME} | cut -c9-10`
 
 ### Now run the GSI
-# Set up some NCEP loadlevelor environment variables
-export SPINLOOPTIME=10000
-export YIELDLOOPTIME=40000
-export AIXTHREAD_SCOPE=S
-export MALLOCMULTIHEAP=true
-export MEMORY_AFFINITY=MCM
-export BIND_TASKS=YES
-
-export LD_LIBRARY_PATH=/usrx/local/NetCDF/3.6.3/lib
-module load ics
-module load ibmpe
-export MP_EAGER_LIMIT=165536
-export MP_COREFILE_FORMAT=lite
-export MP_EUIDEVELOP=min
-export MP_EUILIB=us
-export MP_MPILIB=mpich2
-
-export MP_LABELIO=yes
-export MP_USE_BULK_XFER=yes
-export MP_SHARED_MEMORY=yes
-
-export MPICH_ALLTOALL_THROTTLE=0
-export KMP_STACKSIZE=1024m
-export MP_TASK_AFFINITY=cpu:2
-export OMP_NUM_THREADS=2
-
-# Set to yes for faster collective ops (mpi_reduce)
-# but may not yield bitwise identical results from
-# run to run when yes.
-export MP_COLLECTIVE_OFFLOAD=yes
-
-# Set up some constants
-export RAPGES_FCYC=${RAPGES_FCYC:-$gespath/rap/rapges}
-export RAPGES_PCYC=${RAPGES_PCYC:-$gespath/rap/rapges_pcyc}
-export RAPGES_SATBIAS=${RAPGES_SATBIAS:-$gespath/rap/rapges_satbias}
-export RAPGES_SFC=${RAPGES_SFC:-$gespath/rap/rapges_sfc}
-export RAPGES_ENKF=${RAPGES_ENKF:-$gespath/rap/rapges_enkf}
-export RAPBC=${RAPBC:-$gespath/rap/rapbc}
-
-export PREPDIR=${PREPDIR:-/com/${NET}/prod}
 
 # Compute date & time components for the analysis time
 YYYY=`echo ${START_TIME} | cut -c1-4`
@@ -84,7 +42,7 @@ YYYYMMDDHH=${YYYY}${MM}${DD}${HH}
 YYYYMMDD=${YYYY}${MM}${DD}
 
 # Compute date & time components for the analysis time minus 1 day
-DDm1=`$ndate -24 $START_TIME`
+DDm1=`$NDATE -24 $START_TIME`
 YMDm1=`echo ${DDm1} | cut -c1-8`
 
 # Create the ram work directory and cd into it
@@ -92,7 +50,6 @@ workdir=$DATA/gsiprd
 rm -rf ${workdir}
 mkdir -p ${workdir}
 cd ${workdir}
-/nwprod/util/ush/setup.sh
 
 # Bring over background field
 time_str=${YYYY}-${MM}-${DD}_${HH}_00_00
@@ -110,13 +67,13 @@ if [[ ${mod} -ne '0' ]]; then
   echo 'a cold start will not be possible this cycle if needed'
 fi
 
-PCYC_TIME=`$ndate -1 $START_TIME`
+PCYC_TIME=`$NDATE -1 $START_TIME`
 if [[ ! -r ${RAPGES_PCYC}/rap_${PCYC_TIME}f001 &&  ! -r ${RAPBC}/wrfinput_d01_${time_str} ]]; then
     counter=1
-    while [[ $counter -lt 22 ]]; do
+    while [[ $counter -lt 19 ]]; do
      counterhr=$counter
      typeset -Z2 counterhr
-     FCYC_TIME=`$ndate -${counter} $START_TIME`
+     FCYC_TIME=`$NDATE -${counter} $START_TIME`
      if [ -r ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr ]; then
       echo 'guess available' >> guess.out
       break
@@ -128,16 +85,16 @@ else
 fi
 
 if [ ! -r guess.out ]; then
-    echo 'no first guess is available'
+    echo 'FATAL ERROR: no first guess is available'
     echo 'please try a cycle divisible by 3'
-    exit
+    export err=9; err_chk
 fi
 
 # if the cyce is 09 or 21, we should have the last 1-hr forecast
 #   from the partial cycle available
 
 if [[ ${HH} -eq '09' || ${HH} -eq '21' ]]; then
-  PCYC_TIME=`$ndate -1 $START_TIME`
+  PCYC_TIME=`$NDATE -1 $START_TIME`
   if [ -r ${RAPGES_PCYC}/rap_${PCYC_TIME}f001 ]; then
     cp ${RAPGES_PCYC}/rap_${PCYC_TIME}f001 ./wrf_inout
      echo " Cycle ${YYYYMMDDHH}: GSI started with PCYC guess rap_${PCYC_TIME}f001" 
@@ -149,10 +106,10 @@ fi
 
 if [ ! -r wrf_inout ]; then
     counter=1
-    while [[ $counter -lt 22 ]]; do
+    while [[ $counter -lt 19 ]]; do
      counterhr=$counter
      typeset -Z2 counterhr
-     FCYC_TIME=`$ndate -${counter} $START_TIME`
+     FCYC_TIME=`$NDATE -${counter} $START_TIME`
      if [ -r ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr ]; then
       echo " Cycled run using rap_${FCYC_TIME}f0$counterhr"
       cp ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr ./wrf_inout
@@ -190,7 +147,7 @@ fi
 # Copy cycled satellite radiance bias correction
   satcounter=1
   while [[ $satcounter -lt 22 ]]; do
-    SAT_TIME=`$ndate -${satcounter} $START_TIME`
+    SAT_TIME=`$NDATE -${satcounter} $START_TIME`
     if [ -r ${RAPGES_SATBIAS}/radstat.rap_${SAT_TIME} ]; then
       echo " using satellite bias from ${SAT_TIME}"
       cp ${RAPGES_SATBIAS}/radstat.rap_${SAT_TIME} ./radstat.rap
@@ -205,18 +162,16 @@ fi
 time_updateSST='01'
 if [ ${HH} -eq ${time_updateSST} ]; then
   echo "update SST "
-  NCEPSST=$COMGFS/sst.${YYYYMMDD}
-  NCEPSST2=$COMGFS/sst.${YMDm1}
   cp ${FIXrap}/rap_RTG_SST_landmask.dat ./RTG_SST_landmask.dat
   cp ${FIXrap}/rap_geo_em.d01.nc  ./geo_em.d01.nc
-  if [ -r "${NCEPSST}/rtgssthr_grb_0.083" ]; then
-    cp ${NCEPSST}/rtgssthr_grb_0.083 SSTRTG
-    cp ${NCEPSST}/sst2dvar.t12z.nam_grid SST14km
+  if [ -r "${COMINsstp2}/sst.${YYYYMMDD}/rtgssthr_grb_0.083" ]; then
+    cp ${COMINsstp2}/sst.${YYYYMMDD}/rtgssthr_grb_0.083 SSTRTG
+    cp ${COMINsstp1}/sst.${YYYYMMDD}/sst2dvar.t12z.nam_grid SST14km
     mpirun.lsf ${EXECrap}/rap_process_sst >> $DATA/$pgmout 2>errfile 
     export err=$?; err_chk
-  elif [ -r "${NCEPSST2}/rtgssthr_grb_0.083" ]; then
-    cp ${NCEPSST2}/rtgssthr_grb_0.083 SSTRTG
-    cp ${NCEPSST2}/sst2dvar.t12z.nam_grid SST14km
+  elif [ -r "${COMINsstp2}/sst.${YMDm1}/rtgssthr_grb_0.083" ]; then
+    cp ${COMINsstp2}/sst.${YMDm1}/rtgssthr_grb_0.083 SSTRTG
+    cp ${COMINsstp1}/sst.${YMDm1}/sst2dvar.t12z.nam_grid SST14km
     mpirun.lsf ${EXECrap}/rap_process_sst >> $DATA/$pgmout 2>errfile 
     export err=$?; err_chk
   else
@@ -530,8 +485,8 @@ mv fort.208 fit_pcp1
 mv fort.209 fit_rw1
 mv fort.213 fit_sst1
 
-cat fit_p1 fit_w1 fit_t1 fit_q1 fit_pw1 fit_rad1 fit_rw1 > ${COMOUT}/rap.t${cyc}z.fits.${tmmark}
-cat fort.210 fort.211 fort.212 fort.214 fort.215 fort.217 fort.220 > ${COMOUT}/rap.t${cyc}z.fits2.${tmmark}
+cat fit_p1 fit_w1 fit_t1 fit_q1 fit_pw1 fit_rad1 fit_rw1 > ${COMOUT}/rap.t${cyc}z.fits
+cat fort.210 fort.211 fort.212 fort.214 fort.215 fort.217 fort.220 > ${COMOUT}/rap.t${cyc}z.fits2
 
 # cp satbias_out ${COMOUT}/rap.t${cyc}z.satbias.${tmmark}
 

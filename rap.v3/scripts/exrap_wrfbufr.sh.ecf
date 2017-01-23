@@ -23,15 +23,7 @@ postmsg $jlogfile "$msg"
 fhr=$fhr
 
 # Set up some constants
-export HOMErap=${HOMErap:-/nwprod/rap.${ver}}
-export PARMrap=${PARMrap:-$HOMErap/parm}
-export FIXrap=${FIXrap:-$HOMErap/fix}
-export EXECrap=${EXECrap:-$HOMErap/exec}
-export ndate=${ndate:-/nwprod/util/exec/ndate}
 export XLFRTEOPTS="unit_vars=yes"
-
-export RAPGES_FCYC=${RAPGES_FCYC:-$gespath/rap/rapges}
-export RAPGES_SFC=${RAPGES_SFC:-$gespath/rap/rapges_sfc}
 
 START_TIME=$PDY$cyc
 echo $START_TIME >STARTTIME
@@ -45,8 +37,8 @@ OUTTYP=netcdf
 model=RAPR
 NFILE=1
 INCR=01
-CYCLE1=`/nwprod/util/exec/ndate -1 $START_TIME`
-date=`/nwprod/util/exec/ndate $fhr $START_TIME`
+CYCLE1=`$NDATE -1 $START_TIME`
+date=`$NDATE $fhr $START_TIME`
 
 wyr=`echo $date | cut -c1-4`
 wmn=`echo $date | cut -c5-6`
@@ -54,7 +46,7 @@ wdy=`echo $date | cut -c7-8`
 whr=`echo $date | cut -c9-10`
 
 let fhrold="$fhr - 1"
-dateold=`/nwprod/util/exec/ndate $fhrold $START_TIME`
+dateold=`$NDATE $fhrold $START_TIME`
 
 oyr=`echo $dateold | cut -c1-4`
 omn=`echo $dateold | cut -c5-6`
@@ -64,8 +56,6 @@ ohr=`echo $dateold | cut -c9-10`
 timeform=${wyr}"-"${wmn}"-"${wdy}"_"${whr}"_00_00"
 timeformold=${oyr}"-"${omn}"-"${ody}"_"${ohr}"_00_00"
 
-# already have the wrfout file copied in as wrfoutd01
-cp wrfoutd01 wrfoutd01_${timeform}
 if [ $fhr -eq 0 ]; then
 cp ${RAPGES_SFC}/wrfout_d01_${ohr} wrfoutd01_${timeformold} 
 else
@@ -82,7 +72,7 @@ if [ ${fhr} -eq ${time_analysis} ]; then
   OUTFIL=wrfinput_d01
 else
   OUTFIL=wrfoutd01_${timeform}
-  cp ${FCSTDIR}/wrfout_d01_${timeform} .
+  cp ${FCSTDIR}/wrfout_d01_${timeform} wrfoutd01_${timeform}
 fi
 
 YYYY=`echo $PDY | cut -c1-4`

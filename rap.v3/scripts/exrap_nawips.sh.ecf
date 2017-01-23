@@ -23,11 +23,14 @@ export 'PS4=$RUN:$SECONDS + '
 
 mkdir $DATA/$RUN
 cd $DATA/$RUN
-$utilscript/setup.sh
+
+cp $GEMPAKrap/fix/g2varsncep1.tbl .
+cp $GEMPAKrap/fix/g2vcrdncep1.tbl .
+cp $GEMPAKrap/fix/g2varswmo2.tbl .
+cp $GEMPAKrap/fix/g2vcrdwmo2.tbl .
 
 #
 NAGRIB_TABLE=${NAGRIB_TABLE:-/nwprod/gempak/fix/nagrib.tbl}
-utilfix_nam=${utilfix_nam:-/nwprod/util/fix}
 NAGRIB=nagrib2
 #
 
@@ -55,7 +58,7 @@ while [ $fhcnt -le $fend ] ; do
   typeset -Z3 fhr3
   GRIBIN=$COMIN/${model}.${cycle}.${GRIB}${fhr}${EXT}
   GEMGRD=${RUN}_${PDY}${cyc}f${fhr3}
-  GRIBIN_chk=$GRIBIN.grib2.idx
+  GRIBIN_chk=$GRIBIN.idx
 
   icnt=1
   while [ $icnt -lt 1000 ]
@@ -169,6 +172,6 @@ set -x
 
 msg='Job completed normally.'
 echo $msg
-$DATA/postmsg "$jlogfile" "$msg"
+postmsg "$jlogfile" "$msg"
 
 ############################### END OF SCRIPT #######################

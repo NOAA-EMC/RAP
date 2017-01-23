@@ -13,8 +13,6 @@ cd $DATA
 
 export PS4='SNDP $SECONDS + '
 
-export EXECnam=${EXECnam:-/nwprod/exec}
-
 cp $PARMrap/rap_bufr.tbl .
 cp $PARMrap/rap_modtop.parm .
 cp $PARMrap/rap_sndp.parm.mono sndp.parm 
@@ -29,7 +27,7 @@ rm -rf profilm*
 
 while [ $fhr -le $endfhr ]
 do
-   PROFDIR=$DATA_IN/rap_post_${envir}_${cyc}_f${fhr}
+   PROFDIR=$DATAROOT/rap_wrfbufr_${envir}_${cyc}_f${fhr}
    cp ${PROFDIR}/profilm.c1.f${fhr} .
    if [ $fhr -ne 0 ]; then
      let "fhr1=fhr-1"
@@ -53,9 +51,12 @@ export err=$?; err_chk
 
 #need to manipulate the file to get it to be compatible
 #  with gempak on wcoss
-/nwprod/ush/cwordsh unblk class1.bufr class1.bufr_unblock
-/nwprod/ush/cwordsh block class1.bufr_unblock class1.bufr_block
-cp class1.bufr_block ${COMOUT}/rap.t${cyc}z.class1.bufr.${tmmark}
+${USHobsproc_shared_bufr_cword}/bufr_cword.sh unblk class1.bufr class1.bufr_unblock
+${USHobsproc_shared_bufr_cword}/bufr_cword.sh block class1.bufr_unblock class1.bufr_block
+
+if [ $SENDCOM == "YES" ]; then
+  cp class1.bufr_block ${COMOUT}/rap.t${cyc}z.class1.bufr.${tmmark}
+fi
 
 #Send bufr file
 if test "$SENDDBN" = 'YES'
@@ -74,7 +75,7 @@ EOF
    ln -sf $DATA/class1.bufr fort.20
    export DIRD=${DATA}/bufr.${cycle}/bufr
 
-  pgm=nam_stnmlist
+  pgm=rap_stnmlist
   startmsg
   $EXECrap/rap_stnmlist < stnmlist_input >> $pgmout 2> errfile
   err=$?;export err ;err_chk

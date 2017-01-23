@@ -15,15 +15,6 @@ set -x
 
 cd $DATA
 
-# Set up some constants
-export HOMErap=${HOMErap:-/nwprod/rap.${ver}}
-export PARMrap=${PARMrap:-$HOMErap/parm}
-export FIXrap=${FIXrap:-$HOMErap/fix}
-export EXECrap=${EXECrap:-$HOMErap/exec}
-export ndate=${ndate:-/nwprod/util/exec/ndate}
-
-# Directory for the Radar Mosaic input files
-export COMRAD=${COMRAD:-/com/hourly/prod}
 # NSSL MOSAIC Data
 export COM_MOSAIC=${COM_MOSAIC:-/dcom/us007003/ldmdata/obs/upperair/mrms}
 
@@ -31,9 +22,6 @@ export MOSAICTILENUM=4
 
 ### Process Mosaic
 numtiles=${MOSAICTILENUM}
-
-# Directory for the Radar Mosaic input files
-export COMRAD=${COMRAD:-/com/hourly/prod}
 
 #START_TIME=`cat STARTTIME`
 START_TIME=$PDY$cyc
@@ -105,7 +93,7 @@ else
       gzip -d *.gz
    else
       numtiles=81
-      export MOSAICdir=$COMRAD/radar.${ymdh}
+      export MOSAICdir=$COM_RAD/radar.${ymdh}
       ln -s ${MOSAICdir}/tile1/${ymd}_${hh}00.mosaic ./mosaic_t1
       ln -s ${MOSAICdir}/tile2/${ymd}_${hh}00.mosaic ./mosaic_t2
       ln -s ${MOSAICdir}/tile3/${ymd}_${hh}00.mosaic ./mosaic_t3

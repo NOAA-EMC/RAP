@@ -44,7 +44,6 @@ do
   do
     if [ -s $FCSTDIR/fcstdone${fhr}00.${shh} ]
     then
-#      $SMSBIN/setev release_post${fhr}
       ecflow_client --event release_post${fhr}
       # Remove current fhr from list
       postjobs=`echo $postjobs | sed s/${fhr}//g`

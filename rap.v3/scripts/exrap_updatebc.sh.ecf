@@ -14,12 +14,13 @@
 module purge
 module load EnvVars/1.0.0
 module load ics/15.0.3
-module load ibmpe/1.3.0.10
 module load lsf/9.1
 module load NetCDF/3.6.3
-module load PNetCDF/1.2.0
+module load PNetCDF/1.5.0
 module load nco/4.2.4
 module load jasper/v1.900.1
+module load prod_util
+module load ibmpe
 module list
 
 set -x
@@ -27,11 +28,6 @@ set -x
 cd $DATA
 
 # Set up some constants
-export HOMErap=${HOMErap:-/nwprod/rap.${ver}}
-export PARMrap=${PARMrap:-$HOMErap/parm}
-export FIXrap=${FIXrap:-$HOMErap/fix}
-export EXECrap=${EXECrap:-$HOMErap/exec}
-export ndate=${ndate:-/nwprod/util/exec/ndate}
 
 export WPSNAMELIST=namelist.wps
 START_TIME=$PDY$cyc
@@ -43,12 +39,6 @@ ymdh=`echo ${START_TIME} | cut -c1-10`
 mdh=`echo ${START_TIME} | cut -c5-10`
 hh=`echo ${START_TIME} | cut -c9-10`
 
-# Set up some constants
-export RAPGES_FCYC=${RAPGES_FCYC:-$gespath/rap/rapges}
-export RAPGES_PCYC=${RAPGES_PCYC:-$gespath/rap/rapges_pcyc}
-export RAPGES_SFC=${RAPGES_SFC:-$gespath/rap/rapges_sfc}
-export RAPBC=${RAPBC:-$gespath/rap/rapbc}
-
 # Compute date & time components for the analysis time
 YYYY=`echo ${START_TIME} | cut -c1-4`
 MM=`echo ${START_TIME} | cut -c5-6`
@@ -59,7 +49,7 @@ YYYYMMDDHH=${YYYY}${MM}${DD}${HH}
 YYYYMMDD=${YYYY}${MM}${DD}
 
 # Compute date & time components for the analysis time minus 1 day
-DDm1=`$ndate -24 $START_TIME`
+DDm1=`$NDATE -24 $START_TIME`
 YMDm1=`echo ${DDm1} | cut -c1-8`
 
 # Create the ram work directory and cd into it
@@ -67,7 +57,6 @@ workdir=$DATA/adjustbc
 rm -rf ${workdir}
 mkdir -p ${workdir}
 cd ${workdir}
-/nwprod/util/ush/setup.sh
 
 #######################################
 # Process Update BC
@@ -78,17 +67,11 @@ export FCST_LENGTH="36"
 export FCST_INTERVAL="3"
 export METGRIDPROC="METGRID_PROC"
 
-# Set up the work directory and cd into it
-workdir=$DATA/adjustbc
-mkdir -p ${workdir}
-cd ${workdir}
-/nwprod/util/ush/setup.sh
-
 START_TIME=`cat ../STARTTIME`
 echo $START_TIME
 
 # Calculate start and end time date strings
-END_TIME=`$ndate +${FCST_LENGTH} $START_TIME`
+END_TIME=`$NDATE +${FCST_LENGTH} $START_TIME`
 syyyy=`echo ${START_TIME} | cut -c1-4`
 smm=`echo ${START_TIME} | cut -c5-6`
 sdd=`echo ${START_TIME} | cut -c7-8`
