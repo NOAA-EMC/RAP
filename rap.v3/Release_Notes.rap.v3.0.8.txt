@@ -1,12 +1,10 @@
-rap.v3.0.8 - released 1/23/2017
-  Change method of adjusting land and water points
-  from vegetation type to land/sea mask in the Alaska 
-  smartinit to avoid temperature discontinuities.
+rap.v3.0.8 - released 01/10/2017
+  update bufr staion list
 
-sorc and parm files changed:
-  /nwprod2/rap.v3.0.8/sorc/rap_smartinitak.fd/GETGRIB.f
-  /nwprod2/rap.v3.0.8/sorc/rap_smartinitak.fd/NDFDgrid.f
+sorc files changed:
+  /nwprod2/rap.v3.0.8/sorc/rap_wrfbufr.fd/PROF_EM_NET.f
+  /nwprod2/rap.v3.0.8/sorc/rap_sndp.fd/parm.em
 
-implementation instructions:
-  Compile alaska smartinit as usual.
+fix file changed:
+  /nwprod2/rap.v3.0.8/fix/rap_profdat
 
