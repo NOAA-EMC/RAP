@@ -1,28 +1,23 @@
-#BSUB -J %E%rap_post_f17_%CYC%
-#BSUB -o  /%COM%/output/%ENVIR%/today/rap_post_f17_%CYC%.o%J
-#BSUB -e  /%COM%/output/%ENVIR%/today/rap_post_f17_%CYC%.o%J
+#BSUB -J %E%rap_process_enkf_%CYC%
+#BSUB -o  /%COM%/output/%ENVIR%/today/rap_process_enkf_%CYC%.o%J
+#BSUB -e  /%COM%/output/%ENVIR%/today/rap_process_enkf_%CYC%.o%J
 #BSUB -cwd /tmpnwprd
-#BSUB -R "span[ptile=24]" 
-#BSUB -n 24
-#BSUB -q %QUEUE%
 #BSUB -L /bin/sh
-#BSUB -W 00:25
-#BSUB -P %PROJ%
+#BSUB -W 01:15
+#BSUB -q %QUEUE%
 #BSUB -x
+#BSUB -P %PROJ%
+#BSUB -n 80
+#BSUB -R "span[ptile=8]"
+#BSUB -R affinity[core]
 #BSUB -a poe
-
 
 %include <head.h>
 %include <envir-p2.h>
 
 # EXPORT list here
 
-set -x
-
 export cyc=%CYC%
-export fhr=17
-
-
 
 # versions file for Rapid Refresh model $mod_ver
 VERSION_FILE=$NWROOT/versions/rap.ver
@@ -31,11 +26,10 @@ if [ -f $VERSION_FILE ]; then
 else
   ecflow_client --abort
   exit
-  exit
 fi
 
 # CALL executable job script here
-$NWROOT/rap.${rap_ver}/jobs/JRAP_POST
+$NWROOT/rap.${rap_ver}/jobs/JRAP_PROCESS_ENKF
 
 if [ $? -ne 0 ]; then
   ecflow_client --abort
@@ -44,9 +38,9 @@ fi
 
 %include <tail.h>
 %manual
-######################################################################
-# Purpose: to run RAP post processing
-######################################################################
+##########################################################################
+# Purpose: to updatebcare the boundary conditions for the Rapid Refresh Model
+##########################################################################
 
 
 ######################################################################

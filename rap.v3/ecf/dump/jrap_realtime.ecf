@@ -1,8 +1,8 @@
 #BSUB -J %E%rap_realtime
-#BSUB -o /com/output/%ENVIR%/today/rap_realtime_%CYC%.o%J
-#BSUB -e /com/output/%ENVIR%/today/rap_realtime_%CYC%.o%J
+#BSUB -o /%COM%/output/%ENVIR%/today/rap_realtime_%CYC%.o%J
+#BSUB -e /%COM%/output/%ENVIR%/today/rap_realtime_%CYC%.o%J
 #BSUB -L /bin/sh
-#BSUB -q prod
+#BSUB -q %QUEUE%
 #BSUB -cwd /tmpnwprd
 #BSUB -W 00:45
 #BSUB -R "span[ptile=16]" -R "affinity[core]"
@@ -11,23 +11,22 @@
 #BSUB -R rusage[mem=1000]"
 
 %include <head.h>
+%include <envir-p2.h>
 
 
 # EXPORT list here
 set -x
-export envir=%ENVIR%
 export cyc=%CYC%
 export NET=rap
 
-export job=rap_realtime_${cyc}
-export output=/com/output/${envir}/today/rap_realtime_${cyc}
-export error=/com/output/${envir}/today/rap_realtime_${cyc}
+export output=/%COM%/output/${envir}/today/rap_realtime_${cyc}
+export error=/%COM%/output/${envir}/today/rap_realtime_${cyc}
 
 # CALL executable job script here
 
 
-# versions file for Rapid Refresh model $model_ver
-VERSION_FILE=/nw${envir}/versions/rap.ver
+# versions file for Rapid Refresh model $rap_ver
+VERSION_FILE=$NWROOTp1/versions/hrly_realtime.ver
 if [ -f $VERSION_FILE ]; then
   . $VERSION_FILE
 else
@@ -36,7 +35,8 @@ else
   exit
 fi
 
-/nw${envir}/rap.${model_ver}/jobs/JHRLY_REALTIME
+#$NWROOTp1/hrly_realtime.${code_ver}/jobs/JHRLY_REALTIME
+/nw${envir}/hrly_realtime.${code_ver}/jobs/JHRLY_REALTIME
 
 if [ $? -ne 0 ]; then
   ecflow_client --abort

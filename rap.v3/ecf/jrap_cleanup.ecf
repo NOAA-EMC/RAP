@@ -1,8 +1,8 @@
 #BSUB -J %E%rap_cleanup_%CYC%
-#BSUB -o  /com/output/%ENVIR%/today/rap_cleanup_%CYC%.o%J
-#BSUB -e  /com/output/%ENVIR%/today/rap_cleanup_%CYC%.o%J
+#BSUB -o  /%COM%/output/%ENVIR%/today/rap_cleanup_%CYC%.o%J
+#BSUB -e  /%COM%/output/%ENVIR%/today/rap_cleanup_%CYC%.o%J
 #BSUB -cwd /tmpnwprd
-#BSUB -q prod_serv
+#BSUB -q %QUEUESERV%
 #BSUB -L /bin/sh
 #BSUB -W 00:30
 #BSUB -P %PROJ%
@@ -10,19 +10,18 @@
 #BSUB -R affinity[core]
 
 %include <head.h>
+%include <envir-p2.h>
 
 # EXPORT list here
 
 set -x
 
-export envir=%ENVIR%
 export cyc=%CYC%
-export job=rap_cleanup_%CYC%
 
 
 
 # versions file for Rapid Refresh model $mod_ver
-VERSION_FILE=/nw${envir}/versions/rap.ver
+VERSION_FILE=$NWROOT/versions/rap.ver
 if [ -f $VERSION_FILE ]; then
   . $VERSION_FILE
 else
@@ -32,7 +31,7 @@ else
 fi
 
 # CALL executable job script here
-/nw${envir}/rap.${model_ver}/jobs/JRAP_CLEANUP
+$NWROOT/rap.${rap_ver}/jobs/JRAP_CLEANUP
 
 if [ $? -ne 0 ]; then
   ecflow_client --abort

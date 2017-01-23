@@ -1,8 +1,8 @@
 #BSUB -J %E%rap_gempak_meta_%CYC%
-#BSUB -o /com/output/%ENVIR%/today/rap_gempak_meta_%CYC%.o%J
-#BSUB -e /com/output/%ENVIR%/today/rap_gempak_meta_%CYC%.o%J
+#BSUB -o /%COM%/output/%ENVIR%/today/rap_gempak_meta_%CYC%.o%J
+#BSUB -e /%COM%/output/%ENVIR%/today/rap_gempak_meta_%CYC%.o%J
 #BSUB -L /bin/sh
-#BSUB -q prod
+#BSUB -q %QUEUE%
 #BSUB -cwd /tmpnwprd
 #BSUB -R "span[ptile=2]"
 #BSUB -n 2
@@ -13,16 +13,15 @@
 #BSUB -a poe
 
 %include <head.h>
+%include <envir-p2.h>
 
-export envir=%ENVIR%
-export job=rap_gempak_meta_%CYC%
 export cyc=%CYC%
 export numproc=2
 
 # CALL executable job script here
 
-# versions file for Rapid Refresh model $model_ver
-VERSION_FILE=/nw${envir}/versions/rap.ver
+# versions file for Rapid Refresh model $rap_ver
+VERSION_FILE=$NWROOT/versions/rap.ver
 if [ -f $VERSION_FILE ]; then
   . $VERSION_FILE
 else
@@ -30,7 +29,7 @@ else
   exit
 fi
 
-/nw$envir/rap.${model_ver}/jobs/JRAP_GEMPAK_META
+$NWROOT/rap.${rap_ver}/jobs/JRAP_GEMPAK_META
 
 if [ $? -ne 0 ]; then
   ecflow_client --abort

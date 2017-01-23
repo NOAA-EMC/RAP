@@ -1,27 +1,26 @@
 #BSUB -J %E%rap_gempak_%CYC%
-#BSUB -o /com/output/%ENVIR%/today/rap_gempak_%CYC%.o%J
-#BSUB -e /com/output/%ENVIR%/today/rap_gempak_%CYC%.o%J
+#BSUB -o /%COM%/output/%ENVIR%/today/rap_gempak_%CYC%.o%J
+#BSUB -e /%COM%/output/%ENVIR%/today/rap_gempak_%CYC%.o%J
 #BSUB -L /bin/sh
-#BSUB -q prod_shared   ##prod_serv
+#BSUB -q %QUEUE%_shared   ##prod_serv2
 #BSUB -W 01:00
 #BSUB -cwd /tmpnwprd
 #BSUB -P %PROJ%
-#BSUB -n 4
-#BSUB -R span[ptile=4]
+#BSUB -n 6
+#BSUB -R span[ptile=6]
 #BSUB -a poe
 #BSUB -R rusage[mem=2500]
 #BSUB -R affinity[core]
 
 %include <head.h>
+%include <envir-p2.h>
 
 set -x
-export envir=%ENVIR%
-export job=rap_gempak_%CYC%
 export cyc=%CYC%
 
 # CALL executable job script here
-# versions file for Rapid Refresh model $model_ver
-VERSION_FILE=/nw${envir}/versions/rap.ver
+# versions file for Rapid Refresh model $rap_ver
+VERSION_FILE=$NWROOT/versions/rap.ver
 if [ -f $VERSION_FILE ]; then
   . $VERSION_FILE
 else
@@ -29,7 +28,7 @@ else
   exit
 fi
 
-/nw$envir/rap.${model_ver}/jobs/JRAP_GEMPAK
+$NWROOT/rap.${rap_ver}/jobs/JRAP_GEMPAK
 
 if [ $? -ne 0 ]; then
   ecflow_client --abort

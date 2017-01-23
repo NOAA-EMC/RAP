@@ -1,28 +1,30 @@
 #BSUB -J %E%rap_dump_pcyc_%CYC%
-#BSUB -o /com/output/%ENVIR%/today/rap_dump_pcyc_%CYC%.o%J
-#BSUB -e /com/output/%ENVIR%/today/rap_dump_pcyc_%CYC%.o%J
+#BSUB -o /%COM%/output/%ENVIR%/today/rap_dump_pcyc_%CYC%.o%J
+#BSUB -e /%COM%/output/%ENVIR%/today/rap_dump_pcyc_%CYC%.o%J
 #BSUB -L /bin/sh
-#BSUB -q prod_serv
+#BSUB -q %QUEUE%_shared
+#BSUB -n 3
+#BSUB -R span[ptile=3]
+#BSUB -M 3000
 #BSUB -cwd /tmpnwprd
 #BSUB -W 00:30
 #BSUB -P %PROJ%
-#BSUB -R rusage[mem=6000]
 #BSUB -R affinity[core]
+#BSUB -a poe
 
 %include <head.h>
+%include <envir-p2.h>
 
 
 set -x
-export envir=%ENVIR%
 export cyc=%CYC%
-export job=rap_dump_pcyc_%CYC%
 
 # CALL executable job script here
 
 
 
 # versions file for Rapid Refresh model $mod_ver
-VERSION_FILE=/nw${envir}/versions/rap.ver
+VERSION_FILE=$NWROOT/versions/obsproc_rap.ver
 if [ -f $VERSION_FILE ]; then
   . $VERSION_FILE
 else
@@ -30,7 +32,7 @@ else
   exit
 fi
 
-/nw$envir/rap.${model_ver}/jobs/JRAP_DUMP
+$NWROOT/obsproc_rap.${obsproc_rap_ver}/jobs/JRAP_DUMP
 
 if [ $? -ne 0 ]; then
   ecflow_client --abort

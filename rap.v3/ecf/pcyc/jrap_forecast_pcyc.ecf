@@ -1,28 +1,27 @@
 #BSUB -J %E%rap_forecast_pcyc_%CYC%
-#BSUB -o  /com/output/%ENVIR%/today/rap_forecast_pcyc_%CYC%.o%J
-#BSUB -e  /com/output/%ENVIR%/today/rap_forecast_pcyc_%CYC%.o%J
+#BSUB -o  /%COM%/output/%ENVIR%/today/rap_forecast_pcyc_%CYC%.o%J
+#BSUB -e  /%COM%/output/%ENVIR%/today/rap_forecast_pcyc_%CYC%.o%J
 #BSUB -cwd /tmpnwprd
-#BSUB -q prod
+#BSUB -q %QUEUE%
 #BSUB -L /bin/sh
 #BSUB -P %PROJ%
-#BSUB -n 1200 
+#BSUB -n 600 
 #BSUB -R "span[ptile=24]"
 #BSUB -W 00:40
 #BSUB -x
 #BSUB -a poe
 
 %include <head.h>
+%include <envir-p2.h>
 
 # EXPORT list here
 
 set -x
 
-export envir=%ENVIR%
 export cyc=%CYC%
-export job=rap_forecast_pcyc_%CYC%
 
 # versions file for Rapid Refresh model $mod_ver
-VERSION_FILE=/nw${envir}/versions/rap.ver
+VERSION_FILE=$NWROOT/versions/rap.ver
 if [ -f $VERSION_FILE ]; then
   . $VERSION_FILE
 else
@@ -31,7 +30,7 @@ else
 fi
 
 # CALL executable job script here
-/nw${envir}/rap.${model_ver}/jobs/JRAP_FORECAST_PCYC
+$NWROOT/rap.${rap_ver}/jobs/JRAP_FORECAST_PCYC
 
 if [ $? -ne 0 ]; then
   ecflow_client --abort
