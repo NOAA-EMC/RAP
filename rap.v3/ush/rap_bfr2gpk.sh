@@ -31,7 +31,7 @@ export INFILE
 
 #  Set output directory:
 
-OUTDIR=${COMAWP:-/com/nawips/${envir}/rap.${PDY}}
+OUTDIR=${COMAWP:-/com2/nawips/${envir}/rap.${PDY}}
 
 outfilbase=rap_${PDY}${cyc}
 

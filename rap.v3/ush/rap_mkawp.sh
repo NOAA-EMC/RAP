@@ -82,6 +82,7 @@ EOF
   if test "$SENDCOM" = 'YES'
   then
     cp awp236pgrbf${fhr}.grib2 $COMOUT/rap.${cycle}.awp236pgrbf${fhr}.grib2
+    ${WGRIB2} $COMOUT/rap.${cycle}.awp236pgrbf${fhr}.grib2 -s >$COMOUT/rap.${cycle}.awp236pgrbf${fhr}.grib2.idx
   fi
 # end grid 236 processing
   if [ $SENDDBN = YES ]
@@ -101,7 +102,18 @@ fi
        $fhr -eq 05 -o $fhr -eq 06 -o $fhr -eq 07 -o $fhr -eq 08 -o $fhr -eq 09 \
        -o $fhr -eq 12 ] ; then
 
- $CNVGRIB -g21 $COMOUT/rap.${cycle}.awp236pgrbf${fhr}.grib2 RAP40PRS
+ #XXW $CNVGRIB -g21 $COMOUT/rap.${cycle}.awp236pgrbf${fhr}.grib2 RAP40PRS
+# Change grid 255 to grid 236 in grib1
+ $CNVGRIB -g21 $COMOUT/rap.${cycle}.awp236pgrbf${fhr}.grib2 tmp${fhr}.grib1
+ ln -s  tmp${fhr}.grib1   fort.11
+
+$OVERGRIDID << EOF
+236
+EOF
+
+ mv fort.51  RAP40PRS
+ rm fort.11 
+
  $GRBINDEX RAP40PRS RAP40PRSI
 
   export FORTREPORTS=unit_vars=yes 
@@ -200,6 +212,7 @@ EOF
   if test "$SENDCOM" = 'YES'
   then
     cp awp130pgrbf${fhr}.grib2 $COMOUT/rap.${cycle}.awp130pgrbf${fhr}.grib2
+    ${WGRIB2} $COMOUT/rap.${cycle}.awp130pgrbf${fhr}.grib2 -s >$COMOUT/rap.${cycle}.awp130pgrbf${fhr}.grib2.idx
   fi
   if [ $SENDDBN = YES ]
     then
@@ -268,16 +281,11 @@ EOF
     cat cprecip130.${fhr} >> awp130pgrbf${fhr}.grib2
     cat weasd130.${fhr} >> awp130pgrbf${fhr}.grib2
     cat graupel130.${fhr} >> awp130pgrbf${fhr}.grib2
-  if test "$SENDCOM" = 'YES'
-  then
-    cp awp130pgrbf${fhr}.grib2 $COMOUT/rap.${cycle}.awp130pgrbf${fhr}.grib2
-  fi
-  if [ $SENDDBN = YES ]
-    then
-       ALERT_TYPE=RAP_PG13_GB2
-       $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE} $job $COMOUT/rap.${cycle}.awp130pgrbf${fhr}.grib2
-       $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE}_WIDX $job $COMOUT/rap.${cycle}.awp130pgrbf${fhr}.grib2.idx
-  fi  
+
+#  do NOT need to copy this new version back to COMOUT, as while do need to
+#   send the 2-hr accums to AWIPS, we are ending the generation of them in all
+#   other files
+
 fi # 2-hr check
 
 # Processing AWIPS 130 grids
@@ -294,7 +302,7 @@ fi # 2-hr check
   err=$?;export err ;err_chk
   if test "$SENDCOM" = 'YES'
   then
-    cp grib2.${cycle}.awprap13f${fhr} $PCOM/grib2.${cycle}.awprap13f${fhr}.$job
+    cp grib2.${cycle}.awprap13f${fhr} $PCOM/grib2.${cycle}.awprap13f${fhr}
   fi
 # GSM  had been sending alerts for all fhr < 13 for every
 #   3rd cycle and all fhr < 10 for all other cycles;  changed
@@ -302,7 +310,7 @@ fi # 2-hr check
   if test "$SENDDBN_NTC" = 'YES'
   then
     # rap130 grib2 files to AWIPS NCF
-     $DBNROOT/bin/dbn_alert NTC_LOW $NET $job $PCOM/grib2.${cycle}.awprap13f${fhr}.$job
+     $DBNROOT/bin/dbn_alert NTC_LOW $NET $job $PCOM/grib2.${cycle}.awprap13f${fhr}
   fi
 fi # 130 processing
 
@@ -368,6 +376,7 @@ EOF
     if test "$SENDCOM" = 'YES'
       then
        cp awp252pgrbf${fhr}.grib2 $COMOUT/rap.${cycle}.awp252pgrbf${fhr}.grib2
+       ${WGRIB2} $COMOUT/rap.${cycle}.awp252pgrbf${fhr}.grib2 -s > $COMOUT/rap.${cycle}.awp252pgrbf${fhr}.grib2.idx
     fi
 
     if [ $SENDDBN = YES ]; then
@@ -399,7 +408,7 @@ then
   err=$?;export err ;#err_chk
   if test "$SENDCOM" = 'YES'
   then
-    cp grib2.${cycle}.awprap200f${fhr} $PCOM/grib2.${cycle}.awprap200f${fhr}.$job
+    cp grib2.${cycle}.awprap200f${fhr} $PCOM/grib2.${cycle}.awprap200f${fhr}
   fi
 # GSM  had been sending alerts for all fhr < 13 for every
 #   3rd cycle and all fhr < 10 for all other cycles;  changed
@@ -407,6 +416,6 @@ then
   if test "$SENDDBN_NTC" = 'YES'
   then
     # rap200 grib2 files to AWIPS NCF
-     $DBNROOT/bin/dbn_alert NTC_LOW $NET $job $PCOM/grib2.${cycle}.awprap200f${fhr}.$job
+     $DBNROOT/bin/dbn_alert NTC_LOW $NET $job $PCOM/grib2.${cycle}.awprap200f${fhr}
   fi
 fi # 200 processing

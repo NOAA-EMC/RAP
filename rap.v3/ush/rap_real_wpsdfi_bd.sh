@@ -18,6 +18,18 @@
 set -x
 cd $DATA
 
+# Set MPI options
+export MP_SINGLE_THREAD=yes
+export MP_EAGER_LIMIT=65536
+export OMP_NUM_THREADS=1
+export MP_MPILIB=pempi
+export MP_EUILIB=us
+export MP_LABELIO=yes
+export MP_SHARED_MEMORY=yes
+export MP_USE_BULK_XFER=yes
+export I_MPI_FABRICS=shm:ofa
+export MP_USE_TOKEN_FLOW_CONTROL=yes
+
 ## Get the forecast valid time 
 HH=$1
 
@@ -35,10 +47,6 @@ export SOURCE_PATH=${SOURCE_PATH:-$DATA}
 export INPUT_DATAROOT=${INPUT_DATAROOT:-$DATA}
 export CONSTANTS=sst
 export CONSTANT_PATH=${CONSTANT_PATH:-$DATA}
-export PARMrap=${PARMrap:-$HOMErap/parm}
-export FIXrap=${FIXrap:-$HOMErap/fix}
-export EXECrap=${EXECrap:-$HOMErap/exec}
-export ndate=${ndate:-/nwprod/util/exec/ndate}
 
 # Set the pathname of the WRF namelist
 WRF_NAMELIST=namelist.input
@@ -118,11 +126,11 @@ done
 # Make sure START_TIME is defined and in the correct format
 
 START_TIME=`cat STARTTIME`
-START_TIME=`$ndate +${FCST_VALID} $START_TIME`
+START_TIME=`$NDATE +${FCST_VALID} $START_TIME`
 echo $START_TIME
 
 # Calculate the forecast end time
-END_TIME=`$ndate +${FCST_LENGTH} $START_TIME`
+END_TIME=`$NDATE +${FCST_LENGTH} $START_TIME`
 syyyy=`echo ${START_TIME} | cut -c1-4`
 smm=`echo ${START_TIME} | cut -c5-6`
 sdd=`echo ${START_TIME} | cut -c7-8`
@@ -135,16 +143,16 @@ start_yyyymmdd_hhmmss=${syyyy}-${smm}-${sdd}_${shh}:00:00
 end_yyyymmdd_hhmmss=${eyyyy}-${emm}-${edd}_${ehh}:00:00
 
 # Calculate the DFI forward end time
-DFIFWD_END_TIME=`$ndate +0 $START_TIME`
+DFIFWD_END_TIME=`$NDATE +0 $START_TIME`
 
 # Calculate the DFI backward end time
-DFIBCK_END_TIME=`$ndate -1 $START_TIME`
+DFIBCK_END_TIME=`$NDATE -1 $START_TIME`
 
 # Check to make sure the real input files (e.g. met_em.d01.*) are available
 # and make links to them
 fcst=0
 while [ ${fcst} -le ${FCST_LENGTH} ]; do
-      datestr_temp=`$ndate +${fcst} $START_TIME`
+      datestr_temp=`$NDATE +${fcst} $START_TIME`
       yyyy=`echo ${datestr_temp} | cut -c1-4`
       mm=`echo ${datestr_temp} | cut -c5-6`
       dd=`echo ${datestr_temp} | cut -c7-8`
