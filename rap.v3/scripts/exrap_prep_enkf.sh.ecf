@@ -13,6 +13,7 @@ cd $DATA
 
 # Set up some constants
 
+export NDATE=${NDATE:-/nwprod/util/exec/ndate}
 START_TIME=`$NDATE 9 $PDY$cyc`
 echo $START_TIME >STARTTIME
 
@@ -149,15 +150,20 @@ cp $processanl namelist.input
 ## 
 ## Find closest GFS EnKF forecast to analysis time
 ##
+#COMINgfs=/gpfs/hps/ptmp/emc.glopara/com2/gfs/para
 ENKF_FCST=${COMINgfs}
 CYCSTART_TIME=`echo "${START_TIME}" | sed 's/\([[:digit:]]\{2\}\)$/ \1/'`
 
 stampcycle=`date -d "${CYCSTART_TIME}" +%s`
 minHourDiff=100
-loops="09"
+loops="009"
 for loop in $loops; do
-  for timelist in `ls ${ENKF_FCST}/enkf.*/*/sfg_*_fhr${loop}s_mem080`; do
-    availtime=`basename ${timelist} | cut -d'_' -f2`
+  #for timelist in `ls ${ENKF_FCST}/enkf.*/*/gdas_*.atmf${loop}s.mem080.nemsio`; do
+    #availtime=`basename ${timelist} | cut -d'_' -f2`
+  for timelist in `ls ${ENKF_FCST}/enkf.*/*/gdas*.atmf${loop}s.mem080.nemsio`; do
+    availtimeyyyymmdd=`echo ${timelist} | cut -d'/' -f9 | cut -c 6-13`
+    availtimehh=`echo ${timelist} | cut -d'/' -f10`
+    availtime=${availtimeyyyymmdd}${availtimehh}
     AVAIL_TIME=`echo "${availtime}" | sed 's/\([[:digit:]]\{2\}\)$/ \1/'`
     AVAIL_TIME=`date -d "${AVAIL_TIME}"`
 
@@ -170,13 +176,13 @@ for loop in $loops; do
 
     if [[ ${hourDiff} -lt ${minHourDiff} ]]; then
        minHourDiff=${hourDiff}
-       enkfcstname=sfg_${availtime}_fhr${loop}s
+       enkfcstname=gdas.t${availtimehh}z.atmf${loop}s
        EYYYYMMDD=$(echo ${availtime} | cut -c1-8)
        EHH=$(echo ${availtime} | cut -c9-10)
     fi
   done
 done
-ls ${ENKF_FCST}/enkf.${EYYYYMMDD}/${EHH}/${enkfcstname}_mem??? > filelist
+ls ${ENKF_FCST}/enkf.${EYYYYMMDD}/${EHH}/${enkfcstname}.mem???.nemsio > filelist
 
 export pgm=rap_process_enkf
 . prep_step
