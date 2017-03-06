@@ -1,0 +1,21 @@
+rap.v3.0.10 - released 3/6/2017
+  Modify RAP ENKF processing to handle GFS files in 
+  NEMSIO format
+
+sorc, parm, scripts files changed:
+  /nwprod2/rap.v3.0.10/parm/rap_process_enkf.anl
+  /nwprod2/rap.v3.0.10/sorc/rap_gsi.fd/ncepnems_io.f90
+  /nwprod2/rap.v3.0.10/sorc/rap_gsi.fd/general_commvars_mod.f90
+  /nwprod2/rap.v3.0.10/sorc/rap_process_enkf.fd/general_read_gfsatm_nems.f90
+  /nwprod2/rap.v3.0.10/sorc/rap_process_enkf.fd/get_gefs_for_regional_enspro.f90
+  /nwprod2/rap.v3.0.10/sorc/rap_process_enkf.fd/gfsp2wrfg.f90
+  /nwprod2/rap.v3.0.10/sorc/rap_process_enkf.fd/Makefile
+  /nwprod2/rap.v3.0.10/scripts/rap_prep_enkf.sh.ecf
+
+implementation instructions:
+  rap_gsi and rap_process_enkf must be recompiled with the new
+  and/or changed source files listed above. The path to the
+  new GFS will have to be specified correctly in the 
+  rap_prep_enkf.sh.ecf script. The modified parm file must be in 
+  place
+
