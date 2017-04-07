@@ -13,22 +13,11 @@ date
 # 
 # obtain unique process id (pid) and make temp directories
 #
-export pid=$$
-export DATA=/tmpnwprd1/${job}.${pid}
+export DATA=${DATA:-$DATAROOT/${jobid}}
 mkdir $DATA
 cd $DATA 
 
-####################################
-# File To Log Msgs
-####################################
-export jlogfile=/com2/logs/jlogfile
-
-####################################
-# Determine Job Output Name on System
-####################################
-export outid="LL$job"
-export jobid="${outid}.o${pid}"
-export pgmout="${DATA}/OUTPUT.${pid}"
+export pgmout="${DATA}/OUTPUT.$$"
 
 export cycle=t${cyc}z 
 
@@ -43,7 +32,7 @@ export NET=rap
 export RUN=rap
 export DBN_ALERT_TYPE=RAP_METAFILE
 
-export HOMEgempak=${HOMEgempak:-/nw${envir}/${NET}.${model_ver}/gempak}
+export HOMEgempak=${HOMEgempak:-$NWROOT/${NET}.${rap_ver}/gempak}
 export FIXgempak=$HOMEgempak/fix
 export USHgempak=$HOMEgempak/ush
 
@@ -54,22 +43,13 @@ export USHgempak=$HOMEgempak/ush
 
 cp $FIXgempak/datatype.tbl datatype.tbl
 
-###################################
-# Set up the UTILITIES
-###################################
-export utilscript=/nwprod/util/ush
-export utilities=/nwprod/util/ush
-export utilexec=/nwprod/util/exec
-
-# Run setup to initialize working directory and utility scripts
-sh $utilscript/setup.sh
 # Run setpdy and initialize PDY variables
-sh $utilscript/setpdy.sh
+setpdy.sh
 . PDY
 
-export COMAWP=/com2/nawips/${envir}
-export COMIN=/com2/nawips/${envir}/${RUN}.${PDY}
-export COMOUT=/com2/nawips/${envir}/${RUN}.${PDY}/meta
+export COMAWP=${COMAWP:-$COMROOT/nawips/${envir}}
+export COMIN=${COMIN:-$COMROOT/nawips/${envir}/${RUN}.${PDY}}
+export COMOUT=${COMOUT:-$COMROOT/nawips/${envir}/${RUN}.${PDY}/meta}
 
 if [ ! -f $COMOUT ] ; then
   mkdir -p -m 775 $COMOUT
@@ -82,7 +62,7 @@ postmsg "$jlogfile" "$msg"
 
 ########################################################
 # Execute the script.
-/nw${envir}/${NET}.${model_ver}/scripts/exrap_gempak_meta.sh.ecf
+$NWROOT/${NET}.${rap_ver}/scripts/exrap_gempak_meta.sh.ecf
 ########################################################
 
 
@@ -91,8 +71,8 @@ postmsg "$jlogfile" "$msg"
 
 cat $pgmout
 
-cd /tmpnwprd1
-rm -rf $DATA
+cd $DATAROOT
+if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
 
 date
 

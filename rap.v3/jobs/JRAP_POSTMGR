@@ -11,7 +11,7 @@ set -xa
 # not they will take the default values which is set
 # for the NCO running enviroment
 #######################################################
-export RUN_ENVIR=${RUN_ENVIR:-prod}
+export RUN_ENVIR=${RUN_ENVIR:-nco}
 export SENDECF=${SENDECF:-YES}
 
 ###################################
@@ -21,33 +21,24 @@ export NET=${NET:-rap}
 export RUN=${RUN:-rap}
 export model=${model:-rap}
 
-###############################################################
-# This block can be modified for different Production test
-# environment. This is used for operational testings
-###############################################################
-if [ "$RUN_ENVIR" = prod -a $envir != prod ]; then
-  export DBNROOT=/nwprod/spa_util/fakedbn
-  export jlogfile=${jlogfile:-/com2/logs/${envir}/jlogfile}
-fi
-
 #####################################################################################
 # This block is for Developer's test run:
 # Run config file to get input parameters
 # This config file should define the following variables
-# DATA_IN: Location of working directory, default to /tmpnwprd
+# DATAROOT: Location of working directory, default to /tmpnwprd_p2
 # SENDECF: If the job is to be running using ECF, default to YES
 # SENDDBN: Set to NO for developers, default to YES
 # COM_IN:  Directory for input files, default to /com2/$NET/${envir}
 # COM_OUT: Directory for output file, default to /com2/$NET/${envir}
 # gespath: Directory for the guess or restart files, default to /nwges/${envir}
 #####################################################################################
-if [ "$RUN_ENVIR" != prod ]      ### For Developers, "group_name" is passed from the ECF script
+if [ "$RUN_ENVIR" != nco ]      ### For Developers, "group_name" is passed from the ECF script
 then
   group_name=${group_name:-meso}
   package_name=${package_name:-rap}
 #  . /${group_name}/save/${LOGNAME}/${package_name}/nwprod/parm/${package_name}_para_config
   export userid=${userid:-$LOGNAME}
-  export DATA_IN=${DATA_IN:-/ptmp/$userid}
+  export DATAROOT=${DATAROOT:-/ptmp/$userid}
 fi
 
 export PS4='$SECONDS + '
@@ -56,26 +47,15 @@ date
 ####################################
 # obtain unique process id (pid) and make temp directory
 ####################################
-export pid=$$
-export DATA_IN=${DATA_IN:-/tmpnwprd1}
-export DATA=$DATA_IN/${job}.${pid}
+export DATAROOT=${DATAROOT:-/tmpnwprd_p2}
+export DATA=$DATAROOT/${jobid}
 mkdir -p $DATA
 cd $DATA
 
 export cycle=t${cyc}z
 export tmmark=tm00
 
-####################################
-# Determine Job Output Name on System
-####################################
-export outid="LL$job"
-export jobid="${outid}.o${pid}"
-export pgmout="OUTPUT.${pid}"
-
-####################################
-# File To Log Msgs
-####################################
-export jlogfile=${jlogfile:-/com2/logs/jlogfile}
+export pgmout="OUTPUT.$$"
 
 ####################################
 # SENDECF  - Flag Events on ECF
@@ -88,34 +68,23 @@ export SENDDBN=${SENDDBN:-NO}
 ####################################
 # Specify Execution Areas
 ####################################
-export HOMErap=${HOMErap:-/nw${envir}/${NET}.${model_ver}}
+export HOMErap=${HOMErap:-$NWROOT/${NET}.${rap_ver}}
 export EXECrap=${EXECrap:-${HOMErap}/exec}
 export FIXrap=${FIXrap:-${HOMErap}/fix}
 export PARMrap=${PARMrap:-${HOMErap}/parm}
 export USHrap=${USHrap:-${HOMErap}/ush}
 
-###################################
-# Set up the UTILITIES
-###################################
-export utilscript=${utilscript:-/nwprod/util/ush}
-export utilexec=${utilexec:-/nwprod/util/exec}
-
-###############################################################
-# Run setup to initialize working directory and utility scripts
-###############################################################
-sh $utilscript/setup.sh
-
 ###########################################
 # Run setpdy and initialize PDY variables
 ###########################################
-sh $utilscript/setpdy.sh
+setpdy.sh
 . PDY
 
 ##############################################
 # Define COM directories
 ##############################################
-export COM_IN=${COM_IN:-/com2/${NET}/${envir}}
-export COM_OUT=${COM_OUT:-/com2/${NET}/${envir}}
+export COM_IN=${COM_IN:-$COMROOT/${NET}/${envir}}
+export COM_OUT=${COM_OUT:-$COMROOT/${NET}/${envir}}
 export COM=${COM:-${COM_IN}}
 export COMIN=${COMIN:-${COM_IN}/${RUN}.${PDY}}
 export COMOUT=${COMOUT:-${COM_OUT}/${RUN}.${PDY}}
@@ -125,10 +94,10 @@ mkdir -m 775 -p $COMOUT
 ##############################################
 # Define GES directories
 ##############################################
-export gespath=${gespath:-/nwges/${envir}}
+export gespath=${gespath:-$GESROOT/${envir}}
 env
 
-export FCSTDIR=$DATA_IN/rap_fcst_${envir}_${cyc}
+export FCSTDIR=$DATAROOT/rap_fcst_${envir}_${cyc}
 ########################################################
 # Execute the script.
 ${RAP_POSTMGRSH:-$HOMErap/scripts/exrap_postmgr.sh.ecf}
@@ -139,11 +108,12 @@ cat $pgmout
 msg="ENDED NORMALLY."
 postmsg "$jlogfile" "$msg"
 
+export KEEPDATA=YES
 ##############################
 # Remove the Temporary working directory
 ##############################
-cd $DATA_IN
-if [ ${RM_TMPDIR:-YES} = NO ] 
+cd $DATAROOT
+if [ ${KEEPDATA} = NO ] 
 then
  rm -rf $DATA; 
 fi

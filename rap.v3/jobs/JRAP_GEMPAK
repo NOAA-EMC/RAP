@@ -12,18 +12,8 @@ set -xa
 # not they will take the default values which is set
 # for the NCO running enviroment
 #######################################################
-export RUN_ENVIR=${RUN_ENVIR:-prod}
+export RUN_ENVIR=${RUN_ENVIR:-nco}
 export SENDECF=${SENDECF:-YES}
-
-###############################################################
-# This block can be modified for different Production test
-# environment. This is used for operational testings
-###############################################################
-if [ "$RUN_ENVIR" = prod -a $envir != prod ]; then
-  export jlogfile=${jlogfile:-/com2/logs/${envir}/jlogfile}
-  export SENDDBN=NO
-fi
-
 
 # #### 08/25/1999 ###################
 # SET SHELL PROCESSING VARIABLES
@@ -33,22 +23,11 @@ date
 # 
 # obtain unique process id (pid) and make temp directories
 #
-export pid=$$
-export DATA=/tmpnwprd1/${job}.${pid}
+export DATA=$DATAROOT/${jobid}
 mkdir $DATA
 cd $DATA 
 
-####################################
-# File To Log Msgs
-####################################
-export jlogfile=${jlogfile:-/com2/logs/jlogfiles/jlogfile.${job}.${pid}}
-
-####################################
-# Determine Job Output Name on System
-####################################
-export outid="LL$job"
-export jobid="${outid}.o${pid}"
-export pgmout="OUTPUT.${pid}"
+export pgmout="OUTPUT.$$"
 
 export cycle=t${cyc}z 
 
@@ -61,7 +40,7 @@ export SENDECF=${SENDECF:-YES}
 #
 export NET=rap
 export RUN=rap
-export fend=18
+export fend=21
 export finc=1
 export fstart=00
 export model=rap
@@ -72,23 +51,13 @@ export EXT=""
 #
 . /nwprod/gempak/.gempak
 
-###################################
-# Set up the UTILITIES
-###################################
-export utilscript=/nwprod/util/ush
-export utilities=/nwprod/util/ush
-export utilexec=/nwprod/util/exec
-
-# Run setup to initialize working directory and utility scripts
-sh $utilscript/setup.sh
-
 # Run setpdy and initialize PDY variables
-sh $utilscript/setpdy.sh
+setpdy.sh
 . PDY
 
-export com=${com:-/com2/${NET}/${envir}}
-export COMIN=${COMIN:-/com2/${NET}/${envir}/${RUN}.${PDY}}
-export COMOUT=${COMOUT:-/com2/nawips/${envir}/${RUN}.${PDY}}
+export com=${com:-$COMROOT/${NET}/${envir}}
+export COMIN=${COMIN:-$COMROOT/${NET}/${envir}/${RUN}.${PDY}}
+export COMOUT=${COMOUT:-$COMROOT/nawips/${envir}/${RUN}.${PDY}}
 
 if [ ! -f $COMOUT ] ; then
   mkdir -p -m 775 $COMOUT
@@ -96,7 +65,7 @@ fi
 
 env
 
-export HOMErap=${HOMErap:-/nw${envir}/${NET}.${model_ver}}
+export HOMErap=${HOMErap:-$NWROOT/${NET}.${rap_ver}}
 export SCRIPTSrap=${SCRIPTSrap:-$HOMErap/scripts}
 export GEMPAKrap=${GEMPAKrap:-$HOMErap/gempak}
 export NAGRIB_TABLE=${NAGRIB_TABLE:-$GEMPAKrap/fix/nagrib.tbl}
@@ -105,10 +74,6 @@ export NAGRIB_TABLE=${NAGRIB_TABLE:-$GEMPAKrap/fix/nagrib.tbl}
 # RAP40
 ########################################################
 mkdir -p $DATA/rap
-
-cp $GEMPAKrap/fix/rap13_g2varswmo2.tbl $DATA/rap/g2varswmo2.tbl
-cp $GEMPAKrap/fix/rap13_g2varsncep1.tbl $DATA/rap/g2varsncep1.tbl
-cp $GEMPAKrap/fix/rap13_g2vcrdncep1.tbl $DATA/rap/g2vcrdncep1.tbl
 
 export EXT=.grib2
 export RUN=rap
@@ -140,10 +105,6 @@ echo "$SCRIPTSrap/exrap_nawips.sh.ecf $RUN $GRIB $DBN_ALERT_TYPE $EXT" >>poescri
 ########################################################
 mkdir -p $DATA/rap13
 
-cp $GEMPAKrap/fix/rap13_g2varswmo2.tbl $DATA/rap13/g2varswmo2.tbl
-cp $GEMPAKrap/fix/rap13_g2varsncep1.tbl $DATA/rap13/g2varsncep1.tbl
-cp $GEMPAKrap/fix/rap13_g2vcrdncep1.tbl $DATA/rap13/g2vcrdncep1.tbl
-
 export EXT=.grib2
 export RUN=rap13
 export GRIB=awp130pgrbf
@@ -156,23 +117,16 @@ echo "$SCRIPTSrap/exrap_nawips.sh.ecf $RUN $GRIB $DBN_ALERT_TYPE $EXT" >>poescri
 ########################################################
 mkdir -p $DATA/rap32
 
-cp $GEMPAKrap/fix/rap13_g2varswmo2.tbl $DATA/rap32/g2varswmo2.tbl
-cp $GEMPAKrap/fix/rap13_g2varsncep1.tbl $DATA/rap32/g2varsncep1.tbl
-cp $GEMPAKrap/fix/rap13_g2vcrdncep1.tbl $DATA/rap32/g2vcrdncep1.tbl
-
 export EXT=.grib2
 export RUN=rap32
 export GRIB=awip32f
 export DBN_ALERT_TYPE=RAP32_GEMPAK
 
+echo "$SCRIPTSrap/exrap_nawips.sh.ecf $RUN $GRIB $DBN_ALERT_TYPE $EXT" >>poescript
 ########################################################
 # RAPAK
 ########################################################
 mkdir -p $DATA/rapak
-
-cp $GEMPAKrap/fix/rap13_g2varswmo2.tbl $DATA/rap32/g2varswmo2.tbl
-cp $GEMPAKrap/fix/rap13_g2varsncep1.tbl $DATA/rap32/g2varsncep1.tbl
-cp $GEMPAKrap/fix/rap13_g2vcrdncep1.tbl $DATA/rap32/g2vcrdncep1.tbl
 
 export EXT=.grib2
 export RUN=rapak
@@ -184,16 +138,12 @@ echo "$SCRIPTSrap/exrap_nawips.sh.ecf $RUN $GRIB $DBN_ALERT_TYPE $EXT" >>poescri
 ########################################################
 # RAPHI
 ########################################################
-mkdir -p $DATA/rapak
-
-cp $GEMPAKrap/fix/rap13_g2varswmo2.tbl $DATA/raphi/g2varswmo2.tbl
-cp $GEMPAKrap/fix/rap13_g2varsncep1.tbl $DATA/raphi/g2varsncep1.tbl
-cp $GEMPAKrap/fix/rap13_g2vcrdncep1.tbl $DATA/raphi/g2vcrdncep1.tbl
+mkdir -p $DATA/raphi
 
 export EXT=.grib2
 export RUN=raphi
 export GRIB=awp243f
-export DBN_ALERT_TYPE=RAPAK_GEMPAK
+export DBN_ALERT_TYPE=RAPHI_GEMPAK
 
 echo "$SCRIPTSrap/exrap_nawips.sh.ecf $RUN $GRIB $DBN_ALERT_TYPE $EXT" >>poescript
 
@@ -208,7 +158,7 @@ export MP_CMDFILE=$DATA/poescript
 mpirun.lsf
 export err=$?; err_chk
 
-cd /tmpnwprd1
-rm -rf $DATA
+cd $DATAROOT
+if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
 
 date
