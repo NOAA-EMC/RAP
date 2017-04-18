@@ -782,10 +782,22 @@
               call ret_amsua(tb_obs, nchanl, tsavg5, zasat, clwp_amsua, ierrret)
               call ret_amsua(tsim, nchanl, tsavg5, zasat, clw_guess_retrieval, ierrret)
            end if
-           if (ierrret /= 0) then 
-             varinv(1:nchanl)=zero
-             id_qc(1:nchanl) = ifail_cloud_qc
-           endif
+           if (ierrret /= 0) then
+             if (amsua) then 
+                varinv(1:6)=zero
+                id_qc(1:6) = ifail_cloud_qc
+                varinv(15)=zero
+                id_qc(15) = ifail_cloud_qc
+             else if (atms) then 
+                varinv(1:7)=zero
+                id_qc(1:7) = ifail_cloud_qc
+                varinv(16:22)=zero
+                id_qc(16) = ifail_cloud_qc
+             else       
+                varinv(1:nchanl)=zero
+                id_qc(1:nchanl) = ifail_cloud_qc
+             endif
+          endif
         endif
         predbias=zero
         do i=1,nchanl

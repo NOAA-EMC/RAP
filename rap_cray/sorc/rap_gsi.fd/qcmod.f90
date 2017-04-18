@@ -1871,6 +1871,31 @@ subroutine qc_amsua(nchanl,is,ndat,nsig,npred,sea,land,ice,snow,mixed,luse,   &
 !                  available for ATMS).
   latms_surfaceqc = (latms .AND. .NOT.(sea .OR. land))
 
+! If window channels are missing, skip the following QC and do not
+! assimilate channels 1-6 & 15.
+
+  if (any(abs(tbc((/ ich238, ich314, ich503, ich528, ich536, ich544, ich890 /))) &
+       > 200.0_r_kind))  then
+
+          errf(1:ich544)=zero
+          varinv(1:ich544)=zero
+          do i=1,ich544
+             if(id_qc(i) == igood_qc)id_qc(i) = ifail_interchan_qc
+          end do
+          errf(ich890)=zero
+          varinv(ich890)=zero
+          if(id_qc(ich890) == igood_qc) id_qc(ich890) = ifail_interchan_qc 
+
+          if (latms) then 
+             errf(16:22)=zero
+             varinv(16:22)=zero
+             do i=16,22
+                if(id_qc(i) == igood_qc)id_qc(i) = ifail_interchan_qc
+             end do
+          end if  
+
+  else
+
   if (lcw4crtm) then
      if(.not. sea) then  
        if(factch6 >= one .or. latms_surfaceqc) then   
@@ -2031,6 +2056,7 @@ subroutine qc_amsua(nchanl,is,ndat,nsig,npred,sea,land,ice,snow,mixed,luse,   &
               endif
            end if
         end if
+      end if
      end if
   endif ! <lcw4crtm>
 
