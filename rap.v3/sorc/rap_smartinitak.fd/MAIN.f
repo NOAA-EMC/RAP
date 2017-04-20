@@ -35,7 +35,7 @@ C
      X   DIRTRANS(:,:),T1(:,:),D2(:,:),
      X   WX(:,:),THUNDER(:,:),VIS(:,:),GUST(:,:),
      X   TOPO(:,:),WGUST(:,:),MIXHGT(:,:),SNOD(:,:),
-     X   MGTRANS(:,:),LAL(:,:),BASEZ(:,:)   
+     X   MGTRANS(:,:),LAL(:,:),BASEZ(:,:),CEIL(:,:)
       REAL, ALLOCATABLE :: TOPO_NDFD(:,:),ROUGH(:,:),COAST(:,:), 
      X   DOWNT(:,:),DOWNDEW(:,:),DOWNU(:,:),DOWNP(:,:),
      X   DOWNV(:,:),DOWNQ(:,:),GRIDWX(:,:)
@@ -52,7 +52,7 @@ C
       allocate (topo_ndfd(im,jm),rough(im,jm),coast(im,jm),downt(im,jm),
      X    downdew(im,jm),downu(im,jm),downv(im,jm),downq(im,jm),
      X    gridwx(im,jm),mixhgt(im,jm),basez(im,jm),downp(im,jm),
-     X    mgtrans(im,jm),lal(im,jm))
+     X    mgtrans(im,jm),lal(im,jm),ceil(im,jm))
 
       print *, 'start '
       READ (5,*) FHR
@@ -74,7 +74,7 @@ c   SPECIAL CALL OF THE FULL DATA SET BUT WITHOUT PRECIP
         print *, 'before getgrib'
         CALL GETGRIB(PSFC,ZSFC,PMID,HGHT,T,Q,UWND,VWND,
      X    T2,Q2,D2,U10,V10,COAST,BLI,WETFRZ,VIS,GUST,SNOD,
-     X    REFC,TCLD,LCLD,MCLD,HCLD,BASEZ,VALIDPT,DATE,FHR)
+     X    REFC,TCLD,LCLD,MCLD,HCLD,BASEZ,CEIL,VALIDPT,DATE,FHR)
         print *, 'after getgrib'
 
 c  CALL THE DOWNSCALING CODE 
@@ -219,6 +219,19 @@ c            SKY(I,J)=TCLD(I,J)
         ENDDO
         ENDDO
         CALL GRIBIT(ID,RITEHD,BASEZ,DATE,FHR,DEC)
+        
+        ID(1:25) = 0
+        ID(8)=7
+        ID(9)=215
+        DEC=-3.0
+        DO J=1,JM
+        DO I=1,IM
+          IF (CEIL(I,J).LE. 0.) THEN
+            CEIL(I,J)=SPVAL
+          ENDIF
+        ENDDO
+        ENDDO
+        CALL GRIBIT(ID,RITEHD,CEIL,DATE,FHR,DEC)
 
         ID(1:25) = 0
         ID(8)=71
@@ -441,7 +454,7 @@ c      than 70% and RH at bottom of BL is less than 30
      X    cwr,sky,tcld,wetfrz,dirtrans,t1,wx,thunder,vis,gust,d2,
      X    lcld,mcld,hcld,topo,wgust,u10,v10,refc,t2,q2,bli)
       deallocate (topo_ndfd,rough,coast,downt,downdew,downu,downv,
-     X    downq,downp,gridwx,mixhgt,mgtrans,lal,snod)
+     X    downq,downp,gridwx,mixhgt,mgtrans,lal,snod,ceil)
 
       STOP
       END
