@@ -18,8 +18,14 @@ sorc and fix files changed:
   /nwprod2/rap.v3.0.11/fix/rap_smarttopopr.grb
   /nwprod2/rap.v3.0.11/fix/rap_smartmaskpr.grb
 
+new or revised executables:
+  rap_smartinit_ak
+  rap_smartinit_hi
+  rap_smartinit_pr
+
 implementation instructions:
   Recompile rap_smartinit_ak, rap_smartinit_hi,
   and rap_smartinit_pr. Put updated fix files in
-  place.
+  place. This update is to be implemented alongside
+  the v2.6 RTMA/URMA upgrade.
 
