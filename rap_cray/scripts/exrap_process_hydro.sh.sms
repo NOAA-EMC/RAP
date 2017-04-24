@@ -16,7 +16,7 @@ set -x
 cd $DATA
 
 # Set up some constants
-export HOMErap=${HOMErap:-/gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/rap.v3.0.0}
+export HOMErap=${HOMErap:-/gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/rap.v3.0.10}
 export PARMrap=${PARMrap:-$HOMErap/parm}
 export FIXrap=${FIXrap:-$HOMErap/fix}
 export EXECrap=${EXECrap:-$HOMErap/exec}
@@ -25,7 +25,7 @@ export ndate=${ndate:-/nwprod/util/exec/ndate}
 # Directory for the Radar Mosaic input files
 export COMRAD=${COMRAD:-/com/hourly/prod}
 # NSSL MOSAIC Data
-export COM_MOSAIC=${COM_MOSAIC:-/gpfs/gp1/nco/ops/dcom/us007003/ldmdata/obs/upperair/mrms}
+export COM_MOSAIC=${COM_MOSAIC:-/gpfs/tp1/nco/ops/dcom/us007003/ldmdata/obs/upperair/mrms}
 
 export MOSAICTILENUM=4
 
@@ -51,8 +51,8 @@ DD=`date +"%d" -d "${ymd} ${hh}"`
 HH=`date +"%H" -d "${ymd} ${hh}"`
 mm=`date +"%M" -d "${ymd} ${hh}"`
 
-bsub < $HOMErap/sms/copy_files
-sleep 150
+#bsub < $HOMErap/sms/copy_files
+#sleep 150
 cp ${PARMrap}/rap_prepobs.bufrtable  ./prepobs_prep.bufrtable
 cp ${FIXrap}/rap_geo_em.d01.nc ./geo_em.d01.nc
 
@@ -137,7 +137,7 @@ export pgm=$EXECrap/rap_process_mosaic
 #startmsg
 #poe $pgm >> $pgmout 2>errfile 
 cp ${EXECrap}/rap_process_mosaic .
-runline="aprun -n 36 -N 4 ./rap_process_mosaic"
+runline="time aprun -n 36 -N $PTILE ./rap_process_mosaic"
 $runline > process_mosaic.out
 #mpirun.lsf $pgm > process_mosaic.out
 #export err=$?;err_chk
@@ -149,7 +149,7 @@ fi
 
 ### Process Cloud
 #changed from com_in to com_out
-cp $COM_OUT/rap.${ymd}/rap.t${cyc}z.lgycld.tm00.bufr_d NASA_LaRC_cloud.bufr 
+cp $COM_IN/rap.${ymd}/rap.t${cyc}z.lgycld.tm00.bufr_d NASA_LaRC_cloud.bufr 
 #$EXECrap/rap_ssrc < rap.t${cyc}z.lgycld.tm00.bufr_d > NASA_LaRC_cloud.bufr
 
 echo ${ymdh} > ./nasaLaRC_cycle_date
@@ -161,7 +161,7 @@ export pgm=$EXECrap/rap_process_cloud
 #startmsg
 #poe $pgm >> $pgmout 2>errfile
 cp ${EXECrap}/rap_process_cloud .
-runline="aprun -n 36 -N 4 ./rap_process_cloud"
+runline="time aprun -n 36 -N $PTILE ./rap_process_cloud"
 $runline > process_cloud.out
 #mpirun.lsf $pgm > process_cloud.out
 #export err=$?;err_chk
@@ -198,7 +198,7 @@ export pgm=$EXECrap/rap_process_lightning
 #startmsg
 #poe $pgm >> $pgmout 2>errfile
 cp ${EXECrap}/rap_process_lightning .
-runline="aprun -n 36 -N 4 ./rap_process_lightning"
+runline="time aprun -n 36 -N $PTILE ./rap_process_lightning"
 $runline > process_lightning.out
 #mpirun.lsf $pgm > process_lightning.out
 #export err=$?;err_chk

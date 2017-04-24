@@ -11,8 +11,8 @@
 # 2011-08-24  M Hu / G Manikin / J Zhu
 #
 
-#. /usrx/local/Modules/default/init/ksh
-module purge
+#/opt/modules/3.2.10.3/init/ksh
+#module purge
 module load PrgEnv-intel
 module load ip-intel/2.0.0
 module load cray-mpich
@@ -26,14 +26,16 @@ set -x
 export WRFIO_NCD_LARGE_FILE_SUPPORT=1
 export WRF_DFI_RADAR=1
 cd $DATA
-export MP_SHARED_MEMORY=yes
-export MP_USE_TOKEN_FLOW_CONTROL=yes
-export MP_INSTANCES=2
-export MP_DEBUG_NOTIMEOUT
-export MP_PULSE=0
+
+#export MP_SHARED_MEMORY=yes
+#export MP_USE_TOKEN_FLOW_CONTROL=yes
+#export MP_INSTANCES=2
+#export MP_DEBUG_NOTIMEOUT
+#export MP_PULSE=0
 #export MP_EUIDEVELOP=min
 #export MP_SINGLE_THREAD=no
 #export MP_USE_BULK_XFER=yes
+
 # Set up some constants
 export HOMErap=${HOMErap:-/gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod}
 export PARMrap=${PARMrap:-$HOMErap/parm}
@@ -88,7 +90,7 @@ DFIBCK_END_TIME=`$ndate -1 $START_TIME`
 #export MP_EUILIB=us
 #export MP_TASK_AFFINITY=cpu:1
 #export MP_LABELIO=yes
-export MP_SHARED_MEMORY=yes
+#export MP_SHARED_MEMORY=yes
 #export MPICH_ALLTOALL_THROTTLE=0
 
 # Set up some constants
@@ -335,7 +337,8 @@ mv ${WRF_NAMELIST}.new ${WRF_NAMELIST}
 export pgm=rap_wrfarw
 #. prep_step
 cp ${EXECrap}/rap_wrfarw .
-runline="aprun -n 1224 -N 24 ./rap_wrfarw"
+cp /gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/rap.v3.0.0/sms/MPICH_RANK_ORDER .
+runline="aprun -n 600 -N 12 -d2 -cc depth ./rap_wrfarw"
 $runline
 #mpirun.lsf ${EXECrap}/$pgm < namelist.input
 #export err=$?

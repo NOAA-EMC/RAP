@@ -37,7 +37,7 @@ set -x
 cd $DATA
 
 # Set up some constants
-export HOMErap=${HOMErap:-/gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/rap.v3.0.0}
+export HOMErap=${HOMErap:-/gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/rap.v3.0.10}
 export PARMrap=${PARMrap:-$HOMErap/parm}
 export FIXrap=${FIXrap:-$HOMErap/fix}
 export EXECrap=${EXECrap:-$HOMErap/exec}

@@ -45,7 +45,7 @@ do
     if [ -s $FCSTDIR/fcstdone${fhr}00.${shh} ]
     then
 #      $SMSBIN/setev release_post${fhr}
-      bsub < /meso/save/Corey.Guastini/nwprod/rap.v3.0.0/sms/post/jrap_post_f${fhr}_${shh}.bsub
+      bsub < /gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/rap.${model_ver}/sms/post/jrap_post_f${fhr}_${shh}.bsub
       # Remove current fhr from list
       postjobs=`echo $postjobs | sed s/${fhr}//g`
     fi

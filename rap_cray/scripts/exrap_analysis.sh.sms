@@ -7,6 +7,13 @@
 # Author:   Ming Hu / Geoff Manikin / Julia Zhu  Org: EMC          Date: 2011-10-01
 # 2011-10-01  M Hu / G Manikin / J Zhu
 
+# Load modules
+#module load PrgEnv-intel
+#module load ip-intel/2.0.0
+#module load cray-mpich
+#module load NetCDF-intel-sandybridge/3.6.3
+#
+#ulimit -s 512000
 set -x
 
 cd $DATA
@@ -17,13 +24,13 @@ export HOMErap=${HOMErap:-/gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/rap.v
 export PARMrap=${PARMrap:-$HOMErap/parm}
 export FIXrap=${FIXrap:-$HOMErap/fix}
 export EXECrap=${EXECrap:-$HOMErap/exec}
-export COMGFS=${COMGFS:-/gpfs/gp2/nco/ops/com/gfs/prod}
+export COMGFS=${COMGFS:-/gpfs/tp2/nco/ops/com/gfs/prod}
 #export COMGFS=${COMGFS:-/global/noscrub/emc.glopara/com/gfs/para}
 #export ndate=${ndate:-/nwprod/util/exec/ndate}
 export ndate=${ndate:-/gpfs/hps/nco/ops/nwprod/prod_util.v1.0.5/exec/ndate}
 
 # Directory for the CRTM files:
-export FIXcrtm=${FIXcrtm:-/gpfs/gp1/nco/ops/nwprod/fix}
+export FIXcrtm=${FIXcrtm:-/gpfs/tp1/nco/ops/nwprod/fix}
 #export FIXcrtm=${FIXcrtm:-/meso/save/Ming.Hu/trunk/GSI_r480/fix/CRTM_Coefficients}
 
 export WPSNAMELIST=namelist.wps
@@ -38,16 +45,31 @@ hh=`echo ${START_TIME} | cut -c9-10`
 
 ### Now run the GSI
 # Set up some NCEP loadlevelor environment variables
-export SPINLOOPTIME=10000
-export YIELDLOOPTIME=40000
-export AIXTHREAD_SCOPE=S
-export MALLOCMULTIHEAP=true
-export MEMORY_AFFINITY=MCM
-export BIND_TASKS=YES
+#export SPINLOOPTIME=10000
+#export YIELDLOOPTIME=40000
+#export AIXTHREAD_SCOPE=S
+#export MALLOCMULTIHEAP=true
+#export MEMORY_AFFINITY=MCM
+#export BIND_TASKS=YES
 
-export LD_LIBRARY_PATH=/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/lib
+#export LD_LIBRARY_PATH=/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/lib
 #module load ics
 #module load ibmpe
+
+
+export MPICH_ENV_DISPLAY=1
+export MPICH_VERSION_DISPLAY=1
+export MPICH_ABORT_ON_ERROR=1
+export MPICH_RANK_REORDER_DISPLAY=1
+export ATP_ENABLED=0
+export MALLOC_MMAP_MAX=0
+export MALLOC_TRIM_THRESHOLD_=134217728
+export OMP_NUM_THREADS=2
+export KMP_AFFINITY=disabled
+export OMP_STACKSIZE=500M
+export FORT_BUFFERED=true
+
+
 export MP_EAGER_LIMIT=165536
 export MP_COREFILE_FORMAT=lite
 export MP_EUIDEVELOP=min
@@ -77,10 +99,11 @@ export RAPGES_ENKF=${RAPGES_ENKF:-$gespath/rap/rapges_enkf}
 export RAPBC=${RAPBC:-$gespath/rap/rapbc}
 
 #export PREPDIR=${PREPDIR:-/ptmpd1/Corey.Guastini/com/${NET}/${envir}}
-export PREPDIR=${PREPDIR:-/gpfs/gp2/nco/ops/com/rap/prod}
+export PREPDIR=${PREPDIR:-/gpfs/tp2/nco/ops/com/rap/prod}
 export PREPTESTDIR=${PREPTESTDIR:-/ptmpp1/Dennis.Keyser/CRON/TEST_VAD2/com/${NET}/${envir}}
 #export PREPDIR=${PREPDIR:-/com/${NET}/prod}
-export PREPDIR2=${PREPDIR2:-/gpfs/hps/ptmp/Corey.Guastini/com/${NET}/prod}
+#export PREPDIR2=${PREPDIR2:-/gpfs/hps/ptmp/Corey.Guastini/com/${NET}/prod}
+export PREPDIR2=${PREPDIR2:-/gpfs/tp2/nco/ops/com/rap/prod}
 
 # Compute date & time components for the analysis time
 YYYY=`echo ${START_TIME} | cut -c1-4`
@@ -182,7 +205,7 @@ if [ ! -r wrf_inout ]; then
           echo "cycle Surface fields based on ${RAPGES_SFC}/wrfout_d01_${HH} "
           cp ${RAPGES_SFC}/wrfout_d01_${HH} ./wrfout_d01_save
           cp ${EXECrap}/rap_full_cycle_surace .
-          runline="aprun -n 120 -N 12 ./rap_full_cycle_surface"
+          runline="aprun -n 96 -N 24 ./rap_full_cycle_surface"
           $runline >> $DATA/$pgmout 2>errfile
           #impirun.lsf ${EXECrap}/rap_full_cycle_surface >> $DATA/$pgmout 2>errfile 
           #export err=$?; err_chk
@@ -220,15 +243,15 @@ fi
 time_updateSST='01'
 if [ ${HH} -eq ${time_updateSST} ]; then
   echo "update SST "
-  NCEPSST=/gpfs/gp1/nco/ops/com/gfs/prod/sst.${YYYYMMDD}
-  NCEPSST2=/gpfs/gp1/nco/ops/com/gfs/prod/sst.${YMDm1}
+  NCEPSST=/gpfs/tp1/nco/ops/com/gfs/prod/sst.${YYYYMMDD}
+  NCEPSST2=/gpfs/tp1/nco/ops/com/gfs/prod/sst.${YMDm1}
   cp ${FIXrap}/rap_RTG_SST_landmask.dat ./RTG_SST_landmask.dat
   cp ${FIXrap}/rap_geo_em.d01.nc  ./geo_em.d01.nc
   if [ -r "${NCEPSST}/rtgssthr_grb_0.083" ]; then
     cp ${NCEPSST}/rtgssthr_grb_0.083 SSTRTG
     cp ${NCEPSST}/sst2dvar.t12z.nam_grid SST14km
     cp ${EXECrap}/rap_process_sst .
-    runline="aprun -n 120 -N 12 ./rap_process_sst"
+    runline="aprun -n 96 -N 24 ./rap_process_sst"
     $runline >> $DATA/$pgmout 2>errfile
     #mpirun.lsf ${EXECrap}/rap_process_sst >> $DATA/$pgmout 2>errfile 
     #export err=$?; err_chk
@@ -236,7 +259,7 @@ if [ ${HH} -eq ${time_updateSST} ]; then
     cp ${NCEPSST2}/rtgssthr_grb_0.083 SSTRTG
     cp ${NCEPSST2}/sst2dvar.t12z.nam_grid SST14km
     cp ${EXECrap}/rap_process_sst .
-    runline="aprun -n 120 -N 12 ./rap_process_sst"
+    runline="aprun -n 96 -N 24 ./rap_process_sst"
     $runline >> $DATA/$pgmout 2>errfile
     #mpirun.lsf ${EXECrap}/rap_process_sst >> $DATA/$pgmout 2>errfile 
     #export err=$?; err_chk
@@ -258,7 +281,7 @@ if [ ${HH} -eq ${trim_snow} ]; then
      cp  ${COMIN}/rap.t${HH}z.imssnow ./imssnow
      cp  ${FIXrap}/rap_geo_em.d01.nc ./geo_em.d01.nc
      cp ${EXECrap}/rap_process_imssnow .
-     runline="aprun -n 120 -N 12 ./rap_process_imssnow"
+     runline="aprun -n 96 -N 24 ./rap_process_imssnow"
      $runline >> $DATA/$pgmout 2>errfile
      #mpirun.lsf ${EXECrap}/rap_process_imssnow >> $DATA/$pgmout 2>errfile 
      #export err=$?; err_chk
@@ -278,7 +301,7 @@ icnt=1
     #if [ -r ${PREPTESTDIR}/rap.${YYYYMMDD}/rap.t${HH}z.prepbufr.tm00 ]
     if [ -r ${PREPDIR}/rap.${YYYYMMDD}/rap.t${HH}z.prepbufr.tm00 ]
     then
-      sleep 30
+      #sleep 30
       #ln -s ${PREPTESTDIR}/rap.${YYYYMMDD}/rap.t${HH}z.prepbufr.tm00 ./prepbufr
       ln -s ${PREPDIR}/rap.${YYYYMMDD}/rap.t${HH}z.prepbufr.tm00 ./prepbufr
       break
@@ -522,7 +545,8 @@ export pgm=rap_gsi
 
 #startmsg
 cp ${EXECrap}/rap_gsi .
-runline="aprun -n 120 -N 12 ./rap_gsi"
+runline="time aprun -j1 -cc depth -n 96 -N 12 -d 2 ./rap_gsi"
+#runline="time aprun -j1 -cc depth -n 48 -N 12 -d 2 ./rap_gsi"
 $runline < gsiparm.anl >> $DATA/$pgmout 2>errfile
 #mpirun.lsf ${EXECrap}/rap_gsi < gsiparm.anl >> $DATA/$pgmout 2>errfile 
 #export MP_LABELIO=yes
@@ -605,7 +629,9 @@ EOF
 
 export pgm=rap_gsi
 #startmsg
-runline="aprun -n 120 -N 12 ./rap_gsi"
+#runline="aprun -n 96 -N 24 ./rap_gsi"
+runline="time aprun -j1 -cc depth -n 96 -N 12 -d 2 ./rap_gsi"
+#runline="time aprun -j1 -cc depth -n 48 -N 12 -d 2 ./rap_gsi"
 $runline < gsiparm.anl >> $DATA/$pgmout 2>errfile
 #mpirun.lsf ${EXECrap}/rap_gsi < gsiparm.anl >> $DATA/$pgmout 2>errfile
 
