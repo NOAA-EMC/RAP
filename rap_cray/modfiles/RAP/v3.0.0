@@ -17,7 +17,7 @@ set RAP /gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/rap.v3.0.0/modulefiles/
 set lname RAP
 
 module unuse /gpfs/hps/nco/ops/nwprod/lib/modulefiles
-module use /gpfs/hps/nco/ops/nwtest/lib/modulefiles
+module use /gpfs/hps/nco/ops/nwprod/lib/modulefiles
 
 #setenv COMPILERS ftns
 #setenv COMPILER ftn
