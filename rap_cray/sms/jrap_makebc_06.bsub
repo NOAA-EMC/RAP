@@ -1,6 +1,4 @@
 ##!/bin/ksh --login
-#
-#
 #BSUB -oo /gpfs/hps/ptmp/Corey.Guastini/outputrap/rap_makebc.out06z
 #BSUB -eo /gpfs/hps/ptmp/Corey.Guastini/outputrap/rap_makebc.out06z
 #BSUB -J rap_makebc_06
@@ -8,24 +6,12 @@
 #BSUB -q "dev"
 #BSUB -P RAP-T2O
 #BSUB -M 1800
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 96*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=1800]
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 144*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=1800]
 #BSUB -x
 #BSUB -a poe
-#
-#
-#. /usrx/local/Modules/3.2.9/init/ksh
-
-# Load modules
-#module load ibmpe
-#module load ics
-#module load lsf
-#module load NetCDF/3.6.3
 
 module load prod_util
 module load prod_envir
-# EXPORT list here
-#export MP_SHARED_MEMORY=YES
-#export MEMORY_AFFINITY=MCM
 
 # Set MPI options
 export MP_SINGLE_THREAD=yes
