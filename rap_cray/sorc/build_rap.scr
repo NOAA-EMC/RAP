@@ -93,7 +93,7 @@ make install
 make library
 
 module unload craype-haswell
-module unload craype-sandybridge
+module load craype-sandybridge
 ##############################
 
 cd ${BASE}/rap_process_enkf.fd
