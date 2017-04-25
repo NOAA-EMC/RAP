@@ -1,13 +1,13 @@
 #!/bin/ksh --login
 #
-#BSUB -oo /ptmpp1/Corey.Guastini/outputrap/rap_post_f01.out12z
-#BSUB -eo /ptmpp1/Corey.Guastini/outputrap/rap_post_f01.out12z
-#BSUB -J rap_post_f01_12
-#BSUB -n 32
-#BSUB -R span[ptile=16]
-#BSUB -W 00:20
+#BSUB -oo /gpfs/hps/ptmp/Corey.Guastini/outputrap/rap_post_f01.out12z
+#BSUB -eo /gpfs/hps/ptmp/Corey.Guastini/outputrap/rap_post_f01.out12z
+#BSUB -J rap_post_12_f01
+#BSUB -W 00:30
+#BSUB -q "dev"
 #BSUB -P RAP-T2O
-#BSUB -q devhigh
+#BSUB -M 1800
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 48*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=1800]
 #BSUB -x
 #BSUB -a poe
 
@@ -16,10 +16,24 @@
 ######################################################################
 
 # EXPORT list here
-export MP_SHARED_MEMORY=YES
-export MEMORY_AFFINITY=MCM
 
 set -x
+module load prod_util
+module load prod_envir
+module load grib_util/1.0.3
+module load util_shared/1.0.3
+module load cfp-intel-sandybridge
+
+module list
+
+#export MP_MPILIB=mpich2
+export KMP_AFFINITY=disabled
+#export MP_TASK_AFFINITY=core:1
+export OMP_NUM_THREADS=1
+
+export numprocs=48
+export NTASK=48
+export PTILE=24
 
 export envir=prod
 export RUN_ENVIR=prod
@@ -36,5 +50,6 @@ SMS_PROG=%SMS_PROG% export SMS_PROG
 SMSBIN=/meso/save/wx22yz/sms/bin export SMSBIN
 
 # CALL executable job script here
-. /meso/save/Corey.Guastini/nwprod/versions/rap.ver
-/meso/save/Corey.Guastini/nwprod/rap.${model_ver}/jobs/JRAP_POST.sms.$envir
+. /gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/versions/rap.ver
+# CALL executable job script here
+/gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/rap.${model_ver}/jobs/JRAP_POST.sms.$envir
