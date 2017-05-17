@@ -24,13 +24,13 @@ export HOMErap=${HOMErap:-/gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/rap.v
 export PARMrap=${PARMrap:-$HOMErap/parm}
 export FIXrap=${FIXrap:-$HOMErap/fix}
 export EXECrap=${EXECrap:-$HOMErap/exec}
-export COMGFS=${COMGFS:-/gpfs/tp2/nco/ops/com/gfs/prod}
+export COMGFS=${COMGFS:-/gpfs/gp2/nco/ops/com/gfs/prod}
 #export COMGFS=${COMGFS:-/global/noscrub/emc.glopara/com/gfs/para}
 #export ndate=${ndate:-/nwprod/util/exec/ndate}
 export ndate=${ndate:-/gpfs/hps/nco/ops/nwprod/prod_util.v1.0.5/exec/ndate}
 
 # Directory for the CRTM files:
-export FIXcrtm=${FIXcrtm:-/gpfs/tp1/nco/ops/nwprod/fix}
+export FIXcrtm=${FIXcrtm:-/gpfs/gp1/nco/ops/nwprod/fix}
 #export FIXcrtm=${FIXcrtm:-/meso/save/Ming.Hu/trunk/GSI_r480/fix/CRTM_Coefficients}
 
 export WPSNAMELIST=namelist.wps
@@ -57,10 +57,10 @@ hh=`echo ${START_TIME} | cut -c9-10`
 #module load ibmpe
 
 
-export MPICH_ENV_DISPLAY=1
-export MPICH_VERSION_DISPLAY=1
-export MPICH_ABORT_ON_ERROR=1
-export MPICH_RANK_REORDER_DISPLAY=1
+#export MPICH_ENV_DISPLAY=1
+#export MPICH_VERSION_DISPLAY=1
+#export MPICH_ABORT_ON_ERROR=1
+#export MPICH_RANK_REORDER_DISPLAY=1
 export ATP_ENABLED=0
 export MALLOC_MMAP_MAX=0
 export MALLOC_TRIM_THRESHOLD_=134217728
@@ -70,19 +70,19 @@ export OMP_STACKSIZE=500M
 export FORT_BUFFERED=true
 
 
-export MP_EAGER_LIMIT=165536
-export MP_COREFILE_FORMAT=lite
-export MP_EUIDEVELOP=min
-export MP_EUILIB=us
-export MP_MPILIB=mpich2
+#export MP_EAGER_LIMIT=165536
+#export MP_COREFILE_FORMAT=lite
+#export MP_EUIDEVELOP=min
+#export MP_EUILIB=us
+#export MP_MPILIB=mpich2
 
-export MP_LABELIO=yes
-export MP_USE_BULK_XFER=yes
-export MP_SHARED_MEMORY=yes
+#export MP_LABELIO=yes
+#export MP_USE_BULK_XFER=yes
+#export MP_SHARED_MEMORY=yes
 
-export MPICH_ALLTOALL_THROTTLE=0
+#export MPICH_ALLTOALL_THROTTLE=0
 export KMP_STACKSIZE=1024m
-export MP_TASK_AFFINITY=cpu:2
+#export MP_TASK_AFFINITY=cpu:2
 export OMP_NUM_THREADS=2
 
 # Set to yes for faster collective ops (mpi_reduce)
@@ -99,11 +99,11 @@ export RAPGES_ENKF=${RAPGES_ENKF:-$gespath/rap/rapges_enkf}
 export RAPBC=${RAPBC:-$gespath/rap/rapbc}
 
 #export PREPDIR=${PREPDIR:-/ptmpd1/Corey.Guastini/com/${NET}/${envir}}
-export PREPDIR=${PREPDIR:-/gpfs/tp2/nco/ops/com/rap/prod}
+export PREPDIR=${PREPDIR:-/gpfs/gp2/nco/ops/com/rap/prod}
 export PREPTESTDIR=${PREPTESTDIR:-/ptmpp1/Dennis.Keyser/CRON/TEST_VAD2/com/${NET}/${envir}}
 #export PREPDIR=${PREPDIR:-/com/${NET}/prod}
 #export PREPDIR2=${PREPDIR2:-/gpfs/hps/ptmp/Corey.Guastini/com/${NET}/prod}
-export PREPDIR2=${PREPDIR2:-/gpfs/tp2/nco/ops/com/rap/prod}
+export PREPDIR2=${PREPDIR2:-/gpfs/gp2/nco/ops/com/rap/prod}
 
 # Compute date & time components for the analysis time
 YYYY=`echo ${START_TIME} | cut -c1-4`
@@ -243,8 +243,8 @@ fi
 time_updateSST='01'
 if [ ${HH} -eq ${time_updateSST} ]; then
   echo "update SST "
-  NCEPSST=/gpfs/tp1/nco/ops/com/gfs/prod/sst.${YYYYMMDD}
-  NCEPSST2=/gpfs/tp1/nco/ops/com/gfs/prod/sst.${YMDm1}
+  NCEPSST=/gpfs/gp1/nco/ops/com/gfs/prod/sst.${YYYYMMDD}
+  NCEPSST2=/gpfs/gp1/nco/ops/com/gfs/prod/sst.${YMDm1}
   cp ${FIXrap}/rap_RTG_SST_landmask.dat ./RTG_SST_landmask.dat
   cp ${FIXrap}/rap_geo_em.d01.nc  ./geo_em.d01.nc
   if [ -r "${NCEPSST}/rtgssthr_grb_0.083" ]; then
