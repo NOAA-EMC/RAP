@@ -3,14 +3,19 @@ rap.v3.0.11 - released 4/20/2017
   and mask fix files.
   Add ceiling to output for Alaska, Puerto Rico,
   and Hawaii domains in support of RTMAv2.6.
+  Use downscaled surface pressure to make q adjustments.
 
 sorc and fix files changed:
   /nwprod2/rap.v3.0.11/sorc/rap_smartinitak.fd/GETGRIB.f
   /nwprod2/rap.v3.0.11/sorc/rap_smartinitak.fd/MAIN.f
+  /nwprod2/rap.v3.0.11/sorc/rap_smartinitak.fd/NDFDgrid.f
   /nwprod2/rap.v3.0.11/sorc/rap_smartinit_hi.fd/GETGRIB.f
   /nwprod2/rap.v3.0.11/sorc/rap_smartinit_hi.fd/MAIN.f
+  /nwprod2/rap.v3.0.11/sorc/rap_smartinit_hi.fd/NDFDgrid.f
   /nwprod2/rap.v3.0.11/sorc/rap_smartinit_pr.fd/GETGRIB.f
   /nwprod2/rap.v3.0.11/sorc/rap_smartinit_pr.fd/MAIN.f
+  /nwprod2/rap.v3.0.11/sorc/rap_smartinit_pr.fd/NDFDgrid.f
+  /nwprod2/rap.v3.0.11/sorc/rap_smartinitconus.fd/NDFDgrid.f
   /nwprod2/rap.v3.0.11/fix/rap_conus_elevtiles.grb
   /nwprod2/rap.v3.0.11/fix/rap_conus_slmask.grb
   /nwprod2/rap.v3.0.11/fix/rap_smarttopohi.grb
@@ -22,6 +27,7 @@ new or revised executables:
   rap_smartinit_ak
   rap_smartinit_hi
   rap_smartinit_pr
+  rap_smartinit_conus
 
 implementation instructions:
   Recompile rap_smartinit_ak, rap_smartinit_hi,
