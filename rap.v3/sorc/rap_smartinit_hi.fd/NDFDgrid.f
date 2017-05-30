@@ -540,7 +540,7 @@ C -----------------------------------------------------------------
 
        do j=1,jm
        do i=1,im
-         qnew(i,j)=PQ0/PSFC(I,J)*EXP(A2*(dewnew(I,J)-A3)/
+         qnew(i,j)=PQ0/pnew(I,J)*EXP(A2*(dewnew(I,J)-A3)/
      x        (dewnew(I,J)-A4))
        end do
        end do
