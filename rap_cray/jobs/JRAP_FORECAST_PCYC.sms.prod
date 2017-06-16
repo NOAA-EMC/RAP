@@ -1,7 +1,8 @@
-#!/bin/sh -l
+#!/bin/ksh -l
 set -xa
+
 ########################################
-# RAP Forecast for Partial Cycle
+# RAP Forecast
 ########################################
 
 ######################################################
@@ -17,7 +18,7 @@ export SENDSMS=${SENDSMS:-YES}
 # Specify NET and RUN Name and model
 ####################################
 export NET=${NET:-rap}
-export RUN=${RUN:-rap_p}
+export RUN=${RUN:-rap}
 export model=${model:-rap}
 
 ###############################################################
@@ -44,9 +45,9 @@ if [ "$RUN_ENVIR" != prod ]      ### For Developers, "group_name" is passed from
 then
   group_name=${group_name:-meso}
   package_name=${package_name:-rap}
-  . /${group_name}/save/${LOGNAME}/${package_name}/nwprod/parm/${package_name}_para_config
+#  . /${group_name}/save/${LOGNAME}/${package_name}/nwprod/parm/${package_name}_para_config
   export userid=${userid:-$LOGNAME}
-  export DATA_IN=${DATA_IN:-/ptmpd1/$userid}
+  export DATA_IN=${DATA_IN:-/gpfs/hps/ptmp/$userid}
 fi
 
 if [ $SENDSMS = YES ]
@@ -62,11 +63,13 @@ date
 ####################################
 export pid=$$
 #export DATA_IN=${DATA_IN:-/tmpnwprd}
-export DATA_IN=${DATA_IN:-/ptmpd1/Corey.Guastini}
+export DATA_IN=${DATA_IN:-/gpfs/hps/ptmp/Corey.Guastini}
 export DATA=$DATA_IN/rap_fcst_pcyc_${envir}_${cyc}
 rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
+
+ecflow_client --event release_downstream
 
 export cycle=t${cyc}z
 export tmmark=tm00
@@ -87,14 +90,14 @@ export jlogfile=${jlogfile:-/com/logs/jlogfile}
 # SENDSMS  - Flag Events on SMS
 # SENDCOM  - Copy files to /com directory
 ####################################
-export SENDSMS=${SENDSMS:-YES}
-export SENDCOM=${SENDCOM:-YES}
+export SENDSMS=${SENDSMS:-NO}
+export SENDCOM=${SENDCOM:-NO}
 export SENDDBN=${SENDDBN:-NO}
 
 ####################################
 # Specify Execution Areas
 ####################################
-export HOMErap=${HOMErap:-/meso/save/Corey.Guastini/nw${envir}/${NET}.${model_ver}}
+export HOMErap=${HOMErap:-/gpfs/hps/emc/meso/noscrub/Corey.Guastini/nw${envir}/${NET}.${model_ver}}
 export EXECrap=${EXECrap:-${HOMErap}/exec}
 export FIXrap=${FIXrap:-${HOMErap}/fix}
 export PARMrap=${PARMrap:-${HOMErap}/parm}
@@ -103,27 +106,31 @@ export USHrap=${USHrap:-${HOMErap}/ush}
 ###################################
 # Set up the UTILITIES
 ###################################
-export utilscript=${utilscript:-/nwprod/util/ush}
-export utilexec=${utilexec:-/nwprod/util/exec}
+export utilscript=${utilscript:-/gpfs/hps/nco/ops/nwprod/prod_util.v1.0.4/ush}
+#export utilexec=${utilexec:-/nwprod/util/exec}
+#export utilscript=${utilscript:-/gpfs/tp1/nco/ops/nwprod/util/ush}
+export utilexec=${utilexec:-/gpfs/hps/nco/ops/nwprod/prod_util.v1.0.4/exec}
 
 ###############################################################
 # Run setup to initialize working directory and utility scripts
 ###############################################################
-sh $utilscript/setup.sh
+#sh $utilscript/setup.sh
 
 ###########################################
 # Run setpdy and initialize PDY variables
 ###########################################
 sh $utilscript/setpdy.sh
+#setpdy.sh
 . PDY
-#PDY=20141007
+#export PDY=20170228
 
+#export PDY=20150601
+#export cyc=07
 ##############################################
 # Define COM directories
 ##############################################
-export COM_IN=${COM_IN:-/ptmpd1/Corey.Guastini/com/${NET}/${envir}}
-export COM_OUT=${COM_OUT:-/ptmpd1/Corey.Guastini/com/${NET}/${envir}}
-export COM_RAD=${COM_RAD:-/com/hourly/prod}
+export COM_IN=${COM_IN:-/gpfs/hps/ptmp/Corey.Guastini/com/${NET}/${envir}}
+export COM_OUT=${COM_OUT:-/gpfs/hps/ptmp/Corey.Guastini/com/${NET}/${envir}}
 
 export COM=${COM:-COM_IN}
 export COMIN=${COMIN:-${COM_IN}/${RUN}.${PDY}}
@@ -134,11 +141,11 @@ mkdir -m 775 -p $COMOUT
 ##############################################
 # Define GES directories
 ##############################################
-export gespath=${gespath:-/ptmpd1/Corey.Guastini/nwges/${envir}}
-export RAPBC=$gespath/${NET}/rapbc
-export RAPGES_FCYC=$gespath/${NET}/rapges
-export RAPGES_PCYC=$gespath/${NET}/rapges_pcyc
-export RAPGES_SFC=$gespath/${NET}/rapges_sfc
+export gespath=${gespath:-/gpfs/hps/ptmp/Corey.Guastini/nwges/${envir}}
+export RAPBC=$gespath/${RUN}/rapbc
+export RAPGES_FCYC=$gespath/${RUN}/rapges
+export RAPGES_PCYC=$gespath/${RUN}/rapges_pcyc
+export RAPGES_SFC=$gespath/${RUN}/rapges_sfc
 
 mkdir -m 775 -p $RAPBC $RAPGES_FCYC $RAPGES_PCYC $RAPGES_SFC
 
@@ -159,6 +166,7 @@ postmsg "$jlogfile" "$msg"
 ##############################
 cd $DATA_IN
 if [ ${RM_TMPDIR:-NO} = YES ] ; then rm -rf $DATA ; fi
+
 date
 
 if [ $SENDSMS = YES ]; then $SMSBIN/smscomplete; fi

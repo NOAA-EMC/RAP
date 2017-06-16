@@ -19,7 +19,7 @@ export envir=prod
 # Specify NET and RUN Name and model
 ####################################
 export NET=${NET:-rap}
-export RUN=${RUN:-rap_p}
+export RUN=${RUN:-rap}
 export model=${model:-rap}
 
 ###############################################################
@@ -48,7 +48,7 @@ then
   package_name=${package_name:-rap}
   . /${group_name}/save/${LOGNAME}/${package_name}/nwprod/parm/${package_name}_para_config
   export userid=${userid:-$LOGNAME}
-  export DATA_IN=${DATA_IN:-/ptmpd1/$userid}
+  export DATA_IN=${DATA_IN:-/gpfs/hps/ptmp/$userid}
 fi
 
 if [ $SENDSMS = YES ]
@@ -64,7 +64,7 @@ date
 ####################################
 export pid=$$
 #export DATA_IN=${DATA_IN:-/tmpnwprd}
-export DATA_IN=${DATA_IN:-/ptmpd1/Corey.Guastini}
+export DATA_IN=${DATA_IN:-/gpfs/hps/ptmp/Corey.Guastini}
 export DATA=$DATA_IN/rap_anl_pcyc_${envir}_${cyc}
 mkdir -p $DATA
 cd $DATA
@@ -95,7 +95,7 @@ export SENDDBN=${SENDDBN:-YES}
 ####################################
 # Specify Execution Areas
 ####################################
-export HOMErap=${HOMErap:-/meso/save/Corey.Guastini/nw${envir}/${NET}.${model_ver}}
+export HOMErap=${HOMErap:-/gpfs/hps/emc/meso/noscrub/Corey.Guastini/nw${envir}/${NET}.${model_ver}}
 export EXECrap=${EXECrap:-${HOMErap}/exec}
 export FIXrap=${FIXrap:-${HOMErap}/fix}
 export PARMrap=${PARMrap:-${HOMErap}/parm}
@@ -104,20 +104,23 @@ export USHrap=${USHrap:-${HOMErap}/ush}
 ###################################
 # Set up the UTILITIES
 ###################################
-export utilscript=${utilscript:-/nwprod/util/ush}
-export utilexec=${utilexec:-/nwprod/util/exec}
+#export utilscript=${utilscript:-/nwprod/util/ush}
+#export utilexec=${utilexec:-/nwprod/util/exec}
+export utilscript=${utilscript:-/gpfs/hps/nco/ops/nwprod/prod_util.v1.0.4/ush}
+export utilexec=${utilexec:-/gpfs/hps/nco/ops/nwprod/prod_util.v1.0.4/exec}
 
 ###############################################################
 # Run setup to initialize working directory and utility scripts
 ###############################################################
-sh $utilscript/setup.sh
+#sh $utilscript/setup.sh
 
 ###########################################
 # Run setpdy and initialize PDY variables
 ###########################################
 sh $utilscript/setpdy.sh
 . PDY
-#PDY=20141007
+#export PDY=20170515
+#export cyc=07
 
 ##############################################
 # Define COM directories
@@ -125,9 +128,9 @@ sh $utilscript/setpdy.sh
 #export COM_IN=${COM_IN:-/com/${NET}/${envir}}
 #export COM_OUT=${COM_OUT:-/com/${NET}/${envir}}
 #export COM_RAD=${COM_RAD:-/com/hourly/prod}
-export COM_IN=${COM_IN:-/com/${NET}/prod}
-export COM_OUT=${COM_OUT:-/ptmpd1/Corey.Guastini/com/${NET}/${envir}}
-export COM_RAD=${COM_RAD:-/com/hourly/prod}
+export COM_IN=${COM_IN:-/gpfs/gp2/nco/ops/com/${NET}/prod}
+export COM_OUT=${COM_OUT:-/gpfs/hps/ptmp/Corey.Guastini/com/${NET}/${envir}}
+export COM_RAD=${COM_RAD:-/gpfs/gp1/nco/ops/com/hourly/prod}
 
 export COM=${COM:-COM_IN}
 export COMIN=${COMIN:-${COM_IN}/${RUN}.${PDY}}
@@ -138,7 +141,7 @@ mkdir -m 775 -p $COMOUT
 ##############################################
 # Define GES directories
 ##############################################
-export gespath=${gespath:-/ptmpd1/Corey.Guastini/nwges/${envir}}
+export gespath=${gespath:-/gpfs/hps/ptmp/Corey.Guastini/nwges/${envir}}
 export RAPBC=$gespath/${NET}/rapbc
 export RAPGES_FCYC=$gespath/${NET}/rapges
 export RAPGES_PCYC=$gespath/${NET}/rapges_pcyc
