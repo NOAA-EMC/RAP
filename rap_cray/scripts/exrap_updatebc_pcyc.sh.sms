@@ -134,7 +134,8 @@ cp ${PARMrap}/rap_update_bc_parame.in parame.in
 ln -s wrfinput_d01  wrfinputd1
 ln -s wrfvar_output wrfvar_out
 #mpirun.lsf ${EXECrap}/rap_update_bc  >> $DATA/$pgmout 2>errfile
-runline="aprun -n 1 -N 1 ./rap_metgrid"
+cp ${EXECrap}/rap_update_bc .
+runline="aprun -n 1 -N 1 ./rap_update_bc"
 $runline >> $DATA/$pgmout 2>errfile
 export err=$?; err_chk
 
