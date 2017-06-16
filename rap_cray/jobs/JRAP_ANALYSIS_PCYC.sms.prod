@@ -146,6 +146,10 @@ export RAPBC=$gespath/${NET}/rapbc
 export RAPGES_FCYC=$gespath/${NET}/rapges
 export RAPGES_PCYC=$gespath/${NET}/rapges_pcyc
 export RAPGES_SFC=$gespath/${NET}/rapges_sfc
+export RAPGES_SATBIAS=${RAPGES_SATBIAS:-$gespath/rap/rapges_satbias}
+export RAPGES_SFC=${RAPGES_SFC:-$gespath/rap/rapges_sfc}
+export RAPGES_ENKF=${RAPGES_ENKF:-$gespath/rap/rapges_enkf}
+export RAPBC=${RAPBC:-$gespath/rap/rapbc}
 
 mkdir -m 775 -p $RAPBC $RAPGES_FCYC $RAPGES_PCYC $RAPGES_SFC
 
