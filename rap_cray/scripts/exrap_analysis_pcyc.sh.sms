@@ -27,6 +27,16 @@ export WPSNAMELIST=namelist.wps
 START_TIME=$PDY$cyc
 echo $START_TIME >STARTTIME
 
+
+export ATP_ENABLED=0
+
+export MALLOC_MMAP_MAX=0
+export MALLOC_TRIM_THRESHOLD=134217728
+#export OMP_STACKSIZE=500M
+export KMP_STACKSIZE=1024m
+export MP_COLLECTIVE_OFFLOAD=yes
+
+
 # Compute date & time components for the analysis time
 ymd=`echo ${START_TIME} | cut -c1-8`
 ymdh=`echo ${START_TIME} | cut -c1-10`
