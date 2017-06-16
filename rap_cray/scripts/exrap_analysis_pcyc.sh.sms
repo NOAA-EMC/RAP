@@ -20,6 +20,9 @@ cd $DATA
 # Directory for the CRTM files:
 export FIXcrtm=${FIXcrtm:-/gpfs/tp1/nco/ops/nwprod/fix}
 
+export PREPDIR=${PREPDIR:-/gpfs/tp2/nco/ops/com/rap/prod}
+export PREPDIR2=${PREPDIR2:-/gpfs/tp2/nco/ops/com/rap/prod}
+
 export WPSNAMELIST=namelist.wps
 START_TIME=$PDY$cyc
 echo $START_TIME >STARTTIME
