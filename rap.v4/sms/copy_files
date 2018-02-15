@@ -1,0 +1,54 @@
+#! /bin/ksh
+#
+#BSUB -J Shelley.ftp
+#BSUB -oo /gpfs/hps3/ptmp/Benjamin.Blake/outputrap/copyshelley.out
+#BSUB -eo /gpfs/hps3/ptmp/Benjamin.Blake/outputrap/copyshelley.out
+#BSUB -n 1
+#BSUB -W 00:10
+#BSUB -P RAP-T2O
+#BSUB -R rusage[mem=1000] # memory req in MB
+#BSUB -q "dev_transfer" #Serial job queue
+
+set -x
+#PDY=20171114
+#cyc=11
+START_TIME=$PDY$cyc
+mkdir -p /gpfs/hps3/ptmp/Benjamin.Blake/com/rap/prod/rap_p.${PDY}
+PCYCCOM=/gpfs/hps3/ptmp/Benjamin.Blake/com/rap/prod/rap_p.${PDY}
+# Compute date & time components for the analysis time
+YYYY=`echo ${START_TIME} | cut -c1-4`
+MM=`echo ${START_TIME} | cut -c5-6`
+DD=`echo ${START_TIME} | cut -c7-8`
+HH=`echo ${START_TIME} | cut -c9-10`
+yy=`echo ${START_TIME} | cut -c3-4`
+YYYYMMDDHH=${YYYY}${MM}${DD}${HH}
+YYYYMMDD=${YYYY}${MM}${DD}
+PREPTESTDIR=`ssh luna "echo /gpfs/hps/nco/ops/com/rap/para"`
+cd $COMOUT
+
+icnt=1
+start=0
+  while [ $icnt -lt 2000 ]
+  do
+      ssh luna "test -e ${PREPTESTDIR}/rap.${YYYYMMDD}/rap.t${HH}z.esatms.tm00.bufr_d"
+      if [ $? -eq 0 ]; then
+        sleep 5
+        cd $COMOUT
+        /usr/bin/scp luna:${PREPTESTDIR}/rap.${YYYYMMDD}/rap.t${HH}z.esatms.tm00.bufr_d .
+        /usr/bin/scp luna:${PREPTESTDIR}/rap.${YYYYMMDD}/rap.t${HH}z.escris.tm00.bufr_d .
+        /usr/bin/scp luna:${PREPTESTDIR}/rap.${YYYYMMDD}/rap.t${HH}z.esiasi.tm00.bufr_d .
+        /usr/bin/scp luna:${PREPTESTDIR}/rap.${YYYYMMDD}/rap.t${HH}z.atmsdb.tm00.bufr_d .
+        /usr/bin/scp luna:${PREPTESTDIR}/rap.${YYYYMMDD}/rap.t${HH}z.crisdb.tm00.bufr_d .
+        /usr/bin/scp luna:${PREPTESTDIR}/rap.${YYYYMMDD}/rap.t${HH}z.iasidb.tm00.bufr_d .
+        /usr/bin/scp luna:${PREPTESTDIR}/rap.${YYYYMMDD}/rap.t${HH}z.imssnow.grib2 .
+          icnt=$((icnt + 2000))
+          break
+        start=$((start + 1)) 
+      else
+        icnt=$((icnt + 1))
+        sleep 5
+      fi
+  done
+
+exit
+

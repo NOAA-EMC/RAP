@@ -1,0 +1,117 @@
+﻿Release Notes:  RAP v4.0.0
+
+
+v4.0.0 - released February 14, 2018
+* Now uses WRF Version 3.8.1
+* Updated versions of GSI and post processor
+* Forecasts extended to 39 hours at 03/09/15/21z
+* Change to hybrid vertical coordinate
+* Improved convective, microphysics, LSM, and PBL schemes
+* Refined roughness lengths over various land use types
+* Gives more ensemble weight to hybrid DA
+* Assimilation of new radiances, AMVs over land, and TAMDAR
+* METAR and GOES cloud building made consistent 
+* Upgrade being made concurrently with HRRRv3
+
+
+REPOSITORY DETAILS
+     After cloning the EMC_rap git repository, retrieve the new code from the rap.v4 directory.
+     The build script is located here: EMC_rap/rap.v4/sorc/build_rap.scr
+
+
+Output and Resources
+* output changes
+   * removal of Alaska-Juneau smartinit output (no longer needed by RTMA/URMA)
+   * addition of awp242bgrb files (used for HRRR-AK, not to be sent to ftp server or nomads)
+   * handful of new parameters in all output files
+   * elimination of non-convective precipitation (NCPCP) in all output
+   * elimination of 2- and 3-hr bucket accumulations of precipitation in AWIPS output
+   * output now available to f39 at 03/09/15/21z
+   * pcom output is now located in com/rap/prod/rap.$YYYYMMDD/wmo
+   * nawips output is now located in com/rap/prod/rap.$YYYYMMDD/nawips
+
+
+* compute resource information
+   * still runs every hour, but now to f39 at 03/09/15/21z
+   * analysis job changes from 4 nodes (80 tasks, 24 tasks/node) to 8 nodes (24 tasks/node)
+   * post job changes from 1 node (24 tasks/node) to 2 nodes (24 tasks/node)
+   * single cycle runtime for non-extended forecasts remains about the same
+   * single cycle runtime for extended forecasts increases by ~10 minutes
+      * runtime changes from 13 to ~22-24 minutes for forecast job 
+   * disk space changes
+      * Total: 0.9 TB/day to 1.1 TB/day
+      * com: 665 GB/day to 818 GB/day
+      * nawips subdirectory: 190 GB/day to 235 GB/day
+      * wmo subdirectory: 7 GB/day to 8.5 GB/day
+
+
+* Data retention for files in /com and /nwges under prod/para/test environments
+   * asking to maintain current retention of data in /com and /nwges in prod and recommend same retention for parallel.    
+   * Please mirror smartinit, awp130pgrb, awp242, awip32, awp252pgrb, awp236pgrb, class1 bufr files to development machine along with nawips subdirectories
+
+
+* new executables
+   * rap_update_gvf
+
+
+* revised executables
+   * rap_full_cycle_surface
+   * rap_gsi
+   * rap_process_cloud
+   * rap_process_enkf
+   * rap_process_imssnow
+   * rap_process_lightning
+   * rap_process_mosaic
+   * rap_process_sst
+   * rap_smartinit_ak
+   * rap_smartinit_conus
+   * rap_smartinit_hi
+   * rap_smartinit_pr
+   * rap_sndp
+   * rap_stnmlist
+   * rap_subflds_g2
+   * rap_update_bc
+   * rap_update_fields
+   * rap_wps_metgrid (renamed from rap_metgrid)
+   * rap_wps_ungrib (renamed from rap_ungrib)
+   * rap_wrfarw_fcst (renamed from rap_wrfarw)
+   * rap_wrfarw_real (renamed from rap_real)
+   * rap_wrfbufr
+   * rap_wrfpost
+
+
+* eliminated executables
+   * rap_smartinit_ajn
+   * rap_wgrib2
+
+
+* changes to directories
+   * removal of rapges_sfc directory (no longer needed;  the rapges directories cover all needs)
+   * removal of util directory (no longer needed; the parm cards are now located in parm/wmo)
+    
+* pre-implementation testing requirements
+   * need to test RTMA/URMA upgrade concurrently
+   * need to test NARRE-TL upgrade concurrently
+   * need to test obsproc upgrade concurrently (already running in nwpara)
+   * need to run parallel HRRRs simultaneously
+   * need to test verification updates (mainly for new forecast hours)
+   * need to test smartinit update
+   * please obtain initial guess files from the developers
+
+
+* Dissemination info
+   * output should be placed into /gpfs/hps/nco/ops/com/rap/para
+   * output should be placed on ftp server 
+   * output should be placed on paranomads - a directory structure has been set up
+   * request that all gempak output be transferred to DEVWCOSS as well as all awp130pgrb, awip32, and awp242 grib2 (awp242bgrb not needed)  files and prepbufr files
+   * code is proprietary, and restricted data is used but is not disseminated
+
+
+* Archive to HPSS
+   * scripts may need to be modified to save extra forecast hours at 03/09/15/21z
+   * Estimates for tarballs for runhistory
+      * awip32: 9.67 GB/day to 11.2 GB/day
+      * awp130: 8.69 TB/day to 9.96 GB/day
+      * bufr: 39 GB/day to 40 GB/day
+      * init (wrfbdy and wrf_inout): 156 GB/day to 192 GB/day
+      * wrf (prs + nat): 264 GB/day to 298 GB/day

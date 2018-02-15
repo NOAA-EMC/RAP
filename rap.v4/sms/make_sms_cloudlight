@@ -1,0 +1,20 @@
+#!/bin/sh 
+#
+
+mkdir /stmpp1/Corey.Guastini
+mkdir /stmpp1/Corey.Guastini/work
+rm /stmpp1/Corey.Guastini/work/*
+cd /stmpp1/Corey.Guastini/work
+. /meso/save/Corey.Guastini/nwprod/versions/rap.ver
+
+cp /meso/save/Corey.Guastini/nwprod/rap.${model_ver}/sms/jrap_cloudlight_XX.bsub .
+cycles="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
+for cyc in $cycles; do
+ cp  jrap_cloudlight_XX.bsub jrap_cloudlight_${cyc}.bsub
+ vi jrap_cloudlight_${cyc}.bsub << EOF 
+   :1,\$ s/XX/${cyc}
+   :wq
+EOF
+mv jrap_cloudlight_${cyc}.bsub /meso/save/Corey.Guastini/nwprod/rap.${model_ver}/sms/.
+done
+exit

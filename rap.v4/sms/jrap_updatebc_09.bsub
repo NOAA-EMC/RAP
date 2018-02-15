@@ -1,0 +1,58 @@
+##!/bin/ksh --login
+#
+#BSUB -oo /gpfs/hps3/ptmp/Benjamin.Blake/outputrap/rap_updatebc.out09z
+#BSUB -eo /gpfs/hps3/ptmp/Benjamin.Blake/outputrap/rap_updatebc.out09z
+#BSUB -J rap_updatebc_09
+#BSUB -W 00:40
+#BSUB -q "devonprod"
+#BSUB -P RAP-T2O
+#BSUB -M 1800
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1*{select[craylinux && vnode]span[ptile=1] cu[type=cabinet]}' rusage[mem=1800]
+#BSUB -x
+#BSUB -a poe
+#
+
+# EXPORT list here
+
+#########################################################################
+# Purpose: to update boundary conditions for the Rapid Refresh Model
+##########################################################################
+
+
+set -x
+module load prod_util
+module load prod_envir
+
+module list
+
+export MP_MPILIB=mpich2
+export KMP_AFFINITY=disabled
+export MP_TASK_AFFINITY=core:1
+export OMP_NUM_THREADS=1
+
+export numprocs=120
+export NTASK=120
+export PTILE=12
+
+export envir=prod
+export RUN_ENVIR=prod
+export cyc=09
+export job=rap_updatebc_09
+export group_name=meso
+
+SMSNAME=%SMSNAME% export SMSNAME
+SMSNODE=%SMSNODE% export SMSNODE
+SMSPASS=%SMSPASS% export SMSPASS
+SMS_PROG=%SMS_PROG% export SMS_PROG
+
+SMSBIN=/meso/save/Benjamin.Blake/sms/bin export SMSBIN
+
+# CALL executable job script here
+#. /meso/save/Benjamin.Blake/nwprod/versions/rap.ver
+#/meso/save/Benjamin.Blake/nwprod/rap.${rap_ver}/jobs/JRAP_UPDATEBC 
+
+. /gpfs/hps3/emc/meso/save/Benjamin.Blake/nwprod/versions/rap.ver
+/gpfs/hps3/emc/meso/save/Benjamin.Blake/nwprod/rap.${rap_ver}/jobs/JRAP_UPDATEBC 
+# the forecast is next; need to launch the post manager too
+bsub < /gpfs/hps3/emc/meso/save/Benjamin.Blake/nwprod/rap.${rap_ver}/sms/jrap_fcst_09.bsub
+#bsub < /gpfs/hps/emc/meso/save/Benjamin.Blake/nwprod/rap.${rap_ver}/sms/jrap_postmgr_09.bsub

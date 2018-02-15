@@ -1,0 +1,38 @@
+#!/bin/ksh 
+#
+
+mkdir /gpfs/hps/ptmp/Corey.Guastini
+mkdir /gpfs/hps/ptmp/Corey.Guastini/work
+cd /gpfs/hps/ptmp/Corey.Guastini/work
+
+. /gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/versions/rap.ver
+cp /gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/rap.${model_ver}/sms/jrap_fcst_pcyc_XX.bsub .
+
+cycles="03 04 05 06 07 15 16 17 18 19"
+for cyc in $cycles; do
+ cycp1=`expr $cyc + 1`
+ typeset -Z2 cycp1 
+ cp  jrap_fcst_pcyc_XX.bsub jrap_fcst_pcyc_${cyc}.bsub
+ vi jrap_fcst_pcyc_${cyc}.bsub << EOF 
+   :1,\$ s/XX/${cyc}
+   :wq
+EOF
+ vi jrap_fcst_pcyc_${cyc}.bsub << EOF
+   :1,\$ s/YY/${cycp1}
+   :wq
+EOF
+mv jrap_fcst_pcyc_${cyc}.bsub /gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/rap.${model_ver}/sms/.
+done
+
+cp /gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/rap.${model_ver}/sms/jrap_fcst_pcyc_XX2.bsub .
+cycles="08 20"
+for cyc in $cycles; do
+ cp  jrap_fcst_pcyc_XX2.bsub jrap_fcst_pcyc_${cyc}.bsub
+ vi jrap_fcst_pcyc_${cyc}.bsub << EOF
+   :1,\$ s/XX/${cyc}
+   :wq
+EOF
+mv jrap_fcst_pcyc_${cyc}.bsub /gpfs/hps/emc/meso/noscrub/Corey.Guastini/nwprod/rap.${model_ver}/sms/.
+done
+
+exit

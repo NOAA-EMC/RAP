@@ -1,0 +1,12 @@
+#!/bin/ksh --login
+#
+
+cyc=$1
+
+cd /ptmp/Geoffrey.Manikin/rap_fcst_prod_${cyc}
+cp /meso/save/Geoffrey.Manikin/nwprod/rap.v2.0.0/sms/fcstdone00.03 fcstdone00.${cyc}
+hours="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18"
+for fhr in $hours; do
+ cp fcstdone00.${cyc} fcstdone${fhr}.${cyc}
+done
+exit
