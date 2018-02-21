@@ -498,7 +498,7 @@
       CALL BACLOSE(LUGB5,IRET)
 
       gfld%discipline=0
-      gfld%ipdtmpl(2)=9
+      gfld%ipdtmpl(2)=10
       gfld%fld=CAPCPOUT
 
       KPDS(5)=63

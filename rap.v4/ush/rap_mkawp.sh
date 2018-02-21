@@ -31,6 +31,7 @@ then
   if [ $fhr -eq 06 -o $fhr -eq 09 -o $fhr -eq 12 -o $fhr -eq 15 -o \
        $fhr -eq 18 -o $fhr -eq 21 -o $fhr -eq 24 -o $fhr -eq 27 -o \
        $fhr -eq 30 -o $fhr -eq 33 -o $fhr -eq 36 -o $fhr -eq 39 ] ; then
+       #$fhr -eq 18 -o $fhr -eq 21 ] ; then
 
     $GRB2INDEX ${COMOUT}/rap.t${cyc}z.awp236pgrbf${fhr}.grib2 rap.t${cyc}z.awp236pgrbf${fhr}.grib2.idxbin
     cp ${COMOUT}/rap.t${cyc}z.awp236pgrbf${fhr}.grib2 awp236pgrbf${fhr}.grib2
@@ -131,12 +132,11 @@ pgmout=rap236_tocgrib
 
   if test "$SENDCOM" = 'YES'
   then
-    cp xtrn.${cycle}.faarap${fhr} $COMOUT/rap.${cycle}.g236xtrn.f${fhr}
     cp xtrn.${cycle}.faarap${fhr} $wmo/rap.${cycle}.g236xtrn.f${fhr}
   fi
   if test "$SENDDBN" = 'YES'
   then
-    $DBNROOT/bin/dbn_alert MODEL RAP_WPG $job $COMOUT/rap.${cycle}.g236xtrn.f${fhr}
+    $DBNROOT/bin/dbn_alert MODEL RAP_WPG $job $wmo/rap.${cycle}.g236xtrn.f${fhr}
   fi
 
   if test "$SENDDBN_NTC" = 'YES'
@@ -159,6 +159,7 @@ if  echo $run130 |grep $fhr
 then
 
 cp ${COMOUT}/rap.t${cyc}z.awp130pgrbf${fhr}.grib2 awp130pgrbf${fhr}.grib2 
+#cp awp130pgrbf${fhr}.grib2 wmo.awp130pgrbf${fhr}.grib2
 #######################################################
 # Generate 3-hour precip and snow water equivalent for on-time runs.
 #######################################################
@@ -207,6 +208,7 @@ cp ${COMOUT}/rap.t${cyc}z.awp130pgrbf${fhr}.grib2 awp130pgrbf${fhr}.grib2
     ln -sf weasd130.${fhr}            fort.53
     ln -sf graupel130.${fhr}            fort.54
 pgmout=rap130_3
+#$EXECrap/rap_subflds_g2 << EOF >> $DATA/$pgmout 2>errfile
 $EXECrap/rap_subflds_g2 << EOF 
 $pfhr1 $pfhr2 $IARW $ISNOW
 EOF
@@ -232,6 +234,7 @@ fi # 3-hr check
   if [ $fhr -eq 03 -o $fhr -eq 06 -o $fhr -eq 09 -o $fhr -eq 12 -o $fhr -eq 15 -o \
        $fhr -eq 18 -o $fhr -eq 21 -o $fhr -eq 24 -o $fhr -eq 27 -o $fhr -eq 30 -o \
        $fhr -eq 33 -o $fhr -eq 36 ] ; then
+       #$fhr -eq 18 ] ; then
     echo done >$FCSTDIR/postdone_130_f${fhr}_${cyc}
   fi
 
@@ -332,6 +335,7 @@ fi # 130 processing
   if [ $fhr -eq 06 -o $fhr -eq 09 -o $fhr -eq 12 -o $fhr -eq 15 -o \
        $fhr -eq 18 -o $fhr -eq 21 -o $fhr -eq 24 -o $fhr -eq 27 -o \
        $fhr -eq 30 -o $fhr -eq 33 -o $fhr -eq 36 -o $fhr -eq 39 ] ; then
+       #$fhr -eq 18 -o $fhr -eq 21 ] ; then
 
     $GRB2INDEX ${COMOUT}/rap.t${cyc}z.awp252pgrbf${fhr}.grib2 rap.t${cyc}z.awp252pgrbf${fhr}.grib2.idxbin
     cp ${COMOUT}/rap.t${cyc}z.awp252pgrbf${fhr}.grib2 awp252pgrbf${fhr}.grib2
@@ -374,6 +378,7 @@ fi # 130 processing
     ln -sf weasd252.${fhr}            fort.53
     ln -sf graupel252.${fhr}            fort.54
 pgmout=rap252_3
+#$EXECrap/rap_subflds_g2 << EOF >> $DATA/$pgmout 2>errfile
 $EXECrap/rap_subflds_g2 << EOF 
 $pfhr1 $pfhr2 $IARW $ISNOW
 EOF
