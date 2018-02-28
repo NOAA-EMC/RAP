@@ -94,7 +94,7 @@ if [ ! -r guess.out ]; then
 fi
 
 # read in grid specs
-cp ${FIXhrrr}/rap_gridspecs ./wrf_inout
+cp ${FIXrap}/rap_gridspecs ./wrf_inout
 
 # Set fixed files
 anavinfo=${FIXrap}/rap_anavinfo_arw_netcdf

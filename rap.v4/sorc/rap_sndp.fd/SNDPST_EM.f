@@ -181,6 +181,7 @@ C     BRKOUT=.TRUE.  DO BREAKOUT FILES
 C
        MONOL=.TRUE.
        BRKOUT=.FALSE.
+       print *, 'MONOL ', MONOL
        READ(11,OPTION,END=12322) !read from file eta_sndp.parm.mono
 12322  CONTINUE
 C
@@ -195,6 +196,7 @@ cBZHOU      LRECPR=4*(8+9+LCL1ML1*LM1+LCL1SL1)        !for RSM/ETA
 
       print *, 'about to open profilm'
       print *, 'record length is ', LRECPR
+      print *, 'MONOL check ', MONOL
       OPEN(UNIT=LUNIT,ACCESS='DIRECT',RECL=LRECPR,IOSTAT=IER)
       NREC=0
  33   CONTINUE
@@ -485,6 +487,7 @@ C    IT IS CURRENTLY WRITTEN IN REVERSE ORDER.
         write(0,*) 'estimated true NSTA: ', (NREC-1)/NFCST
         NSTAT_TRUE=(NREC-1)/NFCST
         write(0,*) 'NWORD is: ', NWORD
+        print *, 'MONOL ', MONOL
 C
 C  WRITE OUT INDIVIDUAL FILES FOR EACH STATION
 C
@@ -516,6 +519,7 @@ C
 
            NSEQ = 8
            SBSET = 'ETACLS1'
+           print *, 'MONOL before BFRIZE ', MONOL
 
           CALL BFRIZE(LTBCL1,LCLAS1,SBSET,IYR,IMON,IDAY,IHRST
      1,               SEQNM1,SEQFLG,NSEQ,LVLWSE,FRODAT,NLVL,CLIST1,NP1
@@ -534,6 +538,7 @@ C
      2,             WORKK,IER)
          ENDDO
          ENDIF
+         print *, ' MONOL ', MONOL
          IF (MONOL) THEN
 C
 C  WRITE OUT ONE FILE FOR ALL STATIONS
