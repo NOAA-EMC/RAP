@@ -181,6 +181,7 @@ EOF
     then
       mv WRFNAT${fhr}.tm00 ${COMOUT}/rap.${cycle}.wrfnatf${fhr}.grib2
       mv WRFPRS${fhr}.tm00 ${COMOUT}/rap.${cycle}.wrfprsf${fhr}.grib2
+      mv WRFMSL${fhr}.tm00 ${COMOUT}/rap.${cycle}.wrfmslf${fhr}.grib2
   fi
 
   if [ $SENDDBN = YES ]
@@ -223,6 +224,7 @@ EOF
 
     mv WRFPRS${fhr}.tm00 $COMOUT/rap.${cycle}.wrfprsdf${fhr}.grib2
     mv WRFNAT${fhr}.tm00 $COMOUT/rap.${cycle}.wrfnatdf${fhr}.grib2
+    mv WRFMSL${fhr}.tm00 $COMOUT/rap.${cycle}.wrfmsldf${fhr}.grib2
 
 fi
 

@@ -23,6 +23,12 @@ export NET=${NET:-rap}
 export RUN=${RUN:-rap}
 export model=${model:-rap}
 
+###################################
+# Load the GRIB UTILITIES module
+####################################
+. /opt/modules/default/init/ksh
+module load grib_util/${grib_util_ver}
+
 #####################################################################################
 # This block is for Developer's test run:
 # Run config file to get input parameters
@@ -75,25 +81,12 @@ export FIXrap=${FIXrap:-${HOMErap}/fix}
 export PARMrap=${PARMrap:-${HOMErap}/parm}
 export USHrap=${USHrap:-${HOMErap}/ush}
 
-export gributilexec=${gributilexec:-${NWROOT}/grib_util.${grib_util_ver}/exec}
-export TOCGRIB=${TOCGRIB:-${gributilexec}/tocgrib}
-export TOCGRIB2=${TOCGRIB2:-${gributilexec}/tocgrib2}
-export GRBINDEX=${GRBINDEX:-${gributilexec}/grbindex}
-export GRB2INDEX=${GRB2INDEX:-${gributilexec}/grb2index}
-export CNVGRIB=${CNVGRIB:-${gributilexec}/cnvgrib}
-export WGRIB2=${WGRIB2:-${gributilexec}/wgrib2}
 export CRTM=${CRTM:-${NWROOT}/lib/crtm/${crtm_ver_post}/src/fix}
-
-###################################
-# Set up the UTILITIES
-###################################
-export utilscript=${utilscript:-${NWROOT}/prod_util.${prod_util_ver}/ush}
-export utilexec=${utilexec:-${NWROOT}/prod_util.${prod_util_ver}/exec}
 
 ###########################################
 # Run setpdy and initialize PDY variables
 ###########################################
-sh $utilscript/setpdy.sh
+setpdy.sh
 . PDY
 
 ##############################################

@@ -1,4 +1,0 @@
-mpfort -g -traceback  -I/usrx/local/NetCDF/3.6.3/include -I/nwprod/sorc/wrf_shared.fd/frame -c kinds.f90
-mpfort -g -traceback  -I/usrx/local/NetCDF/3.6.3/include -I/nwprod/sorc/wrf_shared.fd/frame -c update_netcdf_mass.f90
-mpfort -g -traceback  -I/usrx/local/NetCDF/3.6.3/include -I/nwprod/sorc/wrf_shared.fd/frame -c full_cycle_surface_netcdf_mass.f90
-mpfort -g -traceback -o rap_full_cycle_surface  full_cycle_surface_netcdf_mass.o kinds.o update_netcdf_mass.o -L/nwprod/lib -lw3emc_4 -lw3nco_4 -lbacio_4 /nwprod/sorc/wrf_shared.fd/external/io_netcdf/libwrfio_nf.a /nwprod/sorc/wrf_shared.fd/frame/pack_utils.o -L/usrx/local/NetCDF/3.6.3/lib -lnetcdf 
