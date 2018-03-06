@@ -77,6 +77,8 @@ module use -a /opt/cray/modulefiles
 module load /gpfs/hps3/emc/meso/save/Benjamin.Blake/nwprod/rap.v4.0.0/modulefiles/RAP/v4.0.0.da
 module list
 
+export CRAYPE_LINK_TYPE=dynamic
+
 cd ${BASE}/rap_gsi.fd
 make clean
 cd ${BASE}/rap_gsi.fd/gsdcloud
