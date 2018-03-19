@@ -291,7 +291,6 @@
        CALL PUTGB2(71,GFLD,IRET)
 
 !      Write cloud base height to grib2
-!      Initially assume no bitmap
         GFLD%ibmap=255
         DO KK = 1, ITOT
           IF(MOD(KK,IM).EQ.0) THEN
@@ -302,11 +301,7 @@
             N=INT(KK/IM) + 1
           ENDIF
           IF (BASEZ(M,N).EQ. 0.) THEN
-            BITMAP(KK)=.FALSE.
-!           only if there are any 0s flag a bitmap
-            GFLD%ibmap=0
-          ELSE
-            BITMAP(KK)=.TRUE.
+            BASEZ(M,N)=20000
           ENDIF
         ENDDO
         DEC=-3.0
@@ -326,7 +321,6 @@
        CALL PUTGB2(71,GFLD,IRET)
 
 !      Write ceiling height to grib2
-!      Initially assume no bitmap
         GFLD%ibmap=255
         DO KK = 1, ITOT
           IF(MOD(KK,IM).EQ.0) THEN
@@ -337,10 +331,7 @@
             N=INT(KK/IM) + 1
           ENDIF
           IF (CEIL(M,N).EQ. 0.) THEN
-            BITMAP(KK)=.FALSE.
-            GFLD%ibmap=0
-          ELSE
-            BITMAP(KK)=.TRUE.
+            CEIL(M,N)=20000
           ENDIF
         ENDDO
 !        DO J=1,JM
@@ -351,7 +342,6 @@
 !        ENDDO
 !        ENDDO
        DEC=-3.0
-       GFLD%bmap=BITMAP
 
        CALL FILL_FLD(GFLD,ITOT,IM,JM,CEIL)
        

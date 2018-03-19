@@ -347,7 +347,6 @@
 !          ENDIF
 !        ENDDO
 !        ENDDO
-!      Initially assume no bitmap
         GFLD%ibmap=255
         DO KK = 1, ITOT
           IF(MOD(KK,IM).EQ.0) THEN
@@ -358,18 +357,10 @@
             N=INT(KK/IM) + 1
           ENDIF
           IF (BASEZ(M,N).EQ. 0.) THEN
-            BITMAP(KK)=.FALSE.
-            GFLD%ibmap=0
-          ELSE
-            BITMAP(KK)=.TRUE.
+            BASEZ(M,N)=20000
           ENDIF
         ENDDO
         DEC=-3.0
-       print*,'ibmap: ',GFLD%ibmap
-!       print*,'bmap: ',GFLD%bmap
-       GFLD%bmap=BITMAP
-       print*,'ibmap1: ',GFLD%ibmap
-!       print*,'bmap1: ',GFLD%bmap
 
        CALL FILL_FLD(GFLD,ITOT,IM,JM,BASEZ)
        
@@ -382,51 +373,6 @@
        CALL set_scale(gfld,DEC)
        CALL PUTGB2(71,GFLD,IRET)
 
-
-!      Write ceiling height to grib2
-!        DO KK = 1, ITOT
-!          IF(MOD(KK,IM).EQ.0) THEN
-!            M=IM
-!            N=INT(KK/IM)
-!          ELSE
-!            M=MOD(KK,IM)
-!            N=INT(KK/IM) + 1
-!          ENDIF
-!          IF (CEIL(M,N).EQ. 0.) THEN
-!            BITMAP(KK)=.FALSE.
-!          ELSE
-!            BITMAP(KK)=.TRUE.
-!          ENDIF
-!        ENDDO
-!       DEC=-3.0
-!       GFLD%ibmap=0
-!       GFLD%bmap=BITMAP
-
-!       CALL FILL_FLD(GFLD,ITOT,IM,JM,CEIL)
-       
-!       GFLD%ipdtmpl(1)=3
-!       GFLD%ipdtmpl(2)=5
-!       GFLD%ipdtmpl(10)=215
-!       GFLD%ipdtmpl(12)=-9999
-!       GFLD%idrtmpl(2)=DEC
-
-!       CALL set_scale(gfld,DEC)
-!       CALL PUTGB2(71,GFLD,IRET)
-
-!      Write SLP to grib2
-!       GFLD%ibmap=255
-!       DEC=-3.0
-!
-!       CALL FILL_FLD(GFLD,ITOT,IM,JM,SLP)
-!       
-!       GFLD%ipdtmpl(1)=3
-!       GFLD%ipdtmpl(2)=198
-!       GFLD%ipdtmpl(10)=101
-!       GFLD%ipdtmpl(12)=-9999
-!       GFLD%idrtmpl(2)=DEC
-!
-!       CALL set_scale(gfld,DEC)
-!       CALL PUTGB2(71,GFLD,IRET)
 !      Write ceiling height to grib2
 !      Initially assume no bitmap
         GFLD%ibmap=255
@@ -439,10 +385,7 @@
             N=INT(KK/IM) + 1
           ENDIF
           IF (CEIL(M,N).EQ. 0.) THEN
-            BITMAP(KK)=.FALSE.
-            GFLD%ibmap=0
-          ELSE
-            BITMAP(KK)=.TRUE.
+            CEIL(M,N)=20000
           ENDIF
         ENDDO
 !        DO J=1,JM
@@ -453,7 +396,6 @@
 !        ENDDO
 !        ENDDO
        DEC=-3.0
-       GFLD%bmap=BITMAP
 
        CALL FILL_FLD(GFLD,ITOT,IM,JM,CEIL)
        

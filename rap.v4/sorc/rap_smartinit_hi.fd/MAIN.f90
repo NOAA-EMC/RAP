@@ -291,7 +291,6 @@
        CALL PUTGB2(71,GFLD,IRET)
 
 !      Write cloud base height to grib2
-!      Initially assume no bitmap
         GFLD%ibmap=255
         DO KK = 1, ITOT
           IF(MOD(KK,IM).EQ.0) THEN
@@ -302,18 +301,10 @@
             N=INT(KK/IM) + 1
           ENDIF
           IF (BASEZ(M,N).EQ. 0.) THEN
-            BITMAP(KK)=.FALSE.
-!           Only if there are some 0s flag a bitmap
-            GFLD%ibmap=0
-          ELSE
-            BITMAP(KK)=.TRUE.
+            BASEZ(M,N)=20000
           ENDIF
         ENDDO
         DEC=-3.0
-       print*,'ibmap: ',GFLD%ibmap
-!       GFLD%ibmap=0
-       GFLD%bmap=BITMAP
-       print*,'ibmap1: ',GFLD%ibmap
 
        CALL FILL_FLD(GFLD,ITOT,IM,JM,BASEZ)
        
@@ -327,7 +318,6 @@
        CALL PUTGB2(71,GFLD,IRET)
 
 !      Write ceiling height to grib2
-!      Initially assume no bitmap
         GFLD%ibmap=255
         DO KK = 1, ITOT
           IF(MOD(KK,IM).EQ.0) THEN
@@ -338,10 +328,7 @@
             N=INT(KK/IM) + 1
           ENDIF
           IF (CEIL(M,N).EQ. 0.) THEN
-            BITMAP(KK)=.FALSE.
-            GFLD%ibmap=0
-          ELSE
-            BITMAP(KK)=.TRUE.
+            CEIL(M,N)=20000
           ENDIF
         ENDDO
 !        DO J=1,JM
@@ -352,7 +339,6 @@
 !        ENDDO
 !        ENDDO
        DEC=-3.0
-       GFLD%bmap=BITMAP
 
        CALL FILL_FLD(GFLD,ITOT,IM,JM,CEIL)
        
@@ -707,7 +693,7 @@
         write(0,*) 'hardwire locbmap to true'
         locbmap=.true.
         endif
-
+        
 ! INPUT
 !   ibm: integer, bitmap flag (grib2 table 6.0)
 !   scl: real, significant digits,OR binary precision if < 0
