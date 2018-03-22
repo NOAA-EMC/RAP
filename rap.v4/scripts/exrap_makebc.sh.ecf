@@ -205,11 +205,11 @@ done
 
 # Run the GFS ungrib
 export pgm=rap_wps_ungrib
-#. prep_step
+. prep_step
 
-#startmsg
+startmsg
 $EXECrap/rap_wps_ungrib > ungribgfs.out
-#export err=$?;err_chk
+export err=$?;err_chk
 
 echo "GFS ungrib completed at `${DATE}`"
 
@@ -291,10 +291,10 @@ ln -sf ${gribfiles} GRIBFILE.AAA
 
 # Run ungrib
 export pgm=rap_wps_ungrib
-#. prep_step
+. prep_step
 
 $EXECrap/rap_wps_ungrib > ungribsst.out
-#export  err=$?;err_chk
+export  err=$?;err_chk
 
 rm SST
 ln -s sst:${YYYYMMDDHH}  SST
@@ -512,7 +512,7 @@ fi
 cp ${EXECrap}/rap_wps_metgrid .
 runline="aprun -n 24 -N 24 ./rap_wps_metgrid"
 $runline
-#export err=$?; err_chk
+export err=$?; err_chk
 
 echo "metgrid completed successfully at `${DATE}`"
 

@@ -109,13 +109,13 @@ EOF
 
 # Run Process_mosaic
 export pgm=$EXECrap/rap_process_mosaic
-#. prep_step
+. prep_step
 
-#startmsg
+startmsg
 cp ${EXECrap}/rap_process_mosaic .
 runline="time aprun -n 36 -N $PTILE ./rap_process_mosaic"
 $runline > process_mosaic.out
-#export err=$?;err_chk
+export err=$?;err_chk
 
 if [ $SENDCOM = YES ]
 then
@@ -130,13 +130,13 @@ echo ${PDY}${cyc} > ./nasaLaRC_cycle_date
 
 ## Run Process Cloud
 export pgm=$EXECrap/rap_process_cloud
-#. prep_step
+. prep_step
 
-#startmsg
+startmsg
 cp ${EXECrap}/rap_process_cloud .
 runline="time aprun -n 36 -N $PTILE ./rap_process_cloud"
 $runline > process_cloud.out
-#export err=$?;err_chk
+export err=$?;err_chk
 
 if [ $SENDCOM = YES ]
 then
@@ -164,11 +164,11 @@ EOF
 ## Run Process Lightning
 export pgm=$EXECrap/rap_process_lightning
 
-#startmsg
+startmsg
 cp ${EXECrap}/rap_process_lightning .
 runline="time aprun -n 36 -N $PTILE ./rap_process_lightning"
 $runline > process_lightning.out
-#export err=$?;err_chk
+export err=$?;err_chk
 
 if [ $SENDCOM = YES ]
 then
@@ -176,7 +176,7 @@ then
 fi
 
 msg="JOB $job FOR RAP_PREP HAS COMPLETED NORMALLY"
-#postmsg "$jlogfile" "$msg"
+postmsg "$jlogfile" "$msg"
 
 exit 0
 

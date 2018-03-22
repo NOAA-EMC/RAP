@@ -80,9 +80,9 @@ else
 fi
 
 if [ ! -r guess.out ]; then
-    echo 'no first guess is available'
+    echo 'FATAL ERROR: no first guess is available'
     echo 'please try a cycle divisible by 3'
-    exit
+    export err=9; err_chk
 fi
 
 # if the cycle is 09 or 21, we should have the last 1-hr forecast
@@ -133,6 +133,7 @@ if [ ! -r wrf_inout ]; then
           cp ${EXECrap}/rap_full_cycle_surface .
           runline="aprun -n 96 -N 24 ./rap_full_cycle_surface"
           $runline >> $DATA/$pgmout 2>errfile
+          export err=$?; err_chk
           break
         fi
         counter=` expr $counter + 1 `
@@ -179,14 +180,14 @@ if [ ${cyc} -eq ${time_updateSST} ]; then
     cp ${EXECrap}/rap_process_sst .
     runline="aprun -n 96 -N 24 ./rap_process_sst"
     $runline >> $DATA/$pgmout 2>errfile
-    #export err=$?; err_chk
+    export err=$?; err_chk
   elif [ -r "${COMINsst}/sst.${PDYm1}/rtgssthr_grb_0.083.grib2" ]; then
     cp ${COMINsst}/sst.${PDYm1}/rtgssthr_grb_0.083.grib2 SSTRTG
     ln -s SSTRTG latest.SST
     cp ${EXECrap}/rap_process_sst .
     runline="aprun -n 96 -N 24 ./rap_process_sst"
     $runline >> $DATA/$pgmout 2>errfile
-    #export err=$?; err_chk
+    export err=$?; err_chk
   else
     echo "NOTE: no SST data available for ${cyc}z cycle!"
   fi
@@ -514,12 +515,13 @@ if [ -r radstat.rap ]; then
 fi
 
 export pgm=rap_gsi
-#. prep_step
+. prep_step
 
-#startmsg
+startmsg
 cp ${EXECrap}/rap_gsi .
 runline="aprun -j1 -cc depth -n 96 -N 12 -d 2 ./rap_gsi"
 $runline < gsiparm.anl >> $DATA/$pgmout 2>errfile
+export err=$?; err_chk
 
 # Loop over first and last outer loops to generate innovation
 # diagnostic files for indicated observation types (groups)
@@ -592,9 +594,10 @@ $gsi_namelist
 EOF
 
 export pgm=rap_gsi
-#startmsg
+startmsg
 runline="aprun -j1 -cc depth -n 96 -N 12 -d 2 ./rap_gsi"
 $runline < gsiparm.anl >> $DATA/$pgmout 2>errfile
+export err=$?; err_chk
 
 cp gsiparm.anl gsiparm.anl_cloud
 
@@ -608,7 +611,7 @@ if [ ${cyc} -eq ${trim_snow} ]; then
      cp ${EXECrap}/rap_process_imssnow .
      runline="aprun -n 96 -N 24 ./rap_process_imssnow"
      $runline >> $DATA/$pgmout 2>errfile
-     #export err=$?; err_chk
+     export err=$?; err_chk
   else
     echo "${PREPDIR}/rap.${PDY}/rap.t${cyc}z.imssnow.grib2 does not exist!!"
     echo "no snow file available at for ${cyc}z cycle!!!!"
@@ -619,7 +622,7 @@ fi
 
 cp wrf_inout ${COMOUT}/rap.t${cyc}z.wrf_inout
 
-#msg="JOB $job HAS COMPLETED NORMALLY."
-#postmsg "$jlogfile" "$msg"
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
 
 exit 0

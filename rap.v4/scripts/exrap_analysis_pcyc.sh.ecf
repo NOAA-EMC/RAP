@@ -83,7 +83,7 @@ if [ ! -r wrf_inout ]; then
       cp ${EXECrap}/rap_full_cycle_surface .
       runline="aprun -n 96 -N 24 ./rap_full_cycle_surface"
       $runline >> $DATA/$pgmout 2>errfile
-      #export err=$?; err_chk
+      export err=$?; err_chk
    else
       echo "${RAPBC}/wrfinput_d01_${time_str} does not exist!!"
       echo "FATAL ERROR: no background file for analaysis at ${time_str}!!!!"
@@ -442,14 +442,13 @@ if [ -r radstat.rap ]; then
 fi
 
 export pgm=rap_gsi
-#. prep_step
+. prep_step
 
-#startmsg
-#mpirun.lsf ${EXECrap}/rap_gsi < gsiparm.anl >> $DATA/$pgmout 2>errfile 
+startmsg
 cp ${EXECrap}/rap_gsi .
 runline="aprun -j1 -cc depth -n 96 -N 12 -d 2 ./rap_gsi"
 $runline < gsiparm.anl >> $DATA/$pgmout 2>errfile
-#export err=$?; err_chk
+export err=$?; err_chk
 
 # Loop over first and last outer loops to generate innovation
 # diagnostic files for indicated observation types (groups)

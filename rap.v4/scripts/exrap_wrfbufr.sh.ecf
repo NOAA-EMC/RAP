@@ -119,7 +119,7 @@ echo about to run program at $datestr
 cp ${EXECrap}/rap_wrfbufr .
 runline="aprun -n 1 -N 1 ./rap_wrfbufr"
 $runline >> wrfbufr.out
-#export err=$?; err_chk
+export err=$?; err_chk
 
 mv profilm.c1.tm00 profilm.c1.f${fhr}
 

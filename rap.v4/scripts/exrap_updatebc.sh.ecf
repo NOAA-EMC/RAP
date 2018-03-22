@@ -111,7 +111,7 @@ ln -s wrfvar_output wrfvar_out
 cp ${EXECrap}/rap_update_bc .
 runline="aprun -n 1 -N 1 ./rap_update_bc"
 $runline >> $DATA/$pgmout 2>errfile
-#export err=$?; err_chk
+export err=$?; err_chk
 
 echo "end update bc"
 

@@ -381,7 +381,7 @@ export pgm=$EXECrap/rap_wrfarw_real
 cp ${EXECrap}/rap_wrfarw_real .
 runline="aprun -n 144 -N 24 ./rap_wrfarw_real"
 $runline
-#export err=$?;err_chk
+export err=$?;err_chk
 
 echo "real_wps.ksh completed successfully at `${DATE}`"
 
