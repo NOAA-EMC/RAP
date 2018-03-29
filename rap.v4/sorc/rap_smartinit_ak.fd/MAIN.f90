@@ -357,7 +357,7 @@
             N=INT(KK/IM) + 1
           ENDIF
           IF (BASEZ(M,N).EQ. 0.) THEN
-            BASEZ(M,N)=20000
+            BASEZ(M,N)=20000.01
           ENDIF
         ENDDO
         DEC=-3.0
@@ -385,7 +385,7 @@
             N=INT(KK/IM) + 1
           ENDIF
           IF (CEIL(M,N).EQ. 0.) THEN
-            CEIL(M,N)=20000
+            CEIL(M,N)=20000.01
           ENDIF
         ENDDO
 !        DO J=1,JM

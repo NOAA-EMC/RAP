@@ -480,7 +480,7 @@ PRES:max wind
 UGRD:max wind
 VGRD:max wind
 PRATE:surface
-SOILM:0 m underground
+SOIL_M:0 m underground
 MSTAV:0 m underground
 TSOIL:0-0 m below ground
 TSOIL:0.01-0.01 m below ground

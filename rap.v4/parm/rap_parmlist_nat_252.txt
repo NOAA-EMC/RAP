@@ -805,8 +805,9 @@ HPBL:surface
 HGT:surface
 GUST:surface
 TMP:surface
-FRICV:surface
+FRICVW:surface
 ULWRF:top of atmosphere
 WEASD:surface
 var
 SPNCR
+NCCICE
