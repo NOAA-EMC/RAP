@@ -145,7 +145,9 @@
        CALL PUTGB2(71,GFLD,IRET)
 
 !      Write 2-m Q to grib2
-       DEC=4.0 
+! Change precision of specific humidity
+!      DEC=4.0 
+       DEC=6.0 
        CALL FILL_FLD(GFLD,ITOT,IM,JM,DOWNQ)
        GFLD%ipdtmpl(1)=1
        GFLD%ipdtmpl(2)=0
@@ -190,7 +192,9 @@
        ENDDO
 
 !      Write wind gust to grib2
-       DEC=3.0
+!      DEC=3.0
+! Increase precision for wind gust
+       DEC=-4.0
        CALL FILL_FLD(GFLD,ITOT,IM,JM,WGUST)
        GFLD%ipdtmpl(1)=2
        GFLD%ipdtmpl(2)=022
@@ -203,7 +207,9 @@
 
 
 !      Write surface pressure to grib2
-       DEC=3.0
+! Change DEC from 3.0 to 6.0 for more precision
+!      DEC=3.0
+       DEC=6.0
        CALL FILL_FLD(GFLD,ITOT,IM,JM,DOWNP)
        GFLD%ipdtmpl(1)=3
        GFLD%ipdtmpl(2)=0
@@ -291,6 +297,7 @@
        CALL PUTGB2(71,GFLD,IRET)
 
 !      Write cloud base height to grib2
+!      Initially assume no bitmap
         GFLD%ibmap=255
         DO KK = 1, ITOT
           IF(MOD(KK,IM).EQ.0) THEN
@@ -355,6 +362,7 @@
        CALL PUTGB2(71,GFLD,IRET)
 
 !      Write SLP to grib2
+! Do not need to change precision, it matches the RAP NDFD
        GFLD%ibmap=255
        DEC=-3.0
 
@@ -452,6 +460,7 @@
 
 
 !     Write visibility to grib2
+! Do not change visibility precision as it makes it worse
        DEC=2.7
        CALL FILL_FLD(GFLD,ITOT,IM,JM,VIS)
        GFLD%ipdtmpl(1)=19
@@ -461,6 +470,10 @@
        GFLD%idrtmpl(2)=DEC
 
        CALL set_scale(gfld,DEC)
+! Does not help - Adding this ends up decreasing the precision
+!      gfld%idrtmpl(2)=0
+!      gfld%idrtmpl(3)=-2
+!      gfld%idrtmpl(4)=8
        CALL PUTGB2(71,GFLD,IRET)
 
 

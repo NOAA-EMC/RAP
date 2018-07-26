@@ -1,6 +1,6 @@
       SUBROUTINE GETGRIB(PSFC,ZSFC,PMID,HGHT,T,Q,UWND,VWND, &
       T2,Q2,D2,U10,V10,COAST,BLI,WETFRZ,VIS,GUST,DEPSN,  &
-      REFC,TCLD,LCLD,MCLD,HCLD,BASEZ,CEIL,MSLP,VALIDPT,DATE, &
+      REFC,TCLD,LCLD,MCLD,HCLD,BASEZ,CEIL,MSLP,SFCR,VALIDPT,DATE, &
       IFHR,GDIN,GFLD,GFLD8)
 
        use grddef
@@ -63,7 +63,7 @@
        T950(ILIM,JLIM),T850(ILIM,JLIM),T700(ILIM,JLIM), &
        T500(ILIM,JLIM),RH850(ILIM,JLIM),RH700(ILIM,JLIM),  &
        COAST(ILIM,JLIM),REFC(ILIM,JLIM),GUST(ILIM,JLIM), &
-       MSLP(ILIM,JLIM),CEIL(ILIM,JLIM),VTYPE(ILIM,JLIM) 
+       MSLP(ILIM,JLIM),CEIL(ILIM,JLIM),VTYPE(ILIM,JLIM),SFCR(ILIM,JLIM) 
       REAL LCLD(ILIM,JLIM),MCLD(ILIM,JLIM), &
        HCLD(ILIM,JLIM), &
        DEPSN(ILIM,JLIM)
@@ -343,7 +343,23 @@
        print*,'minval v10',minval(v10)
        print*,'maxval v10',maxval(v10)
 
+! SFCR (Surface Roughness)
+
+       JDISC = 2
+       JPDT(1) = 0
+       JPDT(2) = 001
+       JPDT(10) = 001
+       JPDT(12) = 000
+       J=0
+
+      CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
+                     KPDS,KGDS,MASK,GRID,SFCR,GFLD,ISSREF,IRET,ISTAT)
+
+        write(0,*) 'SFCR(1,1): ', SFCR(1,1)
+        print*,'minval(sfcr),maxval(sfcr):',minval(sfcr),maxval(sfcr)
+
 !     Get best lifted index
+      JDISC = 0
       JPDT(1) = 7
       JPDT(2) = 193
       JPDT(10) = -9999

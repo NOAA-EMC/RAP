@@ -309,6 +309,7 @@ GUST:surface:
 PRES:surface:
 HGT:surface:
 TMP:surface:
+SFCR:surface:
 VGTYP:surface:
 LCDC:low cloud layer:
 MCDC:middle cloud layer:
