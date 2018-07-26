@@ -23,12 +23,6 @@ export NET=${NET:-rap}
 export RUN=${RUN:-rap}
 export model=${model:-rap}
 
-###################################
-# Load the GRIB UTILITIES module
-####################################
-. /opt/modules/default/init/ksh
-module load grib_util/${grib_util_ver}
-
 #####################################################################################
 # This block is for Developer's test run:
 # Run config file to get input parameters
@@ -81,6 +75,13 @@ export FIXrap=${FIXrap:-${HOMErap}/fix}
 export PARMrap=${PARMrap:-${HOMErap}/parm}
 export USHrap=${USHrap:-${HOMErap}/ush}
 
+export gributilexec=${gributilexec:-${NWROOT}/grib_util.${grib_util_ver}/exec}
+export TOCGRIB=${TOCGRIB:-${gributilexec}/tocgrib}
+export TOCGRIB2=${TOCGRIB2:-${gributilexec}/tocgrib2}
+export GRBINDEX=${GRBINDEX:-${gributilexec}/grbindex}
+export GRB2INDEX=${GRB2INDEX:-${gributilexec}/grb2index}
+export CNVGRIB=${CNVGRIB:-${gributilexec}/cnvgrib}
+export WGRIB2=${WGRIB2:-${gributilexec}/wgrib2}
 export CRTM=${CRTM:-${NWROOT}/lib/crtm/${crtm_ver_post}/src/fix}
 
 ###########################################
@@ -94,9 +95,9 @@ setpdy.sh
 ##############################################
 export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
 export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
-export wmo=${wmo:-${COMOUT}/wmo}
+export WMO=${WMO:-${COMOUT}/wmo}
 
-mkdir -m 775 -p $COMOUT $wmo
+mkdir -m 775 -p $COMOUT $WMO
 
 ##############################################
 # Define GES directories

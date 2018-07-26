@@ -140,7 +140,7 @@ ls ${COMINgfs}/enkf.${EYYYYMMDD}/${EHH}/${enkfcstname}.mem???.nemsio > filelist0
 export pgm=rap_process_enkf
 . prep_step
 
-startmsg
+#startmsg
 cp ${EXECrap}/rap_process_enkf .
 runline="aprun -n 120 -N 12 ./rap_process_enkf"
 $runline >> $DATA/$pgmout 2>errfile

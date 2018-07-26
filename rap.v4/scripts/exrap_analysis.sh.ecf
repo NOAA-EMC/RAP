@@ -80,9 +80,9 @@ else
 fi
 
 if [ ! -r guess.out ]; then
-    echo 'FATAL ERROR: no first guess is available'
+    echo 'no first guess is available'
     echo 'please try a cycle divisible by 3'
-    export err=9; err_chk
+    exit
 fi
 
 # if the cycle is 09 or 21, we should have the last 1-hr forecast
@@ -133,7 +133,6 @@ if [ ! -r wrf_inout ]; then
           cp ${EXECrap}/rap_full_cycle_surface .
           runline="aprun -n 96 -N 24 ./rap_full_cycle_surface"
           $runline >> $DATA/$pgmout 2>errfile
-          export err=$?; err_chk
           break
         fi
         counter=` expr $counter + 1 `
@@ -234,6 +233,12 @@ else
 fi
 
 #add radial velocity data
+if [ -r "${PREPDIR}/rap.${PDY}/rap.t${cyc}z.radwnd.tm00.bufr_d" ]; then
+  ln -s ${PREPDIR}/rap.${PDY}/rap.t${cyc}z.radwnd.tm00.bufr_d ./radarbufr
+else
+  echo "Warning: ${PREPDIR}/rap.${PDY}/rap.t${cyc}z.radwnd.tm00.bufr_d is not available"
+fi
+
 if [ -r "${PREPDIR}/rap.${PDY}/rap.t${cyc}z.nexrad.tm00.bufr_d" ]; then
   cp ${PREPDIR}/rap.${PDY}/rap.t${cyc}z.nexrad.tm00.bufr_d ./l2rwbufr
 else
@@ -511,7 +516,7 @@ fi
 export pgm=rap_gsi
 . prep_step
 
-startmsg
+#startmsg
 cp ${EXECrap}/rap_gsi .
 runline="aprun -j1 -cc depth -n 96 -N 12 -d 2 ./rap_gsi"
 $runline < gsiparm.anl >> $DATA/$pgmout 2>errfile
@@ -556,7 +561,6 @@ cp ./satbias_out_${PDY}${cyc} ${RAPGES_SATBIAS}/
 mv ./satbias_pc.out satbias_pc.out_${PDY}${cyc}
 cp ./satbias_pc.out_${PDY}${cyc} ${RAPGES_SATBIAS}/
 
-#export err=$?; err_chk
 mv gsiparm.anl gsiparm.anl_var
 mv fort.201 fit_p1
 mv fort.202 fit_w1
@@ -588,7 +592,7 @@ $gsi_namelist
 EOF
 
 export pgm=rap_gsi
-startmsg
+#startmsg
 runline="aprun -j1 -cc depth -n 96 -N 12 -d 2 ./rap_gsi"
 $runline < gsiparm.anl >> $DATA/$pgmout 2>errfile
 export err=$?; err_chk
@@ -616,7 +620,7 @@ fi
 
 cp wrf_inout ${COMOUT}/rap.t${cyc}z.wrf_inout
 
-msg="JOB $job HAS COMPLETED NORMALLY."
+#msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
 
 exit 0

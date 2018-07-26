@@ -159,6 +159,12 @@ else
 fi
 
 #add radial velocity data
+if [ -r "${PREPDIR}/rap_p.${PDY}/rap_p.t${cyc}z.radwnd.tm00.bufr_d" ]; then
+  ln -s ${PREPDIR}/rap_p.${PDY}/rap_p.t${cyc}z.radwnd.tm00.bufr_d ./radarbufr
+else
+  echo "Warning: ${PREPDIR}/rap.${PDY}/rap_p.t${cyc}z.radwnd.tm00.bufr_d is not available"
+fi
+
 if [ -r "${PREPDIR}/rap_p.${PDY}/rap_p.t${cyc}z.nexrad.tm00.bufr_d" ]; then
   ln -s ${PREPDIR}/rap_p.${PDY}/rap_p.t${cyc}z.nexrad.tm00.bufr_d ./l2rwbufr
 else
@@ -438,7 +444,8 @@ fi
 export pgm=rap_gsi
 . prep_step
 
-startmsg
+#startmsg
+#mpirun.lsf ${EXECrap}/rap_gsi < gsiparm.anl >> $DATA/$pgmout 2>errfile 
 cp ${EXECrap}/rap_gsi .
 runline="aprun -j1 -cc depth -n 96 -N 12 -d 2 ./rap_gsi"
 $runline < gsiparm.anl >> $DATA/$pgmout 2>errfile

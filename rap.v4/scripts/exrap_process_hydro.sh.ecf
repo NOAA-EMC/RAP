@@ -111,7 +111,7 @@ EOF
 export pgm=$EXECrap/rap_process_mosaic
 . prep_step
 
-startmsg
+#startmsg
 cp ${EXECrap}/rap_process_mosaic .
 runline="time aprun -n 36 -N $PTILE ./rap_process_mosaic"
 $runline > process_mosaic.out
@@ -132,11 +132,23 @@ echo ${PDY}${cyc} > ./nasaLaRC_cycle_date
 export pgm=$EXECrap/rap_process_cloud
 . prep_step
 
-startmsg
+#startmsg
 cp ${EXECrap}/rap_process_cloud .
 runline="time aprun -n 36 -N $PTILE ./rap_process_cloud"
 $runline > process_cloud.out
-export err=$?;err_chk
+export err=$?
+
+if [ $err -ne 0 ]; then
+  export mailelist=${maillist:-'ncep.list.spa-helpdesk@noaa.gov,geoffrey.manikin@noaa.gov,benjamin.blake@noaa.gov'}
+  export subject="RAP_PROCESS_ClOUD did not run cleanly"
+  echo "*************************************************************" > mailmsg
+  echo "*** WARNING !! RAP_PROCESS_CLOUD didn't complete cleanly. ***" >> mailmsg
+  echo "*************************************************************" >> mailmsg
+  echo >> mailmsg
+  echo " Please check if anything wrong with data or process! " >> mailmsg
+  echo " $job will continue following process " >>mailmsg
+  cat mailmsg |mail.py -s "$subject" $maillist -v
+fi 
 
 if [ $SENDCOM = YES ]
 then
@@ -164,7 +176,7 @@ EOF
 ## Run Process Lightning
 export pgm=$EXECrap/rap_process_lightning
 
-startmsg
+#startmsg
 cp ${EXECrap}/rap_process_lightning .
 runline="time aprun -n 36 -N $PTILE ./rap_process_lightning"
 $runline > process_lightning.out

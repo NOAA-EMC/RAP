@@ -77,7 +77,7 @@ pgmout=rap236_3
 $EXECrap/rap_subflds_g2 << EOF
 $pfhr1 $pfhr2 $IARW $ISNOW
 EOF
-    #export err=$?;err_chk
+    export err=$?;err_chk
 
     cat precip236.${fhr} >> awp236pgrbf${fhr}.grib2
     cat ncprecip236.${fhr} >> awp236pgrbf${fhr}.grib2
@@ -132,11 +132,11 @@ pgmout=rap236_tocgrib
 
   if test "$SENDCOM" = 'YES'
   then
-    cp xtrn.${cycle}.faarap${fhr} $wmo/rap.${cycle}.g236xtrn.f${fhr}
+    cp xtrn.${cycle}.faarap${fhr} $WMO/rap.${cycle}.g236xtrn.f${fhr}
   fi
-  if test "$SENDDBN" = 'YES'
+  if test "$SENDDBN_NTC" = 'YES'
   then
-    $DBNROOT/bin/dbn_alert MODEL RAP_WPG $job $wmo/rap.${cycle}.g236xtrn.f${fhr}
+    $DBNROOT/bin/dbn_alert MODEL RAP_WPG $job $WMO/rap.${cycle}.g236xtrn.f${fhr}
   fi
 
   if test "$SENDDBN_NTC" = 'YES'
@@ -145,10 +145,10 @@ pgmout=rap236_tocgrib
     then
      if [ fhr -le 03 ]
       then
-       $DBNROOT/bin/dbn_alert GRIB_LOW rap $job $wmo/rap.${cycle}.g236xtrn.f${fhr}
+       $DBNROOT/bin/dbn_alert GRIB_LOW rap $job $WMO/rap.${cycle}.g236xtrn.f${fhr}
      fi
     else
-       $DBNROOT/bin/dbn_alert GRIB_LOW rap $job $wmo/rap.${cycle}.g236xtrn.f${fhr}
+       $DBNROOT/bin/dbn_alert GRIB_LOW rap $job $WMO/rap.${cycle}.g236xtrn.f${fhr}
     fi
   fi
   fi
@@ -315,15 +315,15 @@ fi # 3-hr check
   #err=$?;export err ;err_chk
   if test "$SENDCOM" = 'YES'
   then
-    cp grib2.${cycle}.awprap13f${fhr} $wmo/grib2.${cycle}.awprap13f${fhr}
+    cp grib2.${cycle}.awprap13f${fhr} $WMO/grib2.${cycle}.awprap13f${fhr}
   fi
 # GSM  had been sending alerts for all fhr < 13 for every
 #   3rd cycle and all fhr < 10 for all other cycles;  changed
 #   10/9/12 to alert all forecast hours for all cycles  
-  if test "$SENDDBN_NTC" = 'YES'
+  if  [ $SENDDBN_NTC = 'YES' -a $fhr -le 21 ] 
   then
     # rap130 grib2 files to AWIPS NCF
-     $DBNROOT/bin/dbn_alert NTC_LOW $NET $job $wmo/grib2.${cycle}.awprap13f${fhr}
+     $DBNROOT/bin/dbn_alert NTC_LOW $NET $job $WMO/grib2.${cycle}.awprap13f${fhr}
   fi
 fi # 130 processing
 
@@ -426,14 +426,14 @@ then
   #err=$?;export err ;#err_chk
   if test "$SENDCOM" = 'YES'
   then
-    cp grib2.${cycle}.awprap200f${fhr} $wmo/grib2.${cycle}.awprap200f${fhr}
+    cp grib2.${cycle}.awprap200f${fhr} $WMO/grib2.${cycle}.awprap200f${fhr}
   fi
 # GSM  had been sending alerts for all fhr < 13 for every
 #   3rd cycle and all fhr < 10 for all other cycles;  changed
 #   10/9/12 to alert all forecast hours for all cycles  
-  if test "$SENDDBN_NTC" = 'YES'
+  if [ $SENDDBN_NTC = 'YES' -a $fhr -le 21 ]
   then
     # rap200 grib2 files to AWIPS NCF
-     $DBNROOT/bin/dbn_alert NTC_LOW $NET $job $wmo/grib2.${cycle}.awprap200f${fhr}
+     $DBNROOT/bin/dbn_alert NTC_LOW $NET $job $WMO/grib2.${cycle}.awprap200f${fhr}
   fi
 fi # 200 processing

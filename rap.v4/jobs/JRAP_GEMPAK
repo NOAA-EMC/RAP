@@ -49,11 +49,6 @@ export fstart=00
 export model=rap
 export EXT=""
 
-#
-# Now set up GEMPAK/NTRANS environment
-#
-#. /nwprod/gempak/.gempak
-
 # Run setpdy and initialize PDY variables
 setpdy.sh
 . PDY
@@ -82,7 +77,7 @@ export RUN=rap
 export GRIB=awp236pgrbf
 export DBN_ALERT_TYPE=RAP_GEMPAK
 
-echo "$SCRIPTSrap/exrap_nawips.sh.sms $RUN $GRIB $DBN_ALERT_TYPE $EXT &> rap.log " >>poescript
+echo "$SCRIPTSrap/exrap_nawips.sh.ecf $RUN $GRIB $DBN_ALERT_TYPE $EXT &> rap.log " >>poescript
 
 
 ########################################################
@@ -99,7 +94,7 @@ export RUN=rap20
 export GRIB=awp252pgrbf
 export DBN_ALERT_TYPE=RAP20_GEMPAK
 
-echo "$SCRIPTSrap/exrap_nawips.sh.sms $RUN $GRIB $DBN_ALERT_TYPE $EXT &> rap20.log " >>poescript
+echo "$SCRIPTSrap/exrap_nawips.sh.ecf $RUN $GRIB $DBN_ALERT_TYPE $EXT &> rap20.log " >>poescript
 
 
 ########################################################
@@ -112,7 +107,7 @@ export RUN=rap13
 export GRIB=awp130pgrbf
 export DBN_ALERT_TYPE=RAP13_GEMPAK
 
-echo "$SCRIPTSrap/exrap_nawips.sh.sms $RUN $GRIB $DBN_ALERT_TYPE $EXT &> rap13.log " >>poescript
+echo "$SCRIPTSrap/exrap_nawips.sh.ecf $RUN $GRIB $DBN_ALERT_TYPE $EXT &> rap13.log " >>poescript
 
 ########################################################
 # RAP32
@@ -124,7 +119,7 @@ export RUN=rap32
 export GRIB=awip32f
 export DBN_ALERT_TYPE=RAP32_GEMPAK
 
-echo "$SCRIPTSrap/exrap_nawips.sh.sms $RUN $GRIB $DBN_ALERT_TYPE $EXT &> rap32.log " >>poescript
+echo "$SCRIPTSrap/exrap_nawips.sh.ecf $RUN $GRIB $DBN_ALERT_TYPE $EXT &> rap32.log " >>poescript
 
 ########################################################
 # RAPAK
@@ -136,7 +131,7 @@ export RUN=rapak
 export GRIB=awp242f
 export DBN_ALERT_TYPE=RAPAK_GEMPAK
 
-echo "$SCRIPTSrap/exrap_nawips.sh.sms $RUN $GRIB $DBN_ALERT_TYPE $EXT &> rapak.log " >>poescript
+echo "$SCRIPTSrap/exrap_nawips.sh.ecf $RUN $GRIB $DBN_ALERT_TYPE $EXT &> rapak.log " >>poescript
 
 ########################################################
 # RAPHI
@@ -148,7 +143,7 @@ export RUN=raphi
 export GRIB=awp243f
 export DBN_ALERT_TYPE=RAPHI_GEMPAK
 
-echo "$SCRIPTSrap/exrap_nawips.sh.sms $RUN $GRIB $DBN_ALERT_TYPE $EXT &> raphi.log " >>poescript
+echo "$SCRIPTSrap/exrap_nawips.sh.ecf $RUN $GRIB $DBN_ALERT_TYPE $EXT &> raphi.log " >>poescript
 
 cat poescript
 
@@ -157,8 +152,15 @@ export MP_PGMMODEL=mpmd
 export MP_CMDFILE=$DATA/poescript
 
 # Execute the script.
-aprun -N 24 -n 144 cfp poescript
+#aprun -N 24 -n 144 cfp poescript
+aprun -N $PTILE -n $((NODES*PTILE)) cfp poescript
 
+cd $DATA
+cat rap20.log
+cat rap13.log
+cat rap32.log
+cat rapak.log
+cat raphi.log
 
 cd $DATAROOT
 if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi

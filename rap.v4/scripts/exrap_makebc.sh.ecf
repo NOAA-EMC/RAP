@@ -207,7 +207,7 @@ done
 export pgm=rap_wps_ungrib
 . prep_step
 
-startmsg
+#startmsg
 $EXECrap/rap_wps_ungrib > ungribgfs.out
 export err=$?;err_chk
 
@@ -294,7 +294,7 @@ export pgm=rap_wps_ungrib
 . prep_step
 
 $EXECrap/rap_wps_ungrib > ungribsst.out
-export  err=$?;err_chk
+export err=$?;err_chk
 
 rm SST
 ln -s sst:${YYYYMMDDHH}  SST

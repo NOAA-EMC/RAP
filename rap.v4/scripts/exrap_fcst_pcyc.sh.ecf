@@ -300,10 +300,10 @@ cp ${EXECrap}/rap_wrfarw_fcst .
 runline="aprun -n 600 -N 12 -d2 -cc depth ./rap_wrfarw_fcst"
 $runline
 export err=$?
-err_chk
 
 cp rsl.out.0000 ${COMOUT}/rap_p.t${cyc}z.rslout
 
+err_chk
 
 msg="JOB $job FOR RAP_FORECAST HAS COMPLETED NORMALLY"
 postmsg "$jlogfile" "$msg"

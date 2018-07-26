@@ -84,9 +84,9 @@ setpdy.sh
 export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
 export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
 export FIXcrtm=${FIXcrtm:-${NWROOT}/lib/crtm/${crtm_ver_analysis}/fix}
-export PREPDIR=${PREPDIR:-${COMROOT}/${NET}/para}
+export PREPDIR=${PREPDIR:-${COMROOT}/${NET}/${envir}}
 export PREPDIR2=${PREPDIR:-${COMROOT}/${NET}/prod}
-export GVF=${GVF:-${DCOMROOTp1}/us007003/viirs}
+export GVF=${GVF:-${DCOMROOT}/us007003/viirs}
 
 mkdir -m 775 -p $COMOUT 
 

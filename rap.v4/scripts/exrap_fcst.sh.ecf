@@ -17,9 +17,6 @@ export WRFIO_NCD_LARGE_FILE_SUPPORT=1
 export WRF_DFI_RADAR=1
 cd $DATA
 
-# Submit post manager job
-bsub < ${HOMErap}/sms/jrap_postmgr_${cyc}.bsub
-
 # Set up some constants
 export WPSNAMELIST=namelist.wps
 START_TIME=$PDY$cyc

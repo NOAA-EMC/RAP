@@ -88,7 +88,7 @@ export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
 export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
 export COMINradar=${COMINradar:-$(compath.py hourly/prod)}
 export COMINmosaic=${COMINmosaic:-${DCOMROOT}/us007003/ldmdata/obs/upperair/mrms}
-export PREPDIR=${PREPDIR:-${COMROOT}/${NET}/para}
+export PREPDIR=${PREPDIR:-${COMROOT}/${NET}/${envir}}
 
 mkdir -m 775 -p $COMOUT 
 

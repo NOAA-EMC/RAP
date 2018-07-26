@@ -144,21 +144,21 @@ EOF
   fi
 
   if [ $SENDCOM = "YES" ] ; then
-     mv $GEMGRD $COMAWP/$GEMGRD
-#     if [ $SENDDBN = "YES" ] ; then
-#       $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE} $job \
-#           $COMOUT/$GEMGRD
-#     else
-#       echo "##### DBN_ALERT_TYPE is: ${DBN_ALERT_TYPE} #####"
-#     fi
+     cpfs $GEMGRD $COMAWP/$GEMGRD
+     if [ $SENDDBN = "YES" ] ; then
+       $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE} $job \
+           $COMAWP/$GEMGRD
+     else
+       echo "##### DBN_ALERT_TYPE is: ${DBN_ALERT_TYPE} #####"
+     fi
   fi
 
   let fhcnt=fhcnt+finc
 done
 
-#if [ $RUN = rap ]; then 
-#  ecflow_client --event release_meta
-#fi
+if [ $RUN = rap ]; then 
+  ecflow_client --event release_meta
+fi
 
 #####################################################################
 # GOOD RUN
@@ -171,6 +171,6 @@ set -x
 
 #msg='Job completed normally.'
 #echo $msg
-#postmsg "$jlogfile" "$msg"
+postmsg "$jlogfile" "$msg"
 
 ############################### END OF SCRIPT #######################
