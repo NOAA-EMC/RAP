@@ -179,15 +179,16 @@ EOF
 
   if test "$SENDCOM" = 'YES'
     then
-      mv WRFNAT${fhr}.tm00 ${COMOUT}/rap.${cycle}.wrfnatf${fhr}.grib2
-      mv WRFPRS${fhr}.tm00 ${COMOUT}/rap.${cycle}.wrfprsf${fhr}.grib2
-      mv WRFMSL${fhr}.tm00 ${COMOUT}/rap.${cycle}.wrfmslf${fhr}.grib2
+      ${WGRIB2} WRFNAT${fhr}.tm00 -set_radius 1:6370000 -set_grib_type same -grib_out ${COMOUT}/rap.${cycle}.wrfnatf${fhr}.grib2
+      ${WGRIB2} WRFPRS${fhr}.tm00 -set_radius 1:6370000 -set_grib_type same -grib_out ${COMOUT}/rap.${cycle}.wrfprsf${fhr}.grib2
+      ${WGRIB2} WRFMSL${fhr}.tm00 -set_radius 1:6370000 -set_grib_type same -grib_out ${COMOUT}/rap.${cycle}.wrfmslf${fhr}.grib2
   fi
 
   if [ $SENDDBN = YES ]
     then
     $DBNROOT/bin/dbn_alert MODEL RAP_NAT $job $COMOUT/rap.${cycle}.wrfnatf${fhr}.grib2
     $DBNROOT/bin/dbn_alert MODEL RAP_PRS $job $COMOUT/rap.${cycle}.wrfprsf${fhr}.grib2
+    $DBNROOT/bin/dbn_alert MODEL RAP_MSL $job $COMOUT/rap.${cycle}.wrfmslf${fhr}.grib2
   fi
 
 # use post-DFI analysis file to generate extra analysis for EMC 
@@ -222,9 +223,9 @@ EOF
   err=$?;export err ;err_chk
 
 
-    mv WRFPRS${fhr}.tm00 $COMOUT/rap.${cycle}.wrfprsdf${fhr}.grib2
-    mv WRFNAT${fhr}.tm00 $COMOUT/rap.${cycle}.wrfnatdf${fhr}.grib2
-    mv WRFMSL${fhr}.tm00 $COMOUT/rap.${cycle}.wrfmsldf${fhr}.grib2
+    ${WGRIB2} WRFPRS${fhr}.tm00 -set_radius 1:6370000 -set_grib_type same -grib_out $COMOUT/rap.${cycle}.wrfprsdf${fhr}.grib2
+    ${WGRIB2} WRFNAT${fhr}.tm00 -set_radius 1:6370000 -set_grib_type same -grib_out $COMOUT/rap.${cycle}.wrfnatdf${fhr}.grib2
+    ${WGRIB2} WRFMSL${fhr}.tm00 -set_radius 1:6370000 -set_grib_type same -grib_out $COMOUT/rap.${cycle}.wrfmsldf${fhr}.grib2
 
 fi
 
@@ -333,9 +334,10 @@ do
                    awp130bgrb)  ALERT_TYPE=RAP_NG13_GB2;;
                    awp252bgrb)  ALERT_TYPE=RAP_NG20_GB2;;
                   esac
-
+                 if [ $fil != awp242bgrb ]; then # Do not send out awp242bgrb files
                  $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE} $job $COMOUT/rap.${cycle}.awp${grid}bgrbf${fhr}.grib2
                  $DBNROOT/bin/dbn_alert MODEL ${ALERT_TYPE}_WIDX $job $COMOUT/rap.${cycle}.awp${grid}bgrbf${fhr}.grib2.idx
+                 fi
                fi  # SENDBN
            else
              mv tmpuv_${grid}.grib2 ${COMOUT}/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2
@@ -604,9 +606,6 @@ EOF
   fi
 fi
 done
-
-#Submit the wrfbufr job
-bsub < ${HOMErap}/sms/wrfbufr/jrap_wrfbufr_f${fhr}_${cyc}.bsub
 
 #Now do the AWIPS grid conversion
   $USHrap/rap_mkawp.sh $fhr
