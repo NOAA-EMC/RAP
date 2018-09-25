@@ -153,7 +153,9 @@
        CALL PUTGB2(71,GFLD,IRET)
 
 !      Write 2-m Q to grib2
-       DEC=3.0
+! Change precision of specific humidity
+!      DEC=3.0
+       DEC=6.0
 
        CALL FILL_FLD(GFLD,ITOT,IM,JM,DOWNQ)
        
@@ -211,7 +213,9 @@
        ENDDO
 
 !      Write wind gust to grib2
-       DEC=3.0
+!      DEC=3.0
+! Increase precision for wind gust
+       DEC=-4.0
 
        CALL FILL_FLD(GFLD,ITOT,IM,JM,WGUST)
        
@@ -239,7 +243,9 @@
        CALL PUTGB2(71,GFLD,IRET)
 
 !      Write surface pressure to grib2
-       DEC=3.0
+! Change DEC from 3.0 to 6.0 for more precision
+!      DEC=3.0
+       DEC=6.0
 
        CALL FILL_FLD(GFLD,ITOT,IM,JM,DOWNP)
        
@@ -335,6 +341,7 @@
 !          ENDIF
 !        ENDDO
 !        ENDDO
+!      Initially assume no bitmap
         GFLD%ibmap=255
         DO KK = 1, ITOT
           IF(MOD(KK,IM).EQ.0) THEN
@@ -397,6 +404,7 @@
        CALL PUTGB2(71,GFLD,IRET)
 
 !      Write SLP to grib2
+! Do not need to change precision, it matches the RAP NDFD
        GFLD%ibmap=255
        DEC=-3.0
 
@@ -516,6 +524,10 @@
        GFLD%idrtmpl(2)=DEC
 
        CALL set_scale(gfld,DEC)
+! Additional precision needed for CONUS
+!      gfld%idrtmpl(2)=0
+!      gfld%idrtmpl(3)=-2
+!      gfld%idrtmpl(4)=10
        CALL PUTGB2(71,GFLD,IRET)
 
 
