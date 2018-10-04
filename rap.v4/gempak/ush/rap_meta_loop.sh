@@ -29,7 +29,7 @@ device="nc | ${metaname}"
 PDY2=`echo $PDY | cut -c3-`
 MDL=RAP
 mdl=rap
-COMIN="$COMAWP/${mdl}.${PDY}"
+COMIN="$COMAWP/${mdl}.${PDY}/nawips"
 
 if [ "$envir" = "para" ] ; then
    export m_title="RAPP"
@@ -40,7 +40,8 @@ fi
 gdattim=f000
 
 # DETERMINE CURRENT CYCLE BEING PROCESSED
-latest_rap_datetime=`ls -1tr $COMAWP/rap.${PDY}/rap_*f000 | awk -F"/" '{print $NF}' | tail -1 | cut -c5-14`
+latest_rap_datetime=`ls -1tr $COMAWP/rap.${PDY}/nawips/rap_*f000 | awk -F"/" '{print $NF}' | tail -1 | cut -c5-14`
+#XXW latest_rap_datetime=`ls -1tr $COMIN/rap_*f000 | awk -F"/" '{print $NF}' | tail -1 | cut -c5-14`
 fullddate=`echo ${latest_rap_datetime} | cut -c1-8`
 ddate=`echo ${latest_rap_datetime} | cut -c3-8`
 cycle=`echo ${latest_rap_datetime} | cut -c9-10`
@@ -57,10 +58,12 @@ do
     pddate=`datetime -s ${ddate}/${cycle}00 $cnt "%y%m%d"`
     pcycle=`datetime -s ${ddate}/${cycle}00 $cnt "%H"`
 
-    COMIN="$COMAWP/${mdl}.${pfullddate}"
+    COMIN="$COMAWP/${mdl}.${pfullddate}/nawips"
+    #COMIN="$COMIN"
 
 
-$GEMEXE/gdplot2_nc << EOF
+#$GEMEXE/gdplot2_nc << EOF
+gdplot2_nc << EOF
 GDFILE  = F-RAP | ${pddate}/${pcycle}00
 GDATTIM = ${gdattim}
 DEVICE  = ${device}
@@ -258,7 +261,7 @@ TITLE   = 1/-2/~ ? ${MDL} @ RH, TEMP(BL yel,850 red,700 cyan)|~@ RH,R/S TEMP!0
 list
 run
 
-restore /nwprod/gempak/ush/restore/500mb_hght_absv.2.nts
+restore $USHgempak/restore/500mb_hght_absv.2.nts
 CLRBAR  = 1
 TEXT    = 1/21//hw
 TITLE   = 1/-2/~ ? ${MDL} @ HGT AND VORTICITY|~@ HGHT AND VORTICITY!0
