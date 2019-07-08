@@ -85,10 +85,6 @@ echo "$SCRIPTSrap/exrap_nawips.sh.ecf $RUN $GRIB $DBN_ALERT_TYPE $EXT &> rap.log
 ########################################################
 mkdir -p $DATA/rap20
 
-cp $GEMPAKrap/fix/rap13_g2varswmo2.tbl $DATA/rap20/g2varswmo2.tbl
-cp $GEMPAKrap/fix/rap13_g2varsncep1.tbl $DATA/rap20/g2varsncep1.tbl
-cp $GEMPAKrap/fix/rap13_g2vcrdncep1.tbl $DATA/rap20/g2vcrdncep1.tbl
-
 export EXT=.grib2
 export RUN=rap20
 export GRIB=awp252pgrbf

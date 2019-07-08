@@ -80,6 +80,8 @@ export INPUT_DATA=$DATAROOT/rap_fcst_${envir}_${cyc}
 setpdy.sh
 . PDY
 
+export gespath=${gespath:-$GESROOT/${envir}}
+export RAPGES_FCYC=${RAPGES_FCYC:-$gespath/${NET}/rapges}
 ##############################################
 # Define COM directories
 ##############################################

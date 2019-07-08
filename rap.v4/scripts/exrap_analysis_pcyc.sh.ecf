@@ -64,15 +64,20 @@ if [ ! -r wrf_inout ]; then
       echo " Cycle ${PDY}${cyc}: GSI cold start with wrfout_d01_${time_str}"
 
 ## cycle surface variables
+      targetsize=6789027260
       counter=1
          while [[ $counter -lt 22 ]]; do
          counterhr=$counter
          typeset -Z2 counterhr
          FCYC_TIME=`$NDATE -${counter} $START_TIME`
          if [ -r ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr ]; then
-            echo "cycle surface fields based on ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr"
-            cp ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr ./wrfout_d01_save
-            break
+            filesize=$(stat -c%s ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr)
+            echo $filesize
+            if [ $filesize -eq $targetsize ]; then 
+               echo "cycle surface fields based on ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr"
+               cp ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr ./wrfout_d01_save
+               break
+            fi
          fi
          counter=`expr $counter + 1 `
       done

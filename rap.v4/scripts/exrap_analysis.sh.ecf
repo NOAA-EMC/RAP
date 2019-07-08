@@ -87,12 +87,11 @@ fi
 
 # if the cycle is 09 or 21, we should have the last 1-hr forecast
 #   from the partial cycle available
-
 if [[ ${cyc} -eq '09' || ${cyc} -eq '21' ]]; then
   PCYC_TIME=`$NDATE -1 $START_TIME`
   if [ -r ${RAPGES_PCYC}/rap_${PCYC_TIME}f001 ]; then
     cp ${RAPGES_PCYC}/rap_${PCYC_TIME}f001 ./wrf_inout
-     echo " Cycle ${PDY}${cyc}: GSI started with PCYC guess rap_${PCYC_TIME}f001" 
+    echo " Cycle ${PDY}${cyc}: GSI started with PCYC guess rap_${PCYC_TIME}f001"
   fi
 fi
 
@@ -100,16 +99,27 @@ fi
 #   guess from the full cycle
 
 if [ ! -r wrf_inout ]; then
+    targetsize=6789027260
     counter=1
     while [[ $counter -lt 22 ]]; do
      counterhr=$counter
      typeset -Z2 counterhr
      FCYC_TIME=`$NDATE -${counter} $START_TIME`
      if [ -r ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr ]; then
-      echo " Cycled run using rap_${FCYC_TIME}f0$counterhr"
-      cp ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr ./wrf_inout
-      echo " Cycle ${PDY}${cyc}: GSI background=rap_${FCYC_TIME}f0$counterhr"
-      break
+      filesize=$(stat -c%s ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr)
+      echo $filesize
+      if [ $filesize -eq $targetsize ]; then
+       echo " Cycled run using rap_${FCYC_TIME}f0$counterhr"
+       cp ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr ./wrf_inout
+       echo " Cycle ${PDY}${cyc}: GSI background=rap_${FCYC_TIME}f0$counterhr"
+       break
+      else 
+        export subject="Currupt RAP guess file!"
+        export maillist=${maillist:-'ncep.list.spa-helpdesk@noaa.gov,geoffrey.manikin@noaa.gov,benjamin.blake@noaa.gov'}
+        echo "Filesize of ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr $filesize is not right!">>mailmsg 
+        echo "Will check file from previous cycle." >>mailmsg
+        cat mailmsg |mail.py -s "$subject" $maillist -v
+      fi
      fi
      counter=` expr $counter + 1 `
     done
