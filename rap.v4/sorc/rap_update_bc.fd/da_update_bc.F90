@@ -58,8 +58,9 @@ program da_update_bc
    logical :: keep_snow_wrf, var4d_lbc
    real :: bdyfrq, bdyfrqini
    real :: uvMAX, uvMIN, diff, gradThresh
+   real :: uvTendMAX, uvTendMIN, tTendMAX, tTendMIN, qTendMAX, qTendMIN
    integer :: gradPTs, kk, ii, k2, i2, boxsizehalf, imax, imin, kmax, kmin
-   logical :: llimit
+   logical :: llimit, l_limit_uv, l_limit_t, l_limit_q
    character(len=512) :: wrfvar_output_file ! obsolete. Kept for backward compatibility
    logical :: cycling, low_bdy_only ! obsolete. Kept for backward compatibility
    integer, parameter :: namelist_unit = 7, &
@@ -73,7 +74,10 @@ program da_update_bc
                             debug, update_lateral_bdy, update_low_bdy, update_lsm, &
                             keep_tsk_wrf, keep_snow_wrf, iswater, &
                             wrfvar_output_file, cycling, low_bdy_only, &
-                            uvMAX,uvMIN, gradPTs,gradThresh,boxsizehalf
+                            l_limit_uv,uvTendMAX,uvTendMIN, &
+                            uvMAX,uvMIN, gradPTs,gradThresh,boxsizehalf, &
+                            l_limit_t, tTendMAX, tTendMIN, &
+                            l_limit_q, qTendMAX, qTendMIN
 !
 !**********************************************************************
 !
@@ -105,11 +109,20 @@ if(mype==0) then
    wrfvar_output_file = 'OBSOLETE'
    cycling = .false.
    low_bdy_only = .false.
+   l_limit_uv=.false.
+   l_limit_t=.false.
+   l_limit_q=.false.
    uvMAX=1.0E6
    uvMIN=-1.0E6
    gradPTs =3
    gradThresh=2.5E6
    boxsizehalf=10 !10 grid points for half box side
+   uvTendMAX=400.0
+   uvTendMIN=-400.0
+   tTendMAX=400.0
+   tTendMIN=-400.0
+   qTendMAX=400.0
+   qTendMIN=-400.0
    !---------------------------------------------------------------------
    ! Read namelist
    !---------------------------------------------------------------------
@@ -852,8 +865,9 @@ endif
          ! calculate new tendancy
          allocate(slice(dims(1), dims(2)))
          do l=1,dims(3)
-            !!! find large horizontal gradient (> gradThresh)
-            if (llimit) then
+            !!! find large horizontal gradient (> gradThresh) and modify them
+            !!! before the final computation of tend3d(:,:,:)
+            if (llimit .and. l_limit_uv) then
               slice(:,:)=frst3d(:,:,l)
               do k=1,dims(2)
                  do i=gradPTs+1,dims(1)
@@ -869,10 +883,10 @@ endif
                       do k2=kmin,kmax
                         do i2=imin,imax
                           if (slice(i2,k2) > uvMAX) then
-                            write(unit=stdout, fmt='(a,3i5,2e10.2)') 'tendency capped(i,k,l):', i2,k2,l,slice(i2,k2), uvMAX
+                            write(unit=stdout, fmt='(a,3i5,2e10.2)') 'UV capped(i,k,l):', i2,k2,l,slice(i2,k2), uvMAX
                             slice(i2,k2)=uvMAX
                           else if (slice(i2,k2)<uvMIN) then
-                            write(unit=stdout, fmt='(a,3i5,2e10.2)') 'tendency capped(i,k,l):', i2,k2,l,slice(i2,k2), uvMIN
+                            write(unit=stdout, fmt='(a,3i5,2e10.2)') 'UV bottomed(i,k,l):', i2,k2,l,slice(i2,k2), uvMIN
                             slice(i2,k2)=uvMIN
                           endif
                         enddo
@@ -887,6 +901,39 @@ endif
 !tgs bdyfrqini - time interval between analysis time and second time in wrfbdy_d01
                   tend3d(i,k,l)=(scnd3d(i,k,l)-frst3d(i,k,l))/bdyfrqini
 !tgs tend3d(i,k,l)=(scnd3d(i,k,l)-frst3d(i,k,l))/bdyfrq
+                  !!! cap tendency to avoid model crash
+                  select case(trim(vbt_name))
+                  case ('U_BTXS','U_BTXE','U_BTYS','U_BTYE','V_BTXS','V_BTXE','V_BTYS','V_BTYE');
+                    if (l_limit_uv) then
+                      if (tend3d(i,k,l)>uvTendMAX) then
+                        write(unit=stdout, fmt='(a,3i5,2e10.2)') 'UV tendency capped(i,k,l):', i,k,l,tend3d(i,k,l),uvTendMAX
+                        tend3d(i,k,l)=uvTendMAX
+                      else if (tend3d(i,k,l)<uvTendMIN) then
+                        write(unit=stdout, fmt='(a,3i5,2e10.2)') 'UV tendency bottomed(i,k,l):', i,k,l,tend3d(i,k,l),uvTendMIN
+                        tend3d(i,k,l)=uvTendMIN
+                      end if
+                    end if
+                  case ('T_BTXS','T_BTXE','T_BTYS','T_BTYE');
+                    if (l_limit_t) then
+                      if (tend3d(i,k,l)>tTendMAX) then
+                        write(unit=stdout, fmt='(a,3i5,2e10.2)') 't tendency capped(i,k,l):', i,k,l,tend3d(i,k,l),tTendMAX
+                        tend3d(i,k,l)=tTendMAX
+                      else if (tend3d(i,k,l)<tTendMIN) then
+                        write(unit=stdout, fmt='(a,3i5,2e10.2)') 't tendency bottomed(i,k,l):', i,k,l,tend3d(i,k,l),tTendMIN
+                        tend3d(i,k,l)=tTendMIN
+                      end if
+                    end if
+                  case ('QVAPOR_BTXS','QVAPOR_BTXE','QVAPOR_BTYS','QVAPOR_BTYE');
+                    if (l_limit_q) then
+                      if (tend3d(i,k,l)>qTendMAX) then
+                        write(unit=stdout, fmt='(a,3i5,2e10.5)') 'q tendency capped(i,k,l):', i,k,l,tend3d(i,k,l),qTendMAX
+                        tend3d(i,k,l)=qTendMAX
+                      else if (tend3d(i,k,l)<qTendMIN) then
+                        write(unit=stdout, fmt='(a,3i5,2e10.2)') 'q tendency bottomed(i,k,l):', i,k,l,tend3d(i,k,l),qTendMIN
+                        tend3d(i,k,l)=qTendMIN
+                      end if
+                    end if
+                  end select
                end do
             end do
          end do
