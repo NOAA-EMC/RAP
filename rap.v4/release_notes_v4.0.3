@@ -1,30 +1,66 @@
-﻿Release Notes:  RAP v4.0.3
+﻿Release Notes:  RAP v4.0.1
 
 
-v4.0.3 - released July 12, 2019
-* Crisis fix to RAP update_bc code after FV3GFS implementation
-   * Modified the update bc code to handle the FV3GFS output
-   * New code runs successfully with several cases where the operational RAP failed
+v4.0.1 - released July 5, 2018
+* Changes to RAP smartinit for RTMA/URMA version 2.7 upgrade
+   * Changed the decimal precision of downscaled specific humidity to 6.0
+   * Changed the decimal precision of downscaled surface pressure to 6.0
+   * Changed the decimal precision of wind gust to -4.0
+   * Added field needed for VIIRS land surface temperature data assimilation in RTMA/URMA for Alaska only.
+      * pressure, temperature, mixing ratio, u, v, height at model level 1
+      * pressure, temperature, mixing ratio at model level 2
+      * surface roughness
 
 
 * Repository Details
-   * After cloning the master branch of the EMC_rap git repository using the command below, retrieve the new code from the rap.v4 directory.
-      * git clone https://${USER}@vlab.ncep.noaa.gov/code-review/a/EMC_rap
-      * git clone ssh://${USER}@vlab.ncep.noaa.gov:29418/EMC_rap
-   * The build script is located here: rap.v4/sorc/build_rap_all.sh
-   * To build the code, run build_rap_all.sh and specify which codes you would like compiled within the script ("yes" or "no" switches).
+   * After cloning the rap.v4.0.1 branch of the EMC_rap git repository using the command below, retrieve the new code from the rap.v4 directory.
+      * git clone -b rap.v4.0.1 ssh://${USER}@vlab.ncep.noaa.gov:29418/EMC_rap rap.v4.0.1
+   * The build script is located here: rap.v4.0.1/rap.v4/sorc/build_rap_all.sh
+   * Note that the build scripts have been updated from v4.0.0 to comply with EE2 standards.  To build the code, run build_rap_all.sh and specify which codes you would like compiled within the script ("yes" or "no" switches).
 
 
-* parm and sorc files changed
-   * parm/rap_update_bc_parame.in
-   * sorc/rap_update_bc.fd (retrieve entire directory)
+* parm and sorc files changed or added
+   * parm/rap_neighbor_fields.txt
+   * parm/rap_smartparms
+   * sorc/rap_smartinit_ak.fd/GETGRIB.f90
+   * sorc/rap_smartinit_ak.fd/MAIN.f90
+   * sorc/rap_smartinit_conus.fd/MAIN.f90
+   * sorc/rap_smartinit_hi.fd/MAIN.f90
+   * sorc/rap_smartinit_pr.fd/MAIN.f90
+   * sorc/build_rap_all.sh
+   * sorc/build_rap_full_cycle_surface.sh
+   * sorc/build_rap_gsi.sh
+   * sorc/build_rap_process_cloud.sh
+   * sorc/build_rap_process_enkf.sh
+   * sorc/build_rap_process_imssnow.sh
+   * sorc/build_rap_process_lightning.sh
+   * sorc/build_rap_process_mosaic.sh
+   * sorc/build_rap_process_sst.sh
+   * sorc/build_rap_smartinit_ak.sh
+   * sorc/build_rap_smartinit_conus.sh
+   * sorc/build_rap_smartinit_hi.sh
+   * sorc/build_rap_smartinit_pr.sh
+   * sorc/build_rap_sndp.sh
+   * sorc/build_rap_stnmlist.sh
+   * sorc/build_rap_subflds_g2.sh
+   * sorc/build_rap_update_bc.sh
+   * sorc/build_rap_update_fields.sh
+   * sorc/build_rap_update_gvf.sh
+   * sorc/build_rap_wps.sh
+   * sorc/build_rap_wrfarw_serial.sh
+   * sorc/build_rap_wrfarw.sh
+   * sorc/build_rap_wrfbufr.sh
+   * sorc/build_rap_wrfpost.sh
 
 
 * revised executables
-   * rap_update_bc
+   * rap_smartinit_ak
+   * rap_smartinit_conus
+   * rap_smartinit_hi
+   * rap_smartinit_pr
 
     
 * implementation instructions
-   * Retrieve the new parm and sorc files 
-   * Recompile the update_bc code
+   * Retrieve the new parm and sorc files and recompile all 4 smartinit codes
+   * need to test RTMA/URMA upgrade concurrently
 
