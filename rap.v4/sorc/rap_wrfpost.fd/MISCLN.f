@@ -1354,6 +1354,28 @@
             allocate(GTGFD(IM,JSTA:JEND,NFDCTL))
             call FDLVL_MASS(ITYPEFDLVLCTL,NFDCTL,HTFDCTL,GTG,GTGFD)
 !           print *, "GTG 467 Done GTGFD=",me,GTGFD(IM/2,jend,1:NFDCTL)
+
+            ! RAP GTG has a legend of special defination
+            ! 0 m holds the max value of the whole vertical column
+            DO IFD = 1,NFDCTL
+               if(NINT(HTFDCTL(IFD)) == 0) then
+                  N=IFD
+                  exit
+               endif
+            ENDDO
+            DO IFD = 1,NFDCTL
+               DO J=JSTA,JEND
+               DO I=1,IM
+                  work1=GTGFD(I,J,IFD)
+                  if(GTGFD(I,J,N)>=SPVAL) then
+                     GTGFD(I,J,N)=work1
+                  elseif(work1<SPVAL) then
+                     if(GTGFD(I,J,N)<work1) GTGFD(I,J,N)=work1
+                  endif
+               ENDDO
+               ENDDO
+            ENDDO
+
             DO IFD = 1,NFDCTL
               ID(1:25) = 0
               ISVALUE = NINT(HTFDCTL(IFD))
@@ -1363,7 +1385,7 @@
 !$omp parallel do private(i,j)
                  DO J=JSTA,JEND
                  DO I=1,IM
-                    GRID1(I,J)=GTGFD(I,J,IFD) 
+                    GRID1(I,J)=GTGFD(I,J,IFD)
                  ENDDO
                  ENDDO
                  if(grib=='grib1') then
