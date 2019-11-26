@@ -437,3 +437,36 @@ then
      $DBNROOT/bin/dbn_alert NTC_LOW $NET $job $WMO/grib2.${cycle}.awprap200f${fhr}
   fi
 fi # 200 processing
+
+export PROCGTG=${PROCGTG:-YES};
+if [ $PROCGTG = "YES" ]; then
+#======================================================
+# Apply TOCGRIB2 to GTG 130 when forecast hour is 0 1 2 3 6 9 12 15 18
+#======================================================
+fhrN=$(( 10#$fhr ))
+fhrNs=" 0 1 2 3 6 9 12 15 18 "
+if [[ $fhrNs =~ " $fhrN " ]] ; then
+
+   grib_input=rap.${cycle}.gtg130f${fhr}.grib2
+   nwstg_bull=grib2.gtg.${cycle}.${fhr}
+
+   pgm=tocgrib2
+   . prep_step
+   export FORT11=${grib_input}
+   export FORT31=""
+   export FORT51=${nwstg_bull}
+   startmsg
+   $TOCGRIB2 < $PARMrap/wmo/gtg_grib2.f${fhr} >>$pgmout 2>errfile
+   export err=$?; err_chk
+
+   if [ "$SENDCOM" == 'YES' ]; then
+       cp $nwstg_bull ${WMO}/.
+
+       if [ "$SENDDBN" == 'YES' ]; then
+           ${DBNROOT}/bin/dbn_alert NTC_LOW gtg $job $WMO/$nwstg_bull
+       fi
+   fi
+fi
+else
+  echo "PROCGTG is NO, skip processing GTG ..."
+fi

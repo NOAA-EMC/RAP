@@ -10,8 +10,8 @@ low_bdy_only = .false.
 update_lsm = .false.
 
 l_limit_uv=.true.
-uvTendMAX = 120.0  !m/s/dt
-uvTendMIN = -120.0 !m/s/dt
+uvTendMAX = 80.0  !m/s/dt
+uvTendMIN = -80.0 !m/s/dt
 
 !---the following is to remove sharp horizontal wind gradient
 uvMAX = 0.05e6
@@ -20,11 +20,11 @@ gradPTs=3
 gradThresh=2.0e6
 boxsizehalf=10
 
-l_limit_t=.false.
+l_limit_t=.true.
 tTendMAX = 100  !K/dt
-tTendMIN = -80  !K/dt
+tTendMIN = -100  !K/dt
 
-l_limit_q=.false.
-qTendMAX = 0.045  !kg/kg/dt
+l_limit_q=.true.
+qTendMAX = 0.05  !kg/kg/dt
 qTendMIN = -0.08  !kg/kg/dt
 /

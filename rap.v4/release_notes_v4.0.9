@@ -1,0 +1,37 @@
+elease Notes:  RAP v4.0.10
+
+v4.0.10 - released September 23, 2019
+* Fix to address RAP crashes that have occurred since the GFSv15 implementation, due to larger discrepancies between RAP and GFS solutions along the boundaries
+   * Modified the updatebc code to smooth the differences between RAP and GFS, more robust than previous fix (v4.0.8)
+   * New code runs successfully on cases where the operational RAP failed
+
+
+* Repository Details
+   * After cloning the rap.v4.0.10 branch of the EMC_rap git repository using the command below, retrieve the new code from the rap.v4 directory.
+      * git clone -b rap.v4.0.10 https://${USER}@vlab.ncep.noaa.gov/code-review/a/EMC_rap
+      * git clone -b rap.v4.0.10 ssh://${USER}@vlab.ncep.noaa.gov:29418/EMC_rap
+   * The build script is located here: rap.v4/sorc/build_rap_all.sh
+   * To build the code, run build_rap_all.sh and specify which codes you would like compiled within the script ("yes" or "no" switches).
+
+
+* parm and sorc files changed
+   * parm/rap_update_bc_parame.in
+   * sorc/rap_update_bc.fd/da_update_bc.f90
+   * sorc/rap_update_bc.fd/da_update_bc.F90
+
+
+* revised executables
+   * rap_update_bc
+
+
+* resource changes
+   * no additional resources are needed to run this version, and there is no effect on timing
+
+
+* implementation instructions
+   * Retrieve the new parm and sorc files
+   * Recompile the update_bc code
+   * A single test can be run to confirm the fix; EMC and GSD have done that for the 9/5 17Z crash.  No downstream systems needed to be tested, as the changes will be transparent to them.
+
+
+

@@ -30,9 +30,15 @@ else
    export m_title="RAP"
 fi
 
-gdattim=fall
-gdatpcpn01="F01-FEND-01"
-gdatpcpn03="F03-FEND-03"
+if [ $cyc -eq 03 -o $cyc -eq 09 -o $cyc -eq 15 -o $cyc -eq 21 ]; then
+  gdattim=f01-f21-01
+  gdatpcpn01="F01-F21-01"
+  gdatpcpn03="F03-F21-03"
+else
+  gdattim=fall
+  gdatpcpn01="F01-FEND-01"
+  gdatpcpn03="F03-FEND-03"
+fi
 gdatpcpn06="F06-F12-03"
 gdatpcpn12="F12"
 pcpnflag=
@@ -59,9 +65,10 @@ fi
 
 export pgm=gdplot2_nc;. prep_step; startmsg
 
-$GEMEXE/gdplot2_nc << EOF
+#$GEMEXE/gdplot2_nc << EOF
+gdplot2_nc << EOF
 GDFILE  = F-RAP | ${PDY2}/${cyc}00
-GDATTIM = FALL
+GDATTIM = ${gdattim}
 DEVICE  = ${device}
 PANEL   = 0
 TEXT    = 1/21//hw
@@ -257,7 +264,7 @@ TITLE   = 1/-2/~ ? ${MDL} @ RH, TEMP(BL yel,850 red,700 cyan)|~@ RH,R/S TEMP!0
 list
 run
 
-restore /nwprod/gempak/ush/restore/500mb_hght_absv.2.nts
+restore $USHgempak/restore/500mb_hght_absv.2.nts
 CLRBAR  = 1
 TEXT    = 1/21//hw
 TITLE   = 1/-2/~ ? ${MDL} @ HGT AND VORTICITY|~@ HGHT AND VORTICITY!0
@@ -448,7 +455,7 @@ ls -l rap.meta
 export err=$?;export pgm="GEMPAK CHECK FILE";err_chk
 
 if [ $SENDCOM = "YES" ] ; then
-  mv rap.meta ${COMOUT}/rap_${PDY}_${cyc}
+  cpfs rap.meta ${COMOUT}/rap_${PDY}_${cyc}
   if [ $SENDDBN = "YES" ] ; then
     $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE} $job \
      $COMOUT/rap_${PDY}_${cyc}

@@ -23,7 +23,7 @@
 # directory are included, so if no exclude patterns match that file, it will be
 # transferred.
 
-com/rap/_ENVIR_/rap._PDYm1_/ _REMOTEPATH_/com/rap/_ENVIR_/rap._PDYm1_/
+com/rap/_ENVIR_/rap._PDYm1_/ /scratch1/NCEPDEV/rstprod/com/rap/_ENVIR_/rap._PDYm1_/
 + /rap.t??z.1bamua.tm00.bufr_d
 + /rap.t??z.awp130pgrbf??.grib2
 + /rap.t??z.1bhrs4.tm00.bufr_d
@@ -48,7 +48,7 @@ com/rap/_ENVIR_/rap._PDYm1_/ _REMOTEPATH_/com/rap/_ENVIR_/rap._PDYm1_/
 E
 
 
-com/rap/_ENVIR_/rap._PDY_/ _REMOTEPATH_/com/rap/_ENVIR_/rap._PDY_/
+com/rap/_ENVIR_/rap._PDY_/ /scratch1/NCEPDEV/rstprod/com/rap/_ENVIR_/rap._PDY_/
 + /rap.t??z.1bamua.tm00.bufr_d
 + /rap.t??z.awp130pgrbf??.grib2
 + /rap.t??z.1bhrs4.tm00.bufr_d

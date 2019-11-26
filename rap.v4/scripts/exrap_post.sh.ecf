@@ -627,6 +627,24 @@ EOF
 fi
 done
 
+#======================================================
+# For GTG on MSL, convert to grid 130
+#======================================================
+leveltype=msl
+grid_specs_gtg130="lambert:265:25.000000 233.861999:451:13545.087000 16.281000:337:13545.087000"
+$WGRIB2 $COMOUT/rap.${cycle}.wrf${leveltype}f${fhr}.grib2 \
+        -new_grid_winds earth \
+        -new_grid_interpolation bilinear \
+        -new_grid $grid_specs_gtg130 rap.${cycle}.gtg130f${fhr}.grib2
+if test "$SENDCOM" = 'YES'
+then
+    cp rap.${cycle}.gtg130f${fhr}.grib2 ${COMOUT}/.
+    if [ "$SENDDBN" == 'YES' ]; then
+       ${DBNROOT}/bin/dbn_alert MODEL GTG_GB2 $job $COMOUT/rap.${cycle}.gtg130f${fhr}.grib2
+    fi
+fi
+
+
 #Now do the AWIPS grid conversion
   $USHrap/rap_mkawp.sh $fhr
 #End of AWIPS grid generation

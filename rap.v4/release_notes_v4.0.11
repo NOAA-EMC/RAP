@@ -1,0 +1,33 @@
+﻿Release Notes:  RAP v4.0.9
+
+
+v4.0.9 - released July 22, 2019
+* Changes to RAP for GTG implementation
+
+* Purpose
+   * The GTG processing is being moved entirely inside of the RAP post to fulfill the Phase 1 / Phase 2 transition requirements for the GTG 
+
+
+* Repository Details
+   * After cloning the rap.v4.0.9 branch of the EMC_rap git repository using the command below, retrieve the new code from the rap.v4 directory.
+      * git clone -b rap.v4.0.9 https://${USER}@vlab.ncep.noaa.gov/code-review/a/EMC_rap
+      * git clone -b rap.v4.0.9 ssh://${USER}@vlab.ncep.noaa.gov:29418/EMC_rap
+
+
+* parm, scripts, and ush files changed
+   * parm/rap_postcntrl_anl.xml
+   * parm/rap_postcntrl.xml
+   * parm/rap_postxconfig_anl-NT.txt
+   * parm/rap_postxconfig-NT.txt
+   * scripts/exrap_post.sh.ecf
+   * ush/rap_mkawp.sh
+
+
+* resource changes
+   * no additional resources are needed to run this version, and there is no effect on timing
+    
+* implementation instructions
+   * Retrieve the new parm, scripts, and ush files 
+   * Need to test concurrently with GTG upgrade
+   * We are assuming that 4.0.8 (which is currently pending) will be implemented prior to this version; if that is not the case, we will need to redo the changes
+
