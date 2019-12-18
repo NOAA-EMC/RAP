@@ -5,29 +5,26 @@ cd $BASE
 
 #build switches
 
-export BUILD_rap_wrfarw_serial=yes
-export BUILD_rap_update_bc=yes
-export BUILD_rap_wps=yes
-export BUILD_rap_wrfpost=yes
-export BUILD_rap_wrfarw=yes
-export BUILD_rap_gsi=yes
-export BUILD_rap_process_enkf=yes
-export BUILD_rap_full_cycle_surface=yes
-export BUILD_rap_process_cloud=yes
-export BUILD_rap_process_imssnow=yes
-export BUILD_rap_process_mosaic=yes
-export BUILD_rap_process_sst=yes
-export BUILD_rap_process_lightning=yes
-export BUILD_rap_update_gvf=yes
-export BUILD_rap_update_fields=yes
-export BUILD_rap_sndp=yes
-export BUILD_rap_subflds_g2=yes
-export BUILD_rap_wrfbufr=yes
-export BUILD_rap_stnmlist=yes
-export BUILD_rap_smartinit_conus=yes
-export BUILD_rap_smartinit_ak=yes
-export BUILD_rap_smartinit_hi=yes
-export BUILD_rap_smartinit_pr=yes
+export BUILD_rap_wrfarw_serial=no
+export BUILD_rap_update_bc=no
+export BUILD_rap_wps=no
+export BUILD_rap_wrfpost=no
+export BUILD_rap_wrfarw=no
+export BUILD_rap_gsi=no
+export BUILD_rap_process_enkf=no
+export BUILD_rap_full_cycle_surface=no
+export BUILD_rap_process_cloud=no
+export BUILD_rap_process_imssnow=no
+export BUILD_rap_process_mosaic=no
+export BUILD_rap_process_sst=no
+export BUILD_rap_process_lightning=no
+export BUILD_rap_update_gvf=no
+export BUILD_rap_update_fields=no
+export BUILD_rap_sndp=no
+export BUILD_rap_subflds_g2=no
+export BUILD_rap_wrfbufr=no
+export BUILD_rap_stnmlist=no
+export BUILD_rap_smartinit=yes
 
  . /opt/modules/default/init/ksh
 
@@ -221,37 +218,10 @@ fi
 
 ##############################
 
-if [ $BUILD_rap_smartinit_conus = yes ] ; then
+if [ $BUILD_rap_smartinit = yes ] ; then
 
-echo " .... Building rap_smartinit_conus .... "
-$BASE/build_rap_smartinit_conus.sh > $logs_dir/build_smartinit_conus.log 2>&1
-
-fi
-
-##############################
-
-if [ $BUILD_rap_smartinit_ak = yes ] ; then
-
-echo " .... Building rap_smartinit_ak .... "
-$BASE/build_rap_smartinit_ak.sh > $logs_dir/build_smartinit_ak.log 2>&1
-
-fi
-
-##############################
-
-if [ $BUILD_rap_smartinit_hi = yes ] ; then
-
-echo " .... Building rap_smartinit_hi .... "
-$BASE/build_rap_smartinit_hi.sh > $logs_dir/build_smartinit_hi.log 2>&1
-
-fi
-
-##############################
-
-if [ $BUILD_rap_smartinit_pr = yes ] ; then
-
-echo " .... Building rap_smartinit_pr .... "
-$BASE/build_rap_smartinit_pr.sh > $logs_dir/build_smartinit_pr.log 2>&1
+echo " .... Building rap_smartinit .... "
+$BASE/build_rap_smartinit.sh > $logs_dir/build_smartinit.log 2>&1
 
 fi
 

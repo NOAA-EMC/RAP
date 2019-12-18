@@ -9,6 +9,7 @@
 # Script history log:
 # 2011-10-06  G Manikin  -- new script
 # 2018-01-29  B Blake / C Guastini - RAPv4
+# 2019-10-18  A Gibbs - RAPv5
 
 set -xa
 
@@ -50,16 +51,18 @@ export grid_specs_187="lambert:265:25.000000 233.723448:2345:2539.703000 19.2289
 export grid_specs_198="nps:210.000000:60.000000 181.429000:1649:2976.563000 40.530101:1105:2976.563000"
 # Hawaii
 export grid_specs_196="mercator:20.000000 198.474999:321:2500.000000:206.130999 18.072699:225:2500.000000:23.087799"
-# Puerto Rico
-export grid_specs_194="mercator:20.000000 291.804687:177:2500.000000:296.027600 16.828685:129:2500.000000:19.747399"
+# Puerto Rico Original 2.5 km grid
+#export grid_specs_194="mercator:20.000000 291.804687:177:2500.000000:296.027600 16.828685:129:2500.000000:19.747399"
+# Puerto Rico New 1.25 km grid
+export grid_specs_194="mercator:20.000000 291.804700:353:1250.000000:296.015500 16.828700:257:1250.000000:19.736200"
 
 # Remove temporary files
     rm -f tmp_${grid}.inv tmp1_${grid}.grib2 tmpuv1_${grid}.grib2 tmp_${grid}.grib2 tmpuv_${grid}.grib2
 
 # Create subset of fields to be posted
-    ${WGRIB2} -inv tmp1_${grid}.inv ${COMOUT}/rap.${cycle}.wrfnatf${fhr}.grib2 
+    ${WGRIB2} -inv tmp1_${grid}.inv ${COMIN}/rap.${cycle}.wrfnatf${fhr}.grib2 
 
-    grep < tmp1_${grid}.inv "`cat ${PARMrap}/rap_smartparms`" | ${WGRIB2} -i ${COMOUT}/rap.${cycle}.wrfnatf${fhr}.grib2 -grib tmp1_${grid}.grib2 
+    grep < tmp1_${grid}.inv "`cat ${PARMrap}/rap_smartparms`" | ${WGRIB2} -i ${COMIN}/rap.${cycle}.wrfnatf${fhr}.grib2 -grib tmp1_${grid}.grib2 
 
 # Merge vector field records in subset
     ${WGRIB2} tmp1_${grid}.grib2 -new_grid_vectors "`cat ${PARMrap}/rap_vector_fields.txt`" -submsg_uv tmpuv1_${grid}.grib2
@@ -89,7 +92,7 @@ mv rap.NDFD${grid}${fhr} rap.NDFD${ndfdstring}f${fhr}
 
 $GRB2INDEX rap.NDFD${ndfdstring}f${fhr} rap.NDFD${ndfdstring}f${fhr}I
 
-export pgm=rap_smartinit_${domain}
+export pgm=rap_smartinit
 . prep_step
 
 ln -sf rap.NDFD${ndfdstring}f${fhr}     fort.11
@@ -101,11 +104,15 @@ ln -sf LANDNDFD${ndfdstring}I           fort.49
 ln -sf RAP${ndfdstring}${fhr}           fort.70
 ln -sf RAP${ndfdstring}${fhr}.grib2     fort.71
 
-cp ${EXECrap}/rap_smartinit_${domain} .
-runline="aprun rap_smartinit_${domain}"
-rap_smartinit_${domain} <<EOF >> smartinit${domain}.out${fhr}
+cp ${EXECrap}/rap_smartinit .
+runline="aprun rap_smartinit"
+rap_smartinit <<EOF >> smartinit${domain}.out${fhr}
+RAP
+$ndfdstring
+GRIB2
 $fhr
 $cyc
 EOF
+
 export err=$?; err_chk
 cp RAP${ndfdstring}${fhr}.grib2 $COMOUT/rap.t${cyc}z.smartrap${domain}f${fhr}.grib2
