@@ -1,0 +1,52 @@
+Release Notes:  RAP v4.0.14
+
+v4.0.14 - released December 18, 2019
+* Changes to RAP smartinit for RTMA/URMA version 2.8 upgrade
+   * Consolidated the RAP codes for all grids into one source code
+   * Added fields needed for use in the stability calculation for 10-m wind observations, for radiance data assimilation in RTMA and lapse-rate adjustment for 2-m temperature:
+      * skin temperature, surface roughness, model surface pressure
+      * pressure, temperature, mixing ratio, u, v, height at model level 1
+      * pressure, temperature, and mixing ratio at model level 2
+   * Added new temperature downscaling (that is used in the HRRR Smartinit) to the RAP Smartinit
+   * Use land cover instead of vegetation type for coastal adjustment.  This only applies to CONUS, Hawaii, and Puerto Rico, since Alaska is already using land cover for the coastal adjustment.
+   * Puerto Rico grid was changed from 2.5 km to 1.25 km. 
+
+
+* Repository Details
+   * After cloning the rap.v4.0.14 tag of the EMC_rap git repository using the command below, retrieve the new code from the rap.v4 directory.
+      * git clone -b rap.v4.0.14 https://${USER}@vlab.ncep.noaa.gov/code-review/a/EMC_rap
+      * git clone -b rap.v4.0.14 ssh://${USER}@vlab.ncep.noaa.gov:29418/EMC_rap
+
+
+* sorc/ush files changed
+   * sorc/build_rap_all.sh
+   * sorc/build_rap_smartinit.sh
+   * sorc/rap_smartinit.fd
+   * ush/rap_smartinit.sh
+
+* fix files changed
+   * fix/rap_smarttopopr.grib2
+   * fix/rap_smartmaskpr.grib2
+
+* sorc files deleted
+   * build_rap_smartinit_ak.sh
+   * build_rap_smartinit_conus.sh
+   * build_rap_smartinit_hi.sh
+   * build_rap_smartinit_pr.sh
+   * rap_smartinit_ak.fd/
+   * rap_smartinit_conus.fd/
+   * rap_smartinit_hi.fd/
+   * rap_smartinit_pr.fd/
+
+
+* resource changes
+   * Disk usage has increased by ~3 GB total/day.  RAP smartinit has increased from ~7 GB/day to ~10 GB/day.
+   * There is no effect on timing
+
+
+* implementation instructions
+   * Retrieve the new fix files from the following location on Surge (not a best practice to store fix files in repo):
+      * /gpfs/hps3/emc/meso/save/Benjamin.Blake/nwprod/rap.v4.0.14/fix
+   * Retrieve the updated sorc directory, build scripts, and ush script, and re-build the smartinit code.  There will be one executable, rap_smartinit, instead of 4 executables, one for each domain.
+
+
