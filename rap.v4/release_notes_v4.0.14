@@ -1,12 +1,15 @@
 Release Notes:  RAP v4.0.14
 
-v4.0.14 - released December 18, 2019
+v4.0.14 - released December 19, 2019
 * Changes to RAP smartinit for RTMA/URMA version 2.8 upgrade
    * Consolidated the RAP codes for all grids into one source code
-   * Added fields needed for use in the stability calculation for 10-m wind observations, for radiance data assimilation in RTMA and lapse-rate adjustment for 2-m temperature:
-      * skin temperature, surface roughness, model surface pressure
+   * Added fields needed for use in the stability calculation for 10-m wind observations, for radiance data assimilation in RTMA and lapse-rate adjustment for 2-m temperature for both grids:
+      * skin temperature, lapse rate, model surface pressure
+     and added the following for CONUS (already written out for Alaska):
+      * surface roughness
       * pressure, temperature, mixing ratio, u, v, height at model level 1
       * pressure, temperature, and mixing ratio at model level 2
+
    * Added new temperature downscaling (that is used in the HRRR Smartinit) to the RAP Smartinit
    * Use land cover instead of vegetation type for coastal adjustment.  This only applies to CONUS, Hawaii, and Puerto Rico, since Alaska is already using land cover for the coastal adjustment.
    * Puerto Rico grid was changed from 2.5 km to 1.25 km. 
@@ -48,5 +51,4 @@ v4.0.14 - released December 18, 2019
    * Retrieve the new fix files from the following location on Surge (not a best practice to store fix files in repo):
       * /gpfs/hps3/emc/meso/save/Benjamin.Blake/nwprod/rap.v4.0.14/fix
    * Retrieve the updated sorc directory, build scripts, and ush script, and re-build the smartinit code.  There will be one executable, rap_smartinit, instead of 4 executables, one for each domain.
-
 
