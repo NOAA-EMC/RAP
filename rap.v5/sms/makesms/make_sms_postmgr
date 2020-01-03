@@ -1,0 +1,16 @@
+#!/bin/sh 
+#
+
+. /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/versions/rap.ver
+#cp /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.${model_ver}/sms_hps3/jrap_postmgr_XX.bsub .
+cp ../jrap_postmgr_XX.bsub .
+cycles="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
+for cyc in $cycles; do
+ cp jrap_postmgr_XX.bsub jrap_postmgr_${cyc}.bsub
+ vi jrap_postmgr_${cyc}.bsub << EOF 
+   :1,\$ s/XX/${cyc}
+   :wq
+EOF
+#mv jrap_postmgr_${cyc}.bsub /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.${model_ver}/sms_hps3/.
+done
+exit

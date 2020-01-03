@@ -1,6 +1,0 @@
-rap.v3.0.12 - released 8/24/2017
-  Remove level3 and level2.5 radar radial wind from GSI namelist.
- 
-parm file changed:
-  /nwprod2/rap.v3.0.12/parm/rap_gsiparm.anl.sh
- 

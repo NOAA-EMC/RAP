@@ -1,6 +1,0 @@
-rap.v3.0.12 - released 9/5/2017
-  Bug fix to prevent soil temperature cooling to much to crash model
- 
-Source code changed:
-  /nwprod2/rap.v3.0.13/sorc/rap_full_cycle_surface.fd/update_netcdf_mass.f90
- 

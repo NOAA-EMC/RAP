@@ -1,0 +1,6 @@
+export rap_ver=v5.0.0
+export model_ver=v5.0.0
+export crtm_ver_analysis=v2.3.0
+export crtm_ver_post=v2.0.6
+export prod_util_ver=v1.0.25
+export grib_util_ver=v1.0.5

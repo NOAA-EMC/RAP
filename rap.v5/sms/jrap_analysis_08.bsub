@@ -1,0 +1,58 @@
+##!/bin/ksh --login
+#
+#BSUB -oo /gpfs/hps3/ptmp/Ming.Hu/outputrap/rap_analysis.out08z
+#BSUB -eo /gpfs/hps3/ptmp/Ming.Hu/outputrap/rap_analysis.out08z
+#BSUB -J rap_anl_08
+#BSUB -W 01:00
+#BSUB -q "devonprod"
+#BSUB -P RAP-T2O
+#BSUB -M 1800
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 192*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=1800]
+#BSUB -x
+#BSUB -a poe
+#
+
+##########################################################################
+# Purpose: to run the analysis for the Rapid Refresh Model
+##########################################################################
+
+# EXPORT list here
+
+set -x
+module load prod_util
+#module load prod_envir
+
+module list
+
+export MP_MPILIB=mpich2
+export KMP_AFFINITY=disabled
+export MP_TASK_AFFINITY=core:1
+export OMP_NUM_THREADS=2
+#export FORT_BUFFERED=true     # buffer all fortran in/out streams
+module loadcraype-hugepages32M   # set hugepages at runtime
+export OMP_STACKSIZE=300M  # should be enough
+
+export numprocs=96
+export NTASK=96
+export PTILE=24
+
+export envir=prod
+export RUN_ENVIR=prod
+export cyc=08
+export cycle=t08z
+export job=rap_analysis_08
+export group_name=meso
+
+SMSNAME=%SMSNAME% export SMSNAME
+SMSNODE=%SMSNODE% export SMSNODE
+SMSPASS=%SMSPASS% export SMSPASS
+SMS_PROG=%SMS_PROG% export SMS_PROG
+
+SMSBIN=/meso/save/Ming.Hu/sms/bin export SMSBIN
+
+# CALL executable job script here
+. /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/versions/rap.ver
+/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.${rap_ver}/jobs/JRAP_ANALYSIS 
+# next step is to update the boundary conditions
+bsub < /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.${rap_ver}/sms/jrap_updatebc_08.bsub
+#bsub < /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.${rap_ver}/sms/jrap_smokeprep_08.bsub

@@ -1,0 +1,22 @@
+#! /bin/ksh
+#
+#BSUB -W 0:30 # wall clock time of 5 mins
+#BSUB -oo /gpfs/hps3/ptmp/Ming.Hu/outputrap/mirrorrapsmart.out # stdout
+#BSUB -eo /gpfs/hps3/ptmp/Ming.Hu/outputrap/mirrorrapsmart.out # stderr
+#BSUB -R rusage[mem=1000] # memory req in MB
+#BSUB -J rapcopysmart.ftp # job name
+#BSUB -q "dev_transfer" #Serial job queue
+#BSUB -P RAP-T2O # Project code
+
+set -x
+
+ssh Ming.Hu@surge "mkdir -p /gpfs/hps3/ptmp/Ming.Hu/com/rap/prod/rap.'$PDY'"
+if [ $cyc -eq 02 ]; then
+  ssh Ming.Hu@surge "rm -r /gpfs/hps3/ptmp/Ming.Hu/com/rap/prod/rap.'$PDYm4'"
+fi
+
+/usr/bin/scp ${COMOUT}/rap.${cycle}.smart* Ming.Hu@surge:/gpfs/hps3/ptmp/Ming.Hu/com/rap/prod/rap.${PDY}
+/usr/bin/scp ${COMOUT}/rap.${cycle}.wrfnat* Ming.Hu@surge:/gpfs/hps3/ptmp/Ming.Hu/com/rap/prod/rap.${PDY}
+
+exit
+
