@@ -468,6 +468,8 @@ CSNOW:surface
 CICEP:surface
 CFRZR:surface
 CRAIN:surface
+FRZR:surface
+FRZR:surface
 WEASD:surface
 PRES:0C isotherm
 HGT:0C isotherm

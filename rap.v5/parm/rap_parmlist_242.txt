@@ -576,6 +576,7 @@ APCP:surface
 FROZR:surface
 FROZR:surface
 FRZR:surface
+FRZR:surface
 SBT123:top of atmosphere
 SBT124:top of atmosphere
 SBT113:top of atmosphere

@@ -760,6 +760,8 @@ APCP:surface
 APCP:surface
 FROZR:surface
 FROZR:surface
+FRZR:surface
+FRZR:surface
 PRES:surface
 PWAT:entire atmosphere (considered as a single layer)
 PRES:tropopause
