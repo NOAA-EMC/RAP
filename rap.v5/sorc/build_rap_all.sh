@@ -7,8 +7,6 @@ cd $BASE
 
 #build switches
 
-export BUILD_rap_cal_bcpert=yes
-export BUILD_rap_cal_ensemblemean=yes
 export BUILD_rap_wrfarw_serial=yes
 export BUILD_rap_wps=yes
 export BUILD_rap_update_bc=yes
@@ -16,11 +14,8 @@ export BUILD_rap_wrfpost=yes
 export BUILD_rap_wrfarw=no
 export BUILD_rap_gsi=yes
 export BUILD_rap_prep_smoke=yes
-export BUILD_rap_write_idate=yes
 
 export BUILD_rap_full_cycle_surface=yes
-export BUILD_rap_full_cycle_surface_enkf=yes
-export BUILD_rap_process_fvcom=yes
 export BUILD_rap_process_cloud=yes
 export BUILD_rap_process_imssnow=yes
 export BUILD_rap_process_mosaic=yes
@@ -51,42 +46,6 @@ mkdir $BASE/logs
 export logs_dir=$BASE/logs
 
 sleep 1
-
-##############################
-
-if [ $BUILD_rap_cal_bcpert = yes ] ; then
-
-echo " .... Building rap_cal_bcpert .... "
-$BASE/build_rap_cal_bcpert.sh > $logs_dir/build_rap_cal_bcpert.log 2>&1
-
-fi
-
-##############################
-
-if [ $BUILD_rap_cal_ensemblemean = yes ] ; then
-
-echo " .... Building rap_cal_ensemblemean .... "
-$BASE/build_rap_cal_ensemblemean.sh > $logs_dir/build_rap_cal_ensemblemean.log 2>&1
-
-fi
-
-##############################
-
-if [ $BUILD_rap_process_fvcom = yes ] ; then
-
-echo " .... Building rap_process_fvcom .... "
-$BASE/build_rap_process_fvcom.sh > $logs_dir/build_rap_process_fvcom.log 2>&1
-
-fi
-
-##############################
-
-if [ $BUILD_rap_write_idate = yes ] ; then
-
-echo " .... Building rap_write_idate .... "
-$BASE/build_rap_write_idate.sh > $logs_dir/build_rap_write_idate.log 2>&1
-
-fi
 
 ##############################
 
@@ -150,15 +109,6 @@ if [ $BUILD_rap_gsi = yes ] ; then
 echo " .... Building rap_gsi .... "
 
 $BASE/build_rap_gsi.sh > $logs_dir/build_rap_gsi.log 2>&1
-
-fi
-
-##############################
-
-if [ $BUILD_rap_full_cycle_surface_enkf = yes ] ; then
-
-echo " .... Building rap_full_cycle_surface_enkf .... "
-$BASE/build_rap_full_cycle_surface_enkf.sh > $logs_dir/build_full_cycle_surface_enkf.log 2>&1
 
 fi
 

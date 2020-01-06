@@ -1,0 +1,1113 @@
+The target system is: CrayLinuxEnvironment -  - 
+The host system is: Linux - 3.0.101-0.47.106.59.1.17833.1.PTF-default - x86_64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: /opt/cray/craype/2.3.0/bin/cc 
+Build flags: 
+Id flags: 
+
+The output was:
+0
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
+
+The C compiler identification is Intel, found in "/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/3.6.2/CompilerIdC/a.out"
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler: /opt/cray/craype/2.3.0/bin/CC 
+Build flags: 
+Id flags: 
+
+The output was:
+0
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
+
+The CXX compiler identification is Intel, found in "/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/3.6.2/CompilerIdCXX/a.out"
+
+Determining if the C compiler works passed with the following output:
+Change Dir: /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_a07b6/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_a07b6.dir/build.make CMakeFiles/cmTC_a07b6.dir/build
+gmake[1]: Entering directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_a07b6.dir/testCCompiler.c.o
+/opt/cray/craype/2.3.0/bin/cc     -o CMakeFiles/cmTC_a07b6.dir/testCCompiler.c.o   -c /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp/testCCompiler.c
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+Linking C executable cmTC_a07b6
+/gpfs/hps2/usrx/local/dev/cmake/3.6.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a07b6.dir/link.txt --verbose=1
+/opt/cray/craype/2.3.0/bin/cc       CMakeFiles/cmTC_a07b6.dir/testCCompiler.c.o  -o cmTC_a07b6 -dynamic 
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+gmake[1]: Leaving directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_2b928/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_2b928.dir/build.make CMakeFiles/cmTC_2b928.dir/build
+gmake[1]: Entering directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_2b928.dir/CMakeCCompilerABI.c.o
+/opt/cray/craype/2.3.0/bin/cc     -o CMakeFiles/cmTC_2b928.dir/CMakeCCompilerABI.c.o   -c /gpfs/hps2/usrx/local/dev/cmake/3.6.2/share/cmake-3.6/Modules/CMakeCCompilerABI.c
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+Linking C executable cmTC_2b928
+/gpfs/hps2/usrx/local/dev/cmake/3.6.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2b928.dir/link.txt --verbose=1
+/opt/cray/craype/2.3.0/bin/cc      -v CMakeFiles/cmTC_2b928.dir/CMakeCCompilerABI.c.o  -o cmTC_2b928 -dynamic  
+icc version 15.0.3 (gcc version 4.3.0 compatibility)
+/opt/intel/composer_xe_2015.3.187/bin/intel64/mcpcom    -mP1OPT_version=15.0-intel64 -mGLOB_diag_file=CMakeFiles/cmTC_2b928.dir/CMakeCCompilerABI.c.diag -mP1OPT_print_version=FALSE -mCG_use_gas_got_workaround=F -mP2OPT_align_option_used=TRUE -mGLOB_gcc_version=430 "-mGLOB_options_string=-I/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/include -I/opt/cray/libsci/13.0.3/INTEL/140/x86_64/include -I/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/include -I/opt/cray/alps/5.2.4-2.0502.9774.31.11.ari/include -I/opt/cray/xpmem/0.1-2.0502.64982.5.3.ari/include -I/opt/cray/gni-headers/4.0-1.0502.10859.7.8.ari/include -I/opt/cray/pmi/5.0.6-1.0000.10439.140.2.ari/include -I/opt/cray/ugni/6.0-1.0502.10863.8.29.ari/include -I/opt/cray/udreg/2.3.2-1.0502.10518.2.17.ari/include -I/opt/cray/wlm_detect/1.0-1.0502.64649.2.1.ari/include -I/opt/cray/krca/1.0.0-2.0502.67049.8.22.ari/include -I/opt/cray-hss-devel/7.2.0/include -msse3 -D__CRAYXC -D__CRAY_X86_64 -D__CRAYXT_COMPUTE_LINUX_TARGET -v -o cmTC_2b928 -Wl,-rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -lintlc -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib -L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64 -L/opt/cray/atp/1.8.1/libApp -Wl,-Ttext-segment=0x20000000,-zmax-page-size=0x20000000 -Wl,--whole-archive,-lhugetlbfs,--no-whole-archive -Wl,--as-needed,-lmpich_intel,--no-as-needed -lAtpSigHandler -lAtpSigHCommData -Wl,--undefined=_ATP_Data_Globals -Wl,--undefined=__atpHandlerInstall -lrca -Wl,--as-needed,-lsci_intel_mpi,--no-as-needed -Wl,--as-needed,-lsci_intel,--no-as-needed -Wl,--as-needed,-limf,--no-as-needed -Wl,--as-needed,-lm,--no-as-needed -Wl,--as-needed,-lifcore,--no-as-needed -Wl,--as-needed,-lifport,--no-as-needed -Wl,--as-needed,-lpthread,--no-as-needed" -mGLOB_cxx_limited_range=FALSE -mCG_extend_parms=FALSE -mGLOB_compiler_bin_directory=/opt/intel/composer_xe_2015.3.187/bin/intel64 -mGLOB_as_output_backup_file_name=/tmp/iccoZok86as_.s -mIPOPT_activate -mGLOB_em64t -mGLOB_product_id_code=0x22006d91 -mGLOB_extended_instructions=0x20 -mP3OPT_use_mspp_call_convention -mP2OPT_subs_out_of_bound=FALSE -mP2OPT_disam_type_based_disam=2 -mP2OPT_disam_assume_ansi_c -mP2OPT_checked_disam_ansi_alias=TRUE -mGLOB_ansi_alias -mPGOPTI_value_profile_use=T -mGLOB_opt_report_use_source_name -mP2OPT_il0_array_sections=TRUE -mGLOB_offload_mode=1 -mP2OPT_offload_unique_var_string=icc0101786490545eo95Rr -mP2OPT_hlo -mP2OPT_hpo_rtt_control=0 -mIPOPT_args_in_regs=0 -mP2OPT_disam_assume_nonstd_intent_in=FALSE -mGLOB_imf_mapping_library=/opt/intel/composer_xe_2015.3.187/bin/intel64/libiml_attr.so -mPGOPTI_gen_threadsafe_level=0 -mIPOPT_link -mIPOPT_ipo_activate -mIPOPT_mo_activate -mIPOPT_source_files_list=/tmp/iccslisMVufVC -mIPOPT_mo_global_data -mIPOPT_link_script_file=/tmp/iccscriptlmNHE7 "-mIPOPT_cmdline_link="/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crt1.o" "/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crti.o" "/usr/lib64/gcc/x86_64-suse-linux/4.3/crtbegin.o" "--eh-frame-hdr" "--build-id" "-dynamic-linker" "/lib64/ld-linux-x86-64.so.2" "-m" "elf_x86_64" "-L/opt/cray/dmapp/default/lib64" "-L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib" "-L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib" "-L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64" "-L/opt/cray/atp/1.8.1/libApp" "-o" "cmTC_2b928" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/" "-L/lib/../lib64" "-L/lib/../lib64/" "-L/usr/lib/../lib64" "-L/usr/lib/../lib64/" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../" "-L/lib64" "-L/lib/" "-L/usr/lib64" "-L/usr/lib" "CMakeFiles/cmTC_2b928.dir/CMakeCCompilerABI.c.o" "-rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-lintlc" "-Ttext-segment=0x20000000" "-zmax-page-size=0x20000000" "--whole-archive" "-lhugetlbfs" "--no-whole-archive" "--as-needed" "-lmpich_intel" "--no-as-needed" "-lAtpSigHandler" "-lAtpSigHCommData" "--undefined=_ATP_Data_Globals" "--undefined=__atpHandlerInstall" "-lrca" "--as-needed" "-lsci_intel_mpi" "--no-as-needed" "--as-needed" "-lsci_intel" "--no-as-needed" "--as-needed" "-limf" "--no-as-needed" "--as-needed" "-lm" "--no-as-needed" "--as-needed" "-lifcore" "--no-as-needed" "--as-needed" "-lifport" "--no-as-needed" "--as-needed" "-lpthread" "--no-as-needed" "-Bdynamic" "-Bstatic" "-limf" "-lsvml" "-lirng" "-Bdynamic" "-lm" "-Bstatic" "-lipgo" "-ldecimal" "--as-needed" "-Bdynamic" "-lcilkrts" "-lstdc++" "--no-as-needed" "-lgcc" "-lgcc_s" "-Bstatic" "-lirc" "-lsvml" "-Bdynamic" "-lc" "-lgcc" "-lgcc_s" "-Bstatic" "-lirc_s" "-Bdynamic" "-ldl" "-lc" "/usr/lib64/gcc/x86_64-suse-linux/4.3/crtend.o" "/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crtn.o"" -mIPOPT_il_in_obj -mIPOPT_ipo_activate_warn=FALSE -mIPOPT_obj_output_file_name=/tmp/ipo_iccSUKxwE.o -mIPOPT_whole_archive_fixup_file_name=/tmp/iccwarch2QySS4 -mGLOB_linker_version=2.23.1 -mGLOB_long_size_64 -mGLOB_routine_pointer_size_64 -mGLOB_driver_tempfile_name=/tmp/icctempfileso8HGz -mP3OPT_asm_target=P3OPT_ASM_TARGET_GAS -mGLOB_async_unwind_tables=TRUE -mGLOB_obj_output_file=/tmp/ipo_iccSUKxwE.o -mGLOB_source_dialect=GLOB_SOURCE_DIALECT_NONE -mP1OPT_source_file_name=ipo_out.c CMakeFiles/cmTC_2b928.dir/CMakeCCompilerABI.c.o -mIPOPT_object_files=T -mIPOPT_assembly_files=/tmp/iccalismcYqZD -mIPOPT_generated_tempfiles=/tmp/iccelisilKSI8 -mIPOPT_embedded_object_base_name=/tmp/icceobjwSXksD -mIPOPT_cmdline_link_new_name=/tmp/iccllisg91Mb8
+ld    /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crt1.o /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crti.o /usr/lib64/gcc/x86_64-suse-linux/4.3/crtbegin.o --eh-frame-hdr --build-id -dynamic-linker /lib64/ld-linux-x86-64.so.2 -m elf_x86_64 -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib -L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64 -L/opt/cray/atp/1.8.1/libApp -o cmTC_2b928 -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1 -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/usr/lib64/gcc/x86_64-suse-linux/4.3/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64 -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/ -L/lib/../lib64 -L/lib/../lib64/ -L/usr/lib/../lib64 -L/usr/lib/../lib64/ -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../ -L/lib64 -L/lib/ -L/usr/lib64 -L/usr/lib CMakeFiles/cmTC_2b928.dir/CMakeCCompilerABI.c.o -rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -lintlc -Ttext-segment=0x20000000 -zmax-page-size=0x20000000 --whole-archive -lhugetlbfs --no-whole-archive --as-needed -lmpich_intel --no-as-needed -lAtpSigHandler -lAtpSigHCommData --undefined=_ATP_Data_Globals --undefined=__atpHandlerInstall -lrca --as-needed -lsci_intel_mpi --no-as-needed --as-needed -lsci_intel --no-as-needed --as-needed -limf --no-as-needed --as-needed -lm --no-as-needed --as-needed -lifcore --no-as-needed --as-needed -lifport --no-as-needed --as-needed -lpthread --no-as-needed -Bdynamic -Bstatic -limf -lsvml -lirng -Bdynamic -lm -Bstatic -lipgo -ldecimal --as-needed -Bdynamic -lcilkrts -lstdc++ --no-as-needed -lgcc -lgcc_s -Bstatic -lirc -lsvml -Bdynamic -lc -lgcc -lgcc_s -Bstatic -lirc_s -Bdynamic -ldl -lc /usr/lib64/gcc/x86_64-suse-linux/4.3/crtend.o /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crtn.o
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+gmake[1]: Leaving directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+
+
+Parsed C implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command:"/usr/bin/gmake" "cmTC_2b928/fast"]
+  ignore line: [/usr/bin/gmake -f CMakeFiles/cmTC_2b928.dir/build.make CMakeFiles/cmTC_2b928.dir/build]
+  ignore line: [gmake[1]: Entering directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp']
+  ignore line: [Building C object CMakeFiles/cmTC_2b928.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/opt/cray/craype/2.3.0/bin/cc     -o CMakeFiles/cmTC_2b928.dir/CMakeCCompilerABI.c.o   -c /gpfs/hps2/usrx/local/dev/cmake/3.6.2/share/cmake-3.6/Modules/CMakeCCompilerABI.c]
+  ignore line: [No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.]
+  ignore line: [Load a valid targeting module or set CRAY_CPU_TARGET]
+  ignore line: [Linking C executable cmTC_2b928]
+  ignore line: [/gpfs/hps2/usrx/local/dev/cmake/3.6.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2b928.dir/link.txt --verbose=1]
+  ignore line: [/opt/cray/craype/2.3.0/bin/cc      -v CMakeFiles/cmTC_2b928.dir/CMakeCCompilerABI.c.o  -o cmTC_2b928 -dynamic  ]
+  ignore line: [icc version 15.0.3 (gcc version 4.3.0 compatibility)]
+  ignore line: [/opt/intel/composer_xe_2015.3.187/bin/intel64/mcpcom    -mP1OPT_version=15.0-intel64 -mGLOB_diag_file=CMakeFiles/cmTC_2b928.dir/CMakeCCompilerABI.c.diag -mP1OPT_print_version=FALSE -mCG_use_gas_got_workaround=F -mP2OPT_align_option_used=TRUE -mGLOB_gcc_version=430 "-mGLOB_options_string=-I/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/include -I/opt/cray/libsci/13.0.3/INTEL/140/x86_64/include -I/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/include -I/opt/cray/alps/5.2.4-2.0502.9774.31.11.ari/include -I/opt/cray/xpmem/0.1-2.0502.64982.5.3.ari/include -I/opt/cray/gni-headers/4.0-1.0502.10859.7.8.ari/include -I/opt/cray/pmi/5.0.6-1.0000.10439.140.2.ari/include -I/opt/cray/ugni/6.0-1.0502.10863.8.29.ari/include -I/opt/cray/udreg/2.3.2-1.0502.10518.2.17.ari/include -I/opt/cray/wlm_detect/1.0-1.0502.64649.2.1.ari/include -I/opt/cray/krca/1.0.0-2.0502.67049.8.22.ari/include -I/opt/cray-hss-devel/7.2.0/include -msse3 -D__CRAYXC -D__CRAY_X86_64 -D__CRAYXT_COMPUTE_LINUX_TARGET -v -o cmTC_2b928 -Wl,-rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -lintlc -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib -L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64 -L/opt/cray/atp/1.8.1/libApp -Wl,-Ttext-segment=0x20000000,-zmax-page-size=0x20000000 -Wl,--whole-archive,-lhugetlbfs,--no-whole-archive -Wl,--as-needed,-lmpich_intel,--no-as-needed -lAtpSigHandler -lAtpSigHCommData -Wl,--undefined=_ATP_Data_Globals -Wl,--undefined=__atpHandlerInstall -lrca -Wl,--as-needed,-lsci_intel_mpi,--no-as-needed -Wl,--as-needed,-lsci_intel,--no-as-needed -Wl,--as-needed,-limf,--no-as-needed -Wl,--as-needed,-lm,--no-as-needed -Wl,--as-needed,-lifcore,--no-as-needed -Wl,--as-needed,-lifport,--no-as-needed -Wl,--as-needed,-lpthread,--no-as-needed" -mGLOB_cxx_limited_range=FALSE -mCG_extend_parms=FALSE -mGLOB_compiler_bin_directory=/opt/intel/composer_xe_2015.3.187/bin/intel64 -mGLOB_as_output_backup_file_name=/tmp/iccoZok86as_.s -mIPOPT_activate -mGLOB_em64t -mGLOB_product_id_code=0x22006d91 -mGLOB_extended_instructions=0x20 -mP3OPT_use_mspp_call_convention -mP2OPT_subs_out_of_bound=FALSE -mP2OPT_disam_type_based_disam=2 -mP2OPT_disam_assume_ansi_c -mP2OPT_checked_disam_ansi_alias=TRUE -mGLOB_ansi_alias -mPGOPTI_value_profile_use=T -mGLOB_opt_report_use_source_name -mP2OPT_il0_array_sections=TRUE -mGLOB_offload_mode=1 -mP2OPT_offload_unique_var_string=icc0101786490545eo95Rr -mP2OPT_hlo -mP2OPT_hpo_rtt_control=0 -mIPOPT_args_in_regs=0 -mP2OPT_disam_assume_nonstd_intent_in=FALSE -mGLOB_imf_mapping_library=/opt/intel/composer_xe_2015.3.187/bin/intel64/libiml_attr.so -mPGOPTI_gen_threadsafe_level=0 -mIPOPT_link -mIPOPT_ipo_activate -mIPOPT_mo_activate -mIPOPT_source_files_list=/tmp/iccslisMVufVC -mIPOPT_mo_global_data -mIPOPT_link_script_file=/tmp/iccscriptlmNHE7 "-mIPOPT_cmdline_link="/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crt1.o" "/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crti.o" "/usr/lib64/gcc/x86_64-suse-linux/4.3/crtbegin.o" "--eh-frame-hdr" "--build-id" "-dynamic-linker" "/lib64/ld-linux-x86-64.so.2" "-m" "elf_x86_64" "-L/opt/cray/dmapp/default/lib64" "-L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib" "-L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib" "-L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64" "-L/opt/cray/atp/1.8.1/libApp" "-o" "cmTC_2b928" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/" "-L/lib/../lib64" "-L/lib/../lib64/" "-L/usr/lib/../lib64" "-L/usr/lib/../lib64/" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../" "-L/lib64" "-L/lib/" "-L/usr/lib64" "-L/usr/lib" "CMakeFiles/cmTC_2b928.dir/CMakeCCompilerABI.c.o" "-rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-lintlc" "-Ttext-segment=0x20000000" "-zmax-page-size=0x20000000" "--whole-archive" "-lhugetlbfs" "--no-whole-archive" "--as-needed" "-lmpich_intel" "--no-as-needed" "-lAtpSigHandler" "-lAtpSigHCommData" "--undefined=_ATP_Data_Globals" "--undefined=__atpHandlerInstall" "-lrca" "--as-needed" "-lsci_intel_mpi" "--no-as-needed" "--as-needed" "-lsci_intel" "--no-as-needed" "--as-needed" "-limf" "--no-as-needed" "--as-needed" "-lm" "--no-as-needed" "--as-needed" "-lifcore" "--no-as-needed" "--as-needed" "-lifport" "--no-as-needed" "--as-needed" "-lpthread" "--no-as-needed" "-Bdynamic" "-Bstatic" "-limf" "-lsvml" "-lirng" "-Bdynamic" "-lm" "-Bstatic" "-lipgo" "-ldecimal" "--as-needed" "-Bdynamic" "-lcilkrts" "-lstdc++" "--no-as-needed" "-lgcc" "-lgcc_s" "-Bstatic" "-lirc" "-lsvml" "-Bdynamic" "-lc" "-lgcc" "-lgcc_s" "-Bstatic" "-lirc_s" "-Bdynamic" "-ldl" "-lc" "/usr/lib64/gcc/x86_64-suse-linux/4.3/crtend.o" "/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crtn.o"" -mIPOPT_il_in_obj -mIPOPT_ipo_activate_warn=FALSE -mIPOPT_obj_output_file_name=/tmp/ipo_iccSUKxwE.o -mIPOPT_whole_archive_fixup_file_name=/tmp/iccwarch2QySS4 -mGLOB_linker_version=2.23.1 -mGLOB_long_size_64 -mGLOB_routine_pointer_size_64 -mGLOB_driver_tempfile_name=/tmp/icctempfileso8HGz -mP3OPT_asm_target=P3OPT_ASM_TARGET_GAS -mGLOB_async_unwind_tables=TRUE -mGLOB_obj_output_file=/tmp/ipo_iccSUKxwE.o -mGLOB_source_dialect=GLOB_SOURCE_DIALECT_NONE -mP1OPT_source_file_name=ipo_out.c CMakeFiles/cmTC_2b928.dir/CMakeCCompilerABI.c.o -mIPOPT_object_files=T -mIPOPT_assembly_files=/tmp/iccalismcYqZD -mIPOPT_generated_tempfiles=/tmp/iccelisilKSI8 -mIPOPT_embedded_object_base_name=/tmp/icceobjwSXksD -mIPOPT_cmdline_link_new_name=/tmp/iccllisg91Mb8]
+  link line: [ld    /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crt1.o /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crti.o /usr/lib64/gcc/x86_64-suse-linux/4.3/crtbegin.o --eh-frame-hdr --build-id -dynamic-linker /lib64/ld-linux-x86-64.so.2 -m elf_x86_64 -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib -L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64 -L/opt/cray/atp/1.8.1/libApp -o cmTC_2b928 -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1 -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/usr/lib64/gcc/x86_64-suse-linux/4.3/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64 -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/ -L/lib/../lib64 -L/lib/../lib64/ -L/usr/lib/../lib64 -L/usr/lib/../lib64/ -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../ -L/lib64 -L/lib/ -L/usr/lib64 -L/usr/lib CMakeFiles/cmTC_2b928.dir/CMakeCCompilerABI.c.o -rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -lintlc -Ttext-segment=0x20000000 -zmax-page-size=0x20000000 --whole-archive -lhugetlbfs --no-whole-archive --as-needed -lmpich_intel --no-as-needed -lAtpSigHandler -lAtpSigHCommData --undefined=_ATP_Data_Globals --undefined=__atpHandlerInstall -lrca --as-needed -lsci_intel_mpi --no-as-needed --as-needed -lsci_intel --no-as-needed --as-needed -limf --no-as-needed --as-needed -lm --no-as-needed --as-needed -lifcore --no-as-needed --as-needed -lifport --no-as-needed --as-needed -lpthread --no-as-needed -Bdynamic -Bstatic -limf -lsvml -lirng -Bdynamic -lm -Bstatic -lipgo -ldecimal --as-needed -Bdynamic -lcilkrts -lstdc++ --no-as-needed -lgcc -lgcc_s -Bstatic -lirc -lsvml -Bdynamic -lc -lgcc -lgcc_s -Bstatic -lirc_s -Bdynamic -ldl -lc /usr/lib64/gcc/x86_64-suse-linux/4.3/crtend.o /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crtn.o]
+    arg [ld] ==> ignore
+    arg [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crt1.o] ==> ignore
+    arg [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crti.o] ==> ignore
+    arg [/usr/lib64/gcc/x86_64-suse-linux/4.3/crtbegin.o] ==> ignore
+    arg [--eh-frame-hdr] ==> ignore
+    arg [--build-id] ==> ignore
+    arg [-dynamic-linker] ==> ignore
+    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+    arg [-m] ==> ignore
+    arg [elf_x86_64] ==> ignore
+    arg [-L/opt/cray/dmapp/default/lib64] ==> dir [/opt/cray/dmapp/default/lib64]
+    arg [-L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib] ==> dir [/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib]
+    arg [-L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib] ==> dir [/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib]
+    arg [-L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64] ==> dir [/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64]
+    arg [-L/opt/cray/atp/1.8.1/libApp] ==> dir [/opt/cray/atp/1.8.1/libApp]
+    arg [-o] ==> ignore
+    arg [cmTC_2b928] ==> ignore
+    arg [-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+    arg [-L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64] ==> dir [/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64]
+    arg [-L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64] ==> dir [/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64]
+    arg [-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+    arg [-L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64] ==> dir [/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64]
+    arg [-L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1] ==> dir [/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1]
+    arg [-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+    arg [-L/usr/lib64/gcc/x86_64-suse-linux/4.3/] ==> dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/]
+    arg [-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64] ==> dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64]
+    arg [-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/] ==> dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/]
+    arg [-L/lib/../lib64] ==> dir [/lib/../lib64]
+    arg [-L/lib/../lib64/] ==> dir [/lib/../lib64/]
+    arg [-L/usr/lib/../lib64] ==> dir [/usr/lib/../lib64]
+    arg [-L/usr/lib/../lib64/] ==> dir [/usr/lib/../lib64/]
+    arg [-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/] ==> dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/]
+    arg [-L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/] ==> dir [/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/]
+    arg [-L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/] ==> dir [/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/]
+    arg [-L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/] ==> dir [/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/]
+    arg [-L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/] ==> dir [/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/]
+    arg [-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/] ==> dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/]
+    arg [-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../] ==> dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../]
+    arg [-L/lib64] ==> dir [/lib64]
+    arg [-L/lib/] ==> dir [/lib/]
+    arg [-L/usr/lib64] ==> dir [/usr/lib64]
+    arg [-L/usr/lib] ==> dir [/usr/lib]
+    arg [CMakeFiles/cmTC_2b928.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [-rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> ignore
+    arg [-lintlc] ==> lib [intlc]
+    arg [-Ttext-segment=0x20000000] ==> ignore
+    arg [-zmax-page-size=0x20000000] ==> ignore
+    arg [--whole-archive] ==> ignore
+    arg [-lhugetlbfs] ==> lib [hugetlbfs]
+    arg [--no-whole-archive] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-lmpich_intel] ==> lib [mpich_intel]
+    arg [--no-as-needed] ==> ignore
+    arg [-lAtpSigHandler] ==> lib [AtpSigHandler]
+    arg [-lAtpSigHCommData] ==> lib [AtpSigHCommData]
+    arg [--undefined=_ATP_Data_Globals] ==> ignore
+    arg [--undefined=__atpHandlerInstall] ==> ignore
+    arg [-lrca] ==> lib [rca]
+    arg [--as-needed] ==> ignore
+    arg [-lsci_intel_mpi] ==> lib [sci_intel_mpi]
+    arg [--no-as-needed] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-lsci_intel] ==> lib [sci_intel]
+    arg [--no-as-needed] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-limf] ==> lib [imf]
+    arg [--no-as-needed] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-lm] ==> lib [m]
+    arg [--no-as-needed] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-lifcore] ==> lib [ifcore]
+    arg [--no-as-needed] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-lifport] ==> lib [ifport]
+    arg [--no-as-needed] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-lpthread] ==> lib [pthread]
+    arg [--no-as-needed] ==> ignore
+    arg [-Bdynamic] ==> ignore
+    arg [-Bstatic] ==> ignore
+    arg [-limf] ==> lib [imf]
+    arg [-lsvml] ==> lib [svml]
+    arg [-lirng] ==> lib [irng]
+    arg [-Bdynamic] ==> ignore
+    arg [-lm] ==> lib [m]
+    arg [-Bstatic] ==> ignore
+    arg [-lipgo] ==> lib [ipgo]
+    arg [-ldecimal] ==> lib [decimal]
+    arg [--as-needed] ==> ignore
+    arg [-Bdynamic] ==> ignore
+    arg [-lcilkrts] ==> lib [cilkrts]
+    arg [-lstdc++] ==> lib [stdc++]
+    arg [--no-as-needed] ==> ignore
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-Bstatic] ==> ignore
+    arg [-lirc] ==> lib [irc]
+    arg [-lsvml] ==> lib [svml]
+    arg [-Bdynamic] ==> ignore
+    arg [-lc] ==> lib [c]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-Bstatic] ==> ignore
+    arg [-lirc_s] ==> lib [irc_s]
+    arg [-Bdynamic] ==> ignore
+    arg [-ldl] ==> lib [dl]
+    arg [-lc] ==> lib [c]
+    arg [/usr/lib64/gcc/x86_64-suse-linux/4.3/crtend.o] ==> ignore
+    arg [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crtn.o] ==> ignore
+  remove lib [gcc]
+  remove lib [gcc_s]
+  remove lib [gcc]
+  remove lib [gcc_s]
+  collapse library dir [/opt/cray/dmapp/default/lib64] ==> [/opt/cray/dmapp/default/lib64]
+  collapse library dir [/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib] ==> [/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib]
+  collapse library dir [/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib] ==> [/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib]
+  collapse library dir [/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64] ==> [/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64]
+  collapse library dir [/opt/cray/atp/1.8.1/libApp] ==> [/opt/cray/atp/1.8.1/libApp]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64] ==> [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64] ==> [/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64] ==> [/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1] ==> [/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+  collapse library dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/] ==> [/usr/lib64/gcc/x86_64-suse-linux/4.3]
+  collapse library dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64] ==> [/usr/lib64]
+  collapse library dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/] ==> [/usr/lib64]
+  collapse library dir [/lib/../lib64] ==> [/lib64]
+  collapse library dir [/lib/../lib64/] ==> [/lib64]
+  collapse library dir [/usr/lib/../lib64] ==> [/usr/lib64]
+  collapse library dir [/usr/lib/../lib64/] ==> [/usr/lib64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/] ==> [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/] ==> [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/] ==> [/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/] ==> [/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/] ==> [/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1]
+  collapse library dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/] ==> [/usr/x86_64-suse-linux/lib]
+  collapse library dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../] ==> [/usr/lib64]
+  collapse library dir [/lib64] ==> [/lib64]
+  collapse library dir [/lib/] ==> [/lib]
+  collapse library dir [/usr/lib64] ==> [/usr/lib64]
+  collapse library dir [/usr/lib] ==> [/usr/lib]
+  implicit libs: [intlc;hugetlbfs;mpich_intel;AtpSigHandler;AtpSigHCommData;rca;sci_intel_mpi;sci_intel;imf;m;ifcore;ifport;pthread;imf;svml;irng;m;ipgo;decimal;cilkrts;stdc++;irc;svml;c;irc_s;dl;c]
+  implicit dirs: [/opt/cray/dmapp/default/lib64;/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib;/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib;/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64;/opt/cray/atp/1.8.1/libApp;/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64;/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64;/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64;/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1;/usr/lib64/gcc/x86_64-suse-linux/4.3;/usr/lib64;/lib64;/usr/x86_64-suse-linux/lib;/lib;/usr/lib]
+  implicit fwks: []
+
+
+
+
+Detecting C [-std=c11] compiler features compiled with the following output:
+Change Dir: /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_7ed44/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_7ed44.dir/build.make CMakeFiles/cmTC_7ed44.dir/build
+gmake[1]: Entering directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_7ed44.dir/feature_tests.c.o
+/opt/cray/craype/2.3.0/bin/cc    -std=c11 -o CMakeFiles/cmTC_7ed44.dir/feature_tests.c.o   -c /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/feature_tests.c
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+Linking C executable cmTC_7ed44
+/gpfs/hps2/usrx/local/dev/cmake/3.6.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7ed44.dir/link.txt --verbose=1
+/opt/cray/craype/2.3.0/bin/cc       CMakeFiles/cmTC_7ed44.dir/feature_tests.c.o  -o cmTC_7ed44 -dynamic 
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+gmake[1]: Leaving directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+
+
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:1c_restrict
+    Feature record: C_FEATURE:1c_static_assert
+    Feature record: C_FEATURE:1c_variadic_macros
+
+
+Detecting C [-std=c99] compiler features compiled with the following output:
+Change Dir: /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_3b08c/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_3b08c.dir/build.make CMakeFiles/cmTC_3b08c.dir/build
+gmake[1]: Entering directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_3b08c.dir/feature_tests.c.o
+/opt/cray/craype/2.3.0/bin/cc    -std=c99 -o CMakeFiles/cmTC_3b08c.dir/feature_tests.c.o   -c /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/feature_tests.c
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+Linking C executable cmTC_3b08c
+/gpfs/hps2/usrx/local/dev/cmake/3.6.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3b08c.dir/link.txt --verbose=1
+/opt/cray/craype/2.3.0/bin/cc       CMakeFiles/cmTC_3b08c.dir/feature_tests.c.o  -o cmTC_3b08c -dynamic 
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+gmake[1]: Leaving directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+
+
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:1c_restrict
+    Feature record: C_FEATURE:1c_static_assert
+    Feature record: C_FEATURE:1c_variadic_macros
+
+
+Detecting C [-std=c89] compiler features compiled with the following output:
+Change Dir: /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_2adf0/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_2adf0.dir/build.make CMakeFiles/cmTC_2adf0.dir/build
+gmake[1]: Entering directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_2adf0.dir/feature_tests.c.o
+/opt/cray/craype/2.3.0/bin/cc    -std=c89 -o CMakeFiles/cmTC_2adf0.dir/feature_tests.c.o   -c /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/feature_tests.c
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+Linking C executable cmTC_2adf0
+/gpfs/hps2/usrx/local/dev/cmake/3.6.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2adf0.dir/link.txt --verbose=1
+/opt/cray/craype/2.3.0/bin/cc       CMakeFiles/cmTC_2adf0.dir/feature_tests.c.o  -o cmTC_2adf0 -dynamic 
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+gmake[1]: Leaving directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+
+
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:0c_restrict
+    Feature record: C_FEATURE:0c_static_assert
+    Feature record: C_FEATURE:0c_variadic_macros
+Determining if the CXX compiler works passed with the following output:
+Change Dir: /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_a04c0/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_a04c0.dir/build.make CMakeFiles/cmTC_a04c0.dir/build
+gmake[1]: Entering directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_a04c0.dir/testCXXCompiler.cxx.o
+/opt/cray/craype/2.3.0/bin/CC      -o CMakeFiles/cmTC_a04c0.dir/testCXXCompiler.cxx.o -c /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+Linking CXX executable cmTC_a04c0
+/gpfs/hps2/usrx/local/dev/cmake/3.6.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a04c0.dir/link.txt --verbose=1
+/opt/cray/craype/2.3.0/bin/CC        CMakeFiles/cmTC_a04c0.dir/testCXXCompiler.cxx.o  -o cmTC_a04c0 -dynamic 
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+gmake[1]: Leaving directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_3621b/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_3621b.dir/build.make CMakeFiles/cmTC_3621b.dir/build
+gmake[1]: Entering directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_3621b.dir/CMakeCXXCompilerABI.cpp.o
+/opt/cray/craype/2.3.0/bin/CC      -o CMakeFiles/cmTC_3621b.dir/CMakeCXXCompilerABI.cpp.o -c /gpfs/hps2/usrx/local/dev/cmake/3.6.2/share/cmake-3.6/Modules/CMakeCXXCompilerABI.cpp
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+Linking CXX executable cmTC_3621b
+/gpfs/hps2/usrx/local/dev/cmake/3.6.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3621b.dir/link.txt --verbose=1
+/opt/cray/craype/2.3.0/bin/CC       -v CMakeFiles/cmTC_3621b.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_3621b -dynamic  
+icpc version 15.0.3 (gcc version 4.3.0 compatibility)
+/opt/intel/composer_xe_2015.3.187/bin/intel64/mcpcom    -mP1OPT_version=15.0-intel64 -mGLOB_diag_file=CMakeFiles/cmTC_3621b.dir/CMakeCXXCompilerABI.cpp.diag -mP1OPT_print_version=FALSE -mCG_use_gas_got_workaround=F -mP2OPT_align_option_used=TRUE -mGLOB_gcc_version=430 "-mGLOB_options_string=-I/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/include -I/opt/cray/libsci/13.0.3/INTEL/140/x86_64/include -I/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/include -I/opt/cray/alps/5.2.4-2.0502.9774.31.11.ari/include -I/opt/cray/xpmem/0.1-2.0502.64982.5.3.ari/include -I/opt/cray/gni-headers/4.0-1.0502.10859.7.8.ari/include -I/opt/cray/pmi/5.0.6-1.0000.10439.140.2.ari/include -I/opt/cray/ugni/6.0-1.0502.10863.8.29.ari/include -I/opt/cray/udreg/2.3.2-1.0502.10518.2.17.ari/include -I/opt/cray/wlm_detect/1.0-1.0502.64649.2.1.ari/include -I/opt/cray/krca/1.0.0-2.0502.67049.8.22.ari/include -I/opt/cray-hss-devel/7.2.0/include -msse3 -D__CRAYXC -D__CRAY_X86_64 -D__CRAYXT_COMPUTE_LINUX_TARGET -v -o cmTC_3621b -Wl,-rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -lintlc -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib -L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64 -L/opt/cray/atp/1.8.1/libApp -Wl,-Ttext-segment=0x20000000,-zmax-page-size=0x20000000 -Wl,--whole-archive,-lhugetlbfs,--no-whole-archive -Wl,--as-needed,-lmpich_intel,--no-as-needed -lAtpSigHandler -lAtpSigHCommData -Wl,--undefined=_ATP_Data_Globals -Wl,--undefined=__atpHandlerInstall -lrca -Wl,--as-needed,-lmpichcxx_intel,--no-as-needed -Wl,--as-needed,-lsci_intel_mpi,--no-as-needed -Wl,--as-needed,-lsci_intel,--no-as-needed -Wl,--as-needed,-limf,--no-as-needed -Wl,--as-needed,-lm,--no-as-needed -Wl,--as-needed,-lifcore,--no-as-needed -Wl,--as-needed,-lifport,--no-as-needed -Wl,--as-needed,-lpthread,--no-as-needed" -mGLOB_cxx_limited_range=FALSE -mCG_extend_parms=FALSE -mGLOB_compiler_bin_directory=/opt/intel/composer_xe_2015.3.187/bin/intel64 -mGLOB_as_output_backup_file_name=/tmp/icpcupIsPLas_.s -mIPOPT_activate -mGLOB_em64t -mGLOB_product_id_code=0x22006d8e -mGLOB_extended_instructions=0x20 -mP3OPT_use_mspp_call_convention -mP2OPT_subs_out_of_bound=FALSE -mP2OPT_disam_type_based_disam=2 -mP2OPT_disam_assume_ansi_c -mP2OPT_checked_disam_ansi_alias=TRUE -mGLOB_ansi_alias -mPGOPTI_value_profile_use=T -mGLOB_opt_report_use_source_name -mP2OPT_il0_array_sections=TRUE -mGLOB_offload_mode=1 -mP2OPT_offload_unique_var_string=icpc010726188824xEV9z3 -mP2OPT_hlo -mP2OPT_hpo_rtt_control=0 -mIPOPT_args_in_regs=0 -mP2OPT_disam_assume_nonstd_intent_in=FALSE -mGLOB_imf_mapping_library=/opt/intel/composer_xe_2015.3.187/bin/intel64/libiml_attr.so -mPGOPTI_gen_threadsafe_level=0 -mIPOPT_link -mIPOPT_ipo_activate -mIPOPT_mo_activate -mIPOPT_source_files_list=/tmp/icpcslis58oYjx -mIPOPT_mo_global_data -mIPOPT_link_script_file=/tmp/icpcscriptpMBduh "-mIPOPT_cmdline_link="/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crt1.o" "/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crti.o" "/usr/lib64/gcc/x86_64-suse-linux/4.3/crtbegin.o" "--eh-frame-hdr" "--build-id" "-dynamic-linker" "/lib64/ld-linux-x86-64.so.2" "-m" "elf_x86_64" "-L/opt/cray/dmapp/default/lib64" "-L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib" "-L/opt/cray/dmapp/default/lib64" "-L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib" "-L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib" "-L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64" "-L/opt/cray/atp/1.8.1/libApp" "-o" "cmTC_3621b" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/" "-L/lib/../lib64" "-L/lib/../lib64/" "-L/usr/lib/../lib64" "-L/usr/lib/../lib64/" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../" "-L/lib64" "-L/lib/" "-L/usr/lib64" "-L/usr/lib" "CMakeFiles/cmTC_3621b.dir/CMakeCXXCompilerABI.cpp.o" "-rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-lintlc" "-Ttext-segment=0x20000000" "-zmax-page-size=0x20000000" "--whole-archive" "-lhugetlbfs" "--no-whole-archive" "--as-needed" "-lmpich_intel" "--no-as-needed" "-lAtpSigHandler" "-lAtpSigHCommData" "--undefined=_ATP_Data_Globals" "--undefined=__atpHandlerInstall" "-lrca" "--as-needed" "-lmpichcxx_intel" "--no-as-needed" "--as-needed" "-lsci_intel_mpi" "--no-as-needed" "--as-needed" "-lsci_intel" "--no-as-needed" "--as-needed" "-limf" "--no-as-needed" "--as-needed" "-lm" "--no-as-needed" "--as-needed" "-lifcore" "--no-as-needed" "--as-needed" "-lifport" "--no-as-needed" "--as-needed" "-lpthread" "--no-as-needed" "-Bdynamic" "-Bstatic" "-limf" "-lsvml" "-lirng" "-Bdynamic" "-lm" "-Bstatic" "-lipgo" "-ldecimal" "--as-needed" "-Bdynamic" "-lcilkrts" "--no-as-needed" "-lstdc++" "-lgcc" "-lgcc_s" "-Bstatic" "-lirc" "-lsvml" "-Bdynamic" "-lc" "-lgcc" "-lgcc_s" "-Bstatic" "-lirc_s" "-Bdynamic" "-ldl" "-lc" "/usr/lib64/gcc/x86_64-suse-linux/4.3/crtend.o" "/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crtn.o"" -mIPOPT_il_in_obj -mIPOPT_ipo_activate_warn=FALSE -mIPOPT_obj_output_file_name=/tmp/ipo_icpcLoVxk4.o -mIPOPT_whole_archive_fixup_file_name=/tmp/icpcwarchijtbTd -mGLOB_linker_version=2.23.1 -mGLOB_long_size_64 -mGLOB_routine_pointer_size_64 -mGLOB_driver_tempfile_name=/tmp/icpctempfileryfJ7X -mP3OPT_asm_target=P3OPT_ASM_TARGET_GAS -mGLOB_async_unwind_tables=TRUE -mGLOB_obj_output_file=/tmp/ipo_icpcLoVxk4.o -mGLOB_source_dialect=GLOB_SOURCE_DIALECT_NONE -mP1OPT_source_file_name=ipo_out.c CMakeFiles/cmTC_3621b.dir/CMakeCXXCompilerABI.cpp.o -mIPOPT_object_files=T -mIPOPT_assembly_files=/tmp/icpcalisK9S0Ey -mIPOPT_generated_tempfiles=/tmp/icpcelisN7GfPi -mIPOPT_embedded_object_base_name=/tmp/icpceobjmSnuZ2 -mIPOPT_cmdline_link_new_name=/tmp/icpcllisXCsJ9M
+ld    /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crt1.o /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crti.o /usr/lib64/gcc/x86_64-suse-linux/4.3/crtbegin.o --eh-frame-hdr --build-id -dynamic-linker /lib64/ld-linux-x86-64.so.2 -m elf_x86_64 -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib -L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64 -L/opt/cray/atp/1.8.1/libApp -o cmTC_3621b -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1 -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/usr/lib64/gcc/x86_64-suse-linux/4.3/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64 -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/ -L/lib/../lib64 -L/lib/../lib64/ -L/usr/lib/../lib64 -L/usr/lib/../lib64/ -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../ -L/lib64 -L/lib/ -L/usr/lib64 -L/usr/lib CMakeFiles/cmTC_3621b.dir/CMakeCXXCompilerABI.cpp.o -rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -lintlc -Ttext-segment=0x20000000 -zmax-page-size=0x20000000 --whole-archive -lhugetlbfs --no-whole-archive --as-needed -lmpich_intel --no-as-needed -lAtpSigHandler -lAtpSigHCommData --undefined=_ATP_Data_Globals --undefined=__atpHandlerInstall -lrca --as-needed -lmpichcxx_intel --no-as-needed --as-needed -lsci_intel_mpi --no-as-needed --as-needed -lsci_intel --no-as-needed --as-needed -limf --no-as-needed --as-needed -lm --no-as-needed --as-needed -lifcore --no-as-needed --as-needed -lifport --no-as-needed --as-needed -lpthread --no-as-needed -Bdynamic -Bstatic -limf -lsvml -lirng -Bdynamic -lm -Bstatic -lipgo -ldecimal --as-needed -Bdynamic -lcilkrts --no-as-needed -lstdc++ -lgcc -lgcc_s -Bstatic -lirc -lsvml -Bdynamic -lc -lgcc -lgcc_s -Bstatic -lirc_s -Bdynamic -ldl -lc /usr/lib64/gcc/x86_64-suse-linux/4.3/crtend.o /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crtn.o
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+gmake[1]: Leaving directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+
+
+Parsed CXX implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command:"/usr/bin/gmake" "cmTC_3621b/fast"]
+  ignore line: [/usr/bin/gmake -f CMakeFiles/cmTC_3621b.dir/build.make CMakeFiles/cmTC_3621b.dir/build]
+  ignore line: [gmake[1]: Entering directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp']
+  ignore line: [Building CXX object CMakeFiles/cmTC_3621b.dir/CMakeCXXCompilerABI.cpp.o]
+  ignore line: [/opt/cray/craype/2.3.0/bin/CC      -o CMakeFiles/cmTC_3621b.dir/CMakeCXXCompilerABI.cpp.o -c /gpfs/hps2/usrx/local/dev/cmake/3.6.2/share/cmake-3.6/Modules/CMakeCXXCompilerABI.cpp]
+  ignore line: [No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.]
+  ignore line: [Load a valid targeting module or set CRAY_CPU_TARGET]
+  ignore line: [Linking CXX executable cmTC_3621b]
+  ignore line: [/gpfs/hps2/usrx/local/dev/cmake/3.6.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3621b.dir/link.txt --verbose=1]
+  ignore line: [/opt/cray/craype/2.3.0/bin/CC       -v CMakeFiles/cmTC_3621b.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_3621b -dynamic  ]
+  ignore line: [icpc version 15.0.3 (gcc version 4.3.0 compatibility)]
+  ignore line: [/opt/intel/composer_xe_2015.3.187/bin/intel64/mcpcom    -mP1OPT_version=15.0-intel64 -mGLOB_diag_file=CMakeFiles/cmTC_3621b.dir/CMakeCXXCompilerABI.cpp.diag -mP1OPT_print_version=FALSE -mCG_use_gas_got_workaround=F -mP2OPT_align_option_used=TRUE -mGLOB_gcc_version=430 "-mGLOB_options_string=-I/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/include -I/opt/cray/libsci/13.0.3/INTEL/140/x86_64/include -I/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/include -I/opt/cray/alps/5.2.4-2.0502.9774.31.11.ari/include -I/opt/cray/xpmem/0.1-2.0502.64982.5.3.ari/include -I/opt/cray/gni-headers/4.0-1.0502.10859.7.8.ari/include -I/opt/cray/pmi/5.0.6-1.0000.10439.140.2.ari/include -I/opt/cray/ugni/6.0-1.0502.10863.8.29.ari/include -I/opt/cray/udreg/2.3.2-1.0502.10518.2.17.ari/include -I/opt/cray/wlm_detect/1.0-1.0502.64649.2.1.ari/include -I/opt/cray/krca/1.0.0-2.0502.67049.8.22.ari/include -I/opt/cray-hss-devel/7.2.0/include -msse3 -D__CRAYXC -D__CRAY_X86_64 -D__CRAYXT_COMPUTE_LINUX_TARGET -v -o cmTC_3621b -Wl,-rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -lintlc -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib -L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64 -L/opt/cray/atp/1.8.1/libApp -Wl,-Ttext-segment=0x20000000,-zmax-page-size=0x20000000 -Wl,--whole-archive,-lhugetlbfs,--no-whole-archive -Wl,--as-needed,-lmpich_intel,--no-as-needed -lAtpSigHandler -lAtpSigHCommData -Wl,--undefined=_ATP_Data_Globals -Wl,--undefined=__atpHandlerInstall -lrca -Wl,--as-needed,-lmpichcxx_intel,--no-as-needed -Wl,--as-needed,-lsci_intel_mpi,--no-as-needed -Wl,--as-needed,-lsci_intel,--no-as-needed -Wl,--as-needed,-limf,--no-as-needed -Wl,--as-needed,-lm,--no-as-needed -Wl,--as-needed,-lifcore,--no-as-needed -Wl,--as-needed,-lifport,--no-as-needed -Wl,--as-needed,-lpthread,--no-as-needed" -mGLOB_cxx_limited_range=FALSE -mCG_extend_parms=FALSE -mGLOB_compiler_bin_directory=/opt/intel/composer_xe_2015.3.187/bin/intel64 -mGLOB_as_output_backup_file_name=/tmp/icpcupIsPLas_.s -mIPOPT_activate -mGLOB_em64t -mGLOB_product_id_code=0x22006d8e -mGLOB_extended_instructions=0x20 -mP3OPT_use_mspp_call_convention -mP2OPT_subs_out_of_bound=FALSE -mP2OPT_disam_type_based_disam=2 -mP2OPT_disam_assume_ansi_c -mP2OPT_checked_disam_ansi_alias=TRUE -mGLOB_ansi_alias -mPGOPTI_value_profile_use=T -mGLOB_opt_report_use_source_name -mP2OPT_il0_array_sections=TRUE -mGLOB_offload_mode=1 -mP2OPT_offload_unique_var_string=icpc010726188824xEV9z3 -mP2OPT_hlo -mP2OPT_hpo_rtt_control=0 -mIPOPT_args_in_regs=0 -mP2OPT_disam_assume_nonstd_intent_in=FALSE -mGLOB_imf_mapping_library=/opt/intel/composer_xe_2015.3.187/bin/intel64/libiml_attr.so -mPGOPTI_gen_threadsafe_level=0 -mIPOPT_link -mIPOPT_ipo_activate -mIPOPT_mo_activate -mIPOPT_source_files_list=/tmp/icpcslis58oYjx -mIPOPT_mo_global_data -mIPOPT_link_script_file=/tmp/icpcscriptpMBduh "-mIPOPT_cmdline_link="/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crt1.o" "/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crti.o" "/usr/lib64/gcc/x86_64-suse-linux/4.3/crtbegin.o" "--eh-frame-hdr" "--build-id" "-dynamic-linker" "/lib64/ld-linux-x86-64.so.2" "-m" "elf_x86_64" "-L/opt/cray/dmapp/default/lib64" "-L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib" "-L/opt/cray/dmapp/default/lib64" "-L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib" "-L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib" "-L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64" "-L/opt/cray/atp/1.8.1/libApp" "-o" "cmTC_3621b" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/" "-L/lib/../lib64" "-L/lib/../lib64/" "-L/usr/lib/../lib64" "-L/usr/lib/../lib64/" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../" "-L/lib64" "-L/lib/" "-L/usr/lib64" "-L/usr/lib" "CMakeFiles/cmTC_3621b.dir/CMakeCXXCompilerABI.cpp.o" "-rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-lintlc" "-Ttext-segment=0x20000000" "-zmax-page-size=0x20000000" "--whole-archive" "-lhugetlbfs" "--no-whole-archive" "--as-needed" "-lmpich_intel" "--no-as-needed" "-lAtpSigHandler" "-lAtpSigHCommData" "--undefined=_ATP_Data_Globals" "--undefined=__atpHandlerInstall" "-lrca" "--as-needed" "-lmpichcxx_intel" "--no-as-needed" "--as-needed" "-lsci_intel_mpi" "--no-as-needed" "--as-needed" "-lsci_intel" "--no-as-needed" "--as-needed" "-limf" "--no-as-needed" "--as-needed" "-lm" "--no-as-needed" "--as-needed" "-lifcore" "--no-as-needed" "--as-needed" "-lifport" "--no-as-needed" "--as-needed" "-lpthread" "--no-as-needed" "-Bdynamic" "-Bstatic" "-limf" "-lsvml" "-lirng" "-Bdynamic" "-lm" "-Bstatic" "-lipgo" "-ldecimal" "--as-needed" "-Bdynamic" "-lcilkrts" "--no-as-needed" "-lstdc++" "-lgcc" "-lgcc_s" "-Bstatic" "-lirc" "-lsvml" "-Bdynamic" "-lc" "-lgcc" "-lgcc_s" "-Bstatic" "-lirc_s" "-Bdynamic" "-ldl" "-lc" "/usr/lib64/gcc/x86_64-suse-linux/4.3/crtend.o" "/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crtn.o"" -mIPOPT_il_in_obj -mIPOPT_ipo_activate_warn=FALSE -mIPOPT_obj_output_file_name=/tmp/ipo_icpcLoVxk4.o -mIPOPT_whole_archive_fixup_file_name=/tmp/icpcwarchijtbTd -mGLOB_linker_version=2.23.1 -mGLOB_long_size_64 -mGLOB_routine_pointer_size_64 -mGLOB_driver_tempfile_name=/tmp/icpctempfileryfJ7X -mP3OPT_asm_target=P3OPT_ASM_TARGET_GAS -mGLOB_async_unwind_tables=TRUE -mGLOB_obj_output_file=/tmp/ipo_icpcLoVxk4.o -mGLOB_source_dialect=GLOB_SOURCE_DIALECT_NONE -mP1OPT_source_file_name=ipo_out.c CMakeFiles/cmTC_3621b.dir/CMakeCXXCompilerABI.cpp.o -mIPOPT_object_files=T -mIPOPT_assembly_files=/tmp/icpcalisK9S0Ey -mIPOPT_generated_tempfiles=/tmp/icpcelisN7GfPi -mIPOPT_embedded_object_base_name=/tmp/icpceobjmSnuZ2 -mIPOPT_cmdline_link_new_name=/tmp/icpcllisXCsJ9M]
+  link line: [ld    /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crt1.o /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crti.o /usr/lib64/gcc/x86_64-suse-linux/4.3/crtbegin.o --eh-frame-hdr --build-id -dynamic-linker /lib64/ld-linux-x86-64.so.2 -m elf_x86_64 -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib -L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64 -L/opt/cray/atp/1.8.1/libApp -o cmTC_3621b -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1 -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/usr/lib64/gcc/x86_64-suse-linux/4.3/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64 -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/ -L/lib/../lib64 -L/lib/../lib64/ -L/usr/lib/../lib64 -L/usr/lib/../lib64/ -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../ -L/lib64 -L/lib/ -L/usr/lib64 -L/usr/lib CMakeFiles/cmTC_3621b.dir/CMakeCXXCompilerABI.cpp.o -rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -lintlc -Ttext-segment=0x20000000 -zmax-page-size=0x20000000 --whole-archive -lhugetlbfs --no-whole-archive --as-needed -lmpich_intel --no-as-needed -lAtpSigHandler -lAtpSigHCommData --undefined=_ATP_Data_Globals --undefined=__atpHandlerInstall -lrca --as-needed -lmpichcxx_intel --no-as-needed --as-needed -lsci_intel_mpi --no-as-needed --as-needed -lsci_intel --no-as-needed --as-needed -limf --no-as-needed --as-needed -lm --no-as-needed --as-needed -lifcore --no-as-needed --as-needed -lifport --no-as-needed --as-needed -lpthread --no-as-needed -Bdynamic -Bstatic -limf -lsvml -lirng -Bdynamic -lm -Bstatic -lipgo -ldecimal --as-needed -Bdynamic -lcilkrts --no-as-needed -lstdc++ -lgcc -lgcc_s -Bstatic -lirc -lsvml -Bdynamic -lc -lgcc -lgcc_s -Bstatic -lirc_s -Bdynamic -ldl -lc /usr/lib64/gcc/x86_64-suse-linux/4.3/crtend.o /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crtn.o]
+    arg [ld] ==> ignore
+    arg [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crt1.o] ==> ignore
+    arg [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crti.o] ==> ignore
+    arg [/usr/lib64/gcc/x86_64-suse-linux/4.3/crtbegin.o] ==> ignore
+    arg [--eh-frame-hdr] ==> ignore
+    arg [--build-id] ==> ignore
+    arg [-dynamic-linker] ==> ignore
+    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+    arg [-m] ==> ignore
+    arg [elf_x86_64] ==> ignore
+    arg [-L/opt/cray/dmapp/default/lib64] ==> dir [/opt/cray/dmapp/default/lib64]
+    arg [-L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib] ==> dir [/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib]
+    arg [-L/opt/cray/dmapp/default/lib64] ==> dir [/opt/cray/dmapp/default/lib64]
+    arg [-L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib] ==> dir [/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib]
+    arg [-L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib] ==> dir [/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib]
+    arg [-L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64] ==> dir [/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64]
+    arg [-L/opt/cray/atp/1.8.1/libApp] ==> dir [/opt/cray/atp/1.8.1/libApp]
+    arg [-o] ==> ignore
+    arg [cmTC_3621b] ==> ignore
+    arg [-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+    arg [-L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64] ==> dir [/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64]
+    arg [-L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64] ==> dir [/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64]
+    arg [-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+    arg [-L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64] ==> dir [/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64]
+    arg [-L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1] ==> dir [/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1]
+    arg [-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+    arg [-L/usr/lib64/gcc/x86_64-suse-linux/4.3/] ==> dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/]
+    arg [-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64] ==> dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64]
+    arg [-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/] ==> dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/]
+    arg [-L/lib/../lib64] ==> dir [/lib/../lib64]
+    arg [-L/lib/../lib64/] ==> dir [/lib/../lib64/]
+    arg [-L/usr/lib/../lib64] ==> dir [/usr/lib/../lib64]
+    arg [-L/usr/lib/../lib64/] ==> dir [/usr/lib/../lib64/]
+    arg [-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/] ==> dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/]
+    arg [-L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/] ==> dir [/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/]
+    arg [-L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/] ==> dir [/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/]
+    arg [-L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/] ==> dir [/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/]
+    arg [-L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/] ==> dir [/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/]
+    arg [-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/] ==> dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/]
+    arg [-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../] ==> dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../]
+    arg [-L/lib64] ==> dir [/lib64]
+    arg [-L/lib/] ==> dir [/lib/]
+    arg [-L/usr/lib64] ==> dir [/usr/lib64]
+    arg [-L/usr/lib] ==> dir [/usr/lib]
+    arg [CMakeFiles/cmTC_3621b.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+    arg [-rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> ignore
+    arg [-lintlc] ==> lib [intlc]
+    arg [-Ttext-segment=0x20000000] ==> ignore
+    arg [-zmax-page-size=0x20000000] ==> ignore
+    arg [--whole-archive] ==> ignore
+    arg [-lhugetlbfs] ==> lib [hugetlbfs]
+    arg [--no-whole-archive] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-lmpich_intel] ==> lib [mpich_intel]
+    arg [--no-as-needed] ==> ignore
+    arg [-lAtpSigHandler] ==> lib [AtpSigHandler]
+    arg [-lAtpSigHCommData] ==> lib [AtpSigHCommData]
+    arg [--undefined=_ATP_Data_Globals] ==> ignore
+    arg [--undefined=__atpHandlerInstall] ==> ignore
+    arg [-lrca] ==> lib [rca]
+    arg [--as-needed] ==> ignore
+    arg [-lmpichcxx_intel] ==> lib [mpichcxx_intel]
+    arg [--no-as-needed] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-lsci_intel_mpi] ==> lib [sci_intel_mpi]
+    arg [--no-as-needed] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-lsci_intel] ==> lib [sci_intel]
+    arg [--no-as-needed] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-limf] ==> lib [imf]
+    arg [--no-as-needed] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-lm] ==> lib [m]
+    arg [--no-as-needed] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-lifcore] ==> lib [ifcore]
+    arg [--no-as-needed] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-lifport] ==> lib [ifport]
+    arg [--no-as-needed] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-lpthread] ==> lib [pthread]
+    arg [--no-as-needed] ==> ignore
+    arg [-Bdynamic] ==> ignore
+    arg [-Bstatic] ==> ignore
+    arg [-limf] ==> lib [imf]
+    arg [-lsvml] ==> lib [svml]
+    arg [-lirng] ==> lib [irng]
+    arg [-Bdynamic] ==> ignore
+    arg [-lm] ==> lib [m]
+    arg [-Bstatic] ==> ignore
+    arg [-lipgo] ==> lib [ipgo]
+    arg [-ldecimal] ==> lib [decimal]
+    arg [--as-needed] ==> ignore
+    arg [-Bdynamic] ==> ignore
+    arg [-lcilkrts] ==> lib [cilkrts]
+    arg [--no-as-needed] ==> ignore
+    arg [-lstdc++] ==> lib [stdc++]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-Bstatic] ==> ignore
+    arg [-lirc] ==> lib [irc]
+    arg [-lsvml] ==> lib [svml]
+    arg [-Bdynamic] ==> ignore
+    arg [-lc] ==> lib [c]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-Bstatic] ==> ignore
+    arg [-lirc_s] ==> lib [irc_s]
+    arg [-Bdynamic] ==> ignore
+    arg [-ldl] ==> lib [dl]
+    arg [-lc] ==> lib [c]
+    arg [/usr/lib64/gcc/x86_64-suse-linux/4.3/crtend.o] ==> ignore
+    arg [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crtn.o] ==> ignore
+  remove lib [gcc]
+  remove lib [gcc_s]
+  remove lib [gcc]
+  remove lib [gcc_s]
+  collapse library dir [/opt/cray/dmapp/default/lib64] ==> [/opt/cray/dmapp/default/lib64]
+  collapse library dir [/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib] ==> [/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib]
+  collapse library dir [/opt/cray/dmapp/default/lib64] ==> [/opt/cray/dmapp/default/lib64]
+  collapse library dir [/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib] ==> [/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib]
+  collapse library dir [/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib] ==> [/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib]
+  collapse library dir [/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64] ==> [/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64]
+  collapse library dir [/opt/cray/atp/1.8.1/libApp] ==> [/opt/cray/atp/1.8.1/libApp]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64] ==> [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64] ==> [/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64] ==> [/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1] ==> [/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+  collapse library dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/] ==> [/usr/lib64/gcc/x86_64-suse-linux/4.3]
+  collapse library dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64] ==> [/usr/lib64]
+  collapse library dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/] ==> [/usr/lib64]
+  collapse library dir [/lib/../lib64] ==> [/lib64]
+  collapse library dir [/lib/../lib64/] ==> [/lib64]
+  collapse library dir [/usr/lib/../lib64] ==> [/usr/lib64]
+  collapse library dir [/usr/lib/../lib64/] ==> [/usr/lib64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/] ==> [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/] ==> [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/] ==> [/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/] ==> [/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/] ==> [/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1]
+  collapse library dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/] ==> [/usr/x86_64-suse-linux/lib]
+  collapse library dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../] ==> [/usr/lib64]
+  collapse library dir [/lib64] ==> [/lib64]
+  collapse library dir [/lib/] ==> [/lib]
+  collapse library dir [/usr/lib64] ==> [/usr/lib64]
+  collapse library dir [/usr/lib] ==> [/usr/lib]
+  implicit libs: [intlc;hugetlbfs;mpich_intel;AtpSigHandler;AtpSigHCommData;rca;mpichcxx_intel;sci_intel_mpi;sci_intel;imf;m;ifcore;ifport;pthread;imf;svml;irng;m;ipgo;decimal;cilkrts;stdc++;irc;svml;c;irc_s;dl;c]
+  implicit dirs: [/opt/cray/dmapp/default/lib64;/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib;/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib;/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64;/opt/cray/atp/1.8.1/libApp;/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64;/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64;/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64;/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1;/usr/lib64/gcc/x86_64-suse-linux/4.3;/usr/lib64;/lib64;/usr/x86_64-suse-linux/lib;/lib;/usr/lib]
+  implicit fwks: []
+
+
+
+
+Detecting CXX [-std=c++14] compiler features compiled with the following output:
+Change Dir: /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_5ddff/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_5ddff.dir/build.make CMakeFiles/cmTC_5ddff.dir/build
+gmake[1]: Entering directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_5ddff.dir/feature_tests.cxx.o
+/opt/cray/craype/2.3.0/bin/CC     -std=c++14 -o CMakeFiles/cmTC_5ddff.dir/feature_tests.cxx.o -c /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/feature_tests.cxx
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+Linking CXX executable cmTC_5ddff
+/gpfs/hps2/usrx/local/dev/cmake/3.6.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5ddff.dir/link.txt --verbose=1
+/opt/cray/craype/2.3.0/bin/CC        CMakeFiles/cmTC_5ddff.dir/feature_tests.cxx.o  -o cmTC_5ddff -dynamic 
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+gmake[1]: Leaving directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+
+
+    Feature record: CXX_FEATURE:0cxx_aggregate_default_initializers
+    Feature record: CXX_FEATURE:1cxx_alias_templates
+    Feature record: CXX_FEATURE:1cxx_alignas
+    Feature record: CXX_FEATURE:1cxx_alignof
+    Feature record: CXX_FEATURE:1cxx_attributes
+    Feature record: CXX_FEATURE:0cxx_attribute_deprecated
+    Feature record: CXX_FEATURE:1cxx_auto_type
+    Feature record: CXX_FEATURE:1cxx_binary_literals
+    Feature record: CXX_FEATURE:1cxx_constexpr
+    Feature record: CXX_FEATURE:0cxx_contextual_conversions
+    Feature record: CXX_FEATURE:1cxx_decltype
+    Feature record: CXX_FEATURE:0cxx_decltype_auto
+    Feature record: CXX_FEATURE:1cxx_decltype_incomplete_return_types
+    Feature record: CXX_FEATURE:1cxx_default_function_template_args
+    Feature record: CXX_FEATURE:1cxx_defaulted_functions
+    Feature record: CXX_FEATURE:1cxx_defaulted_move_initializers
+    Feature record: CXX_FEATURE:1cxx_delegating_constructors
+    Feature record: CXX_FEATURE:1cxx_deleted_functions
+    Feature record: CXX_FEATURE:0cxx_digit_separators
+    Feature record: CXX_FEATURE:1cxx_enum_forward_declarations
+    Feature record: CXX_FEATURE:1cxx_explicit_conversions
+    Feature record: CXX_FEATURE:1cxx_extended_friend_declarations
+    Feature record: CXX_FEATURE:1cxx_extern_templates
+    Feature record: CXX_FEATURE:1cxx_final
+    Feature record: CXX_FEATURE:1cxx_func_identifier
+    Feature record: CXX_FEATURE:0cxx_generic_lambdas
+    Feature record: CXX_FEATURE:1cxx_inheriting_constructors
+    Feature record: CXX_FEATURE:1cxx_inline_namespaces
+    Feature record: CXX_FEATURE:1cxx_lambdas
+    Feature record: CXX_FEATURE:0cxx_lambda_init_captures
+    Feature record: CXX_FEATURE:1cxx_local_type_template_args
+    Feature record: CXX_FEATURE:1cxx_long_long_type
+    Feature record: CXX_FEATURE:1cxx_noexcept
+    Feature record: CXX_FEATURE:1cxx_nonstatic_member_init
+    Feature record: CXX_FEATURE:1cxx_nullptr
+    Feature record: CXX_FEATURE:1cxx_override
+    Feature record: CXX_FEATURE:1cxx_range_for
+    Feature record: CXX_FEATURE:1cxx_raw_string_literals
+    Feature record: CXX_FEATURE:1cxx_reference_qualified_functions
+    Feature record: CXX_FEATURE:0cxx_return_type_deduction
+    Feature record: CXX_FEATURE:1cxx_right_angle_brackets
+    Feature record: CXX_FEATURE:1cxx_rvalue_references
+    Feature record: CXX_FEATURE:1cxx_sizeof_member
+    Feature record: CXX_FEATURE:1cxx_static_assert
+    Feature record: CXX_FEATURE:1cxx_strong_enums
+    Feature record: CXX_FEATURE:1cxx_template_template_parameters
+    Feature record: CXX_FEATURE:1cxx_thread_local
+    Feature record: CXX_FEATURE:1cxx_trailing_return_types
+    Feature record: CXX_FEATURE:1cxx_unicode_literals
+    Feature record: CXX_FEATURE:1cxx_uniform_initialization
+    Feature record: CXX_FEATURE:1cxx_unrestricted_unions
+    Feature record: CXX_FEATURE:1cxx_user_literals
+    Feature record: CXX_FEATURE:1cxx_variadic_macros
+    Feature record: CXX_FEATURE:1cxx_variadic_templates
+
+
+Detecting CXX [-std=c++11] compiler features compiled with the following output:
+Change Dir: /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_deec0/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_deec0.dir/build.make CMakeFiles/cmTC_deec0.dir/build
+gmake[1]: Entering directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_deec0.dir/feature_tests.cxx.o
+/opt/cray/craype/2.3.0/bin/CC     -std=c++11 -o CMakeFiles/cmTC_deec0.dir/feature_tests.cxx.o -c /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/feature_tests.cxx
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+Linking CXX executable cmTC_deec0
+/gpfs/hps2/usrx/local/dev/cmake/3.6.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_deec0.dir/link.txt --verbose=1
+/opt/cray/craype/2.3.0/bin/CC        CMakeFiles/cmTC_deec0.dir/feature_tests.cxx.o  -o cmTC_deec0 -dynamic 
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+gmake[1]: Leaving directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+
+
+    Feature record: CXX_FEATURE:0cxx_aggregate_default_initializers
+    Feature record: CXX_FEATURE:1cxx_alias_templates
+    Feature record: CXX_FEATURE:1cxx_alignas
+    Feature record: CXX_FEATURE:1cxx_alignof
+    Feature record: CXX_FEATURE:1cxx_attributes
+    Feature record: CXX_FEATURE:0cxx_attribute_deprecated
+    Feature record: CXX_FEATURE:1cxx_auto_type
+    Feature record: CXX_FEATURE:1cxx_binary_literals
+    Feature record: CXX_FEATURE:1cxx_constexpr
+    Feature record: CXX_FEATURE:0cxx_contextual_conversions
+    Feature record: CXX_FEATURE:1cxx_decltype
+    Feature record: CXX_FEATURE:0cxx_decltype_auto
+    Feature record: CXX_FEATURE:1cxx_decltype_incomplete_return_types
+    Feature record: CXX_FEATURE:1cxx_default_function_template_args
+    Feature record: CXX_FEATURE:1cxx_defaulted_functions
+    Feature record: CXX_FEATURE:1cxx_defaulted_move_initializers
+    Feature record: CXX_FEATURE:1cxx_delegating_constructors
+    Feature record: CXX_FEATURE:1cxx_deleted_functions
+    Feature record: CXX_FEATURE:0cxx_digit_separators
+    Feature record: CXX_FEATURE:1cxx_enum_forward_declarations
+    Feature record: CXX_FEATURE:1cxx_explicit_conversions
+    Feature record: CXX_FEATURE:1cxx_extended_friend_declarations
+    Feature record: CXX_FEATURE:1cxx_extern_templates
+    Feature record: CXX_FEATURE:1cxx_final
+    Feature record: CXX_FEATURE:1cxx_func_identifier
+    Feature record: CXX_FEATURE:0cxx_generic_lambdas
+    Feature record: CXX_FEATURE:1cxx_inheriting_constructors
+    Feature record: CXX_FEATURE:1cxx_inline_namespaces
+    Feature record: CXX_FEATURE:1cxx_lambdas
+    Feature record: CXX_FEATURE:0cxx_lambda_init_captures
+    Feature record: CXX_FEATURE:1cxx_local_type_template_args
+    Feature record: CXX_FEATURE:1cxx_long_long_type
+    Feature record: CXX_FEATURE:1cxx_noexcept
+    Feature record: CXX_FEATURE:1cxx_nonstatic_member_init
+    Feature record: CXX_FEATURE:1cxx_nullptr
+    Feature record: CXX_FEATURE:1cxx_override
+    Feature record: CXX_FEATURE:1cxx_range_for
+    Feature record: CXX_FEATURE:1cxx_raw_string_literals
+    Feature record: CXX_FEATURE:1cxx_reference_qualified_functions
+    Feature record: CXX_FEATURE:0cxx_return_type_deduction
+    Feature record: CXX_FEATURE:1cxx_right_angle_brackets
+    Feature record: CXX_FEATURE:1cxx_rvalue_references
+    Feature record: CXX_FEATURE:1cxx_sizeof_member
+    Feature record: CXX_FEATURE:1cxx_static_assert
+    Feature record: CXX_FEATURE:1cxx_strong_enums
+    Feature record: CXX_FEATURE:1cxx_template_template_parameters
+    Feature record: CXX_FEATURE:1cxx_thread_local
+    Feature record: CXX_FEATURE:1cxx_trailing_return_types
+    Feature record: CXX_FEATURE:1cxx_unicode_literals
+    Feature record: CXX_FEATURE:1cxx_uniform_initialization
+    Feature record: CXX_FEATURE:1cxx_unrestricted_unions
+    Feature record: CXX_FEATURE:1cxx_user_literals
+    Feature record: CXX_FEATURE:1cxx_variadic_macros
+    Feature record: CXX_FEATURE:1cxx_variadic_templates
+
+
+Detecting CXX [-std=c++98] compiler features compiled with the following output:
+Change Dir: /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_612ee/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_612ee.dir/build.make CMakeFiles/cmTC_612ee.dir/build
+gmake[1]: Entering directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_612ee.dir/feature_tests.cxx.o
+/opt/cray/craype/2.3.0/bin/CC     -std=c++98 -o CMakeFiles/cmTC_612ee.dir/feature_tests.cxx.o -c /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/feature_tests.cxx
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+Linking CXX executable cmTC_612ee
+/gpfs/hps2/usrx/local/dev/cmake/3.6.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_612ee.dir/link.txt --verbose=1
+/opt/cray/craype/2.3.0/bin/CC        CMakeFiles/cmTC_612ee.dir/feature_tests.cxx.o  -o cmTC_612ee -dynamic 
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+gmake[1]: Leaving directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+
+
+    Feature record: CXX_FEATURE:0cxx_aggregate_default_initializers
+    Feature record: CXX_FEATURE:0cxx_alias_templates
+    Feature record: CXX_FEATURE:0cxx_alignas
+    Feature record: CXX_FEATURE:0cxx_alignof
+    Feature record: CXX_FEATURE:0cxx_attributes
+    Feature record: CXX_FEATURE:0cxx_attribute_deprecated
+    Feature record: CXX_FEATURE:0cxx_auto_type
+    Feature record: CXX_FEATURE:0cxx_binary_literals
+    Feature record: CXX_FEATURE:0cxx_constexpr
+    Feature record: CXX_FEATURE:0cxx_contextual_conversions
+    Feature record: CXX_FEATURE:0cxx_decltype
+    Feature record: CXX_FEATURE:0cxx_decltype_auto
+    Feature record: CXX_FEATURE:0cxx_decltype_incomplete_return_types
+    Feature record: CXX_FEATURE:0cxx_default_function_template_args
+    Feature record: CXX_FEATURE:0cxx_defaulted_functions
+    Feature record: CXX_FEATURE:0cxx_defaulted_move_initializers
+    Feature record: CXX_FEATURE:0cxx_delegating_constructors
+    Feature record: CXX_FEATURE:0cxx_deleted_functions
+    Feature record: CXX_FEATURE:0cxx_digit_separators
+    Feature record: CXX_FEATURE:0cxx_enum_forward_declarations
+    Feature record: CXX_FEATURE:0cxx_explicit_conversions
+    Feature record: CXX_FEATURE:0cxx_extended_friend_declarations
+    Feature record: CXX_FEATURE:0cxx_extern_templates
+    Feature record: CXX_FEATURE:0cxx_final
+    Feature record: CXX_FEATURE:0cxx_func_identifier
+    Feature record: CXX_FEATURE:0cxx_generic_lambdas
+    Feature record: CXX_FEATURE:0cxx_inheriting_constructors
+    Feature record: CXX_FEATURE:0cxx_inline_namespaces
+    Feature record: CXX_FEATURE:0cxx_lambdas
+    Feature record: CXX_FEATURE:0cxx_lambda_init_captures
+    Feature record: CXX_FEATURE:0cxx_local_type_template_args
+    Feature record: CXX_FEATURE:0cxx_long_long_type
+    Feature record: CXX_FEATURE:0cxx_noexcept
+    Feature record: CXX_FEATURE:0cxx_nonstatic_member_init
+    Feature record: CXX_FEATURE:0cxx_nullptr
+    Feature record: CXX_FEATURE:0cxx_override
+    Feature record: CXX_FEATURE:0cxx_range_for
+    Feature record: CXX_FEATURE:0cxx_raw_string_literals
+    Feature record: CXX_FEATURE:0cxx_reference_qualified_functions
+    Feature record: CXX_FEATURE:0cxx_return_type_deduction
+    Feature record: CXX_FEATURE:0cxx_right_angle_brackets
+    Feature record: CXX_FEATURE:0cxx_rvalue_references
+    Feature record: CXX_FEATURE:0cxx_sizeof_member
+    Feature record: CXX_FEATURE:0cxx_static_assert
+    Feature record: CXX_FEATURE:0cxx_strong_enums
+    Feature record: CXX_FEATURE:0cxx_template_template_parameters
+    Feature record: CXX_FEATURE:0cxx_thread_local
+    Feature record: CXX_FEATURE:0cxx_trailing_return_types
+    Feature record: CXX_FEATURE:0cxx_unicode_literals
+    Feature record: CXX_FEATURE:0cxx_uniform_initialization
+    Feature record: CXX_FEATURE:0cxx_unrestricted_unions
+    Feature record: CXX_FEATURE:0cxx_user_literals
+    Feature record: CXX_FEATURE:0cxx_variadic_macros
+    Feature record: CXX_FEATURE:0cxx_variadic_templates
+Compiling the Fortran compiler identification source file "CMakeFortranCompilerId.F" succeeded.
+Compiler: /opt/cray/craype/2.3.0/bin/ftn 
+Build flags: 
+Id flags: -v
+
+The output was:
+0
+ifort version 15.0.3
+/opt/intel/composer_xe_2015.3.187/bin/intel64/fpp    -D__INTEL_COMPILER=1500 -D__INTEL_COMPILER_UPDATE=3 -D__unix__ -D__unix -D__linux__ -D__linux -D__gnu_linux__ -Dunix -Dlinux -D__ELF__ -D__x86_64 -D__x86_64__ -D__amd64 -D__amd64__ -D_MT -D__INTEL_COMPILER_BUILD_DATE=20150407 -D__INTEL_OFFLOAD -D__pentium4 -D__pentium4__ -D__tune_pentium4__ -D__SSE2__ -D__SSE2_MATH__ -D__SSE3__ -D__SSE__ -D__SSE_MATH__ -D__MMX__ -D__CRAYXC -D__CRAY_X86_64 -D__CRAYXT_COMPUTE_LINUX_TARGET -I. -I/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/include -I/opt/cray/libsci/13.0.3/INTEL/140/x86_64/include -I/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/include -I/opt/cray/alps/5.2.4-2.0502.9774.31.11.ari/include -I/opt/cray/xpmem/0.1-2.0502.64982.5.3.ari/include -I/opt/cray/gni-headers/4.0-1.0502.10859.7.8.ari/include -I/opt/cray/pmi/5.0.6-1.0000.10439.140.2.ari/include -I/opt/cray/ugni/6.0-1.0502.10863.8.29.ari/include -I/opt/cray/udreg/2.3.2-1.0502.10518.2.17.ari/include -I/opt/cray/wlm_detect/1.0-1.0502.64649.2.1.ari/include -I/opt/cray/krca/1.0.0-2.0502.67049.8.22.ari/include -I/opt/cray-hss-devel/7.2.0/include -I/opt/intel/composer_xe_2015.3.187/ipp/include -I/opt/intel/composer_xe_2015.3.187/mkl/include -I/opt/intel/composer_xe_2015.3.187/tbb/include -I/opt/intel/composer_xe_2015.3.187/compiler/include/intel64 -I/opt/intel/composer_xe_2015.3.187/compiler/include -I/usr/local/include -I/usr/lib64/gcc/x86_64-suse-linux/4.3/include -I/usr/lib64/gcc/x86_64-suse-linux/4.3/include-fixed -I/usr/include/ -I/usr/include -fixed -4Ycpp -4Ncvf -f_com=yes -MX CMakeFortranCompilerId.F /tmp/ifortZw53CZ.i
+#include "..." search starts here:
+#include <...> search starts here:
+ .
+ /opt/cray/mpt/7.2.0/gni/mpich2-intel/140/include
+ /opt/cray/libsci/13.0.3/INTEL/140/x86_64/include
+ /opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/include
+ /opt/cray/alps/5.2.4-2.0502.9774.31.11.ari/include
+ /opt/cray/xpmem/0.1-2.0502.64982.5.3.ari/include
+ /opt/cray/gni-headers/4.0-1.0502.10859.7.8.ari/include
+ /opt/cray/pmi/5.0.6-1.0000.10439.140.2.ari/include
+ /opt/cray/ugni/6.0-1.0502.10863.8.29.ari/include
+ /opt/cray/udreg/2.3.2-1.0502.10518.2.17.ari/include
+ /opt/cray/wlm_detect/1.0-1.0502.64649.2.1.ari/include
+ /opt/cray/krca/1.0.0-2.0502.67049.8.22.ari/include
+ /opt/cray-hss-devel/7.2.0/include
+ /opt/intel/composer_xe_2015.3.187/ipp/include
+ /opt/intel/composer_xe_2015.3.187/mkl/include
+ /opt/intel/composer_xe_2015.3.187/tbb/include
+ /opt/intel/composer_xe_2015.3.187/compiler/include/intel64
+ /opt/intel/composer_xe_2015.3.187/compiler/include
+ /usr/local/include
+ /usr/lib64/gcc/x86_64-suse-linux/4.3/include
+ /usr/lib64/gcc/x86_64-suse-linux/4.3/include-fixed
+ /usr/include/
+ /usr/include
+End of search list.
+/opt/intel/composer_xe_2015.3.187/bin/intel64/fortcom    -D__INTEL_COMPILER=1500 -D__INTEL_COMPILER_UPDATE=3 -D__unix__ -D__unix -D__linux__ -D__linux -D__gnu_linux__ -Dunix -Dlinux -D__ELF__ -D__x86_64 -D__x86_64__ -D__amd64 -D__amd64__ -D_MT -D__INTEL_COMPILER_BUILD_DATE=20150407 -D__INTEL_OFFLOAD -D__pentium4 -D__pentium4__ -D__tune_pentium4__ -D__SSE2__ -D__SSE2_MATH__ -D__SSE3__ -D__SSE__ -D__SSE_MATH__ -D__MMX__ -mGLOB_pack_sort_init_list -I. -I/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/include -I/opt/cray/libsci/13.0.3/INTEL/140/x86_64/include -I/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/include -I/opt/cray/alps/5.2.4-2.0502.9774.31.11.ari/include -I/opt/cray/xpmem/0.1-2.0502.64982.5.3.ari/include -I/opt/cray/gni-headers/4.0-1.0502.10859.7.8.ari/include -I/opt/cray/pmi/5.0.6-1.0000.10439.140.2.ari/include -I/opt/cray/ugni/6.0-1.0502.10863.8.29.ari/include -I/opt/cray/udreg/2.3.2-1.0502.10518.2.17.ari/include -I/opt/cray/wlm_detect/1.0-1.0502.64649.2.1.ari/include -I/opt/cray/krca/1.0.0-2.0502.67049.8.22.ari/include -I/opt/cray-hss-devel/7.2.0/include -I/opt/intel/composer_xe_2015.3.187/ipp/include -I/opt/intel/composer_xe_2015.3.187/mkl/include -I/opt/intel/composer_xe_2015.3.187/tbb/include -I/opt/intel/composer_xe_2015.3.187/compiler/include/intel64 -I/opt/intel/composer_xe_2015.3.187/compiler/include -I/usr/local/include -I/usr/lib64/gcc/x86_64-suse-linux/4.3/include -I/usr/lib64/gcc/x86_64-suse-linux/4.3/include-fixed -I/usr/include/ -I/usr/include -D__CRAYXC -D__CRAY_X86_64 -D__CRAYXT_COMPUTE_LINUX_TARGET -O2 -simd -offload_host -mP1OPT_version=15.0-intel64 -mGLOB_diag_file=/tmp/ifortqzh0D5.diag -mGLOB_source_language=GLOB_SOURCE_LANGUAGE_F90 -mP2OPT_static_promotion -mP1OPT_print_version=FALSE -mCG_use_gas_got_workaround=F -mP2OPT_align_option_used=TRUE -mGLOB_gcc_version=430 "-mGLOB_options_string=-I/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/include -I/opt/cray/libsci/13.0.3/INTEL/140/x86_64/include -I/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/include -I/opt/cray/alps/5.2.4-2.0502.9774.31.11.ari/include -I/opt/cray/xpmem/0.1-2.0502.64982.5.3.ari/include -I/opt/cray/gni-headers/4.0-1.0502.10859.7.8.ari/include -I/opt/cray/pmi/5.0.6-1.0000.10439.140.2.ari/include -I/opt/cray/ugni/6.0-1.0502.10863.8.29.ari/include -I/opt/cray/udreg/2.3.2-1.0502.10518.2.17.ari/include -I/opt/cray/wlm_detect/1.0-1.0502.64649.2.1.ari/include -I/opt/cray/krca/1.0.0-2.0502.67049.8.22.ari/include -I/opt/cray-hss-devel/7.2.0/include -msse3 -D__CRAYXC -D__CRAY_X86_64 -D__CRAYXT_COMPUTE_LINUX_TARGET -v -Wl,-rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -lintlc -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib -L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64 -L/opt/cray/atp/1.8.1/libApp -Wl,-Ttext-segment=0x20000000,-zmax-page-size=0x20000000 -Wl,--whole-archive,-lhugetlbfs,--no-whole-archive -Wl,--as-needed,-lmpich_intel,--no-as-needed -lAtpSigHandler -lAtpSigHCommData -Wl,--undefined=_ATP_Data_Globals -Wl,--undefined=__atpHandlerInstall -lrca -Wl,--as-needed,-lmpichf90_intel,--no-as-needed -Wl,--as-needed,-lsci_intel_mpi,--no-as-needed -Wl,--as-needed,-lsci_intel,--no-as-needed -Wl,--as-needed,-limf,--no-as-needed -Wl,--as-needed,-lm,--no-as-needed -Wl,--as-needed,-lpthread,--no-as-needed" -mGLOB_cxx_limited_range=FALSE -mCG_extend_parms=FALSE -mGLOB_compiler_bin_directory=/opt/intel/composer_xe_2015.3.187/bin/intel64 -mGLOB_as_output_backup_file_name=/tmp/ifortyD6QCHas_.s -mIPOPT_activate -mIPOPT_lite -mGLOB_em64t -mGLOB_instruction_tuning=0x0 -mGLOB_product_id_code=0x22006d8f -mCG_bnl_movbe=T -mGLOB_extended_instructions=0x20 -mP3OPT_use_mspp_call_convention -mP2OPT_subs_out_of_bound=FALSE -mGLOB_ansi_alias -mPGOPTI_value_profile_use=T -mGLOB_opt_report_use_source_name -mP2OPT_il0_array_sections=TRUE -mGLOB_offload_mode=1 -mP2OPT_offload_unique_var_string=ifort01010991985920AztUR -mP2OPT_hlo_level=2 -mP2OPT_hlo -mP2OPT_hpo_rtt_control=0 -mIPOPT_args_in_regs=0 -mP2OPT_disam_assume_nonstd_intent_in=FALSE -mGLOB_imf_mapping_library=/opt/intel/composer_xe_2015.3.187/bin/intel64/libiml_attr.so -mIPOPT_single_file_compile_and_link=TRUE -mPGOPTI_gen_threadsafe_level=0 -mIPOPT_lto_object_enabled -mIPOPT_lto_object_value=1 -mIPOPT_obj_output_file_name=/tmp/ifortqzh0D5.o -mIPOPT_whole_archive_fixup_file_name=/tmp/ifortwarch89tGEv -mGLOB_linker_version=2.23.1 -mGLOB_long_size_64 -mGLOB_routine_pointer_size_64 -mGLOB_driver_tempfile_name=/tmp/iforttempfilea5OOFp -mP3OPT_asm_target=P3OPT_ASM_TARGET_GAS -mGLOB_async_unwind_tables=TRUE -mGLOB_obj_output_file=/tmp/ifortqzh0D5.o -mGLOB_source_dialect=GLOB_SOURCE_DIALECT_FORTRAN -mP1OPT_source_file_name=CMakeFortranCompilerId.F -mP2OPT_symtab_type_copy=true /tmp/ifortZw53CZ.i
+#include "..." search starts here:
+#include <...> search starts here:
+ .
+ /opt/cray/mpt/7.2.0/gni/mpich2-intel/140/include
+ /opt/cray/libsci/13.0.3/INTEL/140/x86_64/include
+ /opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/include
+ /opt/cray/alps/5.2.4-2.0502.9774.31.11.ari/include
+ /opt/cray/xpmem/0.1-2.0502.64982.5.3.ari/include
+ /opt/cray/gni-headers/4.0-1.0502.10859.7.8.ari/include
+ /opt/cray/pmi/5.0.6-1.0000.10439.140.2.ari/include
+ /opt/cray/ugni/6.0-1.0502.10863.8.29.ari/include
+ /opt/cray/udreg/2.3.2-1.0502.10518.2.17.ari/include
+ /opt/cray/wlm_detect/1.0-1.0502.64649.2.1.ari/include
+ /opt/cray/krca/1.0.0-2.0502.67049.8.22.ari/include
+ /opt/cray-hss-devel/7.2.0/include
+ /opt/intel/composer_xe_2015.3.187/ipp/include
+ /opt/intel/composer_xe_2015.3.187/mkl/include
+ /opt/intel/composer_xe_2015.3.187/tbb/include
+ /opt/intel/composer_xe_2015.3.187/compiler/include/intel64
+ /opt/intel/composer_xe_2015.3.187/compiler/include
+ /usr/local/include
+ /usr/lib64/gcc/x86_64-suse-linux/4.3/include
+ /usr/lib64/gcc/x86_64-suse-linux/4.3/include-fixed
+ /usr/include/
+ /usr/include
+End of search list.
+ld    /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crt1.o /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crti.o /usr/lib64/gcc/x86_64-suse-linux/4.3/crtbegin.o --eh-frame-hdr --build-id -dynamic-linker /lib64/ld-linux-x86-64.so.2 -m elf_x86_64 -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib -L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64 -L/opt/cray/atp/1.8.1/libApp -o a.out /opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/for_main.o -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1 -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/usr/lib64/gcc/x86_64-suse-linux/4.3/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64 -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/ -L/lib/../lib64 -L/lib/../lib64/ -L/usr/lib/../lib64 -L/usr/lib/../lib64/ -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../ -L/lib64 -L/lib/ -L/usr/lib64 -L/usr/lib /tmp/ifortqzh0D5.o -rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -lintlc -Ttext-segment=0x20000000 -zmax-page-size=0x20000000 --whole-archive -lhugetlbfs --no-whole-archive --as-needed -lmpich_intel --no-as-needed -lAtpSigHandler -lAtpSigHCommData --undefined=_ATP_Data_Globals --undefined=__atpHandlerInstall -lrca --as-needed -lmpichf90_intel --no-as-needed --as-needed -lsci_intel_mpi --no-as-needed --as-needed -lsci_intel --no-as-needed --as-needed -limf --no-as-needed --as-needed -lm --no-as-needed --as-needed -lpthread --no-as-needed -Bdynamic -Bstatic -lifport -lifcore -limf -lsvml -Bdynamic -lm -Bstatic -lipgo -lirc -Bdynamic -lpthread -Bstatic -lsvml -Bdynamic -lc -lgcc -lgcc_s -Bstatic -lirc_s -Bdynamic -ldl -lc /usr/lib64/gcc/x86_64-suse-linux/4.3/crtend.o /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crtn.o
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+
+
+Compilation of the Fortran compiler identification source "CMakeFortranCompilerId.F" produced "a.out"
+
+The Fortran compiler identification is Intel, found in "/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/3.6.2/CompilerIdFortran/a.out"
+
+Determining if the Fortran compiler works passed with the following output:
+Change Dir: /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_75b74/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_75b74.dir/build.make CMakeFiles/cmTC_75b74.dir/build
+gmake[1]: Entering directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_75b74.dir/testFortranCompiler.f.o
+/opt/cray/craype/2.3.0/bin/ftn     -c /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp/testFortranCompiler.f -o CMakeFiles/cmTC_75b74.dir/testFortranCompiler.f.o
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+Linking Fortran executable cmTC_75b74
+/gpfs/hps2/usrx/local/dev/cmake/3.6.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_75b74.dir/link.txt --verbose=1
+/opt/cray/craype/2.3.0/bin/ftn       CMakeFiles/cmTC_75b74.dir/testFortranCompiler.f.o  -o cmTC_75b74 -dynamic 
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+gmake[1]: Leaving directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+
+
+Detecting Fortran compiler ABI info compiled with the following output:
+Change Dir: /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_7e933/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_7e933.dir/build.make CMakeFiles/cmTC_7e933.dir/build
+gmake[1]: Entering directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_7e933.dir/CMakeFortranCompilerABI.F.o
+/opt/cray/craype/2.3.0/bin/ftn     -c /gpfs/hps2/usrx/local/dev/cmake/3.6.2/share/cmake-3.6/Modules/CMakeFortranCompilerABI.F -o CMakeFiles/cmTC_7e933.dir/CMakeFortranCompilerABI.F.o
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+Linking Fortran executable cmTC_7e933
+/gpfs/hps2/usrx/local/dev/cmake/3.6.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7e933.dir/link.txt --verbose=1
+/opt/cray/craype/2.3.0/bin/ftn    -v   CMakeFiles/cmTC_7e933.dir/CMakeFortranCompilerABI.F.o  -o cmTC_7e933 -dynamic  
+ifort version 15.0.3
+/opt/intel/composer_xe_2015.3.187/bin/intel64/fortcom    -mP1OPT_version=15.0-intel64 -mGLOB_diag_file=CMakeFiles/cmTC_7e933.dir/CMakeFortranCompilerABI.F.diag -mGLOB_source_language=GLOB_SOURCE_LANGUAGE_F90 -mP2OPT_static_promotion -mP1OPT_print_version=FALSE -mCG_use_gas_got_workaround=F -mP2OPT_align_option_used=TRUE -mGLOB_gcc_version=430 "-mGLOB_options_string=-I/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/include -I/opt/cray/libsci/13.0.3/INTEL/140/x86_64/include -I/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/include -I/opt/cray/alps/5.2.4-2.0502.9774.31.11.ari/include -I/opt/cray/xpmem/0.1-2.0502.64982.5.3.ari/include -I/opt/cray/gni-headers/4.0-1.0502.10859.7.8.ari/include -I/opt/cray/pmi/5.0.6-1.0000.10439.140.2.ari/include -I/opt/cray/ugni/6.0-1.0502.10863.8.29.ari/include -I/opt/cray/udreg/2.3.2-1.0502.10518.2.17.ari/include -I/opt/cray/wlm_detect/1.0-1.0502.64649.2.1.ari/include -I/opt/cray/krca/1.0.0-2.0502.67049.8.22.ari/include -I/opt/cray-hss-devel/7.2.0/include -msse3 -D__CRAYXC -D__CRAY_X86_64 -D__CRAYXT_COMPUTE_LINUX_TARGET -v -o cmTC_7e933 -Wl,-rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -lintlc -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib -L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64 -L/opt/cray/atp/1.8.1/libApp -Wl,-Ttext-segment=0x20000000,-zmax-page-size=0x20000000 -Wl,--whole-archive,-lhugetlbfs,--no-whole-archive -Wl,--as-needed,-lmpich_intel,--no-as-needed -lAtpSigHandler -lAtpSigHCommData -Wl,--undefined=_ATP_Data_Globals -Wl,--undefined=__atpHandlerInstall -lrca -Wl,--as-needed,-lmpichf90_intel,--no-as-needed -Wl,--as-needed,-lsci_intel_mpi,--no-as-needed -Wl,--as-needed,-lsci_intel,--no-as-needed -Wl,--as-needed,-limf,--no-as-needed -Wl,--as-needed,-lm,--no-as-needed -Wl,--as-needed,-lpthread,--no-as-needed" -mGLOB_cxx_limited_range=FALSE -mCG_extend_parms=FALSE -mGLOB_compiler_bin_directory=/opt/intel/composer_xe_2015.3.187/bin/intel64 -mGLOB_as_output_backup_file_name=/tmp/ifortsJuO5Das_.s -mIPOPT_activate -mGLOB_em64t -mGLOB_product_id_code=0x22006d8f -mGLOB_extended_instructions=0x20 -mP3OPT_use_mspp_call_convention -mP2OPT_subs_out_of_bound=FALSE -mGLOB_ansi_alias -mPGOPTI_value_profile_use=T -mGLOB_opt_report_use_source_name -mP2OPT_il0_array_sections=TRUE -mGLOB_offload_mode=1 -mP2OPT_offload_unique_var_string=ifort0109030343954WPuyn -mP2OPT_hlo -mP2OPT_hpo_rtt_control=0 -mIPOPT_args_in_regs=0 -mP2OPT_disam_assume_nonstd_intent_in=FALSE -mGLOB_imf_mapping_library=/opt/intel/composer_xe_2015.3.187/bin/intel64/libiml_attr.so -mPGOPTI_gen_threadsafe_level=0 -mIPOPT_link -mIPOPT_ipo_activate -mIPOPT_mo_activate -mIPOPT_source_files_list=/tmp/ifortslisVE67dA -mIPOPT_mo_global_data -mIPOPT_link_script_file=/tmp/ifortscripthLmMvB "-mIPOPT_cmdline_link="/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crt1.o" "/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crti.o" "/usr/lib64/gcc/x86_64-suse-linux/4.3/crtbegin.o" "--eh-frame-hdr" "--build-id" "-dynamic-linker" "/lib64/ld-linux-x86-64.so.2" "-m" "elf_x86_64" "-L/opt/cray/dmapp/default/lib64" "-L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib" "-L/opt/cray/dmapp/default/lib64" "-L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib" "-L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib" "-L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64" "-L/opt/cray/atp/1.8.1/libApp" "-o" "cmTC_7e933" "/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/for_main.o" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/" "-L/lib/../lib64" "-L/lib/../lib64/" "-L/usr/lib/../lib64" "-L/usr/lib/../lib64/" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../" "-L/lib64" "-L/lib/" "-L/usr/lib64" "-L/usr/lib" "CMakeFiles/cmTC_7e933.dir/CMakeFortranCompilerABI.F.o" "-rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-lintlc" "-Ttext-segment=0x20000000" "-zmax-page-size=0x20000000" "--whole-archive" "-lhugetlbfs" "--no-whole-archive" "--as-needed" "-lmpich_intel" "--no-as-needed" "-lAtpSigHandler" "-lAtpSigHCommData" "--undefined=_ATP_Data_Globals" "--undefined=__atpHandlerInstall" "-lrca" "--as-needed" "-lmpichf90_intel" "--no-as-needed" "--as-needed" "-lsci_intel_mpi" "--no-as-needed" "--as-needed" "-lsci_intel" "--no-as-needed" "--as-needed" "-limf" "--no-as-needed" "--as-needed" "-lm" "--no-as-needed" "--as-needed" "-lpthread" "--no-as-needed" "-Bdynamic" "-Bstatic" "-lifport" "-lifcore" "-limf" "-lsvml" "-Bdynamic" "-lm" "-Bstatic" "-lipgo" "-lirc" "-Bdynamic" "-lpthread" "-Bstatic" "-lsvml" "-Bdynamic" "-lc" "-lgcc" "-lgcc_s" "-Bstatic" "-lirc_s" "-Bdynamic" "-ldl" "-lc" "/usr/lib64/gcc/x86_64-suse-linux/4.3/crtend.o" "/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crtn.o"" -mIPOPT_il_in_obj -mIPOPT_ipo_activate_warn=FALSE -mIPOPT_obj_output_file_name=/tmp/ipo_ifortIMhjws.o -mIPOPT_whole_archive_fixup_file_name=/tmp/ifortwarchvHRt0P -mGLOB_linker_version=2.23.1 -mGLOB_long_size_64 -mGLOB_routine_pointer_size_64 -mGLOB_driver_tempfile_name=/tmp/iforttempfilelh2dmR -mP3OPT_asm_target=P3OPT_ASM_TARGET_GAS -mGLOB_async_unwind_tables=TRUE -mGLOB_obj_output_file=/tmp/ipo_ifortIMhjws.o -mGLOB_source_dialect=GLOB_SOURCE_DIALECT_NONE -mP1OPT_source_file_name=ipo_out.f -mP2OPT_symtab_type_copy=true CMakeFiles/cmTC_7e933.dir/CMakeFortranCompilerABI.F.o -mIPOPT_object_files=T -mIPOPT_assembly_files=/tmp/ifortalisHRuz5u -mIPOPT_generated_tempfiles=/tmp/ifortelisJ27cnw -mIPOPT_embedded_object_base_name=/tmp/iforteobj7ACQEx -mIPOPT_cmdline_link_new_name=/tmp/ifortllis4fauWy
+ld    /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crt1.o /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crti.o /usr/lib64/gcc/x86_64-suse-linux/4.3/crtbegin.o --eh-frame-hdr --build-id -dynamic-linker /lib64/ld-linux-x86-64.so.2 -m elf_x86_64 -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib -L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64 -L/opt/cray/atp/1.8.1/libApp -o cmTC_7e933 /opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/for_main.o -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1 -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/usr/lib64/gcc/x86_64-suse-linux/4.3/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64 -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/ -L/lib/../lib64 -L/lib/../lib64/ -L/usr/lib/../lib64 -L/usr/lib/../lib64/ -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../ -L/lib64 -L/lib/ -L/usr/lib64 -L/usr/lib CMakeFiles/cmTC_7e933.dir/CMakeFortranCompilerABI.F.o -rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -lintlc -Ttext-segment=0x20000000 -zmax-page-size=0x20000000 --whole-archive -lhugetlbfs --no-whole-archive --as-needed -lmpich_intel --no-as-needed -lAtpSigHandler -lAtpSigHCommData --undefined=_ATP_Data_Globals --undefined=__atpHandlerInstall -lrca --as-needed -lmpichf90_intel --no-as-needed --as-needed -lsci_intel_mpi --no-as-needed --as-needed -lsci_intel --no-as-needed --as-needed -limf --no-as-needed --as-needed -lm --no-as-needed --as-needed -lpthread --no-as-needed -Bdynamic -Bstatic -lifport -lifcore -limf -lsvml -Bdynamic -lm -Bstatic -lipgo -lirc -Bdynamic -lpthread -Bstatic -lsvml -Bdynamic -lc -lgcc -lgcc_s -Bstatic -lirc_s -Bdynamic -ldl -lc /usr/lib64/gcc/x86_64-suse-linux/4.3/crtend.o /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crtn.o
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+gmake[1]: Leaving directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+
+
+Parsed Fortran implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command:"/usr/bin/gmake" "cmTC_7e933/fast"]
+  ignore line: [/usr/bin/gmake -f CMakeFiles/cmTC_7e933.dir/build.make CMakeFiles/cmTC_7e933.dir/build]
+  ignore line: [gmake[1]: Entering directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp']
+  ignore line: [Building Fortran object CMakeFiles/cmTC_7e933.dir/CMakeFortranCompilerABI.F.o]
+  ignore line: [/opt/cray/craype/2.3.0/bin/ftn     -c /gpfs/hps2/usrx/local/dev/cmake/3.6.2/share/cmake-3.6/Modules/CMakeFortranCompilerABI.F -o CMakeFiles/cmTC_7e933.dir/CMakeFortranCompilerABI.F.o]
+  ignore line: [No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.]
+  ignore line: [Load a valid targeting module or set CRAY_CPU_TARGET]
+  ignore line: [Linking Fortran executable cmTC_7e933]
+  ignore line: [/gpfs/hps2/usrx/local/dev/cmake/3.6.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7e933.dir/link.txt --verbose=1]
+  ignore line: [/opt/cray/craype/2.3.0/bin/ftn    -v   CMakeFiles/cmTC_7e933.dir/CMakeFortranCompilerABI.F.o  -o cmTC_7e933 -dynamic  ]
+  ignore line: [ifort version 15.0.3]
+  ignore line: [/opt/intel/composer_xe_2015.3.187/bin/intel64/fortcom    -mP1OPT_version=15.0-intel64 -mGLOB_diag_file=CMakeFiles/cmTC_7e933.dir/CMakeFortranCompilerABI.F.diag -mGLOB_source_language=GLOB_SOURCE_LANGUAGE_F90 -mP2OPT_static_promotion -mP1OPT_print_version=FALSE -mCG_use_gas_got_workaround=F -mP2OPT_align_option_used=TRUE -mGLOB_gcc_version=430 "-mGLOB_options_string=-I/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/include -I/opt/cray/libsci/13.0.3/INTEL/140/x86_64/include -I/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/include -I/opt/cray/alps/5.2.4-2.0502.9774.31.11.ari/include -I/opt/cray/xpmem/0.1-2.0502.64982.5.3.ari/include -I/opt/cray/gni-headers/4.0-1.0502.10859.7.8.ari/include -I/opt/cray/pmi/5.0.6-1.0000.10439.140.2.ari/include -I/opt/cray/ugni/6.0-1.0502.10863.8.29.ari/include -I/opt/cray/udreg/2.3.2-1.0502.10518.2.17.ari/include -I/opt/cray/wlm_detect/1.0-1.0502.64649.2.1.ari/include -I/opt/cray/krca/1.0.0-2.0502.67049.8.22.ari/include -I/opt/cray-hss-devel/7.2.0/include -msse3 -D__CRAYXC -D__CRAY_X86_64 -D__CRAYXT_COMPUTE_LINUX_TARGET -v -o cmTC_7e933 -Wl,-rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -lintlc -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib -L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64 -L/opt/cray/atp/1.8.1/libApp -Wl,-Ttext-segment=0x20000000,-zmax-page-size=0x20000000 -Wl,--whole-archive,-lhugetlbfs,--no-whole-archive -Wl,--as-needed,-lmpich_intel,--no-as-needed -lAtpSigHandler -lAtpSigHCommData -Wl,--undefined=_ATP_Data_Globals -Wl,--undefined=__atpHandlerInstall -lrca -Wl,--as-needed,-lmpichf90_intel,--no-as-needed -Wl,--as-needed,-lsci_intel_mpi,--no-as-needed -Wl,--as-needed,-lsci_intel,--no-as-needed -Wl,--as-needed,-limf,--no-as-needed -Wl,--as-needed,-lm,--no-as-needed -Wl,--as-needed,-lpthread,--no-as-needed" -mGLOB_cxx_limited_range=FALSE -mCG_extend_parms=FALSE -mGLOB_compiler_bin_directory=/opt/intel/composer_xe_2015.3.187/bin/intel64 -mGLOB_as_output_backup_file_name=/tmp/ifortsJuO5Das_.s -mIPOPT_activate -mGLOB_em64t -mGLOB_product_id_code=0x22006d8f -mGLOB_extended_instructions=0x20 -mP3OPT_use_mspp_call_convention -mP2OPT_subs_out_of_bound=FALSE -mGLOB_ansi_alias -mPGOPTI_value_profile_use=T -mGLOB_opt_report_use_source_name -mP2OPT_il0_array_sections=TRUE -mGLOB_offload_mode=1 -mP2OPT_offload_unique_var_string=ifort0109030343954WPuyn -mP2OPT_hlo -mP2OPT_hpo_rtt_control=0 -mIPOPT_args_in_regs=0 -mP2OPT_disam_assume_nonstd_intent_in=FALSE -mGLOB_imf_mapping_library=/opt/intel/composer_xe_2015.3.187/bin/intel64/libiml_attr.so -mPGOPTI_gen_threadsafe_level=0 -mIPOPT_link -mIPOPT_ipo_activate -mIPOPT_mo_activate -mIPOPT_source_files_list=/tmp/ifortslisVE67dA -mIPOPT_mo_global_data -mIPOPT_link_script_file=/tmp/ifortscripthLmMvB "-mIPOPT_cmdline_link="/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crt1.o" "/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crti.o" "/usr/lib64/gcc/x86_64-suse-linux/4.3/crtbegin.o" "--eh-frame-hdr" "--build-id" "-dynamic-linker" "/lib64/ld-linux-x86-64.so.2" "-m" "elf_x86_64" "-L/opt/cray/dmapp/default/lib64" "-L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib" "-L/opt/cray/dmapp/default/lib64" "-L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib" "-L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib" "-L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64" "-L/opt/cray/atp/1.8.1/libApp" "-o" "cmTC_7e933" "/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/for_main.o" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64" "-L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/" "-L/lib/../lib64" "-L/lib/../lib64/" "-L/usr/lib/../lib64" "-L/usr/lib/../lib64/" "-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/" "-L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/" "-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../" "-L/lib64" "-L/lib/" "-L/usr/lib64" "-L/usr/lib" "CMakeFiles/cmTC_7e933.dir/CMakeFortranCompilerABI.F.o" "-rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64" "-lintlc" "-Ttext-segment=0x20000000" "-zmax-page-size=0x20000000" "--whole-archive" "-lhugetlbfs" "--no-whole-archive" "--as-needed" "-lmpich_intel" "--no-as-needed" "-lAtpSigHandler" "-lAtpSigHCommData" "--undefined=_ATP_Data_Globals" "--undefined=__atpHandlerInstall" "-lrca" "--as-needed" "-lmpichf90_intel" "--no-as-needed" "--as-needed" "-lsci_intel_mpi" "--no-as-needed" "--as-needed" "-lsci_intel" "--no-as-needed" "--as-needed" "-limf" "--no-as-needed" "--as-needed" "-lm" "--no-as-needed" "--as-needed" "-lpthread" "--no-as-needed" "-Bdynamic" "-Bstatic" "-lifport" "-lifcore" "-limf" "-lsvml" "-Bdynamic" "-lm" "-Bstatic" "-lipgo" "-lirc" "-Bdynamic" "-lpthread" "-Bstatic" "-lsvml" "-Bdynamic" "-lc" "-lgcc" "-lgcc_s" "-Bstatic" "-lirc_s" "-Bdynamic" "-ldl" "-lc" "/usr/lib64/gcc/x86_64-suse-linux/4.3/crtend.o" "/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crtn.o"" -mIPOPT_il_in_obj -mIPOPT_ipo_activate_warn=FALSE -mIPOPT_obj_output_file_name=/tmp/ipo_ifortIMhjws.o -mIPOPT_whole_archive_fixup_file_name=/tmp/ifortwarchvHRt0P -mGLOB_linker_version=2.23.1 -mGLOB_long_size_64 -mGLOB_routine_pointer_size_64 -mGLOB_driver_tempfile_name=/tmp/iforttempfilelh2dmR -mP3OPT_asm_target=P3OPT_ASM_TARGET_GAS -mGLOB_async_unwind_tables=TRUE -mGLOB_obj_output_file=/tmp/ipo_ifortIMhjws.o -mGLOB_source_dialect=GLOB_SOURCE_DIALECT_NONE -mP1OPT_source_file_name=ipo_out.f -mP2OPT_symtab_type_copy=true CMakeFiles/cmTC_7e933.dir/CMakeFortranCompilerABI.F.o -mIPOPT_object_files=T -mIPOPT_assembly_files=/tmp/ifortalisHRuz5u -mIPOPT_generated_tempfiles=/tmp/ifortelisJ27cnw -mIPOPT_embedded_object_base_name=/tmp/iforteobj7ACQEx -mIPOPT_cmdline_link_new_name=/tmp/ifortllis4fauWy]
+  link line: [ld    /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crt1.o /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crti.o /usr/lib64/gcc/x86_64-suse-linux/4.3/crtbegin.o --eh-frame-hdr --build-id -dynamic-linker /lib64/ld-linux-x86-64.so.2 -m elf_x86_64 -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/dmapp/default/lib64 -L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib -L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib -L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64 -L/opt/cray/atp/1.8.1/libApp -o cmTC_7e933 /opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/for_main.o -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64 -L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1 -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -L/usr/lib64/gcc/x86_64-suse-linux/4.3/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64 -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/ -L/lib/../lib64 -L/lib/../lib64/ -L/usr/lib/../lib64 -L/usr/lib/../lib64/ -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/ -L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/ -L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../ -L/lib64 -L/lib/ -L/usr/lib64 -L/usr/lib CMakeFiles/cmTC_7e933.dir/CMakeFortranCompilerABI.F.o -rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -lintlc -Ttext-segment=0x20000000 -zmax-page-size=0x20000000 --whole-archive -lhugetlbfs --no-whole-archive --as-needed -lmpich_intel --no-as-needed -lAtpSigHandler -lAtpSigHCommData --undefined=_ATP_Data_Globals --undefined=__atpHandlerInstall -lrca --as-needed -lmpichf90_intel --no-as-needed --as-needed -lsci_intel_mpi --no-as-needed --as-needed -lsci_intel --no-as-needed --as-needed -limf --no-as-needed --as-needed -lm --no-as-needed --as-needed -lpthread --no-as-needed -Bdynamic -Bstatic -lifport -lifcore -limf -lsvml -Bdynamic -lm -Bstatic -lipgo -lirc -Bdynamic -lpthread -Bstatic -lsvml -Bdynamic -lc -lgcc -lgcc_s -Bstatic -lirc_s -Bdynamic -ldl -lc /usr/lib64/gcc/x86_64-suse-linux/4.3/crtend.o /usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crtn.o]
+    arg [ld] ==> ignore
+    arg [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crt1.o] ==> ignore
+    arg [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crti.o] ==> ignore
+    arg [/usr/lib64/gcc/x86_64-suse-linux/4.3/crtbegin.o] ==> ignore
+    arg [--eh-frame-hdr] ==> ignore
+    arg [--build-id] ==> ignore
+    arg [-dynamic-linker] ==> ignore
+    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+    arg [-m] ==> ignore
+    arg [elf_x86_64] ==> ignore
+    arg [-L/opt/cray/dmapp/default/lib64] ==> dir [/opt/cray/dmapp/default/lib64]
+    arg [-L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib] ==> dir [/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib]
+    arg [-L/opt/cray/dmapp/default/lib64] ==> dir [/opt/cray/dmapp/default/lib64]
+    arg [-L/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib] ==> dir [/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib]
+    arg [-L/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib] ==> dir [/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib]
+    arg [-L/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64] ==> dir [/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64]
+    arg [-L/opt/cray/atp/1.8.1/libApp] ==> dir [/opt/cray/atp/1.8.1/libApp]
+    arg [-o] ==> ignore
+    arg [cmTC_7e933] ==> ignore
+    arg [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/for_main.o] ==> ignore
+    arg [-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+    arg [-L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64] ==> dir [/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64]
+    arg [-L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64] ==> dir [/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64]
+    arg [-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+    arg [-L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64] ==> dir [/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64]
+    arg [-L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1] ==> dir [/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1]
+    arg [-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+    arg [-L/usr/lib64/gcc/x86_64-suse-linux/4.3/] ==> dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/]
+    arg [-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64] ==> dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64]
+    arg [-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/] ==> dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/]
+    arg [-L/lib/../lib64] ==> dir [/lib/../lib64]
+    arg [-L/lib/../lib64/] ==> dir [/lib/../lib64/]
+    arg [-L/usr/lib/../lib64] ==> dir [/usr/lib/../lib64]
+    arg [-L/usr/lib/../lib64/] ==> dir [/usr/lib/../lib64/]
+    arg [-L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/] ==> dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/]
+    arg [-L/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/] ==> dir [/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/]
+    arg [-L/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/] ==> dir [/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/]
+    arg [-L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/] ==> dir [/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/]
+    arg [-L/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/] ==> dir [/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/]
+    arg [-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/] ==> dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/]
+    arg [-L/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../] ==> dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../]
+    arg [-L/lib64] ==> dir [/lib64]
+    arg [-L/lib/] ==> dir [/lib/]
+    arg [-L/usr/lib64] ==> dir [/usr/lib64]
+    arg [-L/usr/lib] ==> dir [/usr/lib]
+    arg [CMakeFiles/cmTC_7e933.dir/CMakeFortranCompilerABI.F.o] ==> ignore
+    arg [-rpath=/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> ignore
+    arg [-lintlc] ==> lib [intlc]
+    arg [-Ttext-segment=0x20000000] ==> ignore
+    arg [-zmax-page-size=0x20000000] ==> ignore
+    arg [--whole-archive] ==> ignore
+    arg [-lhugetlbfs] ==> lib [hugetlbfs]
+    arg [--no-whole-archive] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-lmpich_intel] ==> lib [mpich_intel]
+    arg [--no-as-needed] ==> ignore
+    arg [-lAtpSigHandler] ==> lib [AtpSigHandler]
+    arg [-lAtpSigHCommData] ==> lib [AtpSigHCommData]
+    arg [--undefined=_ATP_Data_Globals] ==> ignore
+    arg [--undefined=__atpHandlerInstall] ==> ignore
+    arg [-lrca] ==> lib [rca]
+    arg [--as-needed] ==> ignore
+    arg [-lmpichf90_intel] ==> lib [mpichf90_intel]
+    arg [--no-as-needed] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-lsci_intel_mpi] ==> lib [sci_intel_mpi]
+    arg [--no-as-needed] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-lsci_intel] ==> lib [sci_intel]
+    arg [--no-as-needed] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-limf] ==> lib [imf]
+    arg [--no-as-needed] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-lm] ==> lib [m]
+    arg [--no-as-needed] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-lpthread] ==> lib [pthread]
+    arg [--no-as-needed] ==> ignore
+    arg [-Bdynamic] ==> ignore
+    arg [-Bstatic] ==> ignore
+    arg [-lifport] ==> lib [ifport]
+    arg [-lifcore] ==> lib [ifcore]
+    arg [-limf] ==> lib [imf]
+    arg [-lsvml] ==> lib [svml]
+    arg [-Bdynamic] ==> ignore
+    arg [-lm] ==> lib [m]
+    arg [-Bstatic] ==> ignore
+    arg [-lipgo] ==> lib [ipgo]
+    arg [-lirc] ==> lib [irc]
+    arg [-Bdynamic] ==> ignore
+    arg [-lpthread] ==> lib [pthread]
+    arg [-Bstatic] ==> ignore
+    arg [-lsvml] ==> lib [svml]
+    arg [-Bdynamic] ==> ignore
+    arg [-lc] ==> lib [c]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-Bstatic] ==> ignore
+    arg [-lirc_s] ==> lib [irc_s]
+    arg [-Bdynamic] ==> ignore
+    arg [-ldl] ==> lib [dl]
+    arg [-lc] ==> lib [c]
+    arg [/usr/lib64/gcc/x86_64-suse-linux/4.3/crtend.o] ==> ignore
+    arg [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/crtn.o] ==> ignore
+  remove lib [gcc]
+  remove lib [gcc_s]
+  collapse library dir [/opt/cray/dmapp/default/lib64] ==> [/opt/cray/dmapp/default/lib64]
+  collapse library dir [/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib] ==> [/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib]
+  collapse library dir [/opt/cray/dmapp/default/lib64] ==> [/opt/cray/dmapp/default/lib64]
+  collapse library dir [/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib] ==> [/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib]
+  collapse library dir [/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib] ==> [/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib]
+  collapse library dir [/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64] ==> [/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64]
+  collapse library dir [/opt/cray/atp/1.8.1/libApp] ==> [/opt/cray/atp/1.8.1/libApp]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64] ==> [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64] ==> [/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64] ==> [/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1] ==> [/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64] ==> [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+  collapse library dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/] ==> [/usr/lib64/gcc/x86_64-suse-linux/4.3]
+  collapse library dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64] ==> [/usr/lib64]
+  collapse library dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../lib64/] ==> [/usr/lib64]
+  collapse library dir [/lib/../lib64] ==> [/lib64]
+  collapse library dir [/lib/../lib64/] ==> [/lib64]
+  collapse library dir [/usr/lib/../lib64] ==> [/usr/lib64]
+  collapse library dir [/usr/lib/../lib64/] ==> [/usr/lib64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64/] ==> [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/ipp/../compiler/lib/intel64/] ==> [/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64/] ==> [/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64/] ==> [/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64]
+  collapse library dir [/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1/] ==> [/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1]
+  collapse library dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../../x86_64-suse-linux/lib/] ==> [/usr/x86_64-suse-linux/lib]
+  collapse library dir [/usr/lib64/gcc/x86_64-suse-linux/4.3/../../../] ==> [/usr/lib64]
+  collapse library dir [/lib64] ==> [/lib64]
+  collapse library dir [/lib/] ==> [/lib]
+  collapse library dir [/usr/lib64] ==> [/usr/lib64]
+  collapse library dir [/usr/lib] ==> [/usr/lib]
+  implicit libs: [intlc;hugetlbfs;mpich_intel;AtpSigHandler;AtpSigHCommData;rca;mpichf90_intel;sci_intel_mpi;sci_intel;imf;m;pthread;ifport;ifcore;imf;svml;m;ipgo;irc;pthread;svml;c;irc_s;dl;c]
+  implicit dirs: [/opt/cray/dmapp/default/lib64;/opt/cray/mpt/7.2.0/gni/mpich2-intel/140/lib;/opt/cray/libsci/13.0.3/INTEL/140/x86_64/lib;/opt/cray/rca/1.0.0-2.0502.60530.1.62.ari/lib64;/opt/cray/atp/1.8.1/libApp;/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64;/opt/intel/composer_xe_2015.3.187/ipp/lib/intel64;/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64;/opt/intel/composer_xe_2015.3.187/tbb/lib/intel64/gcc4.1;/usr/lib64/gcc/x86_64-suse-linux/4.3;/usr/lib64;/lib64;/usr/x86_64-suse-linux/lib;/lib;/usr/lib]
+  implicit fwks: []
+
+
+Determining if the Fortran compiler supports Fortran 90 passed with the following output:
+Change Dir: /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_7257f/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_7257f.dir/build.make CMakeFiles/cmTC_7257f.dir/build
+gmake[1]: Entering directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_7257f.dir/testFortranCompilerF90.f90.o
+/opt/cray/craype/2.3.0/bin/ftn     -c /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp/testFortranCompilerF90.f90 -o CMakeFiles/cmTC_7257f.dir/testFortranCompilerF90.f90.o
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+Linking Fortran executable cmTC_7257f
+/gpfs/hps2/usrx/local/dev/cmake/3.6.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7257f.dir/link.txt --verbose=1
+/opt/cray/craype/2.3.0/bin/ftn       CMakeFiles/cmTC_7257f.dir/testFortranCompilerF90.f90.o  -o cmTC_7257f -dynamic 
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+gmake[1]: Leaving directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+
+
+Performing C SOURCE FILE Test OpenMP_FLAG_DETECTED succeeded with the following output:
+Change Dir: /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_5bb9a/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_5bb9a.dir/build.make CMakeFiles/cmTC_5bb9a.dir/build
+gmake[1]: Entering directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_5bb9a.dir/src.c.o
+/opt/cray/craype/2.3.0/bin/cc    -DOpenMP_FLAG_DETECTED -qopenmp   -o CMakeFiles/cmTC_5bb9a.dir/src.c.o   -c /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp/src.c
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+Linking C executable cmTC_5bb9a
+/gpfs/hps2/usrx/local/dev/cmake/3.6.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5bb9a.dir/link.txt --verbose=1
+/opt/cray/craype/2.3.0/bin/cc   -DOpenMP_FLAG_DETECTED -qopenmp    CMakeFiles/cmTC_5bb9a.dir/src.c.o  -o cmTC_5bb9a -dynamic 
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+gmake[1]: Leaving directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C++ SOURCE FILE Test OpenMP_FLAG_DETECTED succeeded with the following output:
+Change Dir: /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_a8423/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_a8423.dir/build.make CMakeFiles/cmTC_a8423.dir/build
+gmake[1]: Entering directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_a8423.dir/src.cxx.o
+/opt/cray/craype/2.3.0/bin/CC     -DOpenMP_FLAG_DETECTED -qopenmp   -o CMakeFiles/cmTC_a8423.dir/src.cxx.o -c /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp/src.cxx
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+Linking CXX executable cmTC_a8423
+/gpfs/hps2/usrx/local/dev/cmake/3.6.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a8423.dir/link.txt --verbose=1
+/opt/cray/craype/2.3.0/bin/CC    -DOpenMP_FLAG_DETECTED -qopenmp    CMakeFiles/cmTC_a8423.dir/src.cxx.o  -o cmTC_a8423 -dynamic 
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+gmake[1]: Leaving directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing Fortran SOURCE FILE Test OpenMP_FLAG_DETECTED succeeded with the following output:
+Change Dir: /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_55e2c/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_55e2c.dir/build.make CMakeFiles/cmTC_55e2c.dir/build
+gmake[1]: Entering directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+Building Fortran object CMakeFiles/cmTC_55e2c.dir/src.F.o
+/opt/cray/craype/2.3.0/bin/ftn    -DOpenMP_FLAG_DETECTED -qopenmp   -c /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp/src.F -o CMakeFiles/cmTC_55e2c.dir/src.F.o
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+Linking Fortran executable cmTC_55e2c
+/gpfs/hps2/usrx/local/dev/cmake/3.6.2/bin/cmake -E cmake_link_script CMakeFiles/cmTC_55e2c.dir/link.txt --verbose=1
+/opt/cray/craype/2.3.0/bin/ftn      -DOpenMP_FLAG_DETECTED -qopenmp CMakeFiles/cmTC_55e2c.dir/src.F.o  -o cmTC_55e2c -dynamic 
+No supported cpu target is set, so CRAY_CPU_TARGET=x86-64.
+Load a valid targeting module or set CRAY_CPU_TARGET
+gmake[1]: Leaving directory `/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.v5.0.0/sorc/rap_gsi.fd/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+
+      program test
+      use omp_lib
+      integer :: n
+      n = omp_get_num_threads()
+      end program test
+  
