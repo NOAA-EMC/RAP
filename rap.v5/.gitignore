@@ -20,12 +20,6 @@ fix/rap_conus_elevtiles.grib2
 fix/rap_conus_slmask.grib2
 fix/rap_current_mesonet_uselist.txt
 
-sorc/rap_gsi.fd
-sorc/rap_prep_smoke.fd
-sorc/rap_wps.fd
-sorc/rap_wrfarw.fd
-sorc/rap_wrfbufr.fd/wrflibs
-
 exec/
 
 ush/rap_largefiles.tar
