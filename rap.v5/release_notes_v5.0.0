@@ -1,0 +1,111 @@
+elease Notes:  RAP v5.0.0
+
+v5.0.0 - released January 3, 2020
+   - Now uses WRF Version 3.9
+   - Updated versions of GSI and post processor
+   - Forecasts extended to 51 hours for 03/09/15/21z cycles
+   - Improved convective, radiation, LSM, and PBL schemes
+   - Better representation of sub-grid clouds
+   - Specification of smoke from VIIRS fire radiative power, 3D transport of smoke
+   - Upgrade being made concurrently with HRRRv4
+
+REPOSITORY DETAILS
+     After cloning the EMC_rap git repository, retrieve the new code from the rap.v5 directory.
+     The build script is located here: EMC_rap/rap.v5/sorc/build_rap_all.sh
+
+Output and Resources
+- output changes
+   - multiple new parameters in all output files
+   - output now available to f51 for 03/09/15/21z cycles
+   - smoke output now available in the wrfnat, wrfprs, 130pgrb, 130bgrb, 242, 242bgrb, 243, and 231 output files
+   - nawips output is now located in com/rap/prod/rap.$YYYYMMDD/gempak
+
+- compute resource information
+   - still runs every hour, but now to f51 at 03/09/15/21z
+   - forecast job changes from 50 nodes (1200 tasks, 24 tasks/node) to 72 nodes (1728 tasks, 24 tasks/node)
+   - partial cycle forecast job changes from 25 nodes (600 tasks, 24 tasks/node) to 48 nodes (1152 tasks, 24 tasks/node)
+   - process_enkf job changes from 8 tasks/node (10 nodes, 80 tasks) to 12 tasks/node (10 nodes, 120 tasks)
+   - new prep smoke job uses 1 node (24 tasks)
+   - single cycle runtime for non-extended forecasts remains about the same
+   - single cycle runtime for extended forecasts increases by ~3 minutes
+   - runtime changes from ~23 to ~26 minutes for forecast job 
+   - disk space changes
+      - Total: 1.1 TB/day (similar to RAPv4)
+      - com: 818 GB/day to 855 GB/day
+      - gempak subdirectory: 235 GB/day to 252 GB/day
+      - wmo subdirectory: 8.5 GB/day to 9.1 GB/day
+
+- Data retention for files in /com and /nwges under prod/para/test environments
+   - asking to maintain current retention of data in /com and /nwges in prod and recommend same retention for parallel.    
+   - Please mirror smartinit, awp130pgrb, awp242, awip32, awp252pgrb, awp236pgrb, class1 bufr files to development machine along with gempak subdirectories
+
+- new executables
+   - rap_fires_cycle_netcdf
+   - rap_fires_ncfmake
+   - rap_prep_chem_sources
+   - rap_process_fvcom
+   - rap_smartinit
+   - rap_smoke_fre_bbm
+   - rap_smoke_merge_frp
+   - rap_smoke_proc_j01_frp
+   - rap_smoke_proc_modis_frp
+   - rap_smoke_proc_npp_frp
+   - rap_smoke_qc_modis
+   - rap_smoke_qc_viirs
+
+- revised executables
+   - rap_full_cycle_surface
+   - rap_gsi
+   - rap_process_cloud
+   - rap_process_imssnow
+   - rap_process_lightning
+   - rap_process_mosaic
+   - rap_process_sst
+   - rap_sndp
+   - rap_stnmlist
+   - rap_subflds_g2
+   - rap_update_bc
+   - rap_update_fields
+   - rap_update_gvf
+   - rap_wps_metgrid
+   - rap_wps_ungrib
+   - rap_wrfarw_fcst
+   - rap_wrfarw_real
+   - rap_wrfbufr
+   - rap_wrfpost
+
+- eliminated executables
+   - rap_process_enkf (no longer used)
+   - rap_smartinit_ak (no longer used)
+   - rap_smartinit_conus (no longer used)
+   - rap_smartinit_hi (no longer used)
+   - rap_smartinit_pr (no longer used)
+
+- changes to directories
+   - nawips output is now located in com/rap/prod/rap.$YYYYMMDD/gempak
+    
+- pre-implementation testing requirements
+   - need to test obsproc upgrade concurrently
+   - need to run parallel HRRRs simultaneously, but the RAP parallel needs to be set up first
+   - need to run HRRRDAS concurrently with HRRR CONUS, though HRRR CONUS can run without it
+   - need to test verification code changes (those are the only downstream systems for which code changes are needed)
+   - need to test smartinit update
+   - please obtain initial guess files from the developers
+   - please retrieve large fix files from the following directory on WCOSS: /gpfs/hps3/emc/meso/save/Benjamin.Blake/nwprod_final/rap.v5.0.0/fix
+
+- Dissemination info
+   - output should be placed into /gpfs/hps/nco/ops/com/rap/para
+   - output should be placed on ftp server 
+   - output should be placed on paranomads - a directory structure has been set up
+   - request that all gempak output be transferred to DEVWCOSS as well as all awp130pgrb, awip32, and awp242 grib2 (awp242bgrb not needed)  files and prepbufr files
+   - code is proprietary, and restricted data is used but is not disseminated
+
+- Archive to HPSS
+   - scripts may need to be modified to save extra forecast hours at 03/09/15/21z
+   - Estimates for tarballs for runhistory
+      - awip32: 11.2 GB/day to 12.1 GB/day
+      - awp130: 9.96 GB/day to 10.8 GB/day
+      - bufr: 40 GB/day to ??? GB/day
+      - init (wrfbdy and wrf_inout): 192 GB/day to ??? GB/day
+      - wrf (prs + nat): 298 GB/day to 323 GB/day
+
