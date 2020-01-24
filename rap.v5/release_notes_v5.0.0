@@ -105,7 +105,7 @@ Output and Resources
    - Estimates for tarballs for runhistory
       - awip32: 11.2 GB/day to 12.1 GB/day
       - awp130: 9.96 GB/day to 10.8 GB/day
-      - bufr: 40 GB/day to ??? GB/day
-      - init (wrfbdy and wrf_inout): 192 GB/day to ??? GB/day
+      - bufr: 44 GB/day (similar to RAPv4)
+      - init (wrfbdy and wrf_inout): 204 GB/day to 282 GB/day
       - wrf (prs + nat): 298 GB/day to 323 GB/day
 
