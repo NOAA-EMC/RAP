@@ -92,6 +92,7 @@ Output and Resources
    - need to test smartinit update
    - please obtain initial guess files from the developers
    - please retrieve large fix files from the following directory on WCOSS: /gpfs/hps3/emc/meso/save/Benjamin.Blake/nwprod_final/rap.v5.0.0/fix
+   - please retrieve large parm files from the following directory on WCOSS and place in the corresponding rap.v5.0.0/parm directory: /gpfs/hps3/emc/meso/save/Benjamin.Blake/nwprod_final/parm_rap
 
 - Dissemination info
    - output should be placed into /gpfs/hps/nco/ops/com/rap/para
