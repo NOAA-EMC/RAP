@@ -1,7 +1,7 @@
 #
 # Define the name of the executable
 #
-TARGET   = ../../exec/rap_wrfpost_test
+TARGET   = ../../exec/rap_wrfpost
 
 #
 # CPP, Compiler, and Linker Options
