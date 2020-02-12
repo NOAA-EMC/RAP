@@ -1245,6 +1245,11 @@
        </param>
 
        <param>
+          <shortname>ACM_FRAIN_ON_SURFACE</shortname>
+          <scale>6.0</scale>
+       </param>
+
+       <param>
           <shortname>BUCKET_APCP_ON_SURFACE</shortname>
           <scale>-3.0</scale>
        </param>

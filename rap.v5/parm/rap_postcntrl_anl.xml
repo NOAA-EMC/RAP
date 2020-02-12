@@ -1215,6 +1215,11 @@
        </param>
 
        <param>
+          <shortname>ACM_FRAIN_ON_SURFACE</shortname>
+          <scale>6.0</scale>
+       </param>
+
+       <param>
            <shortname>GSD_CSNOW_ON_SURFACE</shortname>
            <table_info>NCEP</table_info>
            <scale>1.0</scale>
