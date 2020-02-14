@@ -589,3 +589,5 @@ HINDEX:surface
 HGT:planetary boundary layer
 HGT:cloud ceiling
 MASSDEN:8 m above ground
+LAYTH:261 K level - 256 K level
+TCDC:boundary layer cloud
