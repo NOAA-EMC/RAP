@@ -70,6 +70,7 @@ export FIXrap=${FIXrap:-${HOMErap}/fix}
 export PARMrap=${PARMrap:-${HOMErap}/parm}
 export USHrap=${USHrap:-${HOMErap}/ush}
 
+export MPISER=${MPISER:-${NWROOThps}/mpiserial.${mpiserial_ver}/exec/mpiserial}
 ###########################################
 # Run setpdy and initialize PDY variables
 ###########################################
@@ -82,8 +83,8 @@ ls -l
 ##############################################
 export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
 export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
-export COMINsst=${COMINsst:-${COMROOTp2}/gfs/prod}
-export FIXcrtm=${FIXcrtm:-${NWROOT}/lib/crtm/${crtm_ver_analysis}/fix}
+export COMINsst=${COMINsst:-${COMROOTp3}/gfs/prod}
+export FIXcrtm=${FIXcrtm:-${NWROOThps}/lib/crtm/${crtm_ver_analysis}/fix}
 export PREPDIR=${PREPDIR:-${COMROOT}/${NET}/${envir}}
 export PREPDIR2=${PREPDIR:-${COMROOT}/${NET}/prod}
 

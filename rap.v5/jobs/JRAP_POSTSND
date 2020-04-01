@@ -72,7 +72,7 @@ export FIXrap=${FIXrap:-${HOMErap}/fix}
 export PARMrap=${PARMrap:-${HOMErap}/parm}
 export USHrap=${USHrap:-${HOMErap}/ush}
 
-export HOMEobsproc_shared_bufr_cword=${HOMEobsproc_shared_bufr_cword:-${NWROOT}/obsproc_shared/bufr_cword.v1.0.0}
+export HOMEobsproc_shared_bufr_cword=${HOMEobsproc_shared_bufr_cword:-${NWROOThps}/obsproc_shared/bufr_cword.v1.0.0}
 export USHobsproc_shared_bufr_cword=${USHobsproc_shared_bufr_cword:-$HOMEobsproc_shared_bufr_cword/ush}
 export EXECobsproc_shared_bufr_cword=${EXECobsproc_shared_bufr_cword:-$HOMEobsproc_shared_bufr_cword/exec}
 

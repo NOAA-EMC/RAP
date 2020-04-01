@@ -35,7 +35,7 @@ rm -rf profilm*
 
 while [ $fhr -le $endfhr ]
 do
-   PROFDIR=$DATAROOT/rap_wrfbufr_${envir}_${cyc}_f${fhr}
+   PROFDIR=${PROFDIR:-$DATAROOT/rap_wrfbufr_${envir}_${cyc}_f${fhr}}
    cp ${PROFDIR}/profilm.c1.f${fhr} .
    if [ $fhr -ne 0 ]; then
      let "fhr1=fhr-1"

@@ -431,7 +431,7 @@ then
 # GSM  had been sending alerts for all fhr < 13 for every
 #   3rd cycle and all fhr < 10 for all other cycles;  changed
 #   10/9/12 to alert all forecast hours for all cycles  
-  if [[ $SENDDBN_NTC = 'YES' -a $fhr -le 21 ]];
+  if [ $SENDDBN_NTC = 'YES' -a $fhr -le 21 ];
   then
     # rap200 grib2 files to AWIPS NCF
      $DBNROOT/bin/dbn_alert NTC_LOW $NET $job $WMO/grib2.${cycle}.awprap200f${fhr}

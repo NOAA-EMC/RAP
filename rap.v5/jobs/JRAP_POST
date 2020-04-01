@@ -75,14 +75,14 @@ export FIXrap=${FIXrap:-${HOMErap}/fix}
 export PARMrap=${PARMrap:-${HOMErap}/parm}
 export USHrap=${USHrap:-${HOMErap}/ush}
 
-export gributilexec=${gributilexec:-${NWROOT}/grib_util.${grib_util_ver}/exec}
+#export gributilexec=${gributilexec:-${NWROOThps}/grib_util.${grib_util_ver}/exec}
 export TOCGRIB=${TOCGRIB:-${gributilexec}/tocgrib}
 export TOCGRIB2=${TOCGRIB2:-${gributilexec}/tocgrib2}
 export GRBINDEX=${GRBINDEX:-${gributilexec}/grbindex}
 export GRB2INDEX=${GRB2INDEX:-${gributilexec}/grb2index}
 export CNVGRIB=${CNVGRIB:-${gributilexec}/cnvgrib}
 export WGRIB2=${WGRIB2:-${gributilexec}/wgrib2}
-export CRTM=${CRTM:-${NWROOT}/lib/crtm/${crtm_ver_post}/src/fix}
+export CRTM=${CRTM:-${NWROOThps}/lib/crtm/${crtm_ver_post}/src/fix}
 
 ###########################################
 # Run setpdy and initialize PDY variables
