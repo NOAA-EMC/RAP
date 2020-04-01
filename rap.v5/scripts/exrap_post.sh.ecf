@@ -644,9 +644,9 @@ $WGRIB2 $COMOUT/rap.${cycle}.wrf${leveltype}f${fhr}.grib2 \
 if test "$SENDCOM" = 'YES'
 then
     cp rap.${cycle}.gtg130f${fhr}.grib2 ${COMOUT}/.
-#   if [ "$SENDDBN" == 'YES' ]; then
-#      ${DBNROOT}/bin/dbn_alert MODEL GTG_GB2 $job $COMOUT/rap.${cycle}.gtg130f${fhr}.grib2
-#   fi
+    if [ "$SENDDBN" == 'YES' ]; then
+       ${DBNROOT}/bin/dbn_alert MODEL GTG_GB2 $job $COMOUT/rap.${cycle}.gtg130f${fhr}.grib2
+    fi
 fi
 
 

@@ -1,8 +1,8 @@
-#2!/bin/ksh
+#!/bin/ksh -l
 set -xa
 
 ########################################
-# RAP Smoke Source Preparation
+# RAP Process ENKF
 ########################################
 
 ######################################################
@@ -46,12 +46,14 @@ date
 ####################################
 # obtain unique process id (pid) and make temp directory
 ####################################
-export DATA=$DATAROOT/rap_smoke_${envir}_${cyc}
+export DATA=$DATAROOT/rap_enkf_${envir}_${cyc}
 mkdir -p $DATA
 cd $DATA
 
 export cycle=t${cyc}z
 export tmmark=tm00
+
+export pgmout="OUTPUT.$$"
 
 ####################################
 # SENDECF  - Flag Events on ECF
@@ -70,23 +72,18 @@ export FIXrap=${FIXrap:-${HOMErap}/fix}
 export PARMrap=${PARMrap:-${HOMErap}/parm}
 export USHrap=${USHrap:-${HOMErap}/ush}
 
-export MPISER=${MPISER:-${NWROOThps}/mpiserial.${mpiserial_ver}/exec/mpiserial}
 ###########################################
 # Run setpdy and initialize PDY variables
 ###########################################
 setpdy.sh
-ls -l
-. ./PDY
+. PDY
 
 ##############################################
 # Define COM directories
 ##############################################
+export COMINgfs=${COMINgfs:-$(compath.py gfs/prod)}
 export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
 export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
-export COMINsst=${COMINsst:-${COMROOTp3}/gfs/prod}
-export FIXcrtm=${FIXcrtm:-${NWROOThps}/lib/crtm/${crtm_ver_analysis}/fix}
-export PREPDIR=${PREPDIR:-${COMROOT}/${NET}/${envir}}
-export PREPDIR2=${PREPDIR:-${COMROOT}/${NET}/prod}
 
 mkdir -m 775 -p $COMOUT 
 
@@ -98,34 +95,21 @@ export RAPBC=$gespath/${NET}/rapbc
 export RAPGES_FCYC=${RAPGES_FCYC:-$gespath/${NET}/rapges}
 export RAPGES_PCYC=${RAPGES_PCYC:-$gespath/${NET}/rapges_pcyc}
 export RAPGES_ENKF=${RAPGES_ENKF:-$gespath/${NET}/rapges_enkf}
-export RAPGES_SATBIAS=${RAPGES_SATBIAS:-$gespath/${NET}/rapges_satbias}
 
-mkdir -m 775 -p $RAPBC $RAPGES_FCYC $RAPGES_PCYC $RAPGES_SATBIAS
+mkdir -m 775 -p $RAPBC $RAPGES_FCYC $RAPGES_PCYC $RAPGES_ENKF
 
 env
 
-#######################################
-# Define observation source directories
-#######################################
-export DCOM_VIIRS_NPP="$DCOMROOT/prod/"
-export DCOM_VIIRS_J01="$DCOMROOT/prod/"
-export DCOM_MODIS="$DCOMROOT/prod/"
-
-test -d "$DCOM_VIIRS_NPP"
-test -d "$DCOM_VIIRS_J01"
-test -d "$MODIS_DIR"
-export VEG_TYPE_DATA="$FIXrap/smoke/SURFACE_DATA/2013_PREP"
-
 ########################################################
 # Execute the script.
-set -e
-${RAP_SMOKESH:-$HOMErap/scripts/exrap_prep_smoke.sh.ecf}
+${RAP_ENKFSH:-$HOMErap/scripts/exrap_prep_enkf.sh.ecf}
 ########################################################
+
+cat $pgmout
 
 msg="ENDED NORMALLY."
 postmsg "$jlogfile" "$msg"
 
-export KEEPDATA=YES
 ##############################
 # Remove the Temporary working directory
 ##############################
