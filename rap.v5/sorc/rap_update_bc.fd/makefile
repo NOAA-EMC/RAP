@@ -21,7 +21,7 @@ ENVCOMPDEFS      = -DWRF_DFI_RADAR=1 -DHYBRID_COORD=1
 CPPFLAGS         = $(ENVCOMPDEFS)
 FCFLAGS          = $(OPTS)
 WRFPATH          = ${BASE}/rap_wrfarw.fd/WRFV3.9
-WRFPATH          = ${BASE}/rap_wrfarw.fd_old/WRFV3.9.serial
+#WRFPATH          = ${BASE}/rap_wrfarw.fd_old/WRFV3.9.serial
 
 INCLD = -I${NETCDF}/include
 
