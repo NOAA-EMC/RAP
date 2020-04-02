@@ -29,7 +29,7 @@ device="nc | ${metaname}"
 PDY2=`echo $PDY | cut -c3-`
 MDL=RAP
 mdl=rap
-COMIN="$COMAWP/${mdl}.${PDY}/nawips"
+COMIN="$COMAWP/${mdl}.${PDY}/gempak"
 
 if [ "$envir" = "para" ] ; then
    export m_title="RAPP"
@@ -40,7 +40,7 @@ fi
 gdattim=f000
 
 # DETERMINE CURRENT CYCLE BEING PROCESSED
-latest_rap_datetime=`ls -1tr $COMAWP/rap.${PDY}/nawips/rap_*f000 | awk -F"/" '{print $NF}' | tail -1 | cut -c5-14`
+latest_rap_datetime=`ls -1tr $COMAWP/rap.${PDY}/gempak/rap_*f000 | awk -F"/" '{print $NF}' | tail -1 | cut -c5-14`
 #XXW latest_rap_datetime=`ls -1tr $COMIN/rap_*f000 | awk -F"/" '{print $NF}' | tail -1 | cut -c5-14`
 fullddate=`echo ${latest_rap_datetime} | cut -c1-8`
 ddate=`echo ${latest_rap_datetime} | cut -c3-8`
@@ -58,7 +58,7 @@ do
     pddate=`datetime -s ${ddate}/${cycle}00 $cnt "%y%m%d"`
     pcycle=`datetime -s ${ddate}/${cycle}00 $cnt "%H"`
 
-    COMIN="$COMAWP/${mdl}.${pfullddate}/nawips"
+    COMIN="$COMAWP/${mdl}.${pfullddate}/gempak"
     #COMIN="$COMIN"
 
 
