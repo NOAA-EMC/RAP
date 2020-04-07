@@ -11,7 +11,7 @@ export BUILD_rap_wrfarw_serial=yes
 export BUILD_rap_wps=yes
 export BUILD_rap_update_bc=yes
 export BUILD_rap_wrfpost=yes
-export BUILD_rap_wrfarw=no
+export BUILD_rap_wrfarw=yes
 export BUILD_rap_gsi=yes
 export BUILD_rap_prep_smoke=yes
 
