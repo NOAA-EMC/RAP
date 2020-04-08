@@ -142,7 +142,7 @@ if [ ! -r wrf_inout ]; then
           echo " Cycle surface fields based on rap_${FCYC_TIME}f0$counterhr"
           cp ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr ./wrfout_d01_save
           cp ${EXECrap}/rap_full_cycle_surface .
-          runline="aprun -n 96 -N 24 ./rap_full_cycle_surface"
+          runline="aprun -n 192 -N 24 ./rap_full_cycle_surface"
           $runline >> $DATA/$pgmout 2>errfile
           break
         fi
@@ -573,7 +573,7 @@ export pgm=rap_gsi
 
 startmsg
 cp ${EXECrap}/rap_gsi .
-runline="aprun -j1 -cc depth -n 96 -N 12 -d 2 ./rap_gsi"
+runline="aprun -j1 -cc depth -n 192 -N 12 -d 2 ./rap_gsi"
 $runline < gsiparm.anl >> $DATA/$pgmout 2>errfile
 export err=$?; err_chk
 
@@ -648,7 +648,7 @@ EOF
 
 export pgm=rap_gsi
 #startmsg
-runline="aprun -j1 -cc depth -n 96 -N 12 -d 2 ./rap_gsi"
+runline="aprun -j1 -cc depth -n 192 -N 12 -d 2 ./rap_gsi"
 $runline < gsiparm.anl >> $DATA/$pgmout 2>errfile
 export err=$?; err_chk
 

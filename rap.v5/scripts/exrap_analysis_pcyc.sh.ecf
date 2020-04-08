@@ -502,7 +502,7 @@ export pgm=rap_gsi
 
 startmsg
 cp ${EXECrap}/rap_gsi .
-runline="aprun -j1 -cc depth -n 96 -N 12 -d 2 ./rap_gsi"
+runline="aprun -j1 -cc depth -n 192 -N 12 -d 2 ./rap_gsi"
 $runline < gsiparm.anl >> $DATA/$pgmout 2>errfile
 export err=$?; err_chk
 
@@ -584,7 +584,7 @@ cp gsiparm.anl gsiparm.anl_cloud
 
 export pgm=rap_gsi
 startmsg
-runline="aprun -j1 -cc depth -n 96 -N 12 -d 2 ./rap_gsi"
+runline="aprun -j1 -cc depth -n 192 -N 12 -d 2 ./rap_gsi"
 $runline < gsiparm.anl >> $DATA/$pgmout 2>errfile
 export err$?; err_chk
 
