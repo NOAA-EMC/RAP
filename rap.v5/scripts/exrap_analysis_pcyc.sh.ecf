@@ -290,10 +290,10 @@ else
   echo "Warning: ${PREPDIR}/rap_p.${PDY}/rap_p.t${cyc}z.esatms.tm00.bufr_d is not available"
 fi
 
-if [ -r "${PREPDIR}/rap_p.${PDY}/rap_p.t${cyc}z.escris.tm00.bufr_d" ]; then
-  ln -s ${PREPDIR}/rap_p.${PDY}/rap_p.t${cyc}z.escris.tm00.bufr_d ./crisbufrears
+if [ -r "${PREPDIR}/rap_p.${PDY}/rap_p.t${cyc}z.escrsf.tm00.bufr_d" ]; then
+  ln -s ${PREPDIR}/rap_p.${PDY}/rap_p.t${cyc}z.escrsf.tm00.bufr_d ./crisfsbufrears
 else
-  echo "Warning: ${PREPDIR}/rap_p.${PDY}/rap_p.t${cyc}z.escris.tm00.bufr_d is not available"
+  echo "Warning: ${PREPDIR}/rap_p.${PDY}/rap_p.t${cyc}z.escrsf.tm00.bufr_d is not available"
 fi
 
 if [ -r "${PREPDIR}/rap_p.${PDY}/rap_p.t${cyc}z.esiasi.tm00.bufr_d" ]; then
@@ -310,10 +310,9 @@ else
   echo "Warning: ${fileobs} is not available"
 fi
 
-fileobs=${PREPDIR}/rap_p.${PDY}/rap_p.t${cyc}z.crisdb.tm00.bufr_d
+fileobs=${PREPDIR}/rap_p.${PDY}/rap_p.t${cyc}z.crsfdb.tm00.bufr_d
 if [ -r "${fileobs}" ]; then
-  ln -s ${fileobs} ./crisbufr_db
-  ln -s ${PREPDIR}/rap_p.${PDY}/rap_p.t${cyc}z.crisdb.tm00.bufr_d ./crisfsbufr_db
+  ln -s ${fileobs} ./crisfsbufr_db
 else
   echo "Warning: ${fileobs} is not available"
 fi
