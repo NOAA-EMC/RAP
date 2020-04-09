@@ -68,8 +68,8 @@ echo
 
  if [ -r ${DATA}/gsiprd/wrf_inout ]; then
   echo " Initial condition ${DATA}/gsiprd/wrf_inout"
-  cp ${DATA}/gsiprd/wrf_inout wrfinput_d01
-  cp ${DATA}/gsiprd/wrf_inout wrfvar_output
+  ln -sf ${DATA}/gsiprd/wrf_inout wrfinput_d01
+  ln -sf ${DATA}/gsiprd/wrf_inout wrfvar_output
  else
    echo "FATAL ERROR: ${DATA}/gsiprd/wrf_inout does not exist.  Run will stop."
    err_exit
