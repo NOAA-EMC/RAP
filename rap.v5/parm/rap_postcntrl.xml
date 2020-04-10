@@ -783,7 +783,7 @@
 
        <param>
            <shortname>ICEC_ON_SURFACE</shortname>
-           <scale>1.0</scale>
+           <scale>-3.0</scale>
        </param>
 
        <param>
@@ -1423,7 +1423,7 @@
 
        <param>
            <shortname>ICEC_ON_SURFACE</shortname>
-           <scale>1.0</scale>
+           <scale>-3.0</scale>
        </param>
 
        <param>
