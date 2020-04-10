@@ -41,6 +41,7 @@ export SPL=2.,5.,7.,10.,20.,30.\
 ,675.,700.,725.,750.,775.,800.,825.,850.\
 ,875.,900.,925.,950.,975.,1000.,1013.2
 
+targetsize=6858968708
 icnt=1
   while [ $icnt -lt 1000 ]
   do
@@ -55,7 +56,16 @@ icnt=1
 
     if [ -s $INPUT_DATA/wrfout_d01_${timestr2} ]
     then
-      sleep 30
+      counter=1
+      while [[ $counter -lt 20 ]]; do
+      filesize=$(stat -c%s $INPUT_DATA/wrfout_d01_${timestr2})
+      if [ $filesize -eq $targetsize ]; then
+        break
+      else 
+        sleep 3
+        counter=` expr $counter + 1 `
+      fi
+      done
       break
     else
       icnt=$((icnt + 1))
@@ -68,49 +78,29 @@ icnt=1
     fi
   done
 
-# copy wrfout file to guess directory for use by later cycles
-# only copying first 6 forecast hours to save disk space
-  targetsize=6858968708
-  if [ $fhr -lt 07 ]
-  then 
-    counter=1
-    while [[ $counter -lt 36 ]]; do
-    filesize=$(stat -c%s $INPUT_DATA/wrfout_d01_${timestr2})
-    echo $filesize
-    if [ $filesize -eq $targetsize ]; then
-      cpfs $INPUT_DATA/wrfout_d01_${timestr2} ${RAPGES_FCYC}/rap_${START_TIME}f0${fhr}
-      break
-    else 
-      sleep 5
-      counter=` expr $counter + 1 `
-    fi
-    done
-    if [ $counter -eq 36 ]; then
-    echo "WARNING: Forecast Hour f0${fhr} still short on node! Copy anyway."
-      cpfs $INPUT_DATA/wrfout_d01_${timestr2} ${RAPGES_FCYC}/rap_${START_TIME}f0${fhr}
-    fi 
-  fi
-
 ##  save sfc files for partial cycle initialization and restart purposes
 timeHH=${HH}
 #if [ ${fhr} -lt 19 ]; then
 #  cp ${INPUT_DATA}/wrfout_d01_${timestr2} ${RAPGES_SFC}/wrfout_d01_${timeHH}
 #fi
 fcstfile=${INPUT_DATA}/wrfout_d01_${timestr2}
-cp ${fcstfile} wrfoutd01
 
 # use pre-DFI analysis file for posting
 time_analysis='00'
+rm wrfoutd01
 if [ ${fhr} -eq ${time_analysis} ]; then
   fcstfile=${INPUT_DATA}/wrfinput_d01
   echo 'use GSI analysis',${fcstfile}
   cp ${fcstfile} wrfinput_d01
-  cp ${INPUT_DATA}/wrfout_analyzed_d01 wrfout_analyzed_d01
+  rm wrfout_analyzed_d01
+  ln -s ${INPUT_DATA}/wrfout_analyzed_d01 wrfout_analyzed_d01
   cp ${EXECrap}/rap_update_fields .
   runline="aprun -n 48 -N 24 ./rap_update_fields"
   $runline >> update_fields.out
-  cp wrfinput_d01 wrfoutd01
+  ln -s wrfinput_d01 wrfoutd01
   export err=$?; err_chk
+else
+  ln -s ${fcstfile} wrfoutd01
 fi
 
 rm -f fort.*
@@ -218,7 +208,7 @@ if [ ${fhr} -eq ${time_analysis} ]; then
   rm wrfoutd01
   echo 'use post-DFI file ',${fcstfile}
   fcstfile=${INPUT_DATA}/wrfout_d01_${timestr2}
-  cp ${fcstfile} wrfoutd01
+  ln -s ${fcstfile} wrfoutd01
   export err=$?; err_chk
 
 rm -f fort.*
@@ -678,6 +668,28 @@ then
   #aprun -cmdfile poescript -pgmmodel mpmd -labelio yes -stdoutmode ordered
   aprun -N 24 -n 48 cfp poescript
 fi
+
+# copy wrfout file to guess directory for use by later cycles
+# only copying first 6 forecast hours to save disk space
+  if [ $fhr -lt 07 ]
+  then 
+    counter=1
+    while [[ $counter -lt 36 ]]; do
+    filesize=$(stat -c%s $INPUT_DATA/wrfout_d01_${timestr2})
+    echo $filesize
+    if [ $filesize -eq $targetsize ]; then
+      cpfs $INPUT_DATA/wrfout_d01_${timestr2} ${RAPGES_FCYC}/rap_${START_TIME}f0${fhr}
+      break
+    else 
+      sleep 5
+      counter=` expr $counter + 1 `
+    fi
+    done
+    if [ $counter -eq 36 ]; then
+    echo "WARNING: Forecast Hour f0${fhr} still short on node! Copy anyway."
+      cpfs $INPUT_DATA/wrfout_d01_${timestr2} ${RAPGES_FCYC}/rap_${START_TIME}f0${fhr}
+    fi 
+  fi
 
 postmsg $jlogfile "RAP POST done for F${fhr}"
 
