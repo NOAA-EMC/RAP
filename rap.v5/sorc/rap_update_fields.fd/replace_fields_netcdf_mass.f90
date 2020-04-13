@@ -121,7 +121,7 @@ if(mype==0) then
 
 ! ------ update accumulated variable-density snow
   rmse_var='SNOWFALLAC'
-  call update_netcdf_mass(dh1,dh2,DateStr1,DateStr2,rmse_var)
+!  call update_netcdf_mass(dh1,dh2,DateStr1,DateStr2,rmse_var)
 
 ! ------ update accumulated convective precip
   rmse_var='RAINC'
