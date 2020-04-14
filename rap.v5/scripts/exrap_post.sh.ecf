@@ -188,7 +188,7 @@ EOF
       mv WRFNAT${fhr}.tm00 ${COMOUT}/rap.${cycle}.wrfnatf${fhr}.grib2
       mv WRFPRS${fhr}.tm00 ${COMOUT}/rap.${cycle}.wrfprsf${fhr}.grib2
       mv WRFMSL${fhr}.tm00 ${COMOUT}/rap.${cycle}.wrfmslf${fhr}.grib2
-      $GRB2INDEX  ${COMOUT}/rap.${cycle}.wrfprsf${fhr}.grib2  ${COMOUT}/rap.${cycle}.wrfprsf${fhr}.grib2.idx
+       ${WGRIB2} ${COMOUT}/rap.${cycle}.wrfprsf${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.wrfprsf${fhr}.grib2.idx
   fi
 
   if [ $SENDDBN = YES ]
