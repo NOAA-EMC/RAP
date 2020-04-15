@@ -140,7 +140,7 @@ fi
   fi
   while [[ $satcounter -lt 22 ]]; do
     SAT_TIME=`$NDATE -${satcounter} $START_TIME`
-    if [ -r ${RAPGES_SATBIAS}/radstat.${partial_or_fullrap}_${SAT_TIME} ]; then
+    if [[ -r ${RAPGES_SATBIAS}/radstat.${partial_or_fullrap}_${SAT_TIME} && -r ${RAPGES_SATBIAS}/satbias_${partial_or_fullout}_${SAT_TIME} && -r ${RAPGES_SATBIAS}/satbias_pc.${partial_or_fullout}_${SAT_TIME} ]]; then
       echo " using satellite bias from ${SAT_TIME}"
       cp ${RAPGES_SATBIAS}/radstat.${partial_or_fullrap}_${SAT_TIME} ./radstat.rap
       cp ${RAPGES_SATBIAS}/satbias_${partial_or_fullout}_${SAT_TIME} ./satbias_in
