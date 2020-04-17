@@ -167,10 +167,7 @@ fi
 if [ -s $PREPDIR/rap.${PDY}/rap.t${cyc}z.lghtng.tm00.bufr_d ]
 then
   cp $PREPDIR/rap.${PDY}/rap.t${cyc}z.lghtng.tm00.bufr_d ./rap.t${cyc}z.lghtng.tm00.bufr_d
-else
-  cp $COM_OUT/rap.${PDY}/rap.t${cyc}z.lghtng.tm00.bufr_d ./rap.t${cyc}z.lghtng.tm00.bufr_d
-fi
-ln -s rap.t${cyc}z.lghtng.tm00.bufr_d lghtngbufr
+  ln -s rap.t${cyc}z.lghtng.tm00.bufr_d lghtngbufr
 
 echo ${PDY}${cyc} > ./lightning_cycle_date
 
@@ -195,6 +192,7 @@ export err=$?;err_chk
 if [ $SENDCOM = YES ]
 then
   cp LightningInGSI.bufr $COMOUT/rap.t${cyc}z.lghtng.bufr
+fi
 fi
 
 msg="JOB $job FOR RAP_PREP HAS COMPLETED NORMALLY"

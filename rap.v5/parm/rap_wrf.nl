@@ -28,7 +28,7 @@
  io_form_history                     = 11 
  io_form_restart                     = 11
  io_form_input                       = 11
- io_form_boundary                    = 11
+ io_form_boundary                    = 2
  debug_level                         = 0
  diag_print                          = 1
  gsd_diagnostics                     = 1
