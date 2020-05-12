@@ -24,17 +24,17 @@
 # transferred.
 
 com/rap/_ENVIR_/rap._PDY_/
-E
+W
 B 850000
 
 com/rap/_ENVIR_/rap_p._PDY_/
-E
+W
 B 170000
 # This directory is a good candidate for compression
 #Z
 
 com/rap/_ENVIR_/rap_e._PDY_/
-E
+W
 B 8800
 
 com/rap/_ENVIR_/rap_eh._PDY_/
@@ -63,13 +63,13 @@ E
 B 850000
 
 com/rap/_ENVIR_/rap_p._PDYm1_/
-E
+W
 B 170000
 # This directory is a good candidate for compression
 #Z
 
 com/rap/_ENVIR_/rap_e._PDYm1_/
-E
+W
 B 8800
 
 com/rap/_ENVIR_/rap_eh._PDYm1_/

@@ -20,6 +20,8 @@ set -x
 
 export cyc=%CYC%
 
+module load craype-hugepages8M
+
 # versions file for Rapid Refresh model $mod_ver
 VERSION_FILE=$NWROOT/versions/rap.ver
 if [ -f $VERSION_FILE ]; then

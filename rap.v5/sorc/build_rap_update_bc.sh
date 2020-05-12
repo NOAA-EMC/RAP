@@ -6,6 +6,7 @@ export BASE=`pwd`
 
  . /opt/modules/default/init/ksh
 module purge
+module purge
 module load ncep
 module load craype-sandybridge
 module use -a /opt/cray/modulefiles
