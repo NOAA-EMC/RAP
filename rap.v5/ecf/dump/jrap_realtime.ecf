@@ -11,7 +11,7 @@
 #BSUB -R rusage[mem=1000]"
 
 %include <head.h>
-%include <envir-p2.h>
+%include <envir-p1-old.h>
 
 
 # EXPORT list here
@@ -26,7 +26,7 @@ export error=/%COM%/output/${envir}/today/rap_realtime_${cyc}
 
 
 # versions file for Rapid Refresh model $rap_ver
-VERSION_FILE=$NWROOTp1/versions/hrly_realtime.ver
+VERSION_FILE=$NWROOT/versions/hrly_realtime.ver
 if [ -f $VERSION_FILE ]; then
   . $VERSION_FILE
 else
@@ -35,8 +35,7 @@ else
   exit
 fi
 
-#$NWROOTp1/hrly_realtime.${code_ver}/jobs/JHRLY_REALTIME
-/nw${envir}/hrly_realtime.${code_ver}/jobs/JHRLY_REALTIME
+$NWROOT/hrly_realtime.${code_ver}/jobs/JHRLY_REALTIME
 
 if [ $? -ne 0 ]; then
   ecflow_client --abort

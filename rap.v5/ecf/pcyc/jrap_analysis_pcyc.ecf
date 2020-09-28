@@ -1,37 +1,32 @@
 #BSUB -J %E%rap_analysis_pcyc_%CYC%
 #BSUB -o  /%COM%/output/%ENVIR%/today/rap_analysis_pcyc_%CYC%.o%J
 #BSUB -e  /%COM%/output/%ENVIR%/today/rap_analysis_pcyc_%CYC%.o%J
-#BSUB -cwd /tmpnwprd
+#BSUB -cwd /tmp
 #BSUB -L /bin/sh
-#BSUB -n 192 
-#BSUB -R "span[ptile=24]"
-#BSUB -R affinity[core:distribute=balance]
 #BSUB -W 00:40
 #BSUB -P %PROJ%
 #BSUB -q %QUEUE%
-#BSUB -x
-#BSUB -a poe
+#BSUB -M 1800
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 384*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=1800]
 
 %include <head.h>
-%include <envir-p2.h>
+%include <envir-xc40.h>
 
 # EXPORT list here
 
 set -x
-
+export model=rap
+%include <model_ver.h>
 export cyc=%CYC%
 
-# versions file for Rapid Refresh model $mod_ver
-VERSION_FILE=$NWROOT/versions/rap.ver
-if [ -f $VERSION_FILE ]; then
-  . $VERSION_FILE
-else
-  ecflow_client --abort
-  exit
-fi
+unset MPICH_RANK_REORDER_METHOD
+export MP_MPILIB=mpich2
+export KMP_AFFINITY=disabled
+export MP_TASK_AFFINITY=core:1
+export OMP_NUM_THREADS=2
 
 # CALL executable job script here
-$NWROOT/rap.${rap_ver}/jobs/JRAP_ANALYSIS_PCYC
+$HOMErap/jobs/JRAP_ANALYSIS_PCYC
 
 if [ $? -ne 0 ]; then
   ecflow_client --abort

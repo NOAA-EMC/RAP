@@ -20,6 +20,7 @@ export WPSNAMELIST=namelist.wps
 START_TIME=$PDY$cyc
 echo $START_TIME >STARTTIME
 
+ECHO="${ECHO:-/bin/echo}"
 export ATP_ENABLED=0
 export MALLOC_MMAP_MAX=0
 export MALLOC_TRIM_THRESHOLD=134217728

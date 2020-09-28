@@ -80,9 +80,9 @@ else
 fi
 
 if [ ! -r guess.out ]; then
-    echo 'no first guess is available'
+    echo 'Warning: no first guess is available'
     echo 'please try a cycle divisible by 3'
-    exit
+#   exit
 fi
 
 # if the cycle is 09 or 21, we should have the last 1-hr forecast

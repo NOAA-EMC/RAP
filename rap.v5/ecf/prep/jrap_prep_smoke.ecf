@@ -1,49 +1,61 @@
-#BSUB -J %E%rap_analysis_%CYC%
-#BSUB -o  /%COM%/output/%ENVIR%/today/rap_prep_smoke_%CYC%.o%J
-#BSUB -e  /%COM%/output/%ENVIR%/today/rap_prep_smoke_%CYC%.o%J
-#BSUB -cwd /tmpnwprd
-#BSUB -R "span[ptile=24]"
-#BSUB -R affinity[core:distribute=balance]
-#BSUB -n 24
-#BSUB -q %QUEUE%
+#BSUB -J %E%rap_prep_smoke_%CYC%
+#BSUB -o /%COM%/output/%ENVIR%/today/rap_prep_smoke_%CYC%.o%J
+#BSUB -e /%COM%/output/%ENVIR%/today/rap_prep_smoke_%CYC%.o%J
 #BSUB -L /bin/sh
-#BSUB -W 00:25
+#BSUB -cwd /tmp
+#BSUB -q %QUEUE%
+#BSUB -W 00:40
 #BSUB -P %PROJ%
-#BSUB -x
-#BSUB -a poe
+#BSUB -M 1800
+#BSUB -extsched 'CRAYLINUX[]'
+##BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 24*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=1800]
 
 %include <head.h>
-%include <envir-p2.h>
-
-# EXPORT list here
+%include <envir-xc40.h>
 
 set -x
+export model=rap
+%include <model_ver.h>
 
 export cyc=%CYC%
+export NODES=1
 
-# versions file for Rapid Refresh model $mod_ver
-VERSION_FILE=$NWROOT/versions/rap.ver
-if [ -f $VERSION_FILE ]; then
-  . $VERSION_FILE
-else
-  ecflow_client --abort
-  exit
-fi
+module load craype-network-aries
+module load ncep/1.0
+module load xt-lsfhpc
+module load craype
+module load PrgEnv-intel
+#module load craype-sandybridge
+module load intel
+module load NetCDF-intel-haswell/4.2
+module load HDF5-serial-intel-haswell/1.8.9
 
-# CALL executable job script here
-$NWROOT/rap.${rap_ver}/jobs/JRAP_PREP_SMOKE
+# Modules needed for parallel execution at runtime:
+module load rca
+module load alps
+module load xpmem
+module load gni-headers
+module load udreg
+module load ugni
+module load mpiserial
+
+module list
+
+export group_name=meso
+
+${HOMErap}/jobs/JRAP_PREP_SMOKE
 
 if [ $? -ne 0 ]; then
   ecflow_client --abort
   exit
 fi
 
+
 %include <tail.h>
 %manual
-##########################################################################
-# Purpose: to prepare the boundary conditions for the Rapid Refresh Model
-##########################################################################
-
+######################################################################
+# Purpose: Job to execute the RAP_SOMEPRPE data processing
+######################################################################
 
 ######################################################################
 # Job specific troubleshooting instructions:

@@ -2,23 +2,19 @@
 #BSUB -o /%COM%/output/%ENVIR%/today/rap_dump_post_pcyc_%CYC%.o%J
 #BSUB -e /%COM%/output/%ENVIR%/today/rap_dump_post_pcyc_%CYC%.o%J
 #BSUB -L /bin/sh
-#BSUB -q %QUEUESERV%
-#BSUB -cwd /tmpnwprd
+#BSUB -q %QUEUE%
+#BSUB -cwd /tmp
 #BSUB -W 00:30
 #BSUB -P %PROJ%
-#BSUB -R rusage[mem=2500]
-#BSUB -R affinity[core]
+#BSUB -M 3000
+#BSUB -extsched 'CRAYLINUX[]'
 
 %include <head.h>
-%include <envir-p2.h>
-
+%include <envir-xc40.h>
 
 set -x
 export cyc=%CYC%
-
-# CALL executable job script here
-
-
+export NODES=1
 
 # versions file for Rapid Refresh model $mod_ver
 VERSION_FILE=$NWROOT/versions/obsproc_rap.ver
@@ -29,6 +25,8 @@ else
   exit
   exit
 fi
+
+module load cfp-intel-sandybridge/$cfp_intel_sandybridge_ver
 
 $NWROOT/obsproc_rap.${obsproc_rap_ver}/jobs/JRAP_DUMP_POST
 

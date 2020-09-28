@@ -1,36 +1,25 @@
-#BSUB -J %E%rap_forecast_restart_%CYC%
-#BSUB -o  /%COM%/output/%ENVIR%/today/rap_forecast_restart_%CYC%.o%J
-#BSUB -e  /%COM%/output/%ENVIR%/today/rap_forecast_restart_%CYC%.o%J
-#BSUB -cwd /tmpnwprd
-#BSUB -n 1728
-#BSUB -R "span[ptile=24]"
-#BSUB -q %QUEUE%
+#BSUB -J %E%rap_gesfile_check_%CYC%
+#BSUB -o  /%COM%/output/%ENVIR%/today/rap_gesfile_check_%CYC%.o%J
+#BSUB -e  /%COM%/output/%ENVIR%/today/rap_gesfile_check_%CYC%.o%J
+#BSUB -cwd /tmp
+#BSUB -q %QUEUE%_shared
 #BSUB -L /bin/sh
-#BSUB -W 00:45
 #BSUB -P %PROJ%
-#BSUB -a poe
-#BSUB -x
+#BSUB -W 02:00
+#BSUB -M 1800
 
 %include <head.h>
-%include <envir-p2.h>
+%include <envir-xc40.h>
 
 # EXPORT list here
 
 set -x
-
+export model=rap
+%include <model_ver.h>
 export cyc=%CYC%
 
-# versions file for Rapid Refresh model $mod_ver
-VERSION_FILE=$NWROOT/versions/rap.ver
-if [ -f $VERSION_FILE ]; then
-  . $VERSION_FILE
-else
-  ecflow_client --abort
-  exit
-fi
-
 # CALL executable job script here
-$NWROOT/rap.${rap_ver}/jobs/JRAP_FORECAST_RESTART
+$HOMErap/jobs/JRAP_GESFILE_CHECK
 
 if [ $? -ne 0 ]; then
   ecflow_client --abort

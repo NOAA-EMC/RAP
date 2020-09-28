@@ -1,33 +1,28 @@
 #BSUB -J %E%rap_postsnd_%CYC%
 #BSUB -o  /%COM%/output/%ENVIR%/today/rap_postsnd_%CYC%.o%J
 #BSUB -e  /%COM%/output/%ENVIR%/today/rap_postsnd_%CYC%.o%J
-#BSUB -cwd /tmpnwprd
-#BSUB -q %QUEUE%_shared
+#BSUB -cwd /tmp
+#BSUB -q %QUEUE%
 #BSUB -L /bin/sh
 #BSUB -W 00:15
 #BSUB -P %PROJ%
-#BSUB -R "rusage[mem=2500]" -R "affinity[core]"
+#BSUB -M 3000
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=3000]
 
 %include <head.h>
-%include <envir-p2.h>
+%include <envir-xc40.h>
+export model=rap
+%include <model_ver.h>
 
 # EXPORT list here
 
 set -x
 
 export cyc=%CYC%
-
-# versions file for Rapid Refresh model $mod_ver
-VERSION_FILE=$NWROOT/versions/rap.ver
-if [ -f $VERSION_FILE ]; then
-  . $VERSION_FILE
-else
-  ecflow_client --abort
-  exit
-fi
+module load gempak/${gempak_ver}
 
 # CALL executable job script here
-$NWROOT/rap.${rap_ver}/jobs/JRAP_POSTSND
+$HOMErap/jobs/JRAP_POSTSND
 
 if [ $? -ne 0 ]; then
   ecflow_client --abort

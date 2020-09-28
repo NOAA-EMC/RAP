@@ -237,6 +237,11 @@ EOF
     mv WRFPRS${fhr}.tm00 $COMOUT/rap.${cycle}.wrfprsdf${fhr}.grib2
     mv WRFNAT${fhr}.tm00 $COMOUT/rap.${cycle}.wrfnatdf${fhr}.grib2
     mv WRFMSL${fhr}.tm00 $COMOUT/rap.${cycle}.wrfmsldf${fhr}.grib2
+  
+  ${WGRIB2} $COMOUT/rap.${cycle}.wrfnatdf${fhr}.grib2 -s > $COMOUT/rap.${cycle}.wrfnatdf${fhr}.grib2.idx
+  if [ $fhr -eq "00" ]; then
+    ecflow_client --event wrfnatdgrib2_ready #for hrrrdas_getguess 09z/21z use to start early
+  fi
 
 fi
 

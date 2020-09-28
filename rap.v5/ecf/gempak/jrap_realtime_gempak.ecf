@@ -13,7 +13,7 @@
 
 
 %include <head.h>
-%include <envir-p2.h>
+%include <envir-p1-old.h>
 
 set -x
 export cyc=%CYC%
@@ -25,7 +25,7 @@ export error=/%COM%/output/${envir}/today/rap_realtime_gempak_${cyc}
 # CALL executable job script here
 
 # versions file for Rapid Refresh model $rap_ver
-VERSION_FILE=$NWROOTp1/versions/hrly_realtime.ver
+VERSION_FILE=/nw${envir}/versions/hrly_realtime.ver
 if [ -f $VERSION_FILE ]; then
   . $VERSION_FILE
 else

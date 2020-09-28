@@ -2,35 +2,27 @@
 #BSUB -o /%COM%/output/%ENVIR%/today/rap_prep_post_%CYC%.o%J
 #BSUB -e /%COM%/output/%ENVIR%/today/rap_prep_post_%CYC%.o%J
 #BSUB -L /bin/sh
-#BSUB -q %QUEUESERV%
-#BSUB -cwd /tmpnwprd
+#BSUB -q %QUEUE%
+#BSUB -cwd /tmp
 #BSUB -W 00:30
 #BSUB -P %PROJ%
-#BSUB -R rusage[mem=2500]
-#BSUB -R affinity[core]
+#BSUB -M 3000
+#BSUB -extsched 'CRAYLINUX[]'
 
 %include <head.h>
-%include <envir-p2.h>
-
+%include <envir-xc40.h>
 
 set -x
+export model=obsproc_rap
+%include <model_ver.h>
+
 export cyc=%CYC%
+export NODES=1
 
-# CALL executable job script here
+module load cfp-intel-sandybridge/$cfp_intel_sandybridge_ver
+module list
 
-
-
-# versions file for Rapid Refresh model $mod_ver
-VERSION_FILE=$NWROOT/versions/obsproc_rap.ver
-if [ -f $VERSION_FILE ]; then
-  . $VERSION_FILE
-else
-  ecflow_client --abort
-  exit
-  exit
-fi
-
-$NWROOT/obsproc_rap.${obsproc_rap_ver}/jobs/JRAP_PREP_POST
+${HOMEobsproc_rap}/jobs/JRAP_PREP_POST
 
 if [ $? -ne 0 ]; then
   ecflow_client --abort

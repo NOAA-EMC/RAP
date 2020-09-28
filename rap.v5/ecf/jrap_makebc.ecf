@@ -1,37 +1,42 @@
 #BSUB -J %E%rap_makebc_%CYC%
 #BSUB -o  /%COM%/output/%ENVIR%/today/rap_makebc_%CYC%.o%J
 #BSUB -e  /%COM%/output/%ENVIR%/today/rap_makebc_%CYC%.o%J
-#BSUB -cwd /tmpnwprd
-#BSUB -R "span[ptile=24]"
-#BSUB -n 144
-#BSUB -R affinity[core:distribute=balance]
+#BSUB -cwd /tmp
 #BSUB -q %QUEUE%
 #BSUB -L /bin/sh
-#BSUB -W 02:00
 #BSUB -P %PROJ%
-#BSUB -x
-#BSUB -a poe
+#BSUB -W 02:00
+#BSUB -M 1800
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 144*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=1800]
+#
 
 %include <head.h>
-%include <envir-p2.h>
+%include <envir-xc40.h>
 
 # EXPORT list here
 
 set -x
-
+export model=rap
+%include <model_ver.h>
 export cyc=%CYC%
 
-# versions file for Rapid Refresh model $mod_ver
-VERSION_FILE=$NWROOT/versions/rap.ver
-if [ -f $VERSION_FILE ]; then
-  . $VERSION_FILE
-else
-  ecflow_client --abort
-  exit
-fi
+export MP_SINGLE_THREAD=yes
+export MP_EUILIB=us
+export MP_LABELIO=yes
+export MP_SHARED_MEMORY=yes
+export MP_USE_BULK_XFER=yes
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export KMP_AFFINITY=disabled
+export MP_MPILIB=mpich2
+
+export numprocs=96
+export NTASK=96
+export PTILE=24
 
 # CALL executable job script here
-$NWROOT/rap.${rap_ver}/jobs/JRAP_MAKEBC
+$HOMErap/jobs/JRAP_MAKEBC
 
 if [ $? -ne 0 ]; then
   ecflow_client --abort

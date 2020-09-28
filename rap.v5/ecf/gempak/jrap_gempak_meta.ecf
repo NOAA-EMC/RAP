@@ -3,33 +3,27 @@
 #BSUB -e /%COM%/output/%ENVIR%/today/rap_gempak_meta_%CYC%.o%J
 #BSUB -L /bin/sh
 #BSUB -q %QUEUE%
-#BSUB -cwd /tmpnwprd
-#BSUB -R "span[ptile=2]"
-#BSUB -n 2
+#BSUB -cwd /tmp
 #BSUB -W 01:00
 #BSUB -P %PROJ%
-##BSUB -R "rusage[mem=1000]" -R "affinity[core]"
-#BSUB -x
-#BSUB -a poe
-
+#BSUB -extsched 'CRAYLINUX[]'
+#BSUB -M 2000
 %include <head.h>
-%include <envir-p2.h>
+%include <envir-xc40.h>
+export model=rap
+%include <model_ver.h>
 
+set -x 
+export NODES=1
+export PTILE=2
 export cyc=%CYC%
-export numproc=2
+#export numproc=2
+
+module load gempak/${gempak_ver}
+module load cfp-intel-sandybridge/${cfp_intel_sandybridge_ver}
 
 # CALL executable job script here
-
-# versions file for Rapid Refresh model $rap_ver
-VERSION_FILE=$NWROOT/versions/rap.ver
-if [ -f $VERSION_FILE ]; then
-  . $VERSION_FILE
-else
-  ecflow_client --abort
-  exit
-fi
-
-$NWROOT/rap.${rap_ver}/jobs/JRAP_GEMPAK_META
+$HOMErap/jobs/JRAP_GEMPAK_META
 
 if [ $? -ne 0 ]; then
   ecflow_client --abort

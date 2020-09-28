@@ -12,7 +12,7 @@ echo "                    data on the CCS is properly protected."
 set -xa
 
 msg="Begin job for $job"
-$DATA/postmsg "$jlogfile" "$msg"
+postmsg "$jlogfile" "$msg"
 
 export RUN=$1
 export GRIB=$2

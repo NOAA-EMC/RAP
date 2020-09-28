@@ -23,9 +23,11 @@
 # directory are included, so if no exclude patterns match that file, it will be
 # transferred.
 
-com/rap/_ENVIR_/rap._PDYm1_/ /scratch4/NCEPDEV/rstprod/com/rap/_ENVIR_/rap._PDYm1_/
+com/rap/_ENVIR_/rap._PDYm1_/ _REMOTEPATH_/com/rap/_ENVIR_/rap._PDYm1_/
 + /rap.t??z.1bamua.tm00.bufr_d
 + /rap.t??z.awp130pgrbf??.grib2
++ /rap.t??z.awip32f??.grib2
++ /rap.t??z.awp242f??.grib2
 + /rap.t??z.1bhrs4.tm00.bufr_d
 + /rap.t??z.1bmhs.tm00.bufr_d
 + /rap.t??z.airsev.tm00.bufr_d
@@ -38,7 +40,6 @@ com/rap/_ENVIR_/rap._PDYm1_/ /scratch4/NCEPDEV/rstprod/com/rap/_ENVIR_/rap._PDYm
 + /rap.t??z.nasacloud.bufr
 + /rap.t??z.nexrad.tm00.bufr_d
 + /rap.t??z.prepbufr.tm00
-+ /rap.t??z.radwnd.tm00.bufr_d
 + /gempak/
 + /gempak/rap13_??????????f???
 + /gempak/rap32_??????????f???
@@ -48,9 +49,11 @@ com/rap/_ENVIR_/rap._PDYm1_/ /scratch4/NCEPDEV/rstprod/com/rap/_ENVIR_/rap._PDYm
 E
 
 
-com/rap/_ENVIR_/rap._PDY_/ /scratch4/NCEPDEV/rstprod/com/rap/_ENVIR_/rap._PDY_/
+com/rap/_ENVIR_/rap._PDYm1_/ _REMOTEPATH_/com/rap/_ENVIR_/rap._PDY_/
 + /rap.t??z.1bamua.tm00.bufr_d
 + /rap.t??z.awp130pgrbf??.grib2
++ /rap.t??z.awip32f??.grib2
++ /rap.t??z.awp242f??.grib2
 + /rap.t??z.1bhrs4.tm00.bufr_d
 + /rap.t??z.1bmhs.tm00.bufr_d
 + /rap.t??z.airsev.tm00.bufr_d
@@ -63,7 +66,6 @@ com/rap/_ENVIR_/rap._PDY_/ /scratch4/NCEPDEV/rstprod/com/rap/_ENVIR_/rap._PDY_/
 + /rap.t??z.nasacloud.bufr
 + /rap.t??z.nexrad.tm00.bufr_d
 + /rap.t??z.prepbufr.tm00
-+ /rap.t??z.radwnd.tm00.bufr_d
 + /gempak/
 + /gempak/rap13_??????????f???
 + /gempak/rap32_??????????f???
