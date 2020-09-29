@@ -14,7 +14,7 @@ IMPLICIT NONE
   INTEGER             :: hour, minute
 
   INTEGER :: stat
-  INTEGER :: yy, mm, dd, bowtie
+  INTEGER :: yy, mm, dd, bowtie, per_anomaly
   INTEGER :: mask, confi
   INTEGER :: posy, posx, posxx
   INTEGER :: i, julday
@@ -113,12 +113,12 @@ IMPLICIT NONE
 
 !!! Write a subroutine for reading all the VIIRS text files, so we don't read the LULC map for each file!!
 line_loop: DO
-              READ(21, *, iostat=stat, end=999) yy,mm,dd,hour,minute,lon_vi,lat_vi,mask,confi,t13,frp_v,posy,posx,bowtie
+              READ(21, *, iostat=stat, end=999) yy,mm,dd,hour,minute,lon_vi,lat_vi,mask,confi,t13,frp_v,posy,posx,bowtie,per_anomaly
               IF (stat /= 0) then
                  print *,'no more lines'
                  exit
               end IF
-              !IF (bowtie==1) cycle      ! duplicate FRP detections, this needs to be improved in future
+              IF (per_anomaly>0) cycle      ! The FRP detections for volcanoes and other non-BB sources
 
 ! From Wilfried: You can assume MODIS 1km FRP to peak around 13,000MW, and VIIRS 750m FRP to peak at 16,000MW
               IF ((frp_v<1.) .OR. (frp_v>10000.)) cycle    ! I suggest we put low/high end limits on the FRP data to remove the false detections or bad data

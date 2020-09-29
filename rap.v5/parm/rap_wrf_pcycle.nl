@@ -170,6 +170,7 @@
 
  &dynamics
  w_damping                           = 1,
+ zadvect_implicit                    = 1,
  diff_opt                            = 2,
  km_opt                              = 4,
  km_opt_dfi                          = 1,

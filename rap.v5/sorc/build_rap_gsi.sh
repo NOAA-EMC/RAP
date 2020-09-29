@@ -26,6 +26,7 @@ module load cmake
 module load craype-hugepages32M
 
 export CRAYPE_LINK_TYPE=dynamic
+export BUFR_LIBd=/gpfs/hps/nco/ops/nwprod/lib/bufr/v11.3.0/intel/libbufr_v11.3.0_4_64.a
 
 cd ${BASE}/rap_gsi.fd
 rm -fr build

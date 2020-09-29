@@ -1513,19 +1513,19 @@ end subroutine read_abba_new
               totalfires= bbbem_plume_fire_prop_g(qfires_agreg,iveg_ag_ptr)%fire_prop(i,j)
 
               ! calculate the mean properties of fire in each grid box
-              if (totalfires > 1.) then
-                  bbbem_plume_fire_prop_g(QSIZEIdx,iveg_ag_ptr)%fire_prop(i,j)  =  	    &
-                   bbbem_plume_fire_prop_g(QSIZEIdx,iveg_ag_ptr)%fire_prop(i,j)  /totalfires
+              !if (totalfires > 1.) then
+              !    bbbem_plume_fire_prop_g(QSIZEIdx,iveg_ag_ptr)%fire_prop(i,j)  =  	    &
+              !     bbbem_plume_fire_prop_g(QSIZEIdx,iveg_ag_ptr)%fire_prop(i,j)  /totalfires
                
-                  bbbem_plume_fire_prop_g(QFRPWIdx,iveg_ag_ptr)%fire_prop(i,j)  =  	    &
-                   bbbem_plume_fire_prop_g(QFRPWIdx,iveg_ag_ptr)%fire_prop(i,j)  /totalfires
+              !    bbbem_plume_fire_prop_g(QFRPWIdx,iveg_ag_ptr)%fire_prop(i,j)  =  	    &
+              !    bbbem_plume_fire_prop_g(QFRPWIdx,iveg_ag_ptr)%fire_prop(i,j)  /totalfires
                    
-                  bbbem_plume_fire_prop_g(DFRPWIdx,iveg_ag_ptr)%fire_prop(i,j)  =  	    &
-                   bbbem_plume_fire_prop_g(DFRPWIdx,iveg_ag_ptr)%fire_prop(i,j)  /totalfires
+              !    bbbem_plume_fire_prop_g(DFRPWIdx,iveg_ag_ptr)%fire_prop(i,j)  =  	    &
+              !     bbbem_plume_fire_prop_g(DFRPWIdx,iveg_ag_ptr)%fire_prop(i,j)  /totalfires
              
-                  bbbem_plume_fire_prop_g(DSIZEIdx,iveg_ag_ptr)%fire_prop(i,j)  =  	    &
-                   bbbem_plume_fire_prop_g(DSIZEIdx,iveg_ag_ptr)%fire_prop(i,j)  /totalfires       
-              endif
+              !    bbbem_plume_fire_prop_g(DSIZEIdx,iveg_ag_ptr)%fire_prop(i,j)  =  	    &
+              !     bbbem_plume_fire_prop_g(DSIZEIdx,iveg_ag_ptr)%fire_prop(i,j)  /totalfires       
+              !endif
 
  	      !- convert from mass consumed during the flaming phase to fraction of the total mass consumed
               do iesp=1,nspecies_actual

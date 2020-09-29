@@ -216,6 +216,9 @@
 !000 019 015 000 Contrails Top                    m                    ????             ?  ?????.??
 !000 019 016 000 Contrails Base                   m                    ????             ?  ?????.??
 !
+!Atmospheric Chemical Constituents
+000 020 000 000 Mass Density                     kg m**-3             MASDEN           ?  -9999.00
+!
 ! Product Discipline 10 - Oceanographic Products
 ! CATEGORY 0 - Waves category
 !D# CT# ID# PD# NAME                             UNITS                GNAM         SCALE   MISSING

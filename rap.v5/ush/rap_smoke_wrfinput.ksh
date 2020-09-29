@@ -4,7 +4,8 @@ set -xue
 
 wrfinput_d01="$1"
 STAT_TIME="${START_TIME:-$PDY$cyc}"
-EXEC="$EXECrap/rap_fires_ncfmake"
+EXEC_FIRES="$EXECrap/rap_fires_ncfmake"
+EXEC_CYCLE="$EXECrap/rap_fires_cycle_netcdf"
 
 # Wrapper to start prep-chem-sources.  Use aprun if this is a MAMU node:
 RUNSERIAL='aprun -d 1 -n 1 -N 1 -j 1'
@@ -19,6 +20,12 @@ DATE="${DATE:-/bin/date}"
 # Run the command:
 ${ECHO} "rap_smoke_wrfinput.ksh started at `${DATE}`"
 
-$RUNSERIAL ${EXEC} ./wrfinput_d01 "$COMOUT/rap.t${cyc}z.smoke.sources.bin"
+sources="$COMOUT/rap.t${cyc}z.smoke.sources.bin"
+
+if [[ ! -s "$sources" ]] || ( ! $RUNSERIAL ${EXEC_FIRES} ./wrfinput_d01 "$sources" ) ; then
+    # Things broke, so zero-out emissions.
+    all_vars='ebu_in_no ebu_in_co ebu_in_pm25 ebu_in_pm10 ebu_in_oc ebu_in_bc ebu_in_smoke FLAM_FRAC MEAN_FRP STD_FRP MEAN_FSIZE STD_FSIZE EBB_SMOKE'
+    $RUNSERIAL $EXEC_CYCLE -z -u $all_vars wrfinput_d01 wrfinput_d01
+fi
 
 ${ECHO} "rap_smoke_wrfinput.ksh finished at `${DATE}`"

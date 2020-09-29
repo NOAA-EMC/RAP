@@ -106,23 +106,22 @@ end
 subroutine vforec(iunit,a,n,nbits,scr,type)
 implicit none
 integer :: iunit,n,nbits
-real :: a(*),scr(*)
+real :: a(n),scr(n)
 character(len=*) :: type
 
 character(len=1) :: vc
 common/vform/vc(0:63)
-real(kind=8) ::  bias, fact
-real ::  sbias, sfact, amin,amax
+double precision ::  bias, fact
+real ::  amin,amax
 
 if(vc(0).ne.'0') call vfinit
 
 !     log scaling assumes range of +/- 10e10
 
-call cscale(a,n,amin,amax)
-bias=dble(-amin+1.e-20)
+amin=minval(a)
+amax=maxval(a)
+bias=dble(-amin)+dble(1.e-20)
 call cfact(bias,amax,nbits,fact)
-sbias=sngl(bias)
-sfact=sngl(fact)
 
 write(iunit,10)n,nbits,bias,fact
 10   format(2i8,2e20.10)
@@ -138,7 +137,7 @@ implicit none
 integer :: iunit,n,nbits
 real :: a(n),scr(n)
 character(len=*) :: type
-real(kind=8) ::  bias, fact
+double precision ::  bias, fact
 
 character(len=1) :: vc
 common/vform/vc(0:63)
@@ -147,9 +146,7 @@ integer :: i,nvalline,nchs,ic,ii,isval,iii,iscr
 real :: scfct
 
 if(type.eq.'LIN') then
-   do 10 i=1,n
-      scr(i)=sngl( ( dble(a(i))+bias ) *fact )
-10      continue
+   scr=(a+bias)*fact
 elseif(type.eq.'LOG') then
    scfct=2.**(nbits-1)
    do 11 i=1,n
@@ -263,12 +260,14 @@ implicit none
 integer :: n,nn
 real :: a(n),amin,amax
 
-amin=1.e30
-amax=-1.e30
-do 10 nn=1,n
-   amin=min(amin,a(nn))
-   amax=max(amax,a(nn))
-10   continue
+amin=minval(a(1:n))
+amax=maxval(a(1:n))
+! amin=1.e30
+! amax=-1.e30
+! do 10 nn=1,n
+!    amin=min(amin,a(nn))
+!    amax=max(amax,a(nn))
+! 10   continue
 
 return
 end
@@ -281,9 +280,9 @@ integer :: nbits
 real :: amax
 double precision  bias, bignum, fact, tnum
 
-bignum=dble(2**nbits-1)
+bignum=dble(2)**nbits-dble(1)
 tnum=bias+dble(amax)
-fact=bignum/(tnum+1.d-20)
+fact=bignum/(tnum+dble(1.d-20))
 
 return
 end

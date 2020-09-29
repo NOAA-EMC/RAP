@@ -9,7 +9,7 @@ program qc_viirs
   REAL :: lon_vi, lat_vi
   INTEGER :: mask, confi
   REAL :: t13, frp_v
-  INTEGER :: posy, posx, bowtie
+  INTEGER :: posy, posx, bowtie, persist_anomaly, bowtie_or_persist_anomaly
 
   ! Max length of a line
   integer, parameter :: LINE_LEN = 500
@@ -36,7 +36,15 @@ program qc_viirs
      ios=0
      READ(line, *, iostat=ios) &
           yy,mm,dd,hour,minute,lon_vi,lat_vi,mask,confi,t13,frp_v, &
-          posy,posx,bowtie
+          posy,posx,persist_anomaly,bowtie
+     if(ios/=0) then
+        ! Failed to read new format.  Fall back to old format.
+        ios=0
+        READ(line, *, iostat=ios) &
+             yy,mm,dd,hour,minute,lon_vi,lat_vi,mask,confi,t13,frp_v, &
+             posy,posx,bowtie
+        persist_anomaly=0
+     endif
 
      if(ios/=0) then
         write(0,50) nread+1,'with parser error iostat =',ios
@@ -45,7 +53,7 @@ program qc_viirs
 
      nread=nread+1
      
-     if ((frp_v<1.) .OR. (frp_v>10000.)) then
+     check_errors: if ((frp_v<1.) .OR. (frp_v>10000.)) then
         write(0,40) nread+1,"with implausible frp_v value",frp_v
      else if(lon_vi<-180.0 .or. lon_vi>180.0) then
         write(0,40) nread+1,'with longitude lon_vi outside [-180,180]',lon_vi
@@ -57,10 +65,15 @@ program qc_viirs
         write(0,50) nread+1,"with invalid month",mm
      else if(dd<1 .or. dd>31) then
         write(0,50) nread+1,"with invalid day",dd
+     else if(persist_anomaly/=0) then
+        write(0,50) nread+1,"with non-zero persist_anomaly",persist_anomaly
      else
+        ! We get here if:
+        !  1. Line has no persist_anomaly and no errors
+        !  2. Line has persist_anomaly=0 and no errors
         print '(A)',trim(line)
         nwrote=nwrote+1
-     end if
+     end if check_errors
   end do line_loop
 
 100 continue ! Error handling for EOF on stdin for header
