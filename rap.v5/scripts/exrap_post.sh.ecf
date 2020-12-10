@@ -42,6 +42,7 @@ export SPL=2.,5.,7.,10.,20.,30.\
 ,875.,900.,925.,950.,975.,1000.,1013.2
 
 targetsize=6858968708
+targetsize2=6871551620
 icnt=1
   while [ $icnt -lt 1000 ]
   do
@@ -59,7 +60,8 @@ icnt=1
       counter=1
       while [[ $counter -lt 20 ]]; do
       filesize=$(stat -c%s $INPUT_DATA/wrfout_d01_${timestr2})
-      if [ $filesize -eq $targetsize ]; then
+#     if [ $filesize -eq $targetsize ]; then
+      if [[ $filesize -eq $targetsize  || $filesize -eq $targetsize2 ]]; then
         break
       else 
         sleep 3
@@ -77,6 +79,29 @@ icnt=1
       err_exit $msg
     fi
   done
+
+# copy wrfout file to guess directory for use by later cycles
+# only copying first 6 forecast hours to save disk space
+  if [ $fhr -lt 07 ]
+  then 
+    counter=1
+    while [[ $counter -lt 36 ]]; do
+    filesize=$(stat -c%s $INPUT_DATA/wrfout_d01_${timestr2})
+    echo $filesize
+#   if [ $filesize -eq $targetsize ]; then
+    if [[ $filesize -eq $targetsize  || $filesize -eq $targetsize2 ]]; then
+      cpfs $INPUT_DATA/wrfout_d01_${timestr2} ${RAPGES_FCYC}/rap_${START_TIME}f0${fhr}
+      break
+    else 
+      sleep 5
+      counter=` expr $counter + 1 `
+    fi
+    done
+    if [ $counter -eq 36 ]; then
+    echo "WARNING: Forecast Hour f0${fhr} still short on node! Copy anyway."
+      cpfs $INPUT_DATA/wrfout_d01_${timestr2} ${RAPGES_FCYC}/rap_${START_TIME}f0${fhr}
+    fi 
+  fi
 
 ##  save sfc files for partial cycle initialization and restart purposes
 timeHH=${HH}
@@ -198,7 +223,7 @@ EOF
     $DBNROOT/bin/dbn_alert MODEL RAP_MSL $job $COMOUT/rap.${cycle}.wrfmslf${fhr}.grib2
     $DBNROOT/bin/dbn_alert MODEL RAP_PRS_WIDX $job $COMOUT/rap.${cycle}.wrfprsf${fhr}.grib2.idx
   fi
-  if [ $fhr -eq 18 ]; then
+  if [ $fhr -eq 18 ] || [ $fhr -eq 21 ]; then
     ecflow_client --event wrfgrib2_ready #for lmp 01z/13z use due to late start on rap 00z and 12z
   fi
 
@@ -673,28 +698,6 @@ then
   #aprun -cmdfile poescript -pgmmodel mpmd -labelio yes -stdoutmode ordered
   aprun -N 24 -n 48 cfp poescript
 fi
-
-# copy wrfout file to guess directory for use by later cycles
-# only copying first 6 forecast hours to save disk space
-  if [ $fhr -lt 07 ]
-  then 
-    counter=1
-    while [[ $counter -lt 36 ]]; do
-    filesize=$(stat -c%s $INPUT_DATA/wrfout_d01_${timestr2})
-    echo $filesize
-    if [ $filesize -eq $targetsize ]; then
-      cpfs $INPUT_DATA/wrfout_d01_${timestr2} ${RAPGES_FCYC}/rap_${START_TIME}f0${fhr}
-      break
-    else 
-      sleep 5
-      counter=` expr $counter + 1 `
-    fi
-    done
-    if [ $counter -eq 36 ]; then
-    echo "WARNING: Forecast Hour f0${fhr} still short on node! Copy anyway."
-      cpfs $INPUT_DATA/wrfout_d01_${timestr2} ${RAPGES_FCYC}/rap_${START_TIME}f0${fhr}
-    fi 
-  fi
 
 postmsg $jlogfile "RAP POST done for F${fhr}"
 
