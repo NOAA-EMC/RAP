@@ -49,6 +49,7 @@ B 9000
 
 com/rap/_ENVIR_/sdm_rtdm/
 + /avgdata/
++ /avgdata/*
 + /obcount_30day/
 + /obcount_30day/rap/
 + /obcount_30day/rap/rap._PDYm1_/***
