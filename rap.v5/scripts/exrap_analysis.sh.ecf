@@ -118,7 +118,7 @@ if [ ! -r wrf_inout ]; then
        break
       else 
         export subject="Corrupt RAP guess file!"
-        export maillist=${maillist:-'ncep.list.spa-helpdesk@noaa.gov,geoffrey.manikin@noaa.gov,benjamin.blake@noaa.gov'}
+        export maillist=${maillist:-'nco.spa@noaa.gov,geoffrey.manikin@noaa.gov,benjamin.blake@noaa.gov'}
         echo "Filesize of ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr $filesize is not right!">>mailmsg 
         echo "Will check file from previous cycle." >>mailmsg
         cat mailmsg |mail.py -s "$subject" $maillist -v

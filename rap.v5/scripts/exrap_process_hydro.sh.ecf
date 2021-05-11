@@ -148,7 +148,7 @@ $runline > process_cloud.out
 export err=$?
 
 if [ $err -ne 0 ]; then
-  export mailelist=${maillist:-'ncep.list.spa-helpdesk@noaa.gov,geoffrey.manikin@noaa.gov,benjamin.blake@noaa.gov'}
+  export mailelist=${maillist:-'nco.spa@noaa.gov,geoffrey.manikin@noaa.gov,benjamin.blake@noaa.gov'}
   export subject="RAP_PROCESS_ClOUD did not run cleanly"
   echo "*************************************************************" > mailmsg
   echo "*** WARNING !! RAP_PROCESS_CLOUD didn't complete cleanly. ***" >> mailmsg
