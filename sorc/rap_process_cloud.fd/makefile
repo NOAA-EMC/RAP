@@ -10,10 +10,10 @@ ARCH     =
 CPPFLAGS =  -DLINUX -Dfunder -DFortranByte=char -DFortranInt=int -DFortranLlong='long long' -D_UNDERSCORE
 NWPLIBS = ${BUFR_LIB4} ${BUFR_LIB4_DA} ${BUFR_LIBd} ${BUFR_LIBd_DA}
 
-INCLD=  -I${NETCDF}/include -I$(WRFPATH)/frame
-LIBS =  -L${NWPLIBS} \
-        $(WRFPATH)/external/io_netcdf/libwrfio_nf.a ${WRFPATH}/frame/pack_utils.o \
-        -L${NETCDF}/lib -lnetcdf
+INCLD=  -I${NETCDF}/include -I${WRF_IO_INC} #(WRFPATH)/frame
+LIBS =  -L${NWPLIBS} ${WRF_IO_LIB} \
+        -L${NETCDF}/lib -lnetcdf -lnetcdff
+       # $(WRFPATH)/external/io_netcdf/libwrfio_nf.a ${WRFPATH}/frame/pack_utils.o
 # cio
 OBJS = kinds.o constants.o module_debug.o gridmod_gsi_map_utils.o \
        misc_definitions_module.o constants_module.o module_map_utils.o \

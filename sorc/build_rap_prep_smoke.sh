@@ -3,11 +3,10 @@
 export BASE=`pwd`
 cd $BASE
 
- . /opt/modules/default/init/ksh
 module purge
-module load intel
-module load NetCDF-intel-haswell/4.2
-module load HDF5-serial-intel-haswell/1.8.9
+module load envvar/1.0
+module use $BASE/../modulefiles
+module load RAP/v5.0.0
 module list
 
 cd ${BASE}/rap_prep_smoke.fd/process-obs/QC
@@ -17,11 +16,11 @@ cp -fp qc_modis.exe ${BASE}/../exec/rap_smoke_qc_modis
 cp -fp qc_viirs.exe ${BASE}/../exec/rap_smoke_qc_viirs
 
 cd ${BASE}/rap_prep_smoke.fd/prep-chem/cycle_netcdf
-./mk-wrf-wcoss-cray
+./mk-wrf-wcoss2
 cp -fp "cycle_netcdf.x" ${BASE}/../exec/rap_fires_cycle_netcdf
 
 cd ${BASE}/rap_prep_smoke.fd/prep-chem/fires_ncfmake
-./mk-wrf-wcoss-cray
+./mk-wrf-wcoss2
 cp -fp "fires_ncfmake.x" ${BASE}/../exec/rap_fires_ncfmake
 
 cd ${BASE}/rap_prep_smoke.fd/prep-chem/Prep_smoke_FRP/bin/build

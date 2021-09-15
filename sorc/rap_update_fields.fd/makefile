@@ -8,27 +8,15 @@ CPP      = /lib/cpp -P
 ARCH     =
 CPPFLAGS =  -DLINUX -Dfunder -DFortranByte=char -DFortranInt=int -DFortranLlong='long long' -D_UNDERSCORE
 OPTS     = -O3 -assume byterecl -convert big_endian
-LIST     =
-FREE     = -FR
-TRAPS    =
-PROFILE  =
 DEBUG    = # -g # -traceback -fpe0 -ftrapuv # -check all
-MEM      =
-MAP      =
-ESSL     =
-MASS     =
 
-W3FLAGS = -I${W3EMC_INC4}
-NEMSIOFLAG = -I${NEMSIO_INC4}
-#WRFPATH    = /nwprod/sorc/wrf_shared.fd
-WRFPATH    = /gpfs/hps/nco/ops/nwprod/wrf_shared.v1.1.0-intel
-NWPLIBS =${W3EMC_LIB4} ${BACIO_LIB4}
+FLAGS = -qopenmp
+NEMSIOFLAG = -I${NEMSIO_INC4} -I${WRF_IO_INC} -I${W3NCO_INC4}
+NWPLIBS =${W3NCO_LIB4} ${BACIO_LIB4}
 
-INCLD= -I${NETCDF}/include -I$(WRFPATH)/frame
+INCLD= -I${NETCDF}/include -I${WRF_IO_INC}
 
-LIBS =  \
-       $(WRFPATH)/external/io_netcdf/libwrfio_nf.a ${WRFPATH}/frame/pack_utils.o \
-       -L${NETCDF}/lib -lnetcdf
+LIBS = ${WRF_IO_LIB} -L${NETCDF}/lib -lnetcdf -lnetcdff
 
 OBJS = kinds.o
 

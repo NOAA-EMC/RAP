@@ -16,7 +16,7 @@ OBJS=	BFRHDR.o BFRIZE.o CALHEL.o CALWXT.o SMIX.o SNDPST_EM.o VAP.o \
 # CMD		Name of the executable
 # PROFLIB	Library needed for profiling
 #
-FC =            ftn -openmp -convert big_endian -g -traceback
+FC =            ftn -qopenmp -convert big_endian -g -traceback
 LDFLAGS = 
 CMD = ../../exec/rap_sndp
 LIBS = ${BUFR_LIB4}
@@ -24,10 +24,10 @@ LIBS = ${BUFR_LIB4}
 # Lines from here on down should not need to be changed.  They are the
 # actual rules which make uses to build a.out.
 #
-all:	 $(CMD) delete
+all:	 $(CMD)
 
 $(CMD):		$(OBJS)
 	$(FC) $(LDFLAGS) -o $(@) $(OBJS) $(LIBS)
 
-delete:
+clean:
 	@rm  *.o
