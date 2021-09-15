@@ -1,0 +1,45 @@
+#BSUB -J %E%rap_post_manager_%CYC%
+#BSUB -o  /%COM%/output/%ENVIR%/today/rap_post_manager_%CYC%.o%J
+#BSUB -e  /%COM%/output/%ENVIR%/today/rap_post_manager_%CYC%.o%J
+#BSUB -cwd /tmp
+#BSUB -q %QUEUE%_shared
+#BSUB -L /bin/sh
+#BSUB -W 00:45
+#BSUB -P %PROJ%
+#BSUB -M 1000
+#BSUB -n 1
+
+%include <head.h>
+%include <envir-xc40.h>
+
+# EXPORT list here
+
+set -x
+
+export model=rap
+%include <model_ver.h>
+export cyc=%CYC%
+
+# CALL executable job script here
+$HOMErap/jobs/JRAP_POSTMGR
+
+if [ $? -ne 0 ]; then
+  ecflow_client --abort
+  exit
+fi
+
+%include <tail.h>
+%manual
+######################################################################
+# Purpose: to run RAP post processing
+######################################################################
+
+
+######################################################################
+# Job specific troubleshooting instructions:
+#  see generic troubleshoot manual page
+#
+######################################################################
+
+# include manual page below
+%end

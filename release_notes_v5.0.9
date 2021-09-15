@@ -1,0 +1,25 @@
+Release Notes:  RAP v5.0.9
+
+v5.0.9 - released July 23, 2021
+* RAPv5 WRF source code change to address an operational RAP failure on July 9th
+   * Implicit-Explicit Vertical Advection (IEVA) is disabled during the backwards integration of the DFI and then immediately turned back on
+   * The impact of this change on the model forecast is in the range of noise
+
+
+* Repository Details
+   * After cloning the rap.v5.0.9 tag of the EMC_rap git repository using the command below, retrieve the new code from the rap.v5 directory.
+  	* git clone -b rap.v5.0.9 https://${USER}@vlab.noaa.gov/code-review/a/EMC_rap
+  	* git clone -b rap.v5.0.9 ssh://${USER}@vlab.noaa.gov:29418/EMC_rap
+
+
+* sorc files changed
+   * sorc/rap_wrfarw.fd/WRFV3.9/share/dfi.F
+
+
+* resource changes
+   * N/A
+
+
+* implementation instructions
+   * Retrieve the new sorc file and re-compile the rap_wrfarw source code
+

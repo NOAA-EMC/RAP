@@ -1,0 +1,59 @@
+Release Notes:  RAP v5.0.4
+
+v5.0.4 - released October 8, 2020
+* RAPv5 code changes required for GFSv16 implementation
+   * Update GSI code to handle switch from nemsio to netcdf ensemble files
+   * Update GSI namelist and ex-scripts to use GFSv16 data
+
+
+* Repository Details
+   * After cloning the rap.v5.0.4 tag of the EMC_rap git repository using the command below, retrieve the new code from the rap.v5 directory.
+  	* git clone -b rap.v5.0.4 https://${USER}@vlab.ncep.noaa.gov/code-review/a/EMC_rap
+  	* git clone -b rap.v5.0.4 ssh://${USER}@vlab.ncep.noaa.gov:29418/EMC_rap
+
+
+* parm files changed
+   * parm/rap_gsiparm.anl.sh
+
+* sorc files changed or added
+   * sorc/build_rap_gsi.sh
+   * sorc/rap_gsi.fd/CMakeLists.txt
+   * sorc/rap_gsi.fd/cmake/Modules/FindGSICONTROL.cmake
+   * sorc/rap_gsi.fd/cmake/Modules/FindHDF5.cmake
+   * sorc/rap_gsi.fd/cmake/Modules/FindIP.cmake
+   * sorc/rap_gsi.fd/cmake/Modules/FindNetCDF.cmake
+   * sorc/rap_gsi.fd/cmake/Modules/platforms/Hera.cmake
+   * sorc/rap_gsi.fd/cmake/Modules/platforms/Jet.cmake
+   * sorc/rap_gsi.fd/cmake/Modules/platforms/Orion.cmake
+   * sorc/rap_gsi.fd/cmake/Modules/platforms/WCOSS-D.cmake
+   * sorc/rap_gsi.fd/cmake/Modules/setIntelFlags.cmake
+   * sorc/rap_gsi.fd/libsrc/ip/*
+   * sorc/rap_gsi.fd/src/fv3gfs_ncio/*
+   * sorc/rap_gsi.fd/src/gsi/CMakeLists.txt
+   * sorc/rap_gsi.fd/src/gsi/general_read_gfsatm.f90
+   * sorc/rap_gsi.fd/src/gsi/get_gefs_for_regional.f90
+   * sorc/rap_gsi.fd/src/gsi/gridmod.F90
+   * sorc/rap_gsi.fd/src/gsi/gsimod.F90
+   * sorc/rap_gsi.fd/src/gsi/guess_grids.F90
+   * sorc/rap_gsi.fd/src/gsi/ncepnems_io.f90
+   * sorc/rap_gsi.fd/src/gsi/netcdfgfs_io.f90
+   * sorc/rap_gsi.fd/src/gsi/read_guess.F90
+   * sorc/rap_gsi.fd/util/EnKF/arw/src/enspreproc_regional.fd/CMakeLists.txt
+   * sorc/rap_gsi.fd/util/EnKF/arw/src/enspreproc_regional.fd/get_gefs_for_regional_enspro.f90
+   * sorc/rap_gsi.fd/util/EnKF/arw/src/enspreproc_regional.fd/gfsp2wrfg.f90
+
+* scripts files changed
+   * scripts/exrap_analysis.sh.ecf
+   * scripts/exrap_analysis_pcyc.sh.ecf
+   * scripts/exrap_makebc.sh.ecf
+
+
+* resource changes
+   * N/A
+
+
+* implementation instructions
+   * Retrieve the new and updated sorc, scripts, and parm files
+   * Re-build the GSI, enkf, process_enkf, and initialens codes with the build_rap_gsi.sh script
+   * These changes should be implemented alongside GFSv16
+   * Note that RAPv5.0.3 has also been submitted and will be implemented in November, so any changes made to v5.0.3 must also be incorporated into v5.0.4

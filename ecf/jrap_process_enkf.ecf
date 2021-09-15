@@ -1,0 +1,56 @@
+#BSUB -J %E%rap_process_enkf_%CYC%
+#BSUB -o  /%COM%/output/%ENVIR%/today/rap_process_enkf_%CYC%.o%J
+#BSUB -e  /%COM%/output/%ENVIR%/today/rap_process_enkf_%CYC%.o%J
+#BSUB -cwd /tmp
+#BSUB -L /bin/sh
+#BSUB -W 00:40
+#BSUB -q %QUEUE%
+#BSUB -P %PROJ%
+#BSUB -M 1800
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 120*{select[craylinux && vnode]span[ptile=12] cu[type=cabinet]}' rusage[mem=1800]
+
+%include <head.h>
+%include <envir-xc40.h>
+
+# EXPORT list here
+export model=rap
+%include <model_ver.h>
+
+export cyc=%CYC%
+
+export MP_SHARED_MEMORY=YES
+export MEMORY_AFFINITY=MCM
+export MP_MPILIB=mpich2
+export KMP_AFFINITY=disabled
+export MP_TASK_AFFINITY=core:1
+export OMP_NUM_THREADS=1
+
+export numprocs=120
+export NTASK=120
+export PTILE=12
+
+export group_name=meso
+
+# CALL executable job script here
+$HOMErap/jobs/JRAP_PROCESS_ENKF
+
+if [ $? -ne 0 ]; then
+  ecflow_client --abort
+  exit
+fi
+
+%include <tail.h>
+%manual
+##########################################################################
+# Purpose: to updatebcare the boundary conditions for the Rapid Refresh Model
+##########################################################################
+
+
+######################################################################
+# Job specific troubleshooting instructions:
+#  see generic troubleshoot manual page
+#
+######################################################################
+
+# include manual page below
+%end

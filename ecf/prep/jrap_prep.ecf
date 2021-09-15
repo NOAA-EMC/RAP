@@ -1,0 +1,46 @@
+#BSUB -J %E%rap_prep_%CYC%
+#BSUB -o /%COM%/output/%ENVIR%/today/rap_prep_%CYC%.o%J
+#BSUB -e /%COM%/output/%ENVIR%/today/rap_prep_%CYC%.o%J
+#BSUB -L /bin/sh
+#BSUB -cwd /tmp
+#BSUB -q %QUEUE%
+#BSUB -W 00:30
+#BSUB -P %PROJ%
+#BSUB -M 3000
+#BSUB -extsched 'CRAYLINUX[]'
+
+%include <head.h>
+%include <envir-xc40.h>
+
+set -x
+export model=obsproc_rap
+%include <model_ver.h>
+
+export cyc=%CYC%
+export NODES=1
+
+module load cfp-intel-sandybridge/$cfp_intel_sandybridge_ver
+module list
+
+${HOMEobsproc_rap}/jobs/JRAP_PREP
+
+if [ $? -ne 0 ]; then
+  ecflow_client --abort
+  exit
+fi
+
+
+%include <tail.h>
+%manual
+######################################################################
+# Purpose: Job to execute the 00Z RAP PREPBUFR data processing
+######################################################################
+
+######################################################################
+# Job specific troubleshooting instructions:
+#  see generic troubleshoot manual page
+#
+######################################################################
+
+# include manual page below
+%end

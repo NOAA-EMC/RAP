@@ -1,0 +1,60 @@
+#BSUB -J %E%rap_makebc_%CYC%
+#BSUB -o  /%COM%/output/%ENVIR%/today/rap_makebc_%CYC%.o%J
+#BSUB -e  /%COM%/output/%ENVIR%/today/rap_makebc_%CYC%.o%J
+#BSUB -cwd /tmp
+#BSUB -q %QUEUE%
+#BSUB -L /bin/sh
+#BSUB -P %PROJ%
+#BSUB -W 02:00
+#BSUB -M 1800
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 144*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=1800]
+#
+
+%include <head.h>
+%include <envir-xc40.h>
+
+# EXPORT list here
+
+set -x
+export model=rap
+%include <model_ver.h>
+export cyc=%CYC%
+
+export MP_SINGLE_THREAD=yes
+export MP_EUILIB=us
+export MP_LABELIO=yes
+export MP_SHARED_MEMORY=yes
+export MP_USE_BULK_XFER=yes
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export KMP_AFFINITY=disabled
+export MP_MPILIB=mpich2
+
+export numprocs=96
+export NTASK=96
+export PTILE=24
+
+# CALL executable job script here
+$HOMErap/jobs/JRAP_MAKEBC
+
+if [ $? -ne 0 ]; then
+  ecflow_client --abort
+  exit
+fi
+
+%include <tail.h>
+%manual
+##########################################################################
+# Purpose: to prepare the boundary conditions for the Rapid Refresh Model
+##########################################################################
+
+
+######################################################################
+# Job specific troubleshooting instructions:
+#  see generic troubleshoot manual page
+#
+######################################################################
+
+# include manual page below
+%end

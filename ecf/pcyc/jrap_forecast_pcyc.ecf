@@ -1,0 +1,77 @@
+#BSUB -J %E%rap_forecast_pcyc_%CYC%
+#BSUB -o  /%COM%/output/%ENVIR%/today/rap_forecast_pcyc_%CYC%.o%J
+#BSUB -e  /%COM%/output/%ENVIR%/today/rap_forecast_pcyc_%CYC%.o%J
+#BSUB -cwd /tmp
+#BSUB -q %QUEUE%
+#BSUB -L /bin/sh
+#BSUB -P %PROJ%
+#BSUB -W 00:40
+#BSUB -M 1800
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1152*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=1800]
+
+%include <head.h>
+%include <envir-xc40.h>
+
+# EXPORT list here
+
+set -x
+
+export model=rap
+%include <model_ver.h>
+
+export cyc=%CYC%
+
+module load craype-hugepages256M
+module load perftools
+module list
+
+export OMP_STACKSIZE=500M
+export KMP_AFFINITY=disabled
+export OMP_NUM_THREADS=2
+
+export group_name=meso
+
+#grid_order -C -c 2,12 -g 10,60 > MPICH_RANK_ORDER
+#export MPICH_RANK_REORDER_METHOD=3
+#export MALLOC_MMAP_MAX_=0
+#export MALLOC_TRIM_THRESHOLD_=134217728
+#export OMP_STACKSIZE=500M
+#export KMP_AFFINITY=disabled
+#export OMP_NUM_THREADS=2
+
+#export numprocs=1224
+#export NTASK=1224
+#export PTILE=24
+
+#export MPICH_MPIIO_HINTS="wrfinput*:cb_nodes=24,wrfrst*:cb_nodes=24,wrfout*:cb_nodes=24"
+#export MPICH_MPIIO_AGGREGATOR_PLACEMENT_DISPLAY=1
+#export MPICH_MPIIO_HINTS_DISPLAY=1
+#export MPICH_ENV_DISPLAY=1
+#export MPICH_VERSION_DISPLAY=1
+#export MPICH_ABORT_ON_ERROR=1
+#export MPICH_MPIIO_STATS=1
+#export ATP_ENABLED=0
+
+# CALL executable job script here
+$HOMErap/jobs/JRAP_FORECAST_PCYC
+
+if [ $? -ne 0 ]; then
+  ecflow_client --abort
+  exit
+fi
+
+%include <tail.h>
+%manual
+##########################################################################
+# Purpose: to prepare the boundary conditions for the Rapid Refresh Model
+##########################################################################
+
+
+######################################################################
+# Job specific troubleshooting instructions:
+#  see generic troubleshoot manual page
+#
+######################################################################
+
+# include manual page below
+%end

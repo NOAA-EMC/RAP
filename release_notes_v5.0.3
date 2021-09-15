@@ -1,0 +1,57 @@
+Release Notes:  RAP v5.0.3
+
+v5.0.3 - released September 30, 2020 following the completion of a successful 30-day EMC stability test
+* Final set of RAPv5 code changes prior to operational implementation
+   * Enable implicit explicit vertical advection (IEVA) scheme to improve model stability, requires namelist changes
+   * Great Salt Lake temperature fix, involves WRF source code changes
+   * Smoke obs pre-processing fix to match HRRR code
+   * Update GSI code for EUMETSAT BUFR format change
+   * Add mass density to gempak files
+   * Update BUFRLIB from version 11.0.1 to 11.3.0
+
+
+* Repository Details
+   * After cloning the rap.v5.0.3 tag of the EMC_rap git repository using the command below, retrieve the new code from the rap.v5 directory.
+  	* git clone -b rap.v5.0.3 https://${USER}@vlab.ncep.noaa.gov/code-review/a/EMC_rap
+  	* git clone -b rap.v5.0.3 ssh://${USER}@vlab.ncep.noaa.gov:29418/EMC_rap
+
+
+* gempak files changed
+   * gempak/fix/g2varswmo2.tbl
+
+* jobs files changed
+   * jobs/JRAP_PREP_SMOKE
+
+* modulefiles files changed
+   * modulefiles/RAP/v5.0.0
+   * modulefiles/RAP/v5.0.0.da
+
+* parm files changed
+   * parm/rap_wrf.nl
+   * parm/rap_wrf_pcycle.nl
+
+* sorc files changed
+   * sorc/build_rap_gsi.sh
+   * sorc/rap_gsi.fd/src/gsi/read_obs.F90
+   * sorc/rap_gsi.fd/src/gsi/read_satwnd.f90
+   * sorc/rap_prep_smoke.fd/prep-chem/Prep_smoke_FRP/aux_src/utils/vformat.f90
+   * sorc/rap_prep_smoke.fd/prep-chem/Prep_smoke_FRP/src/3bem_emissions.f90
+   * sorc/rap_prep_smoke.fd/process-obs/HRRR-AK-Smoke/src/proc_J01_FRP_HRRR_AK.f90     *sorc/rap_prep_smoke.fd/process-obs/HRRR-AK-Smoke/src/proc_NPP_FRP_HRRR-AK_v5.f90
+   * sorc/rap_prep_smoke.fd/process-obs/HRRR-Smoke/src/proc_J01_FRP_HRRR_v3.f90
+   * sorc/rap_prep_smoke.fd/process-obs/HRRR-Smoke/src/proc_NPP_FRP_HRRR_v3.f90
+   * sorc/rap_prep_smoke.fd/process-obs/QC/qc_viirs.f90
+   * sorc/rap_wrfarw.fd/WRFV3.9/phys/module_physics_init.F
+   * sorc/rap_wrfarw.fd/WRFV3.9/phys/module_sf_lake.F
+
+* ush files changed
+   * ush/rap_smoke_wrfinput.ksh
+
+
+* resource changes
+   * N/A
+
+
+* implementation instructions
+   * Retrieve the updated sorc, modulefiles, ush, jobs, parm, and gempak files
+   * Re-build the GSI, prep_smoke, process_cloud, process_lightning, process_mosaic, sndp, stnmlist, update_gvf, and WRF codes
+   * Will need to cold start the model with a surface guess file from GSL, please coordinate with Ming Hu

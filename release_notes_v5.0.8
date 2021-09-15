@@ -1,0 +1,30 @@
+Release Notes:  RAP v5.0.8
+
+v5.0.8 - released May 13, 2021
+* RAPv5 smartinit changes associated with the RTMA/URMA v2.8.7 upgrade
+   * The RTMA CONUS land/sea mask and terrain around the Great Salt Lake are updated to better match the lake's current shape
+* RAPv5 post changes to fix column max GTG product
+
+
+* Repository Details
+   * After cloning the rap.v5.0.8 tag of the EMC_rap git repository using the command below, retrieve the new code from the rap.v5 directory.
+  	* git clone -b rap.v5.0.8 https://${USER}@vlab.ncep.noaa.gov/code-review/a/EMC_rap
+  	* git clone -b rap.v5.0.8 ssh://${USER}@vlab.ncep.noaa.gov:29418/EMC_rap
+
+
+* fix files changed
+   * fix/rap_conus_elevtiles.grib2
+   * fix/rap_conus_slmask.grib2
+
+* sorc files changed
+   * sorc/rap_wrfpost.fd/MISCLN.f
+
+
+* resource changes
+   * N/A
+
+
+* implementation instructions
+   * Retrieve the new fix files from the following directory on Luna/Surge (cannot store fix files in repository): /gpfs/hps3/emc/meso/save/Benjamin.Blake/nwprod_final/rap.v5.0.8/fix
+   * Retrieve the new sorc file and re-compile the rap_wrfpost code
+   * These changes should be implemented alongside RTMA/URMA v2.8.7
