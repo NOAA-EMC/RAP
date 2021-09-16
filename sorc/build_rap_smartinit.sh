@@ -5,14 +5,11 @@ set -x
 export BASE=`pwd`
 cd $BASE
 
- . /opt/modules/default/init/ksh
 module purge
-module load ncep
-module use -a /opt/cray/modulefiles
-module load $BASE/../modulefiles/RAP/v5.0.0.da
-module unload craype-sandybridge
-module load craype-hashwell
-#module load craype-sandybridge
+module load envvar/1.0
+
+module use $BASE/../modulefiles
+module load RAP/v5.0.0.da
 module list
 
 sleep 1
