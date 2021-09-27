@@ -4,7 +4,7 @@
 #BSUB -cwd /tmp
 #BSUB -q %QUEUE%
 #BSUB -L /bin/sh
-#BSUB -W 00:15
+#BSUB -W 00:20
 #BSUB -P %PROJ%
 #BSUB -M 3000
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=3000]

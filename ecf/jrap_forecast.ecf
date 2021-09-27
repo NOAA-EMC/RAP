@@ -21,7 +21,8 @@ export model=rap
 
 export cyc=%CYC%
 
-module load craype-hugepages256M
+module load craype
+module load craype-hugepages8M
 module load perftools
 module list
 

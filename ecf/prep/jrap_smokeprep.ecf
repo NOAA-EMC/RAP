@@ -4,7 +4,7 @@
 #BSUB -L /bin/sh
 #BSUB -cwd /tmp
 #BSUB -q %QUEUE%
-#BSUB -W 00:40
+#BSUB -W 00:30
 #BSUB -P %PROJ%
 #BSUB -M 1800
 #BSUB -extsched 'CRAYLINUX[]'

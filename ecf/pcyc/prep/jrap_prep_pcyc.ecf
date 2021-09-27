@@ -20,6 +20,8 @@ export cyc=%CYC%
 export NODES=1
 
 module load cfp-intel-sandybridge/$cfp_intel_sandybridge_ver
+module load NetCDF-intel-sandybridge/$NetCDF_intel_sandybridge_ver
+module list
 
 ${HOMEobsproc_rap}/jobs/JRAP_PREP
 

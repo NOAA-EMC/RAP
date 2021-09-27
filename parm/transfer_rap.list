@@ -60,7 +60,7 @@ B 2
 #Z
 
 com/rap/_ENVIR_/rap._PDYm1_/
-E
+W
 B 850000
 
 com/rap/_ENVIR_/rap_p._PDYm1_/
@@ -74,6 +74,7 @@ W
 B 8800
 
 com/rap/_ENVIR_/rap_eh._PDYm1_/
+W
 B 9000
 # This directory is a good candidate for compression
 #Z
