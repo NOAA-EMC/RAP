@@ -21,12 +21,12 @@ START_TIME=$PDY$cyc
 echo $START_TIME >STARTTIME
 
 ECHO="${ECHO:-/bin/echo}"
-export ATP_ENABLED=0
-export MALLOC_MMAP_MAX=0
-export MALLOC_TRIM_THRESHOLD=134217728
-export OMP_STACKSIZE=500M
-export KMP_STACKSIZE=1024m
-export MP_COLLECTIVE_OFFLOAD=no
+#export ATP_ENABLED=0
+#export MALLOC_MMAP_MAX=0
+#export MALLOC_TRIM_THRESHOLD=134217728
+#export OMP_STACKSIZE=500M
+#export KMP_STACKSIZE=1024m
+#export MP_COLLECTIVE_OFFLOAD=no
 
 # Compute date & time components for the analysis time
 YYYY=`echo ${START_TIME} | cut -c1-4`
@@ -68,6 +68,7 @@ if [ ! -r wrf_inout ]; then
 ## cycle surface variables
       targetsize=6858968708 # rapv5 size
       targetsize2=6871551620  # rapv5 size working dir on Dell2
+      targetsize3=6854865028  # rapv5 size working dir on WCOSS2
       counter=1
          while [[ $counter -lt 22 ]]; do
          counterhr=$counter
@@ -77,7 +78,7 @@ if [ ! -r wrf_inout ]; then
             filesize=$(stat -c%s ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr)
             echo $filesize
 #            if [ $filesize -eq $targetsize ]; then 
-            if [[ $filesize -eq $targetsize || $filesize -eq $targetsize2 ]]; then
+            if [[ $filesize -eq $targetsize || $filesize -eq $targetsize2 ]] || [ $filesize -eq $targetsize3 ]; then
                echo "cycle surface fields based on ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr"
                cp ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr ./wrfout_d01_save
                break
@@ -90,14 +91,14 @@ if [ ! -r wrf_inout ]; then
          echo "WARNING: no surface data cycled for background at ${time_str}!"
       fi
       cp ${EXECrap}/rap_full_cycle_surface .
-      runline="aprun -n 1 -N 1 ./rap_full_cycle_surface"
+      runline="mpiexec -n 1 -ppn 1 ./rap_full_cycle_surface"
       $runline >> $DATA/$pgmout 2>errfile
       export err=$?; err_chk
 
 # check consistence of the surface parameters
       cp ${FIXrap}/rap_geo_em.d01.nc  ./geo_em.d01.nc
       cp ${EXECrap}/rap_surface_consistcheck .
-      runline="aprun -n 1 -N 1 ./rap_surface_consistcheck"
+      runline="mpiexec -n 1 -ppn 1 ./rap_surface_consistcheck"
       $runline >> $DATA/$pgmout 2>errfile
      # export err=$?; err_chk
    else
@@ -117,14 +118,14 @@ if [ -r "${latestGVF}" ]; then
    cp ${FIXrap}/rap_gvf_VIIRS_4KM.MIN.1gd4r.new gvf_VIIRS_4KM.MIN.1gd4r.new
    cp ${FIXrap}/rap_gvf_VIIRS_4KM.MAX.1gd4r.new gvf_VIIRS_4KM.MAX.1gd4r.new
    cp ${latestGVF} GVF-WKL-GLB.grib2
-   runline="aprun -n 1 -N 1 ./rap_update_gvf"
+   runline="mpiexec -n 1 -ppn 1 ./rap_update_gvf"
    $runline >> update_gvf.out
 elif [ -r "${latestGVF2}" ]; then
    cp ${EXECrap}/rap_update_gvf .
    cp ${FIXrap}/rap_gvf_VIIRS_4KM.MIN.1gd4r.new gvf_VIIRS_4KM.MIN.1gd4r.new
    cp ${FIXrap}/rap_gvf_VIIRS_4KM.MAX.1gd4r.new gvf_VIIRS_4KM.MAX.1gd4r.new
    cp ${latestGVF2} GVF-WKL-GLB.grib2
-   runline="aprun -n 1 -N 1 ./rap_update_gvf"
+   runline="mpiexec -n 1 -ppn 1 ./rap_update_gvf"
    $runline >> update_gvf.out
 else
    ${ECHO} "${GVF}/latest.GVF does not exist!!"
@@ -504,7 +505,7 @@ export pgm=rap_gsi
 
 startmsg
 cp ${EXECrap}/rap_gsi .
-runline="aprun -j1 -cc depth -n 192 -N 12 -d 2 ./rap_gsi"
+runline="mpiexec -n 192 -ppn 64 --cpu-bind core --depth 2 ./rap_gsi"
 $runline < gsiparm.anl >> $DATA/$pgmout 2>errfile
 export err=$?; err_chk
 
@@ -586,7 +587,7 @@ cp gsiparm.anl gsiparm.anl_cloud
 
 export pgm=rap_gsi
 startmsg
-runline="aprun -j1 -cc depth -n 192 -N 12 -d 2 ./rap_gsi"
+runline="mpiexec -n 192 -ppn 64 --cpu-bind core --depth 2 ./rap_gsi"
 $runline < gsiparm.anl >> $DATA/$pgmout 2>errfile
 export err$?; err_chk
 

@@ -118,7 +118,7 @@ cp ${PARMrap}/rap_update_bc_parame.in parame.in
 ln -sf wrfinput_d01  wrfinputd1
 ln -sf wrfvar_output wrfvar_out
 cp ${EXECrap}/rap_update_bc .
-runline="aprun -n 1 -N 1 ./rap_update_bc"
+runline="mpiexec -n 1 -ppn 1 ./rap_update_bc"
 $runline >> $DATA/$pgmout 2>errfile
 export err=$?; err_chk
 

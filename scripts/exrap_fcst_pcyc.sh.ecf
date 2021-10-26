@@ -303,7 +303,7 @@ mv ${WRF_NAMELIST}.new ${WRF_NAMELIST}
 # Run wrf
 startmsg
 cp ${EXECrap}/rap_wrfarw_fcst .
-runline="aprun -n 576 -N 12 -d2 -cc depth ./rap_wrfarw_fcst"
+runline="mpiexec -n 576 -ppn 64  --cpu-bind core --depth 2 ./rap_wrfarw_fcst"
 $runline
 export err=$?
 

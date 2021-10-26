@@ -113,7 +113,7 @@ export pgm=$EXECrap/rap_process_mosaic
 
 #startmsg
 cp ${EXECrap}/rap_process_mosaic .
-runline="time aprun -n 36 -N $PTILE ./rap_process_mosaic"
+runline="time mpiexec -n 36 -ppn 64 ./rap_process_mosaic"
 $runline > process_mosaic.out
 export err=$?;err_chk
 
@@ -143,7 +143,7 @@ export pgm=$EXECrap/rap_process_cloud
 
 #startmsg
 cp ${EXECrap}/rap_process_cloud .
-runline="time aprun -n 36 -N $PTILE ./rap_process_cloud"
+runline="time mpiexec -n 1 -ppn 1 ./rap_process_cloud"
 $runline > process_cloud.out
 export err=$?
 
@@ -185,7 +185,7 @@ EOF
 
   startmsg
   cp ${EXECrap}/rap_process_lightning .
-  runline="time aprun -n 36 -N $PTILE ./rap_process_lightning"
+  runline="time mpiexec -n 1 -ppn 1 ./rap_process_lightning"
   $runline > process_lightning.out
   export err=$?;err_chk
 

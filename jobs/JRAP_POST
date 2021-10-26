@@ -82,11 +82,13 @@ export GRBINDEX=${GRBINDEX:-${gributilexec}/grbindex}
 export GRB2INDEX=${GRB2INDEX:-${gributilexec}/grb2index}
 export CNVGRIB=${CNVGRIB:-${gributilexec}/cnvgrib}
 export WGRIB2=${WGRIB2:-${gributilexec}/wgrib2}
-export CRTM=${CRTM:-${NWROOThps}/lib/crtm/${crtm_ver_post}/src/fix}
+#export CRTM=${CRTM:-${NWROOThps}/lib/crtm/${crtm_ver_post}/src/fix}
+export CRTM=${FIXcrtm_post:-${NWROOThps}/lib/crtm/${crtm_ver_post}/src/fix}
 
 ###########################################
 # Run setpdy and initialize PDY variables
 ###########################################
+export PDY=20210824
 setpdy.sh
 . PDY
 

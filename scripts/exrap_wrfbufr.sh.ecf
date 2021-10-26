@@ -58,7 +58,8 @@ if [ $fhr -eq 0 ]; then
 # Look back 3 hours for relevant file - if not found, we do not want to
 # utilize information from an older cycle for hourly average fields
   counter=1
-  targetsize=6858968708
+#  targetsize=6858968708
+  targetsize=6854865028
   targetsize2=6871551620  ## rapv5 working dir on dell2
   while [[ $counter -lt 04 ]]; do
     counterhr=$counter
@@ -124,7 +125,7 @@ datestr=`date`
 echo about to run program at $datestr
 
 cp ${EXECrap}/rap_wrfbufr .
-runline="aprun -n 1 -N 1 ./rap_wrfbufr"
+runline="mpiexec -n 1 -ppn 1 ./rap_wrfbufr"
 $runline >> wrfbufr.out
 export err=$?; err_chk
 

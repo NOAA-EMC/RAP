@@ -2,7 +2,7 @@
 #
 
 #. /meso/save/Ming.Hu/nwprod/versions/rap.ver
-. /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/versions/rap.ver
+. /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/versions/rap.ver
 # cp /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.${model_ver}/sms/post/jrap_post_fHH_XX.bsub .
 cp ../post/jrap_post_fHH_XX.bsub .
 #cycles="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"

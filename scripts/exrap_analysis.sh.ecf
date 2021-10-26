@@ -22,18 +22,18 @@ echo $START_TIME >STARTTIME
 
 ### Now run the GSI
 # Set up some NCEP loadlevelor environment variables
-export ATP_ENABLED=0
-export MALLOC_MMAP_MAX=0
-export MALLOC_TRIM_THRESHOLD_=134217728
-export KMP_AFFINITY=disabled
-export KMP_STACKSIZE=1024m
+#export ATP_ENABLED=0
+#export MALLOC_MMAP_MAX=0
+#export MALLOC_TRIM_THRESHOLD_=134217728
+#export KMP_AFFINITY=disabled
+#export KMP_STACKSIZE=1024m
 export OMP_STACKSIZE=500M
 export OMP_NUM_THREADS=2
 
 # Set to yes for faster collective ops (mpi_reduce)
 # but may not yield bitwise identical results from
 # run to run when yes.
-export MP_COLLECTIVE_OFFLOAD=no
+#export MP_COLLECTIVE_OFFLOAD=no
 
 # Compute date & time components for the analysis time
 YYYY=`echo ${START_TIME} | cut -c1-4`
@@ -99,9 +99,9 @@ fi
 #   guess from the full cycle
 
 if [ ! -r wrf_inout ]; then
-    targetsize=6858968708  # RAPv5
+#    targetsize=6858968708  # RAPv5
     targetsize2=6871551620  # rapv5 size working dir on Dell2
-#   targetsize=6854865028  # RAPv5
+    targetsize=6854865028  # RAPv5
     counter=1
     while [[ $counter -lt 22 ]]; do
      counterhr=$counter
@@ -144,7 +144,7 @@ if [ ! -r wrf_inout ]; then
           echo " Cycle surface fields based on rap_${FCYC_TIME}f0$counterhr"
           cp ${RAPGES_FCYC}/rap_${FCYC_TIME}f0$counterhr ./wrfout_d01_save
           cp ${EXECrap}/rap_full_cycle_surface .
-          runline="aprun -n 192 -N 24 ./rap_full_cycle_surface"
+          runline="mpiexec -n 1 -ppn 1 ./rap_full_cycle_surface"
           $runline >> $DATA/$pgmout 2>errfile
           break
         fi
@@ -190,14 +190,14 @@ if [ ${cyc} -eq ${time_updateSST} ]; then
     cp ${COMINsst}/sst.${PDY}/rtgssthr_grb_0.083.grib2 SSTRTG
     ln -s SSTRTG latest.SST
     cp ${EXECrap}/rap_process_sst .
-    runline="aprun -n 1 -N 1 ./rap_process_sst"
+    runline="mpiexec -n 1 -ppn 1 ./rap_process_sst"
     $runline >> $DATA/$pgmout 2>errfile
     export err=$?; err_chk
   elif [ -r "${COMINsst}/sst.${PDYm1}/rtgssthr_grb_0.083.grib2" ]; then
     cp ${COMINsst}/sst.${PDYm1}/rtgssthr_grb_0.083.grib2 SSTRTG
     ln -s SSTRTG latest.SST
     cp ${EXECrap}/rap_process_sst .
-    runline="aprun -n 1 -N 1 ./rap_process_sst"
+    runline="mpiexec -n 1 -ppn 1 ./rap_process_sst"
     $runline >> $DATA/$pgmout 2>errfile
     export err=$?; err_chk
   else
@@ -574,7 +574,7 @@ export pgm=rap_gsi
 
 startmsg
 cp ${EXECrap}/rap_gsi .
-runline="aprun -j1 -cc depth -n 192 -N 12 -d 2 ./rap_gsi"
+runline="mpiexec -n 192 -ppn 64 --cpu-bind core --depth 2 ./rap_gsi"
 $runline < gsiparm.anl >> $DATA/$pgmout 2>errfile
 export err=$?; err_chk
 
@@ -649,7 +649,7 @@ EOF
 
 export pgm=rap_gsi
 #startmsg
-runline="aprun -j1 -cc depth -n 192 -N 12 -d 2 ./rap_gsi"
+runline="mpiexec -n 192 -ppn 64 --cpu-bind core --depth 2 ./rap_gsi"
 $runline < gsiparm.anl >> $DATA/$pgmout 2>errfile
 export err=$?; err_chk
 
@@ -664,7 +664,7 @@ if [ ${cyc} -eq ${trim_snow} ]; then
      cp  ${FIXrap}/rap_geo_em.d01.nc ./geo_em.d01.nc
      cp  ${EXECrap}/rap_process_imssnow .
 
-     runline="aprun -n 1 -N 1 ./rap_process_imssnow"
+     runline="mpiexec -n 1 -ppn 1 ./rap_process_imssnow"
      $runline >> $DATA/$pgmout 2>errfile
      export err=$?; err_chk
   else
