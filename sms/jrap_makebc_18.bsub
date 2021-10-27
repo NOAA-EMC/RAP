@@ -1,22 +1,17 @@
-##!/bin/ksh --login
-#BSUB -oo /gpfs/hps3/ptmp/Ming.Hu/outputrap/rap_makebc.out18z
-#BSUB -eo /gpfs/hps3/ptmp/Ming.Hu/outputrap/rap_makebc.out18z
-#BSUB -J rap_makebc_18
-#BSUB -W 02:30
-#BSUB -q "devonprod"
-#BSUB -P RAP-T2O
-#BSUB -M 1800
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 144*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=1800]
-#BSUB -x
-#BSUB -a poe
+#!/bin/bash
+#PBS -j oe
+#PBS -o /lfs/h2/emc/ptmp/Ming.Hu/outputrap/rap_makebc.out18z
+#PBS -e /lfs/h2/emc/ptmp/Ming.Hu/outputrap/rap_makebc.out18z
+#PBS -N rap_makebc_18
+#PBS -l walltime=03:00:00
+#PBS -q "dev"
+#PBS -A RAP-DEV
+#PBS -l select=1:ncpus=128
 
-module load prod_util
-#module load prod_envir
+set -x
 
 # Set MPI options
 export MP_SINGLE_THREAD=yes
-#export MP_EAGER_LIMIT=65536
-#export MP_MPILIB=mpich2
 export MP_EUILIB=us
 export MP_LABELIO=yes
 export MP_SHARED_MEMORY=yes
@@ -27,10 +22,9 @@ export MP_TASK_AFFINITY=core:1
 export KMP_AFFINITY=disabled
 export MP_MPILIB=mpich2
 
-export numprocs=96
-export NTASK=96
+export numprocs=128
+export NTASK=128
 export PTILE=24
-set -x
 
 export envir=prod
 export RUN_ENVIR=prod
@@ -38,7 +32,12 @@ export cyc=18
 export job=rap_makebc_18
 export group_name=meso
 
-. /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/versions/rap.ver
+. /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/versions/rap.ver
 # CALL executable job script here
-/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.${rap_ver}/jobs/JRAP_MAKEBC 
+. /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/rap.${rap_ver}/driver/rapwcoss2.env
+
+module use ${NWROOT}/rap.${rap_ver}/modulefiles
+module load RAP/v5.0.0
+
+${NWROOT}/rap.${rap_ver}/jobs/JRAP_MAKEBC 
 

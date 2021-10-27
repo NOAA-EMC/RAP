@@ -52,7 +52,9 @@ do
   do
     if [ -s $INPUT_DATA/fcstdone${fhr}00.${shh} ]
     then
-      ecflow_client --event release_post${fhr}
+#      ecflow_client --event release_post${fhr}
+      qsub ${HOMErap}/sms/post/jrap_post_f${fhr}_${shh}.bsub
+      qsub ${HOMErap}/sms/wrfbufr/jrap_wrfbufr_f${fhr}_${shh}.bsub
       # Remove current fhr from list
       postjobs=`echo $postjobs | sed s/${fhr}//g`
     fi

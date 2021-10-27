@@ -1,40 +1,27 @@
-##!/bin/ksh --login
-#
-#BSUB -oo /gpfs/hps3/ptmp/Ming.Hu/outputrap/rap_post_f04.out01z
-#BSUB -eo /gpfs/hps3/ptmp/Ming.Hu/outputrap/rap_post_f04.out01z
-#BSUB -J rap_post_01_f04
-#BSUB -W 00:30
-#BSUB -q "devonprod"
-#BSUB -P RAP-T2O
-#BSUB -M 1800
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 48*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=1800]
-#BSUB -x
-#BSUB -a poe
+#!/bin/bash
+#PBS -j oe
+#PBS -o /lfs/h2/emc/ptmp/Ming.Hu/outputrap/rap_post_f04.out01z
+#PBS -e /lfs/h2/emc/ptmp/Ming.Hu/outputrap/rap_post_f04.out01z
+#PBS -N rap_post_01_f04
+#PBS -l walltime=00:30:00
+#PBS -q "dev"
+#PBS -A RAP-DEV
+#PBS -l select=1:ncpus=128
 
-######################################################################
-# Purpose: to run RAP post processing
-######################################################################
 
-# EXPORT list here
+module use /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/rap.v5.1.0//modulefiles
+module load RAP/v5.0.0
+module list
 
 set -x
-. /opt/modules/default/init/ksh 
-module load prod_util
-#module load prod_envir
-module load grib_util/1.0.5
-module load util_shared/1.0.3
-module load cfp-intel-sandybridge
 
-module list
-unset MPICH_RANK_REORDER_METHOD
-#export MP_MPILIB=mpich2
-export KMP_AFFINITY=disabled
-#export MP_TASK_AFFINITY=core:1
+#export OMP_PLACES=cores
 export OMP_NUM_THREADS=1
+#export OMP_STACKSIZE=1G
 
 export numprocs=48
 export NTASK=48
-export PTILE=24
+export PTILE=64
 
 export envir=prod
 export RUN_ENVIR=prod
@@ -43,14 +30,9 @@ export fhr=04
 export job=rap_post_f04_01
 export group_name=meso
 
-SMSNAME=%SMSNAME% export SMSNAME
-SMSNODE=%SMSNODE% export SMSNODE
-SMSPASS=%SMSPASS% export SMSPASS
-SMS_PROG=%SMS_PROG% export SMS_PROG
-
-SMSBIN=/meso/save/wx22yz/sms/bin export SMSBIN
-
+date
+ . /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/versions/rap.ver
 # CALL executable job script here
-. /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/versions/rap.ver
-# CALL executable job script here
-/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.${rap_ver}/jobs/JRAP_POST 
+. /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/rap.${rap_ver}/driver/rapwcoss2.env
+
+${NWROOT}/rap.${rap_ver}/jobs/JRAP_POST

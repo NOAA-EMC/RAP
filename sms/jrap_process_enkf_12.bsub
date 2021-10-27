@@ -1,8 +1,8 @@
 ##!/bin/ksh --login
 #
-#BSUB -oo /gpfs/hps3/ptmp/Ming.Hu/outputrap/rap_process_enkf.out12z
-#BSUB -eo /gpfs/hps3/ptmp/Ming.Hu/outputrap/rap_process_enkf.out12z
-#BSUB -J rap_enkf_00
+#BSUB -oo /gpfs/hps3/ptmp/Ming.Hu/outputrap/rap_process_enkf.out06z
+#BSUB -eo /gpfs/hps3/ptmp/Ming.Hu/outputrap/rap_process_enkf.out06z
+#BSUB -J rap_enkf_06
 #BSUB -W 00:40
 #BSUB -q "devonprod"
 #BSUB -P RAP-T2O
@@ -37,9 +37,9 @@ export PTILE=12
 
 export envir=prod
 export RUN_ENVIR=prod
-export cyc=12
-export cycle=t12z
-export job=rap_process_enkf_12
+export cyc=06
+export cycle=t06z
+export job=rap_process_enkf_06
 export group_name=meso
 
 SMSNAME=%SMSNAME% export SMSNAME

@@ -77,6 +77,7 @@ export USHrap=${USHrap:-${HOMErap}/ush}
 ###########################################
 # Run setpdy and initialize PDY variables
 ###########################################
+export PDY=20210824
 setpdy.sh
 . PDY
 

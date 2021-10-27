@@ -522,7 +522,8 @@ fi
 
 # Run metgrid
 cp ${EXECrap}/rap_wps_metgrid .
-runline="aprun -n 24 -N 24 ./rap_wps_metgrid"
+#runline="aprun -n 24 -N 24 ./rap_wps_metgrid"
+runline="mpiexec -n 48 -ppn 24 ./rap_wps_metgrid"
 $runline
 export err=$?; err_chk
 
@@ -537,7 +538,7 @@ do
 done
 
 cd $DATA/tar
-aprun tar -cvf rap.t${cyc}z.makebc.tar *
+mpiexec -n 1 tar -cvf rap.t${cyc}z.makebc.tar *
 cp rap.t${cyc}z.makebc.tar $COMOUT/.
 
 msg="JOB $job FOR RAP_MAKEBC HAS COMPLETED NORMALLY"

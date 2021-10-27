@@ -77,6 +77,7 @@ export INPUT_DATA=$DATAROOT/rap_fcst_${envir}_${cyc}
 ###########################################
 # Run setpdy and initialize PDY variables
 ###########################################
+export PDY=20210824
 setpdy.sh
 . PDY
 

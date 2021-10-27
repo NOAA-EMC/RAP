@@ -1,41 +1,34 @@
-##!/bin/ksh --login
+##!/bin/bash
 #
-#BSUB -oo /gpfs/hps3/ptmp/Ming.Hu/outputrap/rap_analysis_pcyc.outXXz
-#BSUB -eo /gpfs/hps3/ptmp/Ming.Hu/outputrap/rap_analysis_pcyc.outXXz
-#BSUB -J rap_anl_pcyc_XX
-#BSUB -W 01:00
-#BSUB -q "devonprod"
-#BSUB -P RAP-T2O
-#BSUB -M 1800
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 192*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=1800]
-#BSUB -x
-#BSUB -a poe
+#PBS -j oe
+#PBS -o /lfs/h2/emc/ptmp/Ming.Hu/outputrap/rap_analysis_pcyc.outXXz
+#PBS -e /lfs/h2/emc/ptmp/Ming.Hu/outputrap/rap_analysis_pcyc.outXXz
+#PBS -N rap_anl_pcyc_XX
+#PBS -l walltime=01:00:00
+#PBS -q "dev"
+#PBS -A RAP-DEV
+#PBS -l place=vscatter,select=3:ncpus=128:mem=500GB
 #
 
 ##########################################################################
 # Purpose: to run the analysis for the Rapid Refresh Model
 ##########################################################################
 
+module use /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/rap.v5.1.0/modulefiles
+module load RAP/v5.0.0.da
+module list
+
 # EXPORT list here
 
 set -x
-module load prod_util
-#module load prod_envir
 
-module list
-
-unset MPICH_RANK_REORDER_METHOD
-export MP_MPILIB=mpich2
-export KMP_AFFINITY=disabled
-export MP_TASK_AFFINITY=core:1
+export FI_OFI_RXM_SAR_LIMIT=3145728
 export OMP_NUM_THREADS=2
-#export FORT_BUFFERED=true     # buffer all fortran in/out streams
-module loadcraype-hugepages32M   # set hugepages at runtime
-export OMP_STACKSIZE=300M  # should be enough
+export OMP_STACKSIZE=500M
 
-export numprocs=96
-export NTASK=96
-export PTILE=24
+export numprocs=192
+export NTASK=192
+export PTILE=64
 
 export envir=prod
 export RUN_ENVIR=prod
@@ -44,16 +37,10 @@ export cycle=tXXz
 export job=rap_analysis_pcyc_XX
 export group_name=meso
 
-SMSNAME=%SMSNAME% export SMSNAME
-SMSNODE=%SMSNODE% export SMSNODE
-SMSPASS=%SMSPASS% export SMSPASS
-SMS_PROG=%SMS_PROG% export SMS_PROG
-
-SMSBIN=/meso/save/Ming.Hu/sms/bin export SMSBIN
-
+. /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/versions/rap.ver
 # CALL executable job script here
-. /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/versions/rap.ver
-/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.${rap_ver}/jobs/JRAP_ANALYSIS_PCYC 
+. /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/rap.${rap_ver}/driver/rapwcoss2.env
+
+${NWROOT}/rap.${rap_ver}/jobs/JRAP_ANALYSIS_PCYC 
 # next step is to update the boundary conditions
-bsub < /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.${rap_ver}/sms/jrap_updatebc_pcyc_XX.bsub
-#bsub < /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.${rap_ver}/sms/jrap_smokeprep_pcyc_XX.bsub
+qsub ${NWROOT}/rap.${rap_ver}/sms/jrap_updatebc_pcyc_XX.bsub

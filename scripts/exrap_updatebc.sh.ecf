@@ -76,15 +76,30 @@ echo
  fi
 
 ## boundary condition searching
-typeset -Z2 bdhh
-let bdhh=${shh}/3*3
-bdytime=${syyyy}${smm}${sdd}${bdhh}00
-bdyfile=${RAPBC}/wrfbdy_d01.${bdytime}
-if [ -r ${bdyfile} ]; then
-  cp ${bdyfile} wrfbdy_d01
+## boundary condition searching
+currentime=${syyyy}${smm}${sdd}${shh}00
+set -A XX `ls ${RAPBC}/wrfbdy_d01.*00 | sort -r`
+maxnum=${#XX[*]}
+bdtime=`echo ${XX[0]} |awk 'BEGIN {FS="/"} {print $NF}'|cut -c12-`
+
+if [[ ${currentime} -ge ${bdtime} ]]; then
+   echo "using latest ${XX[0]} as boundary condition "
+   cp ${XX[0]} wrfbdy_d01
 else
-  echo "FATAL ERROR: can not find boundary conditions for ${currentime} !!!"
-  err_exit
+   nn=1
+   bdtime=`echo ${XX[$nn]} |awk 'BEGIN {FS="/"} {print $NF}'|cut -c12-`
+   until [[ ${currentime} -ge ${bdtime} || ${nn} -eq ${maxnum} ]];do
+      ((nn += 1))
+       bdtime=`echo ${XX[$nn]} |awk 'BEGIN {FS="/"} {print $NF}'|cut -c12-`
+   done
+
+   if [[ ${nn} -eq ${maxnum} ]]; then
+        echo "FATAL ERROR: can not find boundary conditions for ${currentime} !!!"
+        err_exit
+   else
+      echo " using old ${XX[$nn]} as boundary condition"
+      cp ${XX[$nn]} wrfbdy_d01
+   fi
 fi
 ## end of boundary condition searching
 

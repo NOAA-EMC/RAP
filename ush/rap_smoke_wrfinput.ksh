@@ -8,7 +8,7 @@ EXEC_FIRES="$EXECrap/rap_fires_ncfmake"
 EXEC_CYCLE="$EXECrap/rap_fires_cycle_netcdf"
 
 # Wrapper to start prep-chem-sources.  Use aprun if this is a MAMU node:
-RUNSERIAL='aprun -d 1 -n 1 -N 1 -j 1'
+RUNSERIAL='mpiexec -n 1 -ppn 1'
 
 # Make sure we are using GMT time zone for time computations:
 export TZ="GMT"

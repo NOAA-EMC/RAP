@@ -14,7 +14,7 @@ minback="${minback:-1}" # minimum number of cycles to go back for smoke in nwges
 NWGES=${gespath}
 
 gesdir="$NWGES/rap/rapges"
-SPAWN="aprun -n 1 -j 1 -d 1 -N 1"
+SPAWN="mpiexec -n 1 -ppn 1"
 #SPAWN="echo"
 #CYCLE_NETCDF="$EXECrap/rap_cycle_netcdf"
 CYCLE_NETCDF="$EXECrap/rap_fires_cycle_netcdf"

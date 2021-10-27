@@ -1,29 +1,18 @@
-#!/bin/ksh --login
-#
-#BSUB -oo /gpfs/hps3/ptmp/Ming.Hu/outputrap/rap_wrfbufr_f10.out13z
-#BSUB -eo /gpfs/hps3/ptmp/Ming.Hu/outputrap/rap_wrfbufr_f10.out13z
-#BSUB -J rap_wrfbufr_f10_13
-#BSUB -W 00:10
-#BSUB -q "devonprod"
-#BSUB -P RAP-T2O
-#BSUB -M 3000
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1*{select[craylinux && vnode]span[ptile=1] cu[type=cabinet]}' rusage[mem=1800]
+#!/bin/bash
+#PBS -j oe
+#PBS -o /lfs/h2/emc/ptmp/Ming.Hu/outputrap/rap_wrfbufr_f10.out13z
+#PBS -e /lfs/h2/emc/ptmp/Ming.Hu/outputrap/rap_wrfbufr_f10.out13z
+#PBS -N rap_wrfbufr_f10_13
+#PBS -l walltime=00:10:00
+#PBS -q "dev"
+#PBS -A RAP-DEV
+#PBS -l select=1:ncpus=128:mem=500G
 
-#BSUB -x
-#BSUB -a poe
-#
-#
-# EXPORT list here
-#export MP_SHARED_MEMORY=YES
-#export MEMORY_AFFINITY=MCM
+module use /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/rap.v5.1.0//modulefiles
+module load RAP/v5.0.0
+module list
 
 set -x
-. /opt/modules/default/init/ksh 
-module load prod_util
-module load prod_envir
-module load grib_util/1.0.3
-module load util_shared/1.0.3
-
 
 export envir=prod
 export RUN_ENVIR=prod
@@ -32,16 +21,12 @@ export fhr=10
 export job=rap_wrfbufr_f10_13
 export group_name=meso
 
-SMSNAME=%SMSNAME% export SMSNAME
-SMSNODE=%SMSNODE% export SMSNODE
-SMSPASS=%SMSPASS% export SMSPASS
-SMS_PROG=%SMS_PROG% export SMS_PROG
-
-#SMSBIN=/meso/save/wx22yz/sms/bin export SMSBIN
-
+ . /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/versions/rap.ver
 # CALL executable job script here
-. /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/versions/rap.ver
-/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.${rap_ver}/jobs/JRAP_WRFBUFR 
+. /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/rap.${rap_ver}/driver/rapwcoss2.env
+
+${NWROOT}/rap.${rap_ver}/jobs/JRAP_WRFBUFR
+
 #%manual
 ######################################################################
 # Purpose: to run RAP wrfbufr processing

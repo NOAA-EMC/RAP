@@ -1,39 +1,47 @@
-##!/bin/ksh --login
-#BSUB -oo /gpfs/hps3/ptmp/Ming.Hu/outputrap/rap_fcst_pcyc.out15z
-#BSUB -eo /gpfs/hps3/ptmp/Ming.Hu/outputrap/rap_fcst_pcyc.out15z
-#BSUB -J rap_fcst_pcyc_15
-#BSUB -W 02:00
-#BSUB -q "devonprod"
-#BSUB -P RAP-T2O
-#BSUB -M 1800
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1152*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=1800]
-#BSUB -x
-#BSUB -a poe
+#!/bin/bash
 #
+#PBS -j oe
+#PBS -o /lfs/h2/emc/ptmp/Ming.Hu/outputrap/rap_fcst_pcyc.out15z
+#PBS -e /lfs/h2/emc/ptmp/Ming.Hu/outputrap/rap_fcst_pcyc.out15z
+#PBS -N rap_fcst_pcyc_15
+#PBS -l walltime=01:00:00
+#PBS -q "dev"
+#PBS -A RAP-DEV
+#PBS -l place=vscatter,select=9:ncpus=128:mem=500GB
+#
+
+##########################################################################
+# Purpose: to run the forecast for the Rapid Refresh Model
+##########################################################################
+
 # EXPORT list here
+
+module use /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/rap.v5.1.0/modulefiles
+module load RAP/v5.0.0
+
 set -x
 
-module load prod_util
+#module load prod_util
 #module load prod_envir
-module load perftools
+#module load perftools
 #/opt/modules/3.2.6.7/bin/modulecmd bash load perftools
 
 module list
-export OMP_STACKSIZE=500M
-export KMP_AFFINITY=disabled
 export OMP_NUM_THREADS=2
+export OMP_STACKSIZE=500M
 
 export envir=prod
 export RUN_ENVIR=prod
 export cyc=15
 export job=rap_fcst_pcyc_15
 export group_name=meso
-export COMDATEROOT=/gpfs/hps/nco/ops/com/
-DATE=`cat ${COMDATEROOT}/date/t${cyc}z | cut -c7-14`
 
-. /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/versions/rap.ver
+. /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/versions/rap.ver
 # CALL executable job script here
-/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.${rap_ver}/jobs/JRAP_FORECAST_PCYC 
+. /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/rap.${rap_ver}/driver/rapwcoss2.env
 
-bsub < /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.${rap_ver}/sms/jrap_analysis_pcyc_16.bsub
-bsub < /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.${rap_ver}/sms/jrap_smokeprep_pcyc_16.bsub
+${NWROOT}/rap.${rap_ver}/jobs/JRAP_FORECAST_PCYC
+# next step is to update the boundary conditions
+
+qsub ${NWROOT}/rap.${rap_ver}/sms/jrap_analysis_pcyc_16.bsub
+qsub ${NWROOT}/rap.${rap_ver}/sms/jrap_smokeprep_pcyc_16.bsub

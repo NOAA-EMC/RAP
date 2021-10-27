@@ -15,10 +15,6 @@ module load hdf5/1.10.6
 module load netcdf/4.7.4
 module load pnetcdf/1.12.2
 
-#Huge pages
-#module load craype-hugepages256M
-
-
 export PNETCDF_QUILT=1
 export WRFIO_NCD_LARGE_FILE_SUPPORT=1
 export WRF_DFI_RADAR=1
