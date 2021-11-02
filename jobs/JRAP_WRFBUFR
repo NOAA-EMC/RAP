@@ -1,7 +1,5 @@
 #!/bin/ksh 
 set -xa
-export MP_IOAGENT_CNT=all
-export MP_IO_BUFFER_SIZE=8M
 
 ########################################
 # RAP Post Processing

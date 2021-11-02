@@ -158,6 +158,8 @@ C	new stuff
 
 	real:: rinc(5)
 	integer:: IDATE(8),JDATE(8)
+        character :: SysDepInfo*80
+        real :: truelat1, truelat2
 
 C------------------------------------------------------------------------
       DATA BLANK/'    '/
@@ -218,7 +220,7 @@ c	endif
 
        if ( frst ) then
          frst = .false.
-         CALL ext_ncd_ioinit(Status)
+         CALL ext_ncd_ioinit(SysDepInfo,Status)
           print*,'CALLed ioinit', Status
 	write(6,*) 'filename early in PROF= ', filename
          CALL ext_ncd_open_for_read( trim(fileName), 0, 0, " ",
@@ -404,11 +406,11 @@ C Getting start time
         write(6,*) 'cenlon= ', cenlon
         call ext_ncd_get_dom_ti_real(DataHandle,'TRUELAT1',tmp
      + ,1,ioutcount,istatus)
-        truelat1=nint(1000.*tmp)
+        truelat1=tmp*1000.0
         write(6,*) 'truelat1= ', truelat1
         call ext_ncd_get_dom_ti_real(DataHandle,'TRUELAT2',tmp
      + ,1,ioutcount,istatus)
-        truelat2=nint(1000.*tmp)
+        truelat2=tmp*1000.0
         write(6,*) 'truelat2= ', truelat2
         call ext_ncd_get_dom_ti_integer(DataHandle,'MAP_PROJ',itmp
      + ,1,ioutcount,istatus)
@@ -1358,11 +1360,11 @@ C Getting start time
         write(6,*) 'cenlon= ', cenlon
         call ext_ncd_get_dom_ti_real(DataHandle,'TRUELAT1',tmp
      + ,1,ioutcount,istatus)
-        truelat1=nint(1000.*tmp)
+        truelat1=1000.*tmp
         write(6,*) 'truelat1= ', truelat1
         call ext_ncd_get_dom_ti_real(DataHandle,'TRUELAT2',tmp
      + ,1,ioutcount,istatus)
-        truelat2=nint(1000.*tmp)
+        truelat2=1000.*tmp
         write(6,*) 'truelat2= ', truelat2
         call ext_ncd_get_dom_ti_integer(DataHandle,'MAP_PROJ',itmp
      + ,1,ioutcount,istatus)
@@ -2169,13 +2171,12 @@ C***  VARIOUS PHYSICS ROUTINES HAVE BEEN
 C***  CALLED SINCE LAST OUTPUT OF PROFILER DATA.  NECESSARY FOR
 C***  CORRECT AVERAGING OF VARIABLES.
 C
-	write(6,*) 'APHTIM, ACUTIM, ARATIM were: ', 
-     &                APHTIM, ACUTIM, ARATIM
-      
 	APHTIM=0.
 	ACUTIM=0.
 	ARATIM=0.
 
+	write(6,*) 'APHTIM, ACUTIM, ARATIM were: ', 
+     &                APHTIM, ACUTIM, ARATIM
       IF(APHTIM.GT.0.)THEN
         RTSPH=1./APHTIM
       ELSE
@@ -2259,11 +2260,18 @@ C
 C
 C***  WIND ROTATION SINES AND COSINES
 C
+      TLM0D=0.0
+      COSPH0=0.0
+      SINPH0=0.0
       DLM    = STNLON(N)+TLM0D*DTR
       XX     = COSPH0*COS(STNLAT(N))*COS(DLM)
      1        +SINPH0*SIN(STNLAT(N))
       YY     = -COS(STNLAT(N))*SIN(DLM)
-      TLON   = ATAN(YY/XX)
+      if(abs(XX) > 1.0e-10) then
+        TLON   = ATAN(YY/XX)
+      else
+        TLON = 1.570796
+      endif
       ALPHA  = ASIN(SINPH0*SIN(TLON)/COS(STNLAT(N)))
        SINALP = SIN(ALPHA)
        COSALP = COS(ALPHA)

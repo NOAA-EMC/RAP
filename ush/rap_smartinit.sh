@@ -86,7 +86,7 @@ eval grid_specs=\${grid_specs_${grid}}
 # Remove temporary files
     rm -f tmp_${grid}.inv tmp1_${grid}.grib2 tmpuv1_${grid}.grib2 tmp_${grid}.grib2 tmpuv_${grid}.grib2
 
-cp ${COMROOT}/date/t${cyc}z DATE
+cp ../../DATE_SMARTINIT DATE
 
 mv rap.NDFD${grid}${fhr} rap.NDFD${ndfdstring}f${fhr}
 
@@ -105,7 +105,7 @@ ln -sf RAP${ndfdstring}${fhr}           fort.70
 ln -sf RAP${ndfdstring}${fhr}.grib2     fort.71
 
 cp ${EXECrap}/rap_smartinit .
-runline="aprun rap_smartinit"
+runline="mpiexec -n 1 -ppn 1 rap_smartinit"
 rap_smartinit <<EOF >> smartinit${domain}.out${fhr}
 RAP
 $ndfdstring

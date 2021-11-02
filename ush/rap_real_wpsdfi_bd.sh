@@ -380,7 +380,7 @@ export pgm=$EXECrap/rap_wrfarw_real
 
 cp ${EXECrap}/rap_wrfarw_real .
 #runline="aprun -n 144 -N 24 ./rap_wrfarw_real"
-runline="mpiexec -n 128 -ppn 64 ./rap_wrfarw_real"
+runline="mpiexec -n 128 -ppn 128 ./rap_wrfarw_real"
 $runline
 export err=$?;err_chk
 

@@ -57,6 +57,8 @@ module load libpng/1.6.37
 module load libxmlparse/2.0.0
 module load wrf_io/1.1.1
 
-module load wgrib2
+module load wgrib2/2.0.8
 module load libjpeg grib_util/1.2.3
 module load util_shared/1.4.0
+module load gempak/7.14.1
+module load cfp/2.0.4

@@ -523,7 +523,7 @@ fi
 # Run metgrid
 cp ${EXECrap}/rap_wps_metgrid .
 #runline="aprun -n 24 -N 24 ./rap_wps_metgrid"
-runline="mpiexec -n 48 -ppn 24 ./rap_wps_metgrid"
+runline="mpiexec -n 128 -ppn 128 ./rap_wps_metgrid"
 $runline
 export err=$?; err_chk
 

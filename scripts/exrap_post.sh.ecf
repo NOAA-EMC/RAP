@@ -697,6 +697,7 @@ then
   echo $USHrap/rap_smartinit.sh $fhr 196 HI >>poescript
   echo $USHrap/rap_smartinit.sh $fhr 194 PR >>poescript
 
+  LSB_DJOB_NUMPROC=8
   export tasks=`cat poescript |wc -l`
   while [ $tasks -lt ${LSB_DJOB_NUMPROC} ]; do
     echo hostname >>poescript
@@ -707,7 +708,9 @@ then
   export MP_PGMMODEL=mpmd
   export MP_CMDFILE=poescript
   #aprun -cmdfile poescript -pgmmodel mpmd -labelio yes -stdoutmode ordered
-  mpiexec -N 24 -ppn 64 cfp poescript
+  postdate=${YYYY}${MM}${DD}${HH}
+  echo "DATE  ${postdate}0000WASHINGTON" > DATE_SMARTINIT
+  mpiexec -np 8 --cpu-bind core cfp ./poescript
 fi
 
 postmsg $jlogfile "RAP POST done for F${fhr}"

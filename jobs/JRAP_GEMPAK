@@ -50,6 +50,7 @@ export model=rap
 export EXT=""
 
 # Run setpdy and initialize PDY variables
+export PDY=20210824
 setpdy.sh
 . PDY
 
@@ -148,8 +149,8 @@ export MP_PGMMODEL=mpmd
 export MP_CMDFILE=$DATA/poescript
 
 # Execute the script.
-aprun -N 24 -n 144 cfp poescript
 #aprun -N $PTILE -n $((NODES*PTILE)) cfp poescript
+mpiexec -np 8 --cpu-bind core cfp ./poescript
 
 cd $DATA
 cat rap20.log
