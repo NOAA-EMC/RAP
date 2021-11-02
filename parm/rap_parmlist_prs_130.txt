@@ -350,7 +350,7 @@ HGT:263 K level
 HGT:253 K level
 MASSDEN:8 m above ground
 CAPE:0-3000 m above ground
-HGT:no_level
+HGT:reserved
 var discipline=0 center=7 local_table=1 parmcat=7 parm=204
 var discipline=0 center=7 local_table=1 parmcat=7 parm=206:0-500 m above ground
 LAYTH:261 K level - 256 K level

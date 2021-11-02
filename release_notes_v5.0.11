@@ -17,6 +17,10 @@ v5.0.11 - released September 27, 2021
    * sorc/rap_wrfpost.fd/MDLFLD.f
    * sorc/rap_wrfpost.fd/SURFCE.f
 
+* parm files changed
+   * parm/rap_parmlist_221.txt
+   * parm/rap_parmlist_prs_130.txt
+
 * resource changes
    * N/A
 
