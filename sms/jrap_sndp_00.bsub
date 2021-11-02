@@ -1,25 +1,22 @@
-#!/bin/ksh --login
-#
-#BSUB -oo /gpfs/hps3/ptmp/Ming.Hu/outputrap/rap_sndp.out00z
-#BSUB -eo /gpfs/hps3/ptmp/Ming.Hu/outputrap/rap_sndp.out00z
-#BSUB -J rap_sndp_00
-#BSUB -W 00:30
-#BSUB -q "devonprod"
-#BSUB -P RAP-T2O
-#BSUB -M 3000
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=3000]
-#
+#!/bin/bash
+#PBS -j oe
+#PBS -o /lfs/h2/emc/ptmp/Ming.Hu/outputrap/rap_sndp.out00z
+#PBS -e /lfs/h2/emc/ptmp/Ming.Hu/outputrap/rap_sndp.out00z
+#PBS -N rap_sndp_00
+#PBS -l walltime=00:30:00
+#PBS -q "dev"
+#PBS -A RAP-DEV
+#PBS -l select=1:ncpus=128
 
-# EXPORT list here
-#export MP_SHARED_MEMORY=YES
-#export MEMORY_AFFINITY=MCM
+#########################################################################
+# Purpose: to update boundary conditions for the Rapid Refresh Model
+##########################################################################
+
+module use /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/rap.v5.1.0/modulefiles
+module load RAP/v5.0.0
+module list
 
 set -x
-. /opt/modules/default/init/ksh 
-module load prod_util
-#module load prod_envir
-module load grib_util/1.0.3
-module load util_shared/1.0.3
 
 export envir=prod
 export RUN_ENVIR=prod
@@ -28,6 +25,8 @@ export tmmark=tm00
 export cycle=t00z
 export job=rap_sndp_00
 
+. /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/versions/rap.ver
 # CALL executable job script here
-. /gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/versions/rap.ver
-/gpfs/hps3/emc/meso/save/Ming.Hu/nwprod/rap.${rap_ver}/jobs/JRAP_POSTSND 
+. /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/rap.${rap_ver}/driver/rapwcoss2.env
+
+${NWROOT}/rap.${rap_ver}/jobs/JRAP_POSTSND
