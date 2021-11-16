@@ -5,7 +5,7 @@ include paths.mk
 
 # Compiler commands.
 
-INCLUDES   = -I$(LIB_RAMS_PATH)/include -I${NETCDF}/include -I${HDF5_INC}
+INCLUDES   = -I$(LIB_RAMS_PATH)/include -I${NETCDF}/include #-I${HDF5_INC}
 LIBS       = -L${NETCDF}/lib -lnetcdf -lnetcdff
 
 F_COMMAND  = $(F_COMP) -c $(F_OPTS) $(INCLUDES) 
