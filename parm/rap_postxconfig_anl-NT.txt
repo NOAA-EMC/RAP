@@ -13,7 +13,7 @@ fcst
 fcst
 hour
 nws_ncep
-ruc_fsl_isen_20km_40n
+rap
 complex_packing_spatial_diff
 2nd_ord_sptdiff
 fltng_pnt
@@ -6208,7 +6208,7 @@ fcst
 fcst
 hour
 nws_ncep
-ruc_fsl_isen_20km_40n
+rap
 complex_packing_spatial_diff
 2nd_ord_sptdiff
 fltng_pnt
@@ -9776,7 +9776,7 @@ fcst
 fcst
 hour
 nws_ncep
-ruc_fsl_isen_20km_40n
+rap
 complex_packing_spatial_diff
 2nd_ord_sptdiff
 fltng_pnt
