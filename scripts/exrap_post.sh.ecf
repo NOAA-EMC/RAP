@@ -713,6 +713,26 @@ then
   mpiexec -np 8 --cpu-bind core cfp ./poescript
 fi
 
+if [ $cyc -eq 03 ]
+then
+  echo $USHrap/rap_smoke.sh $fhr 227 CS >>poescript_smoke
+  echo $USHrap/rap_smoke.sh $fhr 198 AK >>poescript_smoke
+  echo $USHrap/rap_smoke.sh $fhr 196 HI >>poescript_smoke
+
+  LSB_DJOB_NUMPROC=8
+  export tasks=`cat poescript_smoke |wc -l`
+  while [ $tasks -lt ${LSB_DJOB_NUMPROC} ]; do
+    echo hostname >>poescript_smoke
+    export tasks=`cat poescript_smoke |wc -l`
+  done
+
+  chmod 775 poescript
+  export MP_PGMMODEL=mpmd
+  export MP_CMDFILE=poescript
+  export DATAsmoke=${DATAsmoke}
+  mpiexec -np 8 --cpu-bind core cfp ./poescript_smoke
+fi
+
 postmsg $jlogfile "RAP POST done for F${fhr}"
 
 echo EXITING $0
