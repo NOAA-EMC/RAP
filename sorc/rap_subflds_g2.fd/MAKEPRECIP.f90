@@ -489,6 +489,9 @@
       gfld%ipdtmpl(2)=8
       IF (LSUB) KPDS(14)=FHR1
       gfld%discipline=0
+      gfld%idrtnum=0
+      gfld%idrtmpl=0
+      gfld%idrtmpl(3)=2
 
       KPDS(5)=61
       print *, 'writing precip', KPDS(5),KPDS(14),KPDS(15),LUGB5,MAXVAL(APCPOUT)

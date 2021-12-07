@@ -1,13 +1,13 @@
 ################################################################################
 ####  UNIX Script Documentation Block
 #                      .                                             .
-# Script name:         rap_smartinit.sh
-# Script description:  To generate the smartinit products for the Rapid Refresh Model
+# Script name:         rap_smoke.sh
+# Script description:  To generate the HYSPLIT look-alike smoke products for the Rapid Refresh Model
 #
-# Author:      G Manikin /  EMC         Date: 2011-10-06
+# Author:      M Hu, G Manikin /  GSL, EMC         Date: 2021-12-06
 #
 # Script history log:
-# 2021-11-10  G Manikin  -- new script
+# 2021-12-06  M Hu, G Manikin  -- new script
 
 set -xa
 
@@ -50,5 +50,4 @@ mv rap.smoke${grid}${fhr} rap.${cycle}.smoke${ndfdstring}f${fhr}
 
 $GRB2INDEX rap.${cycle}.smoke${ndfdstring}f${fhr} rap.${cycle}.smoke${ndfdstring}f${fhr}I
 
-cp RAP${ndfdstring}${fhr}.grib2 rap.t${cyc}z.smoke${domain}f${fhr}.grib2
-#cp RAP${ndfdstring}${fhr}.grib2 $DATAsmoke/rap.t${cyc}z.smoke${domain}f${fhr}.grib2
+cp rap.${cycle}.smoke${ndfdstring}f${fhr} ${DATAsmoke}/rap.${cycle}.smoke${ndfdstring}f${fhr}
