@@ -11,10 +11,6 @@
 
 set -xa
 
-#cycle=t03z
-#DATAsmoke=/lfs/h2/emc/ptmp/Ming.Hu/rap_postmgr_03.261047/smoke
-#PARMrap=/lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/rap.v5.1.0/parm
-
 cd ${DATAsmoke}
 rm -rf 227 198 196
 
