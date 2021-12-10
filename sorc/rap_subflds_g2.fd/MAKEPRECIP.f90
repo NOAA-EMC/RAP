@@ -1,6 +1,7 @@
        PROGRAM MAKEPRECIP
 
         USE GRIB_MOD
+        implicit none
 !                .      .    .                                       .
 ! SUBPROGRAM:   MAKEPRECIP 
 !   PRGMMR: MANIKIN        ORG: W/NP22     DATE:  07-03-07
@@ -25,13 +26,13 @@
 !   LANGUAGE: FORTRAN-90
 !   MACHINE:  WCOSS     
 !======================================================================
-      INTEGER JPDS(200),JGDS(200),KPDS(200),KGDS(200)
+      INTEGER JPDS(200),KPDS(200)
       INTEGER FHR0,FHR1, FHR2, IARW, ISNOW
       CHARACTER*80 FNAME
       LOGICAL*1 LSUB
 
 !C grib2
-      INTEGER :: LUGB,LUGI,J,JDISC,JPDTN,JGDTN
+      INTEGER :: LUGB,LUGI,J,JPDTN,JGDTN
       INTEGER,DIMENSION(:) :: JIDS(200),JPDT(200),JGDT(200)
       INTEGER,DIMENSION(:) :: PDS_SNOW_HOLD(200),PDS_RAIN_HOLD(200), &
                               PDS_CPCP_HOLD(200), PDS_GRAUPEL_HOLD(200)
@@ -52,6 +53,22 @@
       REAL,     ALLOCATABLE :: APCPOUT(:),CAPCPOUT(:),SNOWOUT(:)
       REAL,     ALLOCATABLE :: GRAUPELOUT(:)
       LOGICAL,  ALLOCATABLE :: MASK(:)
+
+      real :: fhr3, fhr4
+      integer :: lugb2, lugi2, lugb5, lugb6, lugb7, lugb8, lugb9
+      integer :: istat, numval, iretgb, kret, iret_early, igdnum, ihrs1
+
+      external baopenr
+      external baopen
+      external baclose
+      
+      external getgb2
+      external putgb2
+
+      igdnum = 0
+      fhr3 = 0.0
+      fhr4 = 0.0
+      ihrs1 = 0
 !--------------------------------------------------------------------------
 
       print *, 'into RAPSUB'
@@ -177,7 +194,7 @@
 
         APCP1=gfld%fld
 
-        do K=1,200
+        do K=1,size(gfld%ipdtmpl)
         PDS_RAIN_HOLD_EARLY(K)=gfld%ipdtmpl(K)
         enddo
 
@@ -219,7 +236,7 @@
 
         CAPCP1=gfld%fld
 
-        do K=1,200
+        do K=1,size(gfld%ipdtmpl)
         PDS_CPCP_HOLD_EARLY(K)=gfld%ipdtmpl(K)
         enddo
 
@@ -256,7 +273,7 @@
 
         SNOW1=gfld%fld
 
-        do K=1,200
+        do K=1,size(gfld%ipdtmpl)
         PDS_SNOW_HOLD_EARLY(K)=gfld%ipdtmpl(K)
         enddo
         endif
@@ -289,7 +306,7 @@
 
         GRAUPEL1=gfld%fld
 
-        do K=1,200
+        do K=1,size(gfld%ipdtmpl)
         PDS_GRAUPEL_HOLD_EARLY(K)=gfld%ipdtmpl(K)
         enddo
         
@@ -327,7 +344,7 @@
                     UNPACK,K,GFLD,IRET)
         APCP2=gfld%fld
 
-        do K=1,200
+        do K=1,size(gfld%ipdtmpl)
         PDS_RAIN_HOLD(K)=gfld%ipdtmpl(K)
         enddo
 
@@ -354,7 +371,7 @@
 
         CAPCP2=gfld%fld
 
-        do K=1,200
+        do K=1,size(gfld%ipdtmpl)
         PDS_CPCP_HOLD(K)=gfld%ipdtmpl(K)
         enddo
 !
@@ -381,7 +398,7 @@
 
         SNOW2=gfld%fld
 
-        do K=1,200
+        do K=1,size(gfld%ipdtmpl)
         PDS_SNOW_HOLD(K)=gfld%ipdtmpl(K)
         enddo
 
@@ -406,7 +423,7 @@
 
         GRAUPEL2=gfld%fld
 
-        do K=1,200
+        do K=1,size(gfld%ipdtmpl)
         PDS_GRAUPEL_HOLD(K)=gfld%ipdtmpl(K)
         enddo
 
@@ -449,7 +466,7 @@
 ! convert these to GRIB2 equivs
 
         if (IRET_EARLY .ne. 0) then
-          gfld%ipdtmpl=PDS_RAIN_HOLD
+          gfld%ipdtmpl(1:size(gfld%ipdtmpl))=PDS_RAIN_HOLD(1:size(gfld%ipdtmpl))
         else
           gfld%ipdtmpl=PDS_RAIN_HOLD_EARLY
         endif
