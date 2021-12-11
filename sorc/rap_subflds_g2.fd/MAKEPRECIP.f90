@@ -468,7 +468,7 @@
         if (IRET_EARLY .ne. 0) then
           gfld%ipdtmpl(1:size(gfld%ipdtmpl))=PDS_RAIN_HOLD(1:size(gfld%ipdtmpl))
         else
-          gfld%ipdtmpl=PDS_RAIN_HOLD_EARLY
+          gfld%ipdtmpl(1:size(gfld%ipdtmpl))=PDS_RAIN_HOLD_EARLY(1:size(gfld%ipdtmpl))
         endif
 
         gfld%ipdtmpl(9)=ihrs1
