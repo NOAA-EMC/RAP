@@ -107,9 +107,6 @@ env
 #######################################
 # Define observation source directories
 #######################################
-#export DCOM_VIIRS_NPP="$DCOMROOT/prod/"
-#export DCOM_VIIRS_J01="$DCOMROOT/prod/"
-#export DCOM_MODIS="$DCOMROOT/prod/"
 export DCOM_VIIRS_NPP="$DCOMROOT/"
 export DCOM_VIIRS_J01="$DCOMROOT/"
 export DCOM_MODIS="$DCOMROOT/"
