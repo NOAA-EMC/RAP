@@ -1,0 +1,26 @@
+Release Notes:  RAP v5.1.0
+
+v5.1.0 - released December 14, 2021
+* RAPv5 code changes required for implementation on WCOSS2
+
+
+* Repository Details
+   * Clone the wcoss2 branch of the RAP GitHub repository using the following command:
+* git clone -b wcoss2 https://github.com/NOAA-EMC/RAP.git
+
+
+* resource changes
+   * Refer to submission scripts in sms directory for all resource changes
+
+
+* implementation instructions
+   * After retrieving the wcoss2 branch, recompile all source codes using sorc/build_rap_all.sh
+   * Retrieve the following files/directories from /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/rap.v5.1.0_clean: 
+      * fix/
+      * parm/rap_QNWFA_QNIFA_Monthly_GFS
+      * parm/rap_run*
+      * sorc/rap_wrfpost.fd/gtg*
+      * sorc/rap_wrfpost.fd/map_routines.f90
+      * sorc/rap_wrfpost.fd/rap_gtg.config
+   * For modifying the ecf driver scripts, refer to submission scripts in sms directory
+
