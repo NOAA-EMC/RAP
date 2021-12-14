@@ -107,7 +107,7 @@ env
 
 ########################################################
 # Execute the script.
-${RAP_ANALSH:-$HOMErap/scripts/exrap_analysis.sh.ecf}
+${RAP_ANALSH:-$HOMErap/scripts/exrap_analysis.sh}
 ########################################################
 
 cat $pgmout

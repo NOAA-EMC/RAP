@@ -104,7 +104,7 @@ env
 
 ########################################################
 # Execute the script.
-${RAP_PROCESSSH:-$HOMErap/scripts/exrap_process_hydro.sh.ecf}
+${RAP_PROCESSSH:-$HOMErap/scripts/exrap_process_hydro.sh}
 ########################################################
 
 cat $pgmout

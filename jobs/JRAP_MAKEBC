@@ -103,7 +103,7 @@ env
 
 ########################################################
 # Execute the script.
-${RAP_MAKEBCSH:-$HOMErap/scripts/exrap_makebc.sh.ecf}
+${RAP_MAKEBCSH:-$HOMErap/scripts/exrap_makebc.sh}
 ########################################################
 
 cat $pgmout

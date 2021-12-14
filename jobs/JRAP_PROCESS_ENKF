@@ -102,7 +102,7 @@ env
 
 ########################################################
 # Execute the script.
-${RAP_ENKFSH:-$HOMErap/scripts/exrap_prep_enkf.sh.ecf}
+${RAP_ENKFSH:-$HOMErap/scripts/exrap_prep_enkf.sh}
 ########################################################
 
 cat $pgmout

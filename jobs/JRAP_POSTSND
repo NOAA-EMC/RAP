@@ -104,7 +104,7 @@ env
 
 ########################################################
 # Execute the script.
-${RAP_SNDPSH:-$HOMErap/scripts/exrap_postsnd.sh.ecf}
+${RAP_SNDPSH:-$HOMErap/scripts/exrap_postsnd.sh}
 ########################################################
 
 cat $pgmout

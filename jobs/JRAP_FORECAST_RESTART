@@ -99,7 +99,7 @@ env
 
 ########################################################
 # Execute the script.
-${RAP_FCSTSH:-$HOMErap/scripts/exrap_fcst_restart.sh.ecf}
+${RAP_FCSTSH:-$HOMErap/scripts/exrap_fcst_restart.sh}
 ########################################################
 
 cat $pgmout

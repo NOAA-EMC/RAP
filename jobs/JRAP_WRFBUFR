@@ -92,7 +92,7 @@ env
 
 ########################################################
 # Execute the script.
-${RAP_WRFBUFRSH:-$HOMErap/scripts/exrap_wrfbufr.sh.ecf}
+${RAP_WRFBUFRSH:-$HOMErap/scripts/exrap_wrfbufr.sh}
 ########################################################
 
 cat $pgmout

@@ -119,7 +119,7 @@ export VEG_TYPE_DATA="$FIXrap/smoke/SURFACE_DATA/2013_PREP"
 ########################################################
 # Execute the script.
 set -e
-${RAP_SMOKESH:-$HOMErap/scripts/exrap_prep_smoke.sh.ecf}
+${RAP_SMOKESH:-$HOMErap/scripts/exrap_prep_smoke.sh}
 ########################################################
 
 msg="ENDED NORMALLY."

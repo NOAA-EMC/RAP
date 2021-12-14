@@ -98,7 +98,7 @@ export INPUT_DATA=$DATAROOT/rap_fcst_${envir}_${cyc}
 
 ########################################################
 # Execute the script.
-${RAP_POSTMGRSH:-$HOMErap/scripts/exrap_postmgr.sh.ecf}
+${RAP_POSTMGRSH:-$HOMErap/scripts/exrap_postmgr.sh}
 ########################################################
 
 cat $pgmout

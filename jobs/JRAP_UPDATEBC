@@ -102,7 +102,7 @@ env
 
 ########################################################
 # Execute the script.
-${RAP_UPDATEBCSH:-$HOMErap/scripts/exrap_updatebc.sh.ecf}
+${RAP_UPDATEBCSH:-$HOMErap/scripts/exrap_updatebc.sh}
 ########################################################
 
 cat $pgmout

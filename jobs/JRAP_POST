@@ -115,7 +115,7 @@ env
 ########################################################
 # Execute the script.
 export INPUT_DATA=$DATAROOT/rap_fcst_${envir}_${cyc}
-${RAP_POSTSH:-$HOMErap/scripts/exrap_post.sh.ecf}
+${RAP_POSTSH:-$HOMErap/scripts/exrap_post.sh}
 ########################################################
 
 cat $pgmout
