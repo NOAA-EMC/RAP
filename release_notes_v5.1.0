@@ -6,7 +6,8 @@ v5.1.0 - released December 14, 2021
 
 * Repository Details
    * Clone the wcoss2 branch of the RAP GitHub repository using the following command:
-* git clone -b wcoss2 https://github.com/NOAA-EMC/RAP.git
+      * git clone -b wcoss2 https://github.com/NOAA-EMC/RAP.git
+      * mv RAP rap.v5.1.0
 
 
 * resource changes
