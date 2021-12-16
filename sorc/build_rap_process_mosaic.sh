@@ -8,7 +8,7 @@ cd $BASE
 module purge
 module load envvar/1.0
 module use $BASE/../modulefiles
-module load RAP/v5.0.0.da
+source $BASE/../modulefiles/RAP/v5.0.0
 module list
 
 cd ${BASE}/rap_process_mosaic.fd
