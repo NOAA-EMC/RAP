@@ -15,7 +15,7 @@ fi
 SENDCOM=${SENDCOM:-YES}
 # need this because have toruble load module now:
 #MPISER=/gpfs/hps/nco/ops/nwprod/mpiserial.v3.0.0/exec/mpiserial
-export MPISER=${MPISER:-${NWROOThps}/mpiserial.${mpiserial_ver}/exec/mpiserial}
+#export MPISER=${MPISER:-${NWROOThps}/mpiserial.${mpiserial_ver}/exec/mpiserial}
 
 LSB_MAX_NUM_PROCESSORS="${LSB_MAX_NUM_PROCESSORS:-1}"
 if (( LSB_MAX_NUM_PROCESSORS > 1 )) ; then
@@ -24,7 +24,7 @@ if (( LSB_MAX_NUM_PROCESSORS > 1 )) ; then
 
     # Command to run mpiserial:
     np=$(( LSB_MAX_NUM_PROCESSORS - 1 )) # -1 for MAMU node processor
-    MPISERIAL="mpiexec -n $np -ppn 64 $MPISER -m"
+    MPISERIAL=fake_mpiserial #"mpiexec -n $np -ppn 64 $MPISER -m"
 else
     fake_mpiserial() {
         chmod 755 "$1"

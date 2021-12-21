@@ -82,17 +82,28 @@ setpdy.sh
 ##############################################
 # Define COM directories
 ##############################################
-export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
-export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
+
+# for testing with canned data
+export COMROOT=${COMROOT:-/lfs/h2/emc/ptmp/Ming.Hu/com}
+export COMIN=${COMIN:-${COMROOT}/${NET}/${rap_ver}/${RUN}.${PDY}}
+export COMOUT=${COMOUT:-${COMROOT}/${NET}/${rap_ver}/${RUN}.${PDY}}
+
+# for wcoss2 ops
+#export COMIN=${COMIN:-$(compath.py ${envir}/${NET}/${rap_ver}/${RUN}.${PDY})}
+#export COMOUT=${COMOUT:-$(compath.py ${envir}/${NET}/${rap_ver}/${RUN}.${PDY})}
 
 mkdir -m 775 -p $COMOUT 
 
 ##############################################
 # Define GES directories
 ##############################################
-export gespath=${gespath:-$GESROOT/${envir}}
-export RAPBC=${RAPBC:-$gespath/${NET}/rapbc}
-export RAPGES_PCYC=${RAPGES_PCYC:-$gespath/${NET}/rapges_pcyc}
+
+# for testing with canned data
+export gespath=${gespath:-${COMROOT}/${NET}/${rap_ver}/nwges}
+# for wcoss2 ops
+#export gespath=${gespath:-$(compath.py ${envir}/${NET}/${rap_ver}/nwges)}
+export RAPBC=${RAPBC:-$gespath/rapbc}
+export RAPGES_PCYC=${RAPGES_PCYC:-$gespath/rapges_pcyc}
 
 mkdir -m 775 -p $RAPBC
 

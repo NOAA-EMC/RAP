@@ -75,15 +75,13 @@ export FIXrap=${FIXrap:-${HOMErap}/fix}
 export PARMrap=${PARMrap:-${HOMErap}/parm}
 export USHrap=${USHrap:-${HOMErap}/ush}
 
-#export gributilexec=${gributilexec:-${NWROOThps}/grib_util.${grib_util_ver}/exec}
 export TOCGRIB=${TOCGRIB:-${gributilexec}/tocgrib}
 export TOCGRIB2=${TOCGRIB2:-${gributilexec}/tocgrib2}
 export GRBINDEX=${GRBINDEX:-${gributilexec}/grbindex}
 export GRB2INDEX=${GRB2INDEX:-${gributilexec}/grb2index}
 export CNVGRIB=${CNVGRIB:-${gributilexec}/cnvgrib}
 export WGRIB2=${WGRIB2:-${gributilexec}/wgrib2}
-#export CRTM=${CRTM:-${NWROOThps}/lib/crtm/${crtm_ver_post}/src/fix}
-export CRTM=${FIXcrtm_post:-${NWROOThps}/lib/crtm/${crtm_ver_post}/src/fix}
+export CRTM=${FIXcrtm:-${FIXrap}/crtm_v2.3.0_coefficients}
 
 ###########################################
 # Run setpdy and initialize PDY variables
@@ -94,8 +92,16 @@ setpdy.sh
 ##############################################
 # Define COM directories
 ##############################################
-export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
-export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
+
+# for testing with canned data
+export COMROOT=${COMROOT:-/lfs/h2/emc/ptmp/Ming.Hu/com}
+export COMIN=${COMIN:-${COMROOT}/${NET}/${rap_ver}/${RUN}.${PDY}}
+export COMOUT=${COMOUT:-${COMROOT}/${NET}/${rap_ver}/${RUN}.${PDY}}
+
+# for wcoss2 ops
+#export COMIN=${COMIN:-$(compath.py ${envir}/${NET}/${rap_ver}/${RUN}.${PDY})}
+#export COMOUT=${COMOUT:-$(compath.py ${envir}/${NET}/${rap_ver}/${RUN}.${PDY})}
+
 export WMO=${WMO:-${COMOUT}/wmo}
 
 mkdir -m 775 -p $COMOUT $WMO
@@ -103,10 +109,13 @@ mkdir -m 775 -p $COMOUT $WMO
 ##############################################
 # Define GES directories
 ##############################################
-export gespath=${gespath:-$GESROOT/${envir}}
-export RAPBC=${RAPBC:-$gespath/${NET}/rapbc}
-export RAPGES_FCYC=${RAPGES_FCYC:-$gespath/${NET}/rapges}
-export RAPGES_PCYC=${RAPGES_PCYC:-$gespath/${NET}/rapges_pcyc}
+# for testing with canned data
+export gespath=${gespath:-${COMROOT}/${NET}/${rap_ver}/nwges}
+# for wcoss2 ops
+#export gespath=${gespath:-$(compath.py ${envir}/${NET}/${rap_ver}/nwges)}
+export RAPBC=${RAPBC:-$gespath/rapbc}
+export RAPGES_FCYC=${RAPGES_FCYC:-$gespath/rapges}
+export RAPGES_PCYC=${RAPGES_PCYC:-$gespath/rapges_pcyc}
 
 mkdir -m 775 -p $RAPBC $RAPGES_FCYC $RAPGES_PCYC
 

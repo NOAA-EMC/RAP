@@ -84,19 +84,34 @@ setpdy.sh
 ##############################################
 # Define COM directories
 ##############################################
-export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
-export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
+
+# for testing with canned data
+export DCOMROOT=/lfs/h1/ops/$envir/dcom
+export COMROOT=${COMROOT:-/lfs/h2/emc/ptmp/Ming.Hu/com}
+export COMIN=${COMIN:-${COMROOT}/${NET}/${rap_ver}/${RUN}.${PDY}}
+export COMOUT=${COMOUT:-${COMROOT}/${NET}/${rap_ver}/${RUN}.${PDY}}
+
 export COMINradar=${COMINradar:-$(compath.py hourly/prod)}
 export COMINmosaic=${COMINmosaic:-${DCOMROOT}/ldmdata/obs/upperair/mrms}
-export PREPDIR=${PREPDIR:-${COMROOT}/${NET}/${envir}}
+export PREPDIR=${PREPDIR:-$(compath.py ${envir}/${NET}/${rap_ver})}
+
+# for wcoss2 ops
+#export COMIN=${COMIN:-$(compath.py ${envir}/${NET}/${rap_ver}/${RUN}.${PDY})}
+#export COMOUT=${COMOUT:-$(compath.py ${envir}/${NET}/${rap_ver}/${RUN}.${PDY})}
+#export COMINradar=${COMINradar:-$(compath.py hourly/prod)}
+#export COMINmosaic=${COMINmosaic:-${DCOMROOT}/ldmdata/obs/upperair/mrms}
+#export PREPDIR=${PREPDIR:-$(compath.py ${envir}/${NET}/${rap_ver})}
 
 mkdir -m 775 -p $COMOUT 
 
 ##############################################
 # Define GES directories
 ##############################################
-export gespath=${gespath:-$GESROOT/${envir}}
-export RAPBC=$gespath/${NET}/rapbc
+# for testing with canned data
+export gespath=${gespath:-${COMROOT}/${NET}/${rap_ver}/nwges}
+# for wcoss2 ops
+#export gespath=${gespath:-$(compath.py ${envir}/${NET}/${rap_ver}/nwges)}
+export RAPBC=${RAPBC:-$gespath/rapbc}
 
 mkdir -m 775 -p $RAPBC
 
