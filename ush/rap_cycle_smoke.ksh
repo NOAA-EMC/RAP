@@ -13,7 +13,7 @@ maxback="${maxback:-9}" # how many hours ago to search for wrfout in nwges
 minback="${minback:-1}" # minimum number of cycles to go back for smoke in nwges
 NWGES=${gespath}
 
-gesdir="$NWGES/rap/rapges"
+gesdir="$NWGES/rapges"
 SPAWN="mpiexec -n 1 -ppn 1"
 #SPAWN="echo"
 #CYCLE_NETCDF="$EXECrap/rap_cycle_netcdf"

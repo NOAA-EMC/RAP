@@ -53,7 +53,17 @@ export EXT=""
 setpdy.sh
 . PDY
 
-export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
+##############################################
+# Define COM directories
+##############################################
+
+# for testing with canned data
+export COMROOT=${COMROOT:-/lfs/h2/emc/ptmp/Ming.Hu/com}
+export COMIN=${COMIN:-${COMROOT}/${NET}/${rap_ver}/${RUN}.${PDY}}
+
+# for wcoss2 ops
+#export COMIN=${COMIN:-$(compath.py ${envir}/${NET}/${rap_ver}/${RUN}.${PDY})}
+
 export COMAWP=${COMAWP:-${COMIN}/gempak}
 
 if [ ! -f $COMAWP ] ; then

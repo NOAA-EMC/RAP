@@ -42,8 +42,14 @@ cp $FIXgempak/datatype.tbl datatype.tbl
 setpdy.sh
 . PDY
 
-export COMAWP=${COMAWP:-$COMROOT/${NET}/${envir}}
-export COMIN=${COMIN:-$COMROOT/${NET}/${envir}/${RUN}.${PDY}/gempak}
+# for testing with canned data
+export COMROOT=${COMROOT:-/lfs/h2/emc/ptmp/Ming.Hu/com}
+export COMIN=${COMIN:-${COMROOT}/${NET}/${rap_ver}/${RUN}.${PDY}/gempak}
+
+# for wcoss2 ops
+#export COMIN=${COMIN:-$(compath.py ${envir}/${NET}/${rap_ver}/${RUN}.${PDY}/gempak)}
+
+export COMAWP=${COMAWP:-$COMROOT/${NET}/${rap_ver}}
 export COMOUT=${COMOUT:-$COMIN/meta}
 
 if [ ! -f $COMOUT ] ; then
