@@ -12,20 +12,34 @@
 # Purpose: to update boundary conditions for the Rapid Refresh Model
 ##########################################################################
 
-module use /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/rap.v5.1.0//modulefiles
-module load RAP/v5.0.0
-module list
-
 set -x
 
-export envir=prod
+export envir=canned
 export RUN_ENVIR=prod
 export cyc=20
 export job=rap_postmgr_20
 export group_name=meso
 
-. /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/versions/rap.ver
-# CALL executable job script here
-. /lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod/rap.${rap_ver}/driver/rapwcoss2.env
+
+# Paths needed here for testing - these will be set by prod_envir in ops
+export NWROOT=/lfs/h2/emc/lam/noscrub/Ming.Hu/nwprod
+export DATAROOT=/lfs/h2/emc/ptmp/Ming.Hu
+
+. ${NWROOT}/rap.v5.1.0/versions/run.ver
+
+module purge
+
+module load envvar/${envvar_ver}
+module load PrgEnv-intel/${PrgEnv_intel_ver}
+module load craype/${craype_ver}
+module load intel/${intel_ver}
+module load cray-mpich/${cray_mpich_ver}
+module load hdf5/${hdf5_ver}
+module load netcdf/${netcdf_ver}
+module load pnetcdf/${pnetcdf_ver}
+
+module load prod_util/${prod_util_ver}
+module load util_shared/${util_shared_ver}
+module load cray-pals/${cray_pals_ver}
 
 ${NWROOT}/rap.${rap_ver}/jobs/JRAP_POSTMGR

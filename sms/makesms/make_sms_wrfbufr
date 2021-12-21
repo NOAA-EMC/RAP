@@ -17,8 +17,8 @@ for cyc in $cycles; do
 EOF
 #mv jrap_wrfbufr_f21_${cyc}.bsub /meso/save/Ming.Hu/nwprod/rap.${model_ver}/sms/wrfbufr/.
 done
-
 exit
+
 for cyc in $cycles; do
 for fhr in $hours; do
  echo $fhr
