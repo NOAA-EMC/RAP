@@ -1,0 +1,29 @@
+Release Notes:  RAP v5.0.11
+
+v5.0.11 - released September 27, 2021
+* RAPv5 post source code changes to address two issues related to smoke fields and LFC height
+   * All smoke mass density concentration fields will now output the correct units of kg/m^3
+   * The vertical coordinate for the LFC height is fixed so that it is no longer listed as “missing”
+
+
+* Repository Details
+   * Clone the rap.v5.0.11 branch of the RAP GitHub repository using the following command:
+* git clone -b rap.v5.0.11 https://github.com/NOAA-EMC/RAP.git
+
+
+* sorc files changed
+   * sorc/rap_wrfpost.fd/grib2_module.f
+   * sorc/rap_wrfpost.fd/MDL2P.f
+   * sorc/rap_wrfpost.fd/MDLFLD.f
+   * sorc/rap_wrfpost.fd/SURFCE.f
+
+* parm files changed
+   * parm/rap_parmlist_221.txt
+   * parm/rap_parmlist_prs_130.txt
+
+* resource changes
+   * N/A
+
+
+* implementation instructions
+   * Retrieve the new sorc files and re-compile the rap_wrfpost source code
