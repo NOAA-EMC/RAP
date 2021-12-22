@@ -55,9 +55,10 @@ do
   do
     if [ -s $INPUT_DATA/fcstdone${fhr}00.${shh} ]
     then
-#      ecflow_client --event release_post${fhr}
-      qsub -v DATAsmoke=${DATAsmoke} ${HOMErap}/sms/post/jrap_post_f${fhr}_${shh}.bsub
-      qsub ${HOMErap}/sms/wrfbufr/jrap_wrfbufr_f${fhr}_${shh}.bsub
+	    # need to pass ${DATAsmoke} into post job submission.
+      ecflow_client --event release_post${fhr}
+#      qsub -v DATAsmoke=${DATAsmoke} ${HOMErap}/sms/post/jrap_post_f${fhr}_${shh}.bsub
+#      qsub ${HOMErap}/sms/wrfbufr/jrap_wrfbufr_f${fhr}_${shh}.bsub
       # Remove current fhr from list
       postjobs=`echo $postjobs | sed s/${fhr}//g`
     fi
