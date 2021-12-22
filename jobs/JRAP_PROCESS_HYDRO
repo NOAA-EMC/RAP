@@ -94,7 +94,7 @@ setpdy.sh
 # for wcoss2 ops
 export COMIN=${COMIN:-$(compath.py ${envir}/${NET}/${rap_ver}/${RUN}.${PDY})}
 export COMOUT=${COMOUT:-$(compath.py ${envir}/${NET}/${rap_ver}/${RUN}.${PDY})}
-export COMINradar=${COMINradar:-$(compath.py hourly/prod)}
+export COMINradar=${COMINradar:-$(compath.py $envir/hourly/$radar_ver)}
 export COMINmosaic=${COMINmosaic:-${DCOMROOT}/ldmdata/obs/upperair/mrms}
 export PREPDIR=${PREPDIR:-$(compath.py ${envir}/${NET}/${rap_ver})}
 
