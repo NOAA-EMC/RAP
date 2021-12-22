@@ -20,6 +20,7 @@ export prod_util_ver="2.0.8"
 export prod_envir_ver="2.0.4"
 export cray_pals_ver="1.0.12"
 export libjpeg_ver="9c"
+export radar_ver="v0.0"
 
 #Upstream model versions
 export gfs_ver=v16.2
