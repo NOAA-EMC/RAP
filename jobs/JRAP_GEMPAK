@@ -58,11 +58,11 @@ setpdy.sh
 ##############################################
 
 # for testing with canned data
-export COMROOT=${COMROOT:-/lfs/h2/emc/ptmp/Ming.Hu/com}
-export COMIN=${COMIN:-${COMROOT}/${NET}/${rap_ver}/${RUN}.${PDY}}
+#export COMROOT=${COMROOT:-/lfs/h2/emc/ptmp/Ming.Hu/com}
+#export COMIN=${COMIN:-${COMROOT}/${NET}/${rap_ver}/${RUN}.${PDY}}
 
 # for wcoss2 ops
-#export COMIN=${COMIN:-$(compath.py ${envir}/${NET}/${rap_ver}/${RUN}.${PDY})}
+export COMIN=${COMIN:-$(compath.py ${envir}/${NET}/${rap_ver}/${RUN}.${PDY})}
 
 export COMAWP=${COMAWP:-${COMIN}/gempak}
 
