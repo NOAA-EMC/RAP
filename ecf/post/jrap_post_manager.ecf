@@ -1,32 +1,24 @@
-#BSUB -J %E%rap_post_manager_%CYC%
-#BSUB -o  /%COM%/output/%ENVIR%/today/rap_post_manager_%CYC%.o%J
-#BSUB -e  /%COM%/output/%ENVIR%/today/rap_post_manager_%CYC%.o%J
-#BSUB -cwd /tmp
-#BSUB -q %QUEUE%_shared
-#BSUB -L /bin/sh
-#BSUB -W 00:45
-#BSUB -P %PROJ%
-#BSUB -M 1000
-#BSUB -n 1
+#PBS -N rap_post_manager_%CYC%
+#PBS -j oe
+#PBS -S /bin/bash
+#PBS -q %QUEUE%
+#PBS -l walltime=00:45:00
+#PBS -A %PROJ%-%PROJENVIR%
+#PBS -l place=vscatter:shared,select=1:ncpus=1:mem=4GB
+#PBS -l debug=true
 
+export model=rap
 %include <head.h>
-%include <envir-xc40.h>
+%include <envir-p1.h>
 
 # EXPORT list here
 
 set -x
 
-export model=rap
-%include <model_ver.h>
 export cyc=%CYC%
 
 # CALL executable job script here
 $HOMErap/jobs/JRAP_POSTMGR
-
-if [ $? -ne 0 ]; then
-  ecflow_client --abort
-  exit
-fi
 
 %include <tail.h>
 %manual

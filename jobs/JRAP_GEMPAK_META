@@ -32,7 +32,7 @@ export NET=rap
 export RUN=rap
 export DBN_ALERT_TYPE=RAP_METAFILE
 
-export HOMEgempak=${HOMEgempak:-$NWROOT/${NET}.${rap_ver}/gempak}
+export HOMEgempak=${HOMEgempak:-${PACKAGEROOT}/${NET}.${rap_ver}/gempak}
 export FIXgempak=$HOMEgempak/fix
 export USHgempak=$HOMEgempak/ush
 
@@ -40,17 +40,13 @@ cp $FIXgempak/datatype.tbl datatype.tbl
 
 # Run setpdy and initialize PDY variables
 setpdy.sh
-. PDY
-
-# for testing with canned data
-#export COMROOT=${COMROOT:-/lfs/h2/emc/ptmp/Ming.Hu/com}
-#export COMIN=${COMIN:-${COMROOT}/${NET}/${rap_ver}/${RUN}.${PDY}/gempak}
+. ./PDY
 
 # for wcoss2 ops
-export COMIN=${COMIN:-$(compath.py ${envir}/${NET}/${rap_ver}/${RUN}.${PDY}/gempak)}
+export COMIN=${COMIN:-$(compath.py ${NET}/${rap_ver})/${RUN}.${PDY}/gempak}
 
-export COMAWP=${COMAWP:-$COMROOT/${NET}/${rap_ver}}
-export COMOUT=${COMOUT:-$COMIN/meta}
+export COMAWP=${COMAWP:-$(compath.py ${NET}/${rap_ver})}
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${rap_ver})/${RUN}.${PDY}/gempak/meta}
 
 if [ ! -f $COMOUT ] ; then
   mkdir -p -m 775 $COMOUT
@@ -59,10 +55,18 @@ fi
 env
 
 msg="Begin job for $job"
-postmsg "$jlogfile" "$msg"
+postmsg "$msg"
 
 ########################################################
 # Execute the script.
+#my debug
+#cp $USHgempak/rap_meta.sh .
+#cp $USHgempak/rap_meta_loop.sh .
+#echo "./rap_meta.sh &> rap_meta.out" >> poescript
+#echo "./rap_meta_loop.sh &> rap_meta_loop.out" >> poescript
+export KEEPDATA=YES
+
+#ORIG
 rm poescript
 echo "$USHgempak/rap_meta.sh &> rap_meta.out" >> poescript
 echo "$USHgempak/rap_meta_loop.sh &> rap_meta_loop.out" >> poescript
@@ -71,14 +75,15 @@ chmod 775 $DATA/poescript
 export MP_PGMMODEL=mpmd
 export MP_CMDFILE=$DATA/poescript
 
-aprun -N $PTILE -n $((NODES*PTILE)) cfp poescript
+#aprun -N $PTILE -n $((NODES*PTILE)) cfp poescript
+mpiexec -np 2 --cpu-bind core cfp ./poescript
 
 cat rap_meta.out
 cat rap_meta_loop.out
 ########################################################
 
 msg="job has ended"
-postmsg "$jlogfile" "$msg"
+postmsg "$msg"
 
 cat $pgmout
 

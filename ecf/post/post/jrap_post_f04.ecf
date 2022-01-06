@@ -1,45 +1,47 @@
-#BSUB -J %E%rap_post_f04_%CYC%
-#BSUB -o  /%COM%/output/%ENVIR%/today/rap_post_f04_%CYC%.o%J
-#BSUB -e  /%COM%/output/%ENVIR%/today/rap_post_f04_%CYC%.o%J
-#BSUB -cwd /tmp
-#BSUB -q %QUEUE%
-#BSUB -L /bin/sh
-#BSUB -W 00:25
-#BSUB -P %PROJ%
-#BSUB -M 1800
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 48*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=1800]
+#PBS -N rap_post_f%HH%_%CYC%
+#PBS -j oe
+#PBS -S /bin/bash
+#PBS -q %QUEUE%
+#PBS -l walltime=00:30:00
+#PBS -A %PROJ%-%PROJENVIR%
+#PBS -l place=vscatter:shared,select=1:ncpus=48:mem=192GB
+#PBS -l debug=true
 
+export model=rap
 %include <head.h>
-%include <envir-xc40.h>
-
-# EXPORT list here
+%include <envir-p1.h>
 
 set -x
 
-export model=rap
-%include <model_ver.h>
-
 export cyc=%CYC%
-export fhr=04
+export fhr=%HH%
 
+#============ Module load
+module load PrgEnv-intel/${PrgEnv_intel_ver}
+module load craype/${craype_ver}
+module load intel/${intel_ver}
+module load cray-mpich/${cray_mpich_ver}
+module load hdf5/${hdf5_ver}
+module load netcdf/${netcdf_ver}
+module load pnetcdf/${pnetcdf_ver}
+module load wgrib2/${wgrib2_ver}
+module load libjpeg/${libjpeg_ver}
 module load grib_util/${grib_util_ver}
 module load util_shared/${util_shared_ver}
-module load cfp-intel-sandybridge
+module load cray-pals/${cray_pals_ver}
+module list
+#============
 
-unset MPICH_RANK_REORDER_METHOD
-export KMP_AFFINITY=disabled
-export OMP_NUM_THREADS=1
+# EXPORT list here
 export numprocs=48
 export NTASK=48
-export PTILE=24
+export PTILE=64
 
-# CALL executable job script here
-$HOMErap/jobs/JRAP_POST
+export OMP_NUM_THREADS=1
 
-if [ $? -ne 0 ]; then
-  ecflow_client --abort
-  exit
-fi
+
+export group_name=meso
+${HOMErap}/jobs/JRAP_POST
 
 %include <tail.h>
 %manual

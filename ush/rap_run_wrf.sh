@@ -47,7 +47,7 @@ cb_nodes=32
 
 # Override values if requested
 if [[ -s "$override_file" ]] ; then
-    source "$override_file"
+    source ./"$override_file"
 fi
 
 # Calculate further resource information:

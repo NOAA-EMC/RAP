@@ -78,7 +78,7 @@ export USHrap=${USHrap:-${HOMErap}/ush}
 # Run setpdy and initialize PDY variables
 ###########################################
 setpdy.sh
-. PDY
+. ./PDY
 
 env
 
@@ -110,7 +110,7 @@ done
 cat $pgmout
 
 msg="ENDED NORMALLY."
-postmsg "$jlogfile" "$msg"
+postmsg "$msg"
 
 ##############################
 # Remove the Temporary working directory
