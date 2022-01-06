@@ -1,33 +1,43 @@
-#BSUB -J %E%rap_postsnd_%CYC%
-#BSUB -o  /%COM%/output/%ENVIR%/today/rap_postsnd_%CYC%.o%J
-#BSUB -e  /%COM%/output/%ENVIR%/today/rap_postsnd_%CYC%.o%J
-#BSUB -cwd /tmp
-#BSUB -q %QUEUE%
-#BSUB -L /bin/sh
-#BSUB -W 00:15
-#BSUB -P %PROJ%
-#BSUB -M 3000
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=3000]
+#PBS -N rap_postsnd_%CYC%
+#PBS -j oe
+#PBS -S /bin/bash
+#PBS -q %QUEUE%
+#PBS -l walltime=00:30:00
+#PBS -A %PROJ%-%PROJENVIR%
+#PBS -l place=vscatter:shared,select=1:ncpus=1:mem=4000MB
+#PBS -l debug=true
 
-%include <head.h>
-%include <envir-xc40.h>
 export model=rap
-%include <model_ver.h>
-
-# EXPORT list here
+%include <head.h>
+%include <envir-p1.h>
 
 set -x
 
 export cyc=%CYC%
+
+#============ Module load
+module load PrgEnv-intel/${PrgEnv_intel_ver}
+module load craype/${craype_ver}
+module load intel/${intel_ver}
 module load gempak/${gempak_ver}
+module load cray-mpich/${cray_mpich_ver}
+module load hdf5/${hdf5_ver}
+module load netcdf/${netcdf_ver}
+module load pnetcdf/${pnetcdf_ver}
+module load wgrib2/${wgrib2_ver}
+module load libjpeg/${libjpeg_ver}
+module load grib_util/${grib_util_ver}
+module load util_shared/${util_shared_ver}
+module load cray-pals/${cray_pals_ver}
+module list
+#============
 
-# CALL executable job script here
-$HOMErap/jobs/JRAP_POSTSND
+# EXPORT list here
 
-if [ $? -ne 0 ]; then
-  ecflow_client --abort
-  exit
-fi
+
+
+export group_name=meso
+${HOMErap}/jobs/JRAP_POSTSND
 
 %include <tail.h>
 %manual

@@ -76,7 +76,7 @@ export INPUT_DATA=$DATAROOT/rap_fcst_${envir}_${cyc}
 # Run setpdy and initialize PDY variables
 ###########################################
 setpdy.sh
-. PDY
+. ./PDY
 
 ##############################################
 # Define COM directories
@@ -88,13 +88,13 @@ setpdy.sh
 #export COMOUT=${COMOUT:-${COMROOT}/${NET}/${rap_ver}/${RUN}.${PDY}}
 
 # for wcoss2 ops
-export COMIN=${COMIN:-$(compath.py ${envir}/${NET}/${rap_ver}/${RUN}.${PDY})}
-export COMOUT=${COMOUT:-$(compath.py ${envir}/${NET}/${rap_ver}/${RUN}.${PDY})}
+export COMIN=${COMIN:-$(compath.py ${NET}/${rap_ver})/${RUN}.${PDY}}
+export COMOUT=${COMOUT:-$(compath.py ${NET}/${rap_ver})/${RUN}.${PDY}}
 
 # for testing with canned data
 #export gespath=${gespath:-${COMROOT}/${NET}/${rap_ver}/nwges}
 # for wcoss2 ops
-export gespath=${gespath:-$(compath.py ${envir}/${NET}/${rap_ver}/nwges)}
+export gespath=${gespath:-$(compath.py ${NET}/${rap_ver})/nwges}
 export RAPGES_FCYC=${RAPGES_FCYC:-$gespath/rapges}
 
 mkdir -m 775 -p $COMOUT
@@ -109,7 +109,7 @@ ${RAP_WRFBUFRSH:-$HOMErap/scripts/exrap_wrfbufr.sh}
 cat $pgmout
 
 msg="ENDED NORMALLY."
-postmsg "$jlogfile" "$msg"
+postmsg "$msg"
 
 export KEEPDATA=YES
 ##############################

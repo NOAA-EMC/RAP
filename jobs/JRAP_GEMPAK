@@ -23,7 +23,7 @@ date
 # 
 # obtain unique process id (pid) and make temp directories
 #
-export DATA=$DATAROOT/rap_gempak_${cyc}.$$
+export DATA=${DATA:-$DATAROOT/${jobid}}
 mkdir $DATA
 cd $DATA
 
@@ -51,7 +51,7 @@ export EXT=""
 
 # Run setpdy and initialize PDY variables
 setpdy.sh
-. PDY
+. ./PDY
 
 ##############################################
 # Define COM directories
@@ -62,7 +62,7 @@ setpdy.sh
 #export COMIN=${COMIN:-${COMROOT}/${NET}/${rap_ver}/${RUN}.${PDY}}
 
 # for wcoss2 ops
-export COMIN=${COMIN:-$(compath.py ${envir}/${NET}/${rap_ver}/${RUN}.${PDY})}
+export COMIN=${COMIN:-$(compath.py ${NET}/${rap_ver})/${RUN}.${PDY}}
 
 export COMAWP=${COMAWP:-${COMIN}/gempak}
 
@@ -72,7 +72,7 @@ fi
 
 env
 
-export HOMErap=${HOMErap:-${NWROOT}/${NET}.${rap_ver}}
+export HOMErap=${HOMErap:-${PACKAGEROOT}/${NET}.${rap_ver}}
 export SCRIPTSrap=${SCRIPTSrap:-$HOMErap/scripts}
 export GEMPAKrap=${GEMPAKrap:-$HOMErap/gempak}
 export NAGRIB_TABLE=${NAGRIB_TABLE:-$GEMPAKrap/fix/nagrib.tbl}
