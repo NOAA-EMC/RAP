@@ -105,8 +105,8 @@ ln -sf RAP${ndfdstring}${fhr}           fort.70
 ln -sf RAP${ndfdstring}${fhr}.grib2     fort.71
 
 cp ${EXECrap}/rap_smartinit .
-runline="mpiexec -n 1 -ppn 1 rap_smartinit"
-rap_smartinit <<EOF >> smartinit${domain}.out${fhr}
+runline="mpiexec -n 1 -ppn 1 ./rap_smartinit"
+$runline <<EOF >> smartinit${domain}.out${fhr}
 RAP
 $ndfdstring
 GRIB2
