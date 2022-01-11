@@ -81,7 +81,7 @@ export GRBINDEX=${GRBINDEX:-${gributilexec}/grbindex}
 export GRB2INDEX=${GRB2INDEX:-${gributilexec}/grb2index}
 export CNVGRIB=${CNVGRIB:-${gributilexec}/cnvgrib}
 export WGRIB2=${WGRIB2:-${gributilexec}/wgrib2}
-export CRTM=${FIXcrtm:-${FIXrap}/crtm_v2.3.0_coefficients}
+export CRTM=${FIXcrtm:-$CRTM_FIX}
 
 ###########################################
 # Run setpdy and initialize PDY variables

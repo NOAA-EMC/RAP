@@ -1,5 +1,5 @@
-export crtm_ver_analysis=v2.3.0
-export crtm_ver_post=v2.0.6
+#export crtm_ver_analysis=v2.3.0
+#export crtm_ver_post=v2.0.6
 
 export PrgEnv_intel_ver="8.1.0"
 export craype_ver="2.7.10"
@@ -8,6 +8,7 @@ export cray_mpich_ver="8.1.7"
 export hdf5_ver="1.10.6"
 export netcdf_ver="4.7.4"
 export pnetcdf_ver="1.12.2"
+export crtm_ver="2.3.0"
 
 export wgrib2_ver="2.0.8"
 export grib_util_ver="1.2.3"
