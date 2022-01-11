@@ -31,7 +31,6 @@ module load cray-mpich/${cray_mpich_ver}
 module load hdf5/${hdf5_ver}
 module load netcdf/${netcdf_ver}
 module load pnetcdf/${pnetcdf_ver}
-module load prod_util/${prod_util_ver}
 module load cray-pals/${cray_pals_ver}
 
 module load ip/${ip_ver}

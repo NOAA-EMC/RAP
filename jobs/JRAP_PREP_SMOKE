@@ -69,7 +69,7 @@ export EXECrap=${EXECrap:-${HOMErap}/exec}
 export FIXrap=${FIXrap:-${HOMErap}/fix}
 export PARMrap=${PARMrap:-${HOMErap}/parm}
 export USHrap=${USHrap:-${HOMErap}/ush}
-export FIXcrtm=${FIXcrtm:-${FIXrap}/crtm_v2.3.0_coefficients}
+export FIXcrtm=${FIXcrtm:-$CRTM_FIX}
 
 ###########################################
 # Run setpdy and initialize PDY variables
