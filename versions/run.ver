@@ -27,6 +27,7 @@ export DATAFS=h1
 export DCOMROOT=/lfs/h1/ops/canned/dcom
 export PDY=20210823
 export COMPATH=/lfs/h1/ops/canned/com/hourly/:/lfs/h1/ops/canned/com/gfs/
+export SENDCANNEDDBN=YES
 
 #Since obsproc does the prep now , these two path needs to be update for prod
 export PREPDIR=/lfs/h1/ops/canned/com/rap/v5.1
