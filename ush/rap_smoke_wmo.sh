@@ -51,7 +51,7 @@ for reg in CS AK HI
    export FORT12="filesize"
    export FORT31=
    export FORT51=${temp_grid_grib2}
-   ${TOCGRIB2SUPER} < $PARMrap/wmo/rap_grib2_${type}smoke_${grdid} >> rap${type}smoke${reg}.wmoout
+   ${TOCGRIB2SUPER} < $PARMrap/wmo/rap_grib2_${type}smoke_${grdid} >> $DATA/$pgmout 2>errfile
 
    echo `ls -l ${grib_input} | awk '{print $5} '` > filesize
    export XLFRTEOPTS="unit_vars=yes"
@@ -59,7 +59,7 @@ for reg in CS AK HI
    export FORT12="filesize"
    export FORT31=
    export FORT51=${smoke_grid_grib2}
-   ${TOCGRIB2SUPER} < $PARMrap/wmo/rap_grib2_${type}smoke_${grdid}
+   ${TOCGRIB2SUPER} < $PARMrap/wmo/rap_grib2_${type}smoke_${grdid} >> $DATA/$pgmout 2>errfile
 
 done
 done

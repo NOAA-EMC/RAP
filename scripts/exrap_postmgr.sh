@@ -23,10 +23,6 @@ TCP=22
 TEND=21
 fi
 
-# make a space for saving all smoke products from one forecast
-mkdir -p smoke
-DATAsmoke=$(pwd)/smoke
-
 if [ -e posthours ]; then
    rm -f posthours
 fi
@@ -55,9 +51,8 @@ do
   do
     if [ -s $INPUT_DATA/fcstdone${fhr}00.${shh} ]
     then
-	    # need to pass ${DATAsmoke} into post job submission.
       ecflow_client --event release_post${fhr}
-#      qsub -v DATAsmoke=${DATAsmoke} ${HOMErap}/sms/post/jrap_post_f${fhr}_${shh}.bsub
+#      qsub ${HOMErap}/sms/post/jrap_post_f${fhr}_${shh}.bsub
 #      qsub ${HOMErap}/sms/wrfbufr/jrap_wrfbufr_f${fhr}_${shh}.bsub
       # Remove current fhr from list
       postjobs=`echo $postjobs | sed s/${fhr}//g`

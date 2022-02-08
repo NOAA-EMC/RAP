@@ -729,22 +729,27 @@ then
   chmod 775 poescript
   export MP_PGMMODEL=mpmd
   export MP_CMDFILE=poescript
-  export DATAsmoke=${DATAsmoke}
+  mkdir -p smoke
+  export DATAsmoke=$(pwd)/smoke
   mpiexec -np 8 --cpu-bind core cfp ./poescript_smoke
 fi
 
 if [ $cyc -eq 03 -a $fhr -eq 51 ]
 then
-   counter=1
-   while [[ $counter -lt 80 ]]; do
-      numfiles=$(ls ${DATAsmoke}/rap.${cycle}.smoke* | wc -l)
-      if [[ $numfiles -eq 156 ]]; then
-        break
-      else
-        sleep 5
-        counter=` expr $counter + 1 `
-      fi
+  sleep 60
+# Retrieve smoke output from previous forecast hours
+  hours="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50"
+  for hour in $hours; do
+    cp $DATAROOT/rap_post_${envir}_${cyc}_f${hour}/smoke/rap* ${DATAsmoke}
   done
+
+  numfiles=$(ls ${DATAsmoke}/rap.${cycle}.smoke* | wc -l)
+  if [[ $numfiles -eq 156 ]]; then
+    break
+  else
+    echo "WARNING: Not all smoke output was produced."
+    exit
+  fi
   $USHrap/rap_smoke_wmo.sh
 fi
 
