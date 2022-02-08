@@ -61,5 +61,7 @@ for reg in CS AK HI
    export FORT51=${smoke_grid_grib2}
    ${TOCGRIB2SUPER} < $PARMrap/wmo/rap_grib2_${type}smoke_${grdid} >> $DATA/$pgmout 2>errfile
 
+   cp ${smoke_grid_grib2} $COMOUT/wmo
+
 done
 done
