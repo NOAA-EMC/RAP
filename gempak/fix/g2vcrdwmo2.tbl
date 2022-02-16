@@ -17,6 +17,7 @@
 010 255 Entire Atmosphere                 -                    NONE     0
 011 255 Cumulonimbus Base                 m                    HTCB     0
 012 255 Cumulonimbus Top                  m                    HTCT     0
+014 255 Level of Free Convection          -                    LFCV     0
 020 255 Isothermal level                  K                    TMPL     0
 100 255 Isobaric surface                  Pa                   PRES    -2
 100 100 Layer between two isobaric sfcs   Pa                   PRES    -2
