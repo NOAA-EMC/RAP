@@ -28,12 +28,8 @@ export BUILD_rap_wrfbufr=yes
 export BUILD_rap_stnmlist=yes
 export BUILD_rap_smartinit=yes
 
-module purge
-module load envvar/1.0
-module use $BASE/../modulefiles
-source $BASE/../modulefiles/RAP/v5.0.0
 
-module list
+source $BASE/build_rap_module_load.sh
 
 mkdir $BASE/logs
 export logs_dir=$BASE/logs
