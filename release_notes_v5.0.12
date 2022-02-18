@@ -1,0 +1,24 @@
+Release Notes:  RAP v5.0.12
+
+v5.0.12 - released February 16, 2022
+* Crisis fix to address an issue with the smoke pre-processing job.  The current RAP smoke is missing all of the MODIS detections due to the upstream MODIS file name convention change.
+
+
+* Repository Details
+   * Clone the rap.v5.0.12 branch of the RAP GitHub repository using the following command:
+* git clone -b rap.v5.0.12 https://github.com/NOAA-EMC/RAP.git
+
+
+* sorc files changed    
+   * sorc/rap_prep_smoke.fd/process-obs/HRRR-AK-Smoke/src/proc_MODIS_FRP_HRRR-AK.f90
+   * sorc/rap_prep_smoke.fd/process-obs/HRRR-Smoke/src/proc_MODIS_FRP_HRRR_v3.f90
+   * sorc/rap_prep_smoke.fd/process-obs/RAP-Smoke/src/proc_MODIS_FRP_RAP_v3.f90
+
+
+* resource changes
+   * N/A
+
+
+* implementation instructions
+   * Retrieve the new sorc files and re-compile the rap_prep_smoke source code
+
