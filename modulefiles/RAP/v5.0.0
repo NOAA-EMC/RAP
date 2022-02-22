@@ -1,10 +1,10 @@
 #%Module######################################################################
 ##                                                   Geoffrey.Manikin@noaa.gov
 ##                                                           NOAA/NWS/NCEP/EMC
-## RAP v5.0.0
+## RAP version from build.ver/rap_build_ver 
 ##_____________________________________________________
 
-set ver v5.0.0
+set ver ${rap_build_ver}
 
 set sys [uname sysname]
 set lname HRRR
@@ -19,7 +19,6 @@ export C_COMP_MP=cc
 export C_COMP_MPI=cc
 
 export BASE=`pwd`
-source $BASE/../../versions/build.ver
 
 module purge
 

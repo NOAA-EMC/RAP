@@ -4,11 +4,7 @@ set -x
 
 export BASE=`pwd`
 
-module purge
-module load envvar/1.0
-module use $BASE/../modulefiles
-source $BASE/../modulefiles/RAP/v5.0.0
-module list
+source $BASE/build_rap_module_load.sh
 
 cd ${BASE}/rap_wps.fd/WPSV3.9.1
 ./clean -aa
