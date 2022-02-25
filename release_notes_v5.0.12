@@ -21,4 +21,11 @@ v5.0.12 - released February 16, 2022
 
 * implementation instructions
    * Retrieve the new sorc files and re-compile the rap_prep_smoke source code
-
+   * Retrieve the following files from the rap.v5.0.11 package (not stored in GitHub repository):
+      * fix/
+      * parm/rap_gtg.config
+      * parm/rap_QNWFA_QNIFA_Monthly_GFS
+      * parm/rap_run_*
+      * sorc/rap_wrfpost.fd/gtg_*.f90
+      * sorc/rap_wrfpost.fd/map_routines.f90
+   * Testing should include running the prep_smoke job.  A full cycle test is not needed.
