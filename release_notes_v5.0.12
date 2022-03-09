@@ -1,8 +1,9 @@
 Release Notes:  RAP v5.0.12
 
-v5.0.12 - released February 16, 2022
-* Crisis fix to address an issue with the smoke pre-processing job.  The current RAP smoke is missing all of the MODIS detections due to the upstream MODIS file name convention change.
-
+v5.0.12 - released March 9, 2022
+* Crisis fix to address two issues related to the smoke and cloud pre-processing jobs.  
+   * The current RAP smoke is missing all of the MODIS detections due to the upstream MODIS file name convention change.  A source code change is required to read in the correct files.
+   * When processing NASA cloud observations, the code first reads in the observation time.  The time is a 32-bit integer, and starting with the beginning of 2022, the integer lies outside the range of values that 32-bit can represent, resulting in the NASA cloud products not being used.  To fix the issue, several integers are changed from 32-bit to 64-bit so the observation time is correctly represented.
 
 * Repository Details
    * Clone the rap.v5.0.12 branch of the RAP GitHub repository using the following command:
@@ -13,6 +14,7 @@ v5.0.12 - released February 16, 2022
    * sorc/rap_prep_smoke.fd/process-obs/HRRR-AK-Smoke/src/proc_MODIS_FRP_HRRR-AK.f90
    * sorc/rap_prep_smoke.fd/process-obs/HRRR-Smoke/src/proc_MODIS_FRP_HRRR_v3.f90
    * sorc/rap_prep_smoke.fd/process-obs/RAP-Smoke/src/proc_MODIS_FRP_RAP_v3.f90
+   * sorc/rap_process_cloud.fd/process_NASALaRC_cloud.f90
 
 
 * resource changes
@@ -20,7 +22,7 @@ v5.0.12 - released February 16, 2022
 
 
 * implementation instructions
-   * Retrieve the new sorc files and re-compile the rap_prep_smoke source code
+   * Retrieve the new sorc files and re-compile the rap_prep_smoke and rap_process_cloud source codes
    * Retrieve the following files from the rap.v5.0.11 package (not stored in GitHub repository):
       * fix/
       * parm/rap_gtg.config
@@ -28,4 +30,4 @@ v5.0.12 - released February 16, 2022
       * parm/rap_run_*
       * sorc/rap_wrfpost.fd/gtg_*.f90
       * sorc/rap_wrfpost.fd/map_routines.f90
-   * Testing should include running the prep_smoke job.  A full cycle test is not needed.
+   * Testing should include running the prep_smoke and process_cloud jobs.  A full cycle test is not needed.
