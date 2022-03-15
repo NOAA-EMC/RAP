@@ -394,11 +394,11 @@ mv rsl.error.* ${rsldir}
 
 bdyfile=${RAPBC}/wrfbdy_d01.${start_YYYYMMDDHHMM}
 echo "${bdyfile}"
-cp wrfbdy_d01 ${bdyfile}
+cpfs wrfbdy_d01 ${bdyfile}
 cp wrfbdy_d01 wrfbdy_d01.${start_YYYYMMDDHHMM}
 outputfile=${RAPBC}/wrfinput_d01_${start_year}-${start_month}-${start_day}_${start_hour}_00_00
 echo "${outputfile}"
-cp wrfinput_d01 ${outputfile}
+cpfs wrfinput_d01 ${outputfile}
 cp wrfinput_d01 wrfinput_d01_${start_year}-${start_month}-${start_day}_${start_hour}_00_00
 
 if [ ! -r "wrfinput_d01" ]; then

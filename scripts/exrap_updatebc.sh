@@ -82,8 +82,19 @@ set -A XX `ls ${RAPBC}/wrfbdy_d01.*00 | sort -r`
 maxnum=${#XX[*]}
 bdtime=`echo ${XX[0]} |awk 'BEGIN {FS="/"} {print $NF}'|cut -c12-`
 
+targetsize=4657965304 # RAPv5 boundary file size
+counter=1
 if [[ ${currentime} -ge ${bdtime} ]]; then
    echo "using latest ${XX[0]} as boundary condition "
+   while [[ $counter -lt 20 ]]; do
+     filesize=$(stat -c%s ${XX[0]})
+     if [ $filesize -eq $targetsize ]; then
+        break
+     else
+        sleep 3
+        counter=` expr $counter + 1 `
+     fi
+   done
    cp ${XX[0]} wrfbdy_d01
 else
    nn=1
@@ -98,6 +109,16 @@ else
         err_exit
    else
       echo " using old ${XX[$nn]} as boundary condition"
+
+      while [[ $counter -lt 20 ]]; do
+         filesize=$(stat -c%s ${XX[0]})
+         if [ $filesize -eq $targetsize ]; then
+            break
+         else
+            sleep 3
+            counter=` expr $counter + 1 `
+         fi
+      done
       cp ${XX[$nn]} wrfbdy_d01
    fi
 fi
@@ -124,7 +145,8 @@ cp ${PARMrap}/rap_update_bc_parame.in parame.in
 ln -s wrfinput_d01  wrfinputd1
 ln -s wrfvar_output wrfvar_out
 cp ${EXECrap}/rap_update_bc .
-runline="aprun -n 1 -N 1 ./rap_update_bc"
+#runline="aprun -n 1 -N 1 ./rap_update_bc"
+runline="./rap_update_bc"
 $runline >> $DATA/$pgmout 2>errfile
 export err=$?; err_chk
 
