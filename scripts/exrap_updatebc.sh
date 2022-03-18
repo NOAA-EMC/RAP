@@ -111,7 +111,7 @@ else
       echo " using old ${XX[$nn]} as boundary condition"
 
       while [[ $counter -lt 20 ]]; do
-         filesize=$(stat -c%s ${XX[0]})
+         filesize=$(stat -c%s ${XX[$nn]})
          if [ $filesize -eq $targetsize ]; then
             break
          else
