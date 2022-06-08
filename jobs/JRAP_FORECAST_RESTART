@@ -81,7 +81,6 @@ setpdy.sh
 # Define COM directories
 ##############################################
 
-# for wcoss2 ops
 export COMIN=${COMIN:-$(compath.py ${envir}/${NET}/${rap_ver}/${RUN}.${PDY})}
 export COMOUT=${COMOUT:-$(compath.py ${envir}/${NET}/${rap_ver}/${RUN}.${PDY})}
 

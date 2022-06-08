@@ -82,18 +82,9 @@ setpdy.sh
 # Define COM directories
 ##############################################
 
-# for testing with canned data
-#export COMROOT=${COMROOT:-/lfs/h2/emc/ptmp/Ming.Hu/com}
-#export COMIN=${COMIN:-${COMROOT}/${NET}/${rap_ver}/${RUN}.${PDY}}
-#export COMOUT=${COMOUT:-${COMROOT}/${NET}/${rap_ver}/${RUN}.${PDY}}
-
-# for wcoss2 ops
 export COMIN=${COMIN:-$(compath.py ${NET}/${rap_ver})/${RUN}.${PDY}}
 export COMOUT=${COMOUT:-$(compath.py ${NET}/${rap_ver})/${RUN}.${PDY}}
 
-# for testing with canned data
-#export gespath=${gespath:-${COMROOT}/${NET}/${rap_ver}/nwges}
-# for wcoss2 ops
 export gespath=${gespath:-$(compath.py ${NET}/${rap_ver})/nwges}
 export RAPGES_FCYC=${RAPGES_FCYC:-$gespath/rapges}
 

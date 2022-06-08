@@ -186,15 +186,15 @@ if [ ${cyc} -eq ${time_updateSST} ]; then
   echo "update SST "
   cp ${FIXrap}/rap_RTG_SST_landmask.dat ./RTG_SST_landmask.dat
   cp ${FIXrap}/rap_geo_em.d01.nc  ./geo_em.d01.nc
-  if [ -r "${COMINsst}/sst.${PDY}/rtgssthr_grb_0.083.grib2" ]; then
-    cp ${COMINsst}/sst.${PDY}/rtgssthr_grb_0.083.grib2 SSTRTG
+  if [ -r "${COMINsst}/nsst.${PDY}/rtgssthr_grb_0.083.grib2" ]; then
+    cp ${COMINsst}/nsst.${PDY}/rtgssthr_grb_0.083.grib2 SSTRTG
     ln -s SSTRTG latest.SST
     cp ${EXECrap}/rap_process_sst .
     runline="mpiexec -n 1 -ppn 1 ./rap_process_sst"
     $runline >> $DATA/$pgmout 2>errfile
     export err=$?; err_chk
-  elif [ -r "${COMINsst}/sst.${PDYm1}/rtgssthr_grb_0.083.grib2" ]; then
-    cp ${COMINsst}/sst.${PDYm1}/rtgssthr_grb_0.083.grib2 SSTRTG
+  elif [ -r "${COMINsst}/nsst.${PDYm1}/rtgssthr_grb_0.083.grib2" ]; then
+    cp ${COMINsst}/nsst.${PDYm1}/rtgssthr_grb_0.083.grib2 SSTRTG
     ln -s SSTRTG latest.SST
     cp ${EXECrap}/rap_process_sst .
     runline="mpiexec -n 1 -ppn 1 ./rap_process_sst"

@@ -83,7 +83,6 @@ setpdy.sh
 # Define COM directories
 ##############################################
 
-# for wcoss2 ops
 export COMIN=${COMIN:-$(compath.py ${NET}/${rap_ver})/${RUN}.${PDY}}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${rap_ver})/${RUN}.${PDY}}
 
@@ -93,9 +92,6 @@ mkdir -m 775 -p $COMOUT
 # Define GES directories
 ##############################################
 
-# for testing with canned data
-#export gespath=${gespath:-${COMROOT}/${NET}/${rap_ver}/nwges}
-# for wcoss2 ops
 export gespath=${gespath:-$(compath.py ${NET}/${rap_ver})/nwges}
 export RAPBC=${RAPBC:-$gespath/rapbc}
 export RAPGES_PCYC=${RAPGES_PCYC:-$gespath/rapges_pcyc}

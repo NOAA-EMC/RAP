@@ -4,7 +4,7 @@
 #PBS -q %QUEUE%
 #PBS -l walltime=00:30:00
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l place=vscatter:shared,select=1:ncpus=48:mem=192GB
+#PBS -l place=shared,select=1:ncpus=64:mem=192GB
 #PBS -l debug=true
 
 export model=rap
@@ -35,8 +35,8 @@ module list
 #============
 
 # EXPORT list here
-export numprocs=48
-export NTASK=48
+export numprocs=64
+export NTASK=64
 export PTILE=64
 
 export OMP_NUM_THREADS=1

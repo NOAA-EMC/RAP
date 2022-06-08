@@ -10,7 +10,7 @@ export netcdf_ver="4.7.4"
 export pnetcdf_ver="1.12.2"
 export crtm_ver="2.3.0"
 
-export wgrib2_ver="2.0.8"
+export wgrib2_ver="2.0.7"
 export grib_util_ver="1.2.3"
 export util_shared_ver="1.4.0"
 export gempak_ver="7.14.1"
@@ -19,20 +19,21 @@ export cray_pals_ver="1.0.12"
 export libjpeg_ver="9c"
 export radar_ver="v0.0"
 
-#Upstream model versions
-export gfs_ver=v16.2
-
-#Canned temp 
-export DATAFS=h1
-export DCOMROOT=/lfs/h1/ops/canned/dcom
-export PDY=20210823
-export COMPATH=/lfs/h1/ops/canned/com/hourly/:/lfs/h1/ops/canned/com/gfs/
-export SENDCANNEDDBN=YES
-
-#Since obsproc does the prep now , these two path needs to be update for prod
-export PREPDIR=/lfs/h1/ops/canned/com/rap/v5.1
-export PREPDIR2=/lfs/h1/ops/canned/com/rap/v5.1/rap.$PDY
-###
+#export SENDDBN=NO
 
 # Debug for implementation
-export maillist=arash.bigdeli@noaa.gov
+#export maillist=gregory.mott@noaa.gov
+export maillist=${maillist:-'nco.spa@noaa.gov'}
+
+#for upstream dependencies
+#for PREPDIR and PREPDIR2 set in j-jobs
+export obsproc_ver=v1.0
+
+#GFS version
+export gfs_ver=v16.2
+
+#nsst version 
+export nsst_ver=v1.2
+
+#radarl2
+export radarl2_ver=v1.2

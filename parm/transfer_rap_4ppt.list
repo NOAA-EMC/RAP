@@ -23,13 +23,16 @@
 # directory are included, so if no exclude patterns match that file, it will be
 # transferred.
 
-com/rap/_ENVIR_/rap._PDY_/
+#com/rap/_ENVIR_/rap._PDY_/
+_COMROOT_/rap/_SHORTVER_/rap._PDY_/
+
 + *t11z*
 - *
 W
 B 850000
 
-_GESROOT_/_ENVIR_/rap/
+#_GESROOT_/_ENVIR_/rap/
+_COMROOT_/rap/_SHORTVER_/nwges/
 + /rapges/
 + /rapges/rap__PDY_11f00[1]
 - *
