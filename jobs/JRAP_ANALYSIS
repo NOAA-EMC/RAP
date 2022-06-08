@@ -83,20 +83,18 @@ setpdy.sh
 # Define COM directories
 ##############################################
 
-# for testing with canned data
-#export DCOMROOT=/lfs/h1/ops/$envir/dcom
-#export COMROOT=${COMROOT:-/lfs/h2/emc/ptmp/Ming.Hu/com}
-#export COMIN=${COMIN:-${COMROOT}/${NET}/${rap_ver}/${RUN}.${PDY}}
-#export COMOUT=${COMOUT:-${COMROOT}/${NET}/${rap_ver}/${RUN}.${PDY}}
-
-# for wcoss2 ops
 export COMIN=${COMIN:-$(compath.py ${NET}/${rap_ver})/${RUN}.${PDY}}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${rap_ver})/${RUN}.${PDY}}
 
-export PREPDIR=${PREPDIR:-$(compath.py ${NET}/${rap_ver})}
-export PREPDIR2=${PREPDIR2:-$(compath.py ${NET}/${rap_ver})/${RUN}.${PDY}}
+export PREPDIR=${PREPDIR:-$(compath.py obsproc/${obsproc_ver})}
+
+#old
+#export PREPDIR2=${PREPDIR2:-$(compath.py obsproc/${obsproc_ver})}
+
+export PREPDIR2=${PREPDIR2:-$(compath.py ${NET}/${rap_ver})}
+
 export COMINgfs=${COMINgfs:-$(compath.py gfs/${gfs_ver})}
-export COMINsst=${COMINsst:-$(compath.py gfs/${gfs_ver})}
+export COMINsst=${COMINsst:-$(compath.py ${envir}/com/nsst/${nsst_ver})}
 
 mkdir -m 775 -p $COMOUT 
 
@@ -104,9 +102,6 @@ mkdir -m 775 -p $COMOUT
 # Define GES directories
 ##############################################
 
-# for testing with canned data
-#export gespath=${gespath:-${COMROOT}/${NET}/${rap_ver}/nwges}
-# for wcoss2 ops
 export gespath=${gespath:-$(compath.py ${NET}/${rap_ver})/nwges}
 
 export RAPBC=$gespath/rapbc

@@ -23,63 +23,32 @@
 # directory are included, so if no exclude patterns match that file, it will be
 # transferred.
 
-com/rap/_ENVIR_/rap._PDY_/
+#com/rap/_ENVIR_/rap._PDY_/
+_COMROOT_/rap/_SHORTVER_/rap._PDY_/
+
 W
 B 850000
 
-com/rap/_ENVIR_/rap_p._PDY_/
+#com/rap/_ENVIR_/rap_p._PDY_/
+_COMROOT_/rap/_SHORTVER_/rap_p._PDY_/
+
 W
 B 170000
 # This directory is a good candidate for compression
 #Z
 
-com/rap/_ENVIR_/rap_e._PDY_/
-W
-B 8800
+#com/rap/_ENVIR_/rap._PDYm1_/
+_COMROOT_/rap/_SHORTVER_/rap._PDYm1_/
 
-com/rap/_ENVIR_/rap_eh._PDY_/
-B 9000
-# This directory is a good candidate for compression
-#Z
 
-#com/realtime/_ENVIR_/rap._PDY_/
-#B 1
-# This directory is a good candidate for compression
-#Z
-
-com/rap/_ENVIR_/sdm_rtdm/
-+ /avgdata/
-+ /avgdata/*
-+ /obcount_30day/
-+ /obcount_30day/rap/
-+ /obcount_30day/rap/rap._PDYm1_/***
-+ /obcount_30day/rap/rap._PDY_/***
-- *
-B 2
-# This directory is a good candidate for compression
-#Z
-
-com/rap/_ENVIR_/rap._PDYm1_/
 E
 B 850000
 
-com/rap/_ENVIR_/rap_p._PDYm1_/
+#com/rap/_ENVIR_/rap_p._PDYm1_/
+_COMROOT_/rap/_SHORTVER_/rap_p._PDYm1_/
+
 W
 B 170000
-# This directory is a good candidate for compression
-#Z
-
-com/rap/_ENVIR_/rap_e._PDYm1_/
-W
-B 8800
-
-com/rap/_ENVIR_/rap_eh._PDYm1_/
-B 9000
-# This directory is a good candidate for compression
-#Z
-
-#com/realtime/_ENVIR_/rap._PDYm1_/
-#B 1
 # This directory is a good candidate for compression
 #Z
 

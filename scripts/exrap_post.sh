@@ -215,8 +215,11 @@ EOF
 
   startmsg
   cp ${EXECrap}/rap_wrfpost .
-  runline="mpiexec -n 48 -ppn 64 ./rap_wrfpost"
-  $runline >> wrfpost.out
+#  runline="mpiexec -n 48 -ppn 64 ./rap_wrfpost"
+  runline="mpiexec -n 64 -ppn 64 ./rap_wrfpost"
+#  runline="mpiexec -n 48 -ppn 48 ./rap_wrfpost"
+
+$runline >> wrfpost.out
   err=$?;export err ;err_chk
 
   if test "$SENDCOM" = 'YES'
@@ -265,7 +268,10 @@ EOF
   export pgm;. prep_step
 
   startmsg
-  runline="mpiexec -n 48 -ppn 64 ./rap_wrfpost"
+#  runline="mpiexec -n 48 -ppn 64 ./rap_wrfpost"
+  runline="mpiexec -n 64 -ppn 64 ./rap_wrfpost"
+#    runline="mpiexec -n 48 -ppn 48 ./rap_wrfpost"
+
   $runline >> wrfpost2.out
   err=$?;export err ;err_chk
 
