@@ -1,0 +1,27 @@
+Release Notes: RAP v5.1.1
+
+v5.1.1 - released June 9, 2022
+* Adds the aerosol optical thickness (AOTK) parameter to three additional output grids
+   * AOTK is a key smoke parameter that will be verified as part of Version 1 of the EMC Verification System.  It is currently available only on the native lat-lon RAP grid, and the MET verification software is unable to read that grid  
+
+
+* Repository Details
+   * Clone the wcoss2 branch of the RAP GitHub repository using the following command (contains v5.1.1 release notes):
+* git clone -b wcoss2 https://github.com/NOAA-EMC/RAP.git
+   * Note: Once the RAP is implemented on WCOSS2, the wcoss2 branch will be renamed to the develop branch.
+
+
+* parm files changed
+   * parm/rap_parmlist_221.txt
+   * parm/rap_parmlist_242.txt
+   * parm/rap_parmlist_prs_130.txt
+
+
+* resource changes
+   * N/A
+
+
+* implementation instructions
+   * Retrieve the new parm files
+   * Testing should include running all the post jobs for a given cycle to produce new versions of the awp130pgrb, awp242, and awip32 grib2 files
+
