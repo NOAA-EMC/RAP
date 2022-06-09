@@ -298,6 +298,7 @@ HGT:highest tropospheric freezing level
 RH:highest tropospheric freezing level
 SNOD:surface
 PWAT:entire atmosphere (considered as a single layer)
+AOTK:entire atmosphere (considered as a single layer)
 RH:2 m above ground
 BGRUN:surface
 USTM:0-6000 m above ground
