@@ -64,5 +64,10 @@ for reg in CS AK HI
 
    cp ${smoke_grid_grib2} $COMOUT/wmo
 
+   if [ "$SENDDBN" == 'YES' ]; then
+      ${DBNROOT}/bin/dbn_alert NTC_LOW RAP_SMOKE $job $COMOUT/wmo/${smoke_grid_grib2}
+   fi
+
 done
 done
+
