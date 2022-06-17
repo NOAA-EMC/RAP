@@ -8,6 +8,7 @@
 #
 # Script history log:
 # 2021-12-06  M Hu, G Manikin  -- new script
+# 2022-06-17  B Blake          -- separate smoke records into sfc and pbl files
 
 set -xa
 
@@ -29,25 +30,28 @@ export grid_specs_196="mercator:20.000000 198.474999:321:2500.000000:206.130999 
 
 
 # Create subset of fields to be posted
-    ${WGRIB2} -inv tmp1_${grid}.inv ${COMOUT}/rap.${cycle}.wrfnatf${fhr}.grib2 
-
-    grep < tmp1_${grid}.inv "`cat ${PARMrap}/rap_smokeparms`" | ${WGRIB2} -i ${COMOUT}/rap.${cycle}.wrfnatf${fhr}.grib2 -grib tmp1_${grid}.grib2 
+for type in sfc pbl
+do
+    ${WGRIB2} -inv tmp1_${grid}_${type}.inv ${COMOUT}/rap.${cycle}.wrfnatf${fhr}.grib2 
+    grep < tmp1_${grid}_${type}.inv "`cat ${PARMrap}/rap_smokeparms_${type}`" | ${WGRIB2} -i ${COMOUT}/rap.${cycle}.wrfnatf${fhr}.grib2 -grib tmp1_${grid}_${type}.grib2 
 
 # Interpolate fields to new grid
-eval grid_specs=\${grid_specs_${grid}}
-    ${WGRIB2} tmp1_${grid}.grib2 -set_bitmap 1 -set_grib_type jpeg -new_grid_winds grid \
-       -new_grid_interpolation bilinear \
-       -new_grid ${grid_specs} tmp_${grid}.grib2 
+    eval grid_specs=\${grid_specs_${grid}}
+    ${WGRIB2} tmp1_${grid}_${type}.grib2 -set_bitmap 1 -set_grib_type jpeg \
+       -new_grid_winds grid -new_grid_interpolation bilinear \
+       -new_grid ${grid_specs} tmp_${grid}_${type}.grib2 
 
 # Move grid to final location and index
-      mv tmp_${grid}.grib2 rap.smoke${grid}${fhr}
-      ${WGRIB2} rap.smoke${grid}${fhr} -s > rap.smoke${grid}${fhr}.idx
+    mv tmp_${grid}_${type}.grib2 rap.smoke${grid}${fhr}_${type}
+    ${WGRIB2} rap.smoke${grid}${fhr}_${type} -s > rap.smoke${grid}${fhr}_${type}.idx
 
 # Remove temporary files
-    rm -f tmp_${grid}.inv tmp1_${grid}.grib2 tmpuv1_${grid}.grib2 tmp_${grid}.grib2 tmpuv_${grid}.grib2
+    rm -f tmp_${grid}_${type}.inv tmp1_${grid}_${type}.grib2 tmpuv1_${grid}_${type}.grib2 tmp_${grid}_${type}.grib2 tmpuv_${grid}_${type}.grib2
 
-mv rap.smoke${grid}${fhr} rap.${cycle}.smoke${ndfdstring}f${fhr}
+    mv rap.smoke${grid}${fhr}_${type} rap.${cycle}.smoke${ndfdstring}f${fhr}_${type}
 
-$GRB2INDEX rap.${cycle}.smoke${ndfdstring}f${fhr} rap.${cycle}.smoke${ndfdstring}f${fhr}I
+    $GRB2INDEX rap.${cycle}.smoke${ndfdstring}f${fhr}_${type} rap.${cycle}.smoke${ndfdstring}f${fhr}_${type}I
 
-cp rap.${cycle}.smoke${ndfdstring}f${fhr} ${DATAsmoke}/rap.${cycle}.smoke${ndfdstring}f${fhr}
+    cp rap.${cycle}.smoke${ndfdstring}f${fhr}_${type} ${DATAsmoke}/rap.${cycle}.smoke${ndfdstring}f${fhr}_${type}
+
+done

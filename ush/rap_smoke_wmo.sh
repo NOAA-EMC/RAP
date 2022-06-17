@@ -8,29 +8,51 @@
 #
 # Script history log:
 # 2021-12-06  M Hu, G Manikin  -- new script
+# 2022-06-17  B Blake          -- Send smoke output to COMOUT and add DBN alerts
 
 set -xa
 
 cd ${DATAsmoke}
 rm -rf 227 198 196
 
+for type in sfc pbl
+do
+
 mkdir 227
-cat rap.${cycle}.smokeCSf00 rap.${cycle}.smokeCSf01 rap.${cycle}.smokeCSf02 rap.${cycle}.smokeCSf03 rap.${cycle}.smokeCSf04 rap.${cycle}.smokeCSf05 rap.${cycle}.smokeCSf06 rap.${cycle}.smokeCSf07 rap.${cycle}.smokeCSf08 rap.${cycle}.smokeCSf09 rap.${cycle}.smokeCSf10 rap.${cycle}.smokeCSf11 rap.${cycle}.smokeCSf12 rap.${cycle}.smokeCSf13 rap.${cycle}.smokeCSf14 rap.${cycle}.smokeCSf15 rap.${cycle}.smokeCSf16 rap.${cycle}.smokeCSf17 rap.${cycle}.smokeCSf18 rap.${cycle}.smokeCSf19 rap.${cycle}.smokeCSf20 rap.${cycle}.smokeCSf21 rap.${cycle}.smokeCSf22 rap.${cycle}.smokeCSf23 rap.${cycle}.smokeCSf24 rap.${cycle}.smokeCSf25 rap.${cycle}.smokeCSf26 rap.${cycle}.smokeCSf27 rap.${cycle}.smokeCSf28 rap.${cycle}.smokeCSf29 rap.${cycle}.smokeCSf30 rap.${cycle}.smokeCSf31 rap.${cycle}.smokeCSf32 rap.${cycle}.smokeCSf33 rap.${cycle}.smokeCSf34 rap.${cycle}.smokeCSf35 rap.${cycle}.smokeCSf36 rap.${cycle}.smokeCSf37 rap.${cycle}.smokeCSf38 rap.${cycle}.smokeCSf39 rap.${cycle}.smokeCSf40 rap.${cycle}.smokeCSf41 rap.${cycle}.smokeCSf42 rap.${cycle}.smokeCSf43 rap.${cycle}.smokeCSf44 rap.${cycle}.smokeCSf45 rap.${cycle}.smokeCSf46 rap.${cycle}.smokeCSf47 rap.${cycle}.smokeCSf48 rap.${cycle}.smokeCSf49 rap.${cycle}.smokeCSf50 rap.${cycle}.smokeCSf51 > 227/rap.${cycle}.smokeCS_all
-$GRB2INDEX 227/rap.${cycle}.smokeCS_all 227/rap.${cycle}.smokeCS_allI
+cat rap.${cycle}.smokeCSf00_${type} rap.${cycle}.smokeCSf01_${type} rap.${cycle}.smokeCSf02_${type} rap.${cycle}.smokeCSf03_${type} rap.${cycle}.smokeCSf04_${type} rap.${cycle}.smokeCSf05_${type} rap.${cycle}.smokeCSf06_${type} rap.${cycle}.smokeCSf07_${type} rap.${cycle}.smokeCSf08_${type} rap.${cycle}.smokeCSf09_${type} rap.${cycle}.smokeCSf10_${type} rap.${cycle}.smokeCSf11_${type} rap.${cycle}.smokeCSf12_${type} rap.${cycle}.smokeCSf13_${type} rap.${cycle}.smokeCSf14_${type} rap.${cycle}.smokeCSf15_${type} rap.${cycle}.smokeCSf16_${type} rap.${cycle}.smokeCSf17_${type} rap.${cycle}.smokeCSf18_${type} rap.${cycle}.smokeCSf19_${type} rap.${cycle}.smokeCSf20_${type} rap.${cycle}.smokeCSf21_${type} rap.${cycle}.smokeCSf22_${type} rap.${cycle}.smokeCSf23_${type} rap.${cycle}.smokeCSf24_${type} rap.${cycle}.smokeCSf25_${type} rap.${cycle}.smokeCSf26_${type} rap.${cycle}.smokeCSf27_${type} rap.${cycle}.smokeCSf28_${type} rap.${cycle}.smokeCSf29_${type} rap.${cycle}.smokeCSf30_${type} rap.${cycle}.smokeCSf31_${type} rap.${cycle}.smokeCSf32_${type} rap.${cycle}.smokeCSf33_${type} rap.${cycle}.smokeCSf34_${type} rap.${cycle}.smokeCSf35_${type} rap.${cycle}.smokeCSf36_${type} rap.${cycle}.smokeCSf37_${type} rap.${cycle}.smokeCSf38_${type} rap.${cycle}.smokeCSf39_${type} rap.${cycle}.smokeCSf40_${type} rap.${cycle}.smokeCSf41_${type} rap.${cycle}.smokeCSf42_${type} rap.${cycle}.smokeCSf43_${type} rap.${cycle}.smokeCSf44_${type} rap.${cycle}.smokeCSf45_${type} rap.${cycle}.smokeCSf46_${type} rap.${cycle}.smokeCSf47_${type} rap.${cycle}.smokeCSf48_${type} rap.${cycle}.smokeCSf49_${type} rap.${cycle}.smokeCSf50_${type} rap.${cycle}.smokeCSf51_${type} > 227/rap.${cycle}.smokeCS_${type}_all
+$GRB2INDEX 227/rap.${cycle}.smokeCS_${type}_all 227/rap.${cycle}.smokeCS_${type}_allI
+
+cp 227/rap.${cycle}.smokeCS_${type}_all ${COMOUT}/rap_smokeCS.${cycle}.${type}.1hr_227.grib2
+if [ "$SENDDBN" == 'YES' ]; then
+  ${DBNROOT}/bin/dbn_alert MODEL RAP_SMOKE $job $COMOUT/rap_smokeCS.${cycle}.${type}.1hr_227.grib2
+fi
 
 mkdir 198
-cat rap.${cycle}.smokeAKf00 rap.${cycle}.smokeAKf01 rap.${cycle}.smokeAKf02 rap.${cycle}.smokeAKf03 rap.${cycle}.smokeAKf04 rap.${cycle}.smokeAKf05 rap.${cycle}.smokeAKf06 rap.${cycle}.smokeAKf07 rap.${cycle}.smokeAKf08 rap.${cycle}.smokeAKf09 rap.${cycle}.smokeAKf10 rap.${cycle}.smokeAKf11 rap.${cycle}.smokeAKf12 rap.${cycle}.smokeAKf13 rap.${cycle}.smokeAKf14 rap.${cycle}.smokeAKf15 rap.${cycle}.smokeAKf16 rap.${cycle}.smokeAKf17 rap.${cycle}.smokeAKf18 rap.${cycle}.smokeAKf19 rap.${cycle}.smokeAKf20 rap.${cycle}.smokeAKf21 rap.${cycle}.smokeAKf22 rap.${cycle}.smokeAKf23 rap.${cycle}.smokeAKf24 rap.${cycle}.smokeAKf25 rap.${cycle}.smokeAKf26 rap.${cycle}.smokeAKf27 rap.${cycle}.smokeAKf28 rap.${cycle}.smokeAKf29 rap.${cycle}.smokeAKf30 rap.${cycle}.smokeAKf31 rap.${cycle}.smokeAKf32 rap.${cycle}.smokeAKf33 rap.${cycle}.smokeAKf34 rap.${cycle}.smokeAKf35 rap.${cycle}.smokeAKf36 rap.${cycle}.smokeAKf37 rap.${cycle}.smokeAKf38 rap.${cycle}.smokeAKf39 rap.${cycle}.smokeAKf40 rap.${cycle}.smokeAKf41 rap.${cycle}.smokeAKf42 rap.${cycle}.smokeAKf43 rap.${cycle}.smokeAKf44 rap.${cycle}.smokeAKf45 rap.${cycle}.smokeAKf46 rap.${cycle}.smokeAKf47 rap.${cycle}.smokeAKf48 rap.${cycle}.smokeAKf49 rap.${cycle}.smokeAKf50 rap.${cycle}.smokeAKf51 > 198/rap.${cycle}.smokeAK_all
-$GRB2INDEX 198/rap.${cycle}.smokeAK_all 198/rap.${cycle}.smokeAK_allI
+cat rap.${cycle}.smokeAKf00_${type} rap.${cycle}.smokeAKf01_${type} rap.${cycle}.smokeAKf02_${type} rap.${cycle}.smokeAKf03_${type} rap.${cycle}.smokeAKf04_${type} rap.${cycle}.smokeAKf05_${type} rap.${cycle}.smokeAKf06_${type} rap.${cycle}.smokeAKf07_${type} rap.${cycle}.smokeAKf08_${type} rap.${cycle}.smokeAKf09_${type} rap.${cycle}.smokeAKf10_${type} rap.${cycle}.smokeAKf11_${type} rap.${cycle}.smokeAKf12_${type} rap.${cycle}.smokeAKf13_${type} rap.${cycle}.smokeAKf14_${type} rap.${cycle}.smokeAKf15_${type} rap.${cycle}.smokeAKf16_${type} rap.${cycle}.smokeAKf17_${type} rap.${cycle}.smokeAKf18_${type} rap.${cycle}.smokeAKf19_${type} rap.${cycle}.smokeAKf20_${type} rap.${cycle}.smokeAKf21_${type} rap.${cycle}.smokeAKf22_${type} rap.${cycle}.smokeAKf23_${type} rap.${cycle}.smokeAKf24_${type} rap.${cycle}.smokeAKf25_${type} rap.${cycle}.smokeAKf26_${type} rap.${cycle}.smokeAKf27_${type} rap.${cycle}.smokeAKf28_${type} rap.${cycle}.smokeAKf29_${type} rap.${cycle}.smokeAKf30_${type} rap.${cycle}.smokeAKf31_${type} rap.${cycle}.smokeAKf32_${type} rap.${cycle}.smokeAKf33_${type} rap.${cycle}.smokeAKf34_${type} rap.${cycle}.smokeAKf35_${type} rap.${cycle}.smokeAKf36_${type} rap.${cycle}.smokeAKf37_${type} rap.${cycle}.smokeAKf38_${type} rap.${cycle}.smokeAKf39_${type} rap.${cycle}.smokeAKf40_${type} rap.${cycle}.smokeAKf41_${type} rap.${cycle}.smokeAKf42_${type} rap.${cycle}.smokeAKf43_${type} rap.${cycle}.smokeAKf44_${type} rap.${cycle}.smokeAKf45_${type} rap.${cycle}.smokeAKf46_${type} rap.${cycle}.smokeAKf47_${type} rap.${cycle}.smokeAKf48_${type} rap.${cycle}.smokeAKf49_${type} rap.${cycle}.smokeAKf50_${type} rap.${cycle}.smokeAKf51_${type} > 198/rap.${cycle}.smokeAK_${type}_all
+$GRB2INDEX 198/rap.${cycle}.smokeAK_${type}_all 198/rap.${cycle}.smokeAK_${type}_allI
 
-mkdir  196
-cat rap.${cycle}.smokeHIf00 rap.${cycle}.smokeHIf01 rap.${cycle}.smokeHIf02 rap.${cycle}.smokeHIf03 rap.${cycle}.smokeHIf04 rap.${cycle}.smokeHIf05 rap.${cycle}.smokeHIf06 rap.${cycle}.smokeHIf07 rap.${cycle}.smokeHIf08 rap.${cycle}.smokeHIf09 rap.${cycle}.smokeHIf10 rap.${cycle}.smokeHIf11 rap.${cycle}.smokeHIf12 rap.${cycle}.smokeHIf13 rap.${cycle}.smokeHIf14 rap.${cycle}.smokeHIf15 rap.${cycle}.smokeHIf16 rap.${cycle}.smokeHIf17 rap.${cycle}.smokeHIf18 rap.${cycle}.smokeHIf19 rap.${cycle}.smokeHIf20 rap.${cycle}.smokeHIf21 rap.${cycle}.smokeHIf22 rap.${cycle}.smokeHIf23 rap.${cycle}.smokeHIf24 rap.${cycle}.smokeHIf25 rap.${cycle}.smokeHIf26 rap.${cycle}.smokeHIf27 rap.${cycle}.smokeHIf28 rap.${cycle}.smokeHIf29 rap.${cycle}.smokeHIf30 rap.${cycle}.smokeHIf31 rap.${cycle}.smokeHIf32 rap.${cycle}.smokeHIf33 rap.${cycle}.smokeHIf34 rap.${cycle}.smokeHIf35 rap.${cycle}.smokeHIf36 rap.${cycle}.smokeHIf37 rap.${cycle}.smokeHIf38 rap.${cycle}.smokeHIf39 rap.${cycle}.smokeHIf40 rap.${cycle}.smokeHIf41 rap.${cycle}.smokeHIf42 rap.${cycle}.smokeHIf43 rap.${cycle}.smokeHIf44 rap.${cycle}.smokeHIf45 rap.${cycle}.smokeHIf46 rap.${cycle}.smokeHIf47 rap.${cycle}.smokeHIf48 rap.${cycle}.smokeHIf49 rap.${cycle}.smokeHIf50 rap.${cycle}.smokeHIf51 > 196/rap.${cycle}.smokeHI_all
+cp 198/rap.${cycle}.smokeAK_${type}_all ${COMOUT}/rap_smokeAK.${cycle}.${type}.1hr_198.grib2
+if [ "$SENDDBN" == 'YES' ]; then
+  ${DBNROOT}/bin/dbn_alert MODEL RAP_SMOKE $job $COMOUT/rap_smokeAK.${cycle}.${type}.1hr_198.grib2
+fi
+
+mkdir 196
+cat rap.${cycle}.smokeHIf00_${type} rap.${cycle}.smokeHIf01_${type} rap.${cycle}.smokeHIf02_${type} rap.${cycle}.smokeHIf03_${type} rap.${cycle}.smokeHIf04_${type} rap.${cycle}.smokeHIf05_${type} rap.${cycle}.smokeHIf06_${type} rap.${cycle}.smokeHIf07_${type} rap.${cycle}.smokeHIf08_${type} rap.${cycle}.smokeHIf09_${type} rap.${cycle}.smokeHIf10_${type} rap.${cycle}.smokeHIf11_${type} rap.${cycle}.smokeHIf12_${type} rap.${cycle}.smokeHIf13_${type} rap.${cycle}.smokeHIf14_${type} rap.${cycle}.smokeHIf15_${type} rap.${cycle}.smokeHIf16_${type} rap.${cycle}.smokeHIf17_${type} rap.${cycle}.smokeHIf18_${type} rap.${cycle}.smokeHIf19_${type} rap.${cycle}.smokeHIf20_${type} rap.${cycle}.smokeHIf21_${type} rap.${cycle}.smokeHIf22_${type} rap.${cycle}.smokeHIf23_${type} rap.${cycle}.smokeHIf24_${type} rap.${cycle}.smokeHIf25_${type} rap.${cycle}.smokeHIf26_${type} rap.${cycle}.smokeHIf27_${type} rap.${cycle}.smokeHIf28_${type} rap.${cycle}.smokeHIf29_${type} rap.${cycle}.smokeHIf30_${type} rap.${cycle}.smokeHIf31_${type} rap.${cycle}.smokeHIf32_${type} rap.${cycle}.smokeHIf33_${type} rap.${cycle}.smokeHIf34_${type} rap.${cycle}.smokeHIf35_${type} rap.${cycle}.smokeHIf36_${type} rap.${cycle}.smokeHIf37_${type} rap.${cycle}.smokeHIf38_${type} rap.${cycle}.smokeHIf39_${type} rap.${cycle}.smokeHIf40_${type} rap.${cycle}.smokeHIf41_${type} rap.${cycle}.smokeHIf42_${type} rap.${cycle}.smokeHIf43_${type} rap.${cycle}.smokeHIf44_${type} rap.${cycle}.smokeHIf45_${type} rap.${cycle}.smokeHIf46_${type} rap.${cycle}.smokeHIf47_${type} rap.${cycle}.smokeHIf48_${type} rap.${cycle}.smokeHIf49_${type} rap.${cycle}.smokeHIf50_${type} rap.${cycle}.smokeHIf51_${type} > 196/rap.${cycle}.smokeHI_${type}_all
 $GRB2INDEX 196/rap.${cycle}.smokeHI_all 196/rap.${cycle}.smokeHI_allI
+
+cp 196/rap.${cycle}.smokeHI_${type}_all ${COMOUT}/rap_smokeHI.${cycle}.${type}.1hr_196.grib2
+if [ "$SENDDBN" == 'YES' ]; then
+  ${DBNROOT}/bin/dbn_alert MODEL RAP_SMOKE $job $COMOUT/rap_smokeHI.${cycle}.${type}.1hr_196.grib2
+fi
+
+done
+
 
 for reg in CS AK HI
  do
  for type in sfc pbl
  do
-   grib_input=rap.${cycle}.smoke${reg}_all
+   grib_input=rap.${cycle}.smoke${reg}_${type}_all
    temp_grid_grib2=rap.${type}smoke${reg}.tmp
    if [ ${reg} == 'CS' ]; then
       grdid=227
