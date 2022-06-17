@@ -750,7 +750,7 @@ then
   done
 
   numfiles=$(ls ${DATAsmoke}/rap.${cycle}.smoke* | wc -l)
-  if [[ $numfiles -eq 156 ]]; then
+  if [[ $numfiles -eq 312 ]]; then
     break
   else
     echo "WARNING: Not all smoke output was produced."
