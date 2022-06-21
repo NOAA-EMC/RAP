@@ -22,12 +22,10 @@ cd $DATA/smoke/${grid}
 # smoke grids
 # CONUS
 export grid_specs_227="lambert:265:25:25 226.541:1473:5079 12.190:1025:5079"
-
 # Alaska
-export grid_specs_198="nps:210.000000:60.000000 181.429000:1649:2976.563000 40.530101:1105:2976.563000"
+export grid_specs_198="nps:210:60 181.429:825:5953 40.53:553:5953"
 # Hawaii
-export grid_specs_196="mercator:20.000000 198.474999:321:2500.000000:206.130999 18.072699:225:2500.000000:23.087799"
-
+export grid_specs_196="mercator:20.000000 198.475000:321:2500:206.131000 18.073000:225:2500:23.088000"
 
 # Create subset of fields to be posted
 for type in sfc pbl
