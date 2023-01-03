@@ -27,10 +27,10 @@ export maillist=${maillist:-'nco.spa@noaa.gov'}
 
 #for upstream dependencies
 #for PREPDIR and PREPDIR2 set in j-jobs
-export obsproc_ver=v1.0
+export obsproc_ver=v1.1
 
 #GFS version
-export gfs_ver=v16.2
+export gfs_ver=v16.3
 
 #nsst version 
 export nsst_ver=v1.2
