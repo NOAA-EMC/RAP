@@ -111,8 +111,8 @@ fi
 
 # Update GVF with real-time data
 if [[ ${cyc} -eq '03' || ${cyc} -eq '15' ]]; then
-latestGVF=`ls ${GVF}/GVF-WKL-GLB_v2r3_npp_s*_e${PDYm1}_c${PDY}*.grib2`
-latestGVF2=`ls ${GVF}/GVF-WKL-GLB_v2r3_npp_s*_e${PDYm2}_c${PDYm1}*.grib2`
+latestGVF=`ls ${GVF}/GVF-WKL-GLB_v3r0_npp_s*_e${PDYm1}_c${PDY}*.grib2`
+latestGVF2=`ls ${GVF}/GVF-WKL-GLB_v3r0_npp_s*_e${PDYm2}_c${PDYm1}*.grib2`
 if [ -r "${latestGVF}" ]; then
    cp ${EXECrap}/rap_update_gvf .
    cp ${FIXrap}/rap_gvf_VIIRS_4KM.MIN.1gd4r.new gvf_VIIRS_4KM.MIN.1gd4r.new
