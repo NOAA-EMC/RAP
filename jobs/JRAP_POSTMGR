@@ -49,7 +49,8 @@ date
 # obtain unique process id (pid) and make temp directory
 ####################################
 export DATA=$DATAROOT/rap_postmgr_${cyc}.$$
-mkdir -p $DATA
+export DATApostchk=$DATAROOT/rap_postchk_${envir}_${cyc}
+mkdir -p $DATA $DATApostchk
 cd $DATA
 
 export cycle=t${cyc}z
