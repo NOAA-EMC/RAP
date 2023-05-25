@@ -1,9 +1,9 @@
 Release Notes: RAP v5.1.8
 
-v5.1.8 - released April 3, 2023
+v5.1.8 - released May 25, 2023
 * Script and source code changes required to use the new naming convention for the VIIRS fire data input
    * The format and content of the VIIRS fire data remains the same, but the name of the file was changed.  Therefore, the ex-script and source code need to be modified in order to read in the correct file names.
-
+* Source code changes to fix an issue with how the HRRR handles smoke concentrations on the boundaries.  These changes are not required for the RAP, but they will keep the WRF code consistent with HRRR v.4.1.7
 
 * Repository Details
    * Clone the rap.v5.1.8 branch of the RAP GitHub repository using the following command (contains v5.1.8 release notes):
@@ -19,6 +19,8 @@ v5.1.8 - released April 3, 2023
    * sorc/rap_prep_smoke.fd/process-obs/HRRR-Smoke/src/proc_NPP_FRP_HRRR_v3.f90
    * sorc/rap_prep_smoke.fd/process-obs/RAP-Smoke/src/proc_J01_FRP_RAP_v3.f90
    * sorc/rap_prep_smoke.fd/process-obs/RAP-Smoke/src/proc_NPP_FRP_RAP_v3.f90
+   * sorc/rap_wrfarw.fd/WRFV3.9/configure.wrf.useme
+   * sorc/rap_wrfarw.fd/WRFV3.9/real_em.F
 
 
 * resource changes
@@ -27,5 +29,5 @@ v5.1.8 - released April 3, 2023
 
 * implementation instructions
    * Retrieve the rap.v5.1.8 branch from GitHub
-   * Re-compile the rap_prep_smoke codes and update the exrap_prep_smoke.sh script
+   * Re-compile the rap_prep_smoke and WRF codes, and update the exrap_prep_smoke.sh script
    * Run a single prep_smoke job.  A full cycle test is not needed.
