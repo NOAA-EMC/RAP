@@ -1,0 +1,22 @@
+Release Notes: RAP v5.1.8
+
+v5.1.8 - released May 25, 2023
+* Source code changes to fix an issue with how the HRRR handles smoke concentrations on the boundaries.  These changes are not required for the RAP, but they will keep the WRF code consistent with HRRR v.4.1.7
+
+* Repository Details
+   * Clone the rap.v5.1.8 branch of the RAP GitHub repository using the following command (contains v5.1.8 release notes):
+* git clone -b rap.v5.1.8 https://github.com/NOAA-EMC/RAP.git
+
+
+* sorc files changed
+   * sorc/rap_wrfarw.fd/WRFV3.9/configure.wrf.useme
+   * sorc/rap_wrfarw.fd/WRFV3.9/real_em.F
+
+
+* resource changes
+   * N/A
+
+
+* implementation instructions
+   * Retrieve the rap.v5.1.8 branch from GitHub
+   * Re-compile the WRF source code

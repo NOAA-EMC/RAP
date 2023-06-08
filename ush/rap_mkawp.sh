@@ -42,7 +42,7 @@ then
 # proceeding.
 #
     ic=0
-    while [ ! -r $INPUT_DATA/postdone_236_f${fhr3}_${cyc} ] ; do
+    while [ ! -r $DATApostchk/postdone_236_f${fhr3}_${cyc} ] ; do
       let ic=ic+1
       if [ $ic -gt 180 ] ; then
         err_exit "F$fhr SUB PROCESSING GIVING UP AFTER 45 MINUTES WAITING FOR F$fhr3 files"
@@ -101,7 +101,7 @@ fi
   if [ $fhr -eq 03 -o $fhr -eq 06 -o $fhr -eq 09 -o $fhr -eq 12 -o $fhr -eq 15 -o \
        $fhr -eq 18 -o $fhr -eq 21 -o $fhr -eq 24 -o $fhr -eq 27 -o $fhr -eq 30 -o \
        $fhr -eq 33 -o $fhr -eq 36 ] ; then
-    echo done >$INPUT_DATA/postdone_236_f${fhr}_${cyc}
+    echo done >$DATApostchk/postdone_236_f${fhr}_${cyc}
   fi
   
   if [ $fhr -eq 00 -o $fhr -eq 01 -o $fhr -eq 02 -o $fhr -eq 03 -o $fhr -eq 04 -o \
@@ -177,7 +177,7 @@ cp ${COMOUT}/rap.t${cyc}z.awp130pgrbf${fhr}.grib2 awp130pgrbf${fhr}.grib2
 # proceeding.
 #
     ic=0
-    while [ ! -r $INPUT_DATA/postdone_130_f${fhr3}_${cyc} ] ; do
+    while [ ! -r $DATApostchk/postdone_130_f${fhr3}_${cyc} ] ; do
       let ic=ic+1
       if [ $ic -gt 180 ] ; then
         err_exit "F$fhr SUB PROCESSING GIVING UP AFTER 45 MINUTES WAITING FOR F$fhr3 files"
@@ -235,7 +235,7 @@ fi # 3-hr check
        $fhr -eq 18 -o $fhr -eq 21 -o $fhr -eq 24 -o $fhr -eq 27 -o $fhr -eq 30 -o \
        $fhr -eq 33 -o $fhr -eq 36 ] ; then
        #$fhr -eq 18 ] ; then
-    echo done >$INPUT_DATA/postdone_130_f${fhr}_${cyc}
+    echo done >$DATApostchk/postdone_130_f${fhr}_${cyc}
   fi
 
 #######################################################
@@ -253,7 +253,7 @@ fi # 3-hr check
 # proceeding.
 #
 #    ic=0
-#    while [ ! -r $INPUT_DATA/postdone_130_f${fhr2}_${cyc} ] ; do
+#    while [ ! -r $DATApostchk/postdone_130_f${fhr2}_${cyc} ] ; do
 #      let ic=ic+1
 #      if [ $ic -gt 180 ] ; then
 #        err_exit "F$fhr SUB PROCESSING GIVING UP AFTER 45 MINUTES WAITING FOR F$fhr2 files"
@@ -346,7 +346,7 @@ fi # 130 processing
 # proceeding.
 #
     ic=0
-    while [ ! -r $INPUT_DATA/postdone_252_f${fhr3}_${cyc} ] ; do
+    while [ ! -r $DATApostchk/postdone_252_f${fhr3}_${cyc} ] ; do
       let ic=ic+1
       if [ $ic -gt 180 ] ; then
         err_exit "F$fhr SUB PROCESSING GIVING UP AFTER 45 MINUTES WAITING FOR F$fhr3 files"
@@ -405,7 +405,7 @@ fi # end 252 processing
   if [ $fhr -eq 03 -o $fhr -eq 06 -o $fhr -eq 09 -o $fhr -eq 12 -o $fhr -eq 15 -o \
        $fhr -eq 18  -o $fhr -eq 21 -o $fhr -eq 24 -o $fhr -eq 27 -o $fhr -eq 30 -o \
        $fhr -eq 33 -o $fhr -eq 36 ] ; then
-    echo done >$INPUT_DATA/postdone_252_f${fhr}_${cyc}
+    echo done >$DATApostchk/postdone_252_f${fhr}_${cyc}
   fi
 
 #process 200

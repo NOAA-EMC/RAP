@@ -119,6 +119,7 @@ cd $DATAROOT
 if [ ${KEEPDATA} = NO ] ; then
   rm -rf $DATAROOT/rap_anl_${envir}_${cyc}
   rm -rf $DATAROOT/rap_fcst_${envir}_${cyc}
+  rm -rf $DATAROOT/rap_postchk_${envir}_${cyc}
   fhr=00
   while [ $fhr -le $endfhr ]
   do

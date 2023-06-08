@@ -39,13 +39,6 @@ fi
 
 gdattim=f000
 
-# DETERMINE CURRENT CYCLE BEING PROCESSED
-latest_rap_datetime=`ls -1tr $COMAWP/rap.${PDY}/gempak/rap_*f000 | awk -F"/" '{print $NF}' | tail -1 | cut -c5-14`
-#XXW latest_rap_datetime=`ls -1tr $COMIN/rap_*f000 | awk -F"/" '{print $NF}' | tail -1 | cut -c5-14`
-fullddate=`echo ${latest_rap_datetime} | cut -c1-8`
-ddate=`echo ${latest_rap_datetime} | cut -c3-8`
-cycle=`echo ${latest_rap_datetime} | cut -c9-10`
-
 # SET UP WHILE LOOP TO GO FROM 23 HOURS AGO TO CURRENT CYCLE (I.E. 24-HOUR LOOP)
 cnt=23
 
@@ -54,9 +47,9 @@ do
 
     export pgm=gdplot2_nc;. prep_step; startmsg
 
-    pfullddate=`datetime -s ${ddate}/${cycle}00 $cnt "%Y%m%d"`
-    pddate=`datetime -s ${ddate}/${cycle}00 $cnt "%y%m%d"`
-    pcycle=`datetime -s ${ddate}/${cycle}00 $cnt "%H"`
+    pfullddate=`datetime -s ${PDY}/${cyc}00 $cnt "%Y%m%d"`
+    pddate=`datetime -s ${PDY}/${cyc}00 $cnt "%y%m%d"`
+    pcycle=`datetime -s ${PDY}/${cyc}00 $cnt "%H"`
 
     COMIN="$COMAWP/${mdl}.${pfullddate}/gempak"
     #COMIN="$COMIN"

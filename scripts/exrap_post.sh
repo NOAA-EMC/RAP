@@ -513,7 +513,7 @@ do
     ic=0
 # 221 grids have different naming convention (awip32), so need separate loop
     if [ $grid -ne 221 ] ; then
-    while [ ! -r $INPUT_DATA/postdone_${grid}_f${fhr3}_${cyc} ] ; do
+    while [ ! -r $DATApostchk/postdone_${grid}_f${fhr3}_${cyc} ] ; do
       let ic=ic+1
       if [ $ic -gt 180 ] ; then
         err_exit "FATAL ERROR: F$fhr SUB PROCESSING GIVING UP AFTER 45 MINUTES WAITING FOR F$fhr3 files"
@@ -522,7 +522,7 @@ do
     done
     $GRB2INDEX ${COMOUT}/rap.t${cyc}z.awp${grid}f${fhr3}.grib2 rap.t${cyc}z.awp${grid}f${fhr3}.grib2.idxbin
     else
-    while [ ! -r $INPUT_DATA/postdone_221_f${fhr3}_${cyc} ] ; do
+    while [ ! -r $DATApostchk/postdone_221_f${fhr3}_${cyc} ] ; do
       let ic=ic+1
       if [ $ic -gt 180 ] ; then
         err_exit "FATAL ERROR: F$fhr SUB PROCESSING GIVING UP AFTER 45 MINUTES WAITING FOR F$fhr3 files"
@@ -667,7 +667,7 @@ EOF
   if [ $fhr -eq 03 -o $fhr -eq 06 -o $fhr -eq 09 -o $fhr -eq 12 -o $fhr -eq 15 -o \
        $fhr -eq 18 -o $fhr -eq 21 -o $fhr -eq 24 -o $fhr -eq 27 -o $fhr -eq 30 -o \
        $fhr -eq 33 -o $fhr -eq 36 ] ; then
-    echo done >$INPUT_DATA/postdone_${grid}_f${fhr}_${cyc}
+    echo done >$DATApostchk/postdone_${grid}_f${fhr}_${cyc}
   fi
 fi
 done
