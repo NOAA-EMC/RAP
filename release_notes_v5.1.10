@@ -1,0 +1,22 @@
+Release Notes: RAP v5.1.10
+
+v5.1.10 - released June 15, 2023
+* Source code changes to fix an issue with the serial WRF code build
+
+
+* Repository Details
+   * Clone the rap.v5.1.10 branch of the RAP GitHub repository using the following command (contains v5.1.10 release notes):
+* git clone -b rap.v5.1.10 https://github.com/NOAA-EMC/RAP.git
+
+
+* sorc files changed
+   * sorc/rap_wrfarw.fd/WRFV3.9/configure.wrf.serial
+
+
+* resource changes
+   * N/A
+
+
+* implementation instructions
+   * Retrieve the rap.v5.1.10 branch from GitHub
+   * No test cycles need to be run; this change should be implemented alongside hrrr.v4.1.8
