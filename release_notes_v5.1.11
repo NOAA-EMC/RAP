@@ -1,0 +1,28 @@
+Release Notes: RAP v5.1.11
+
+v5.1.11 - released July 7, 2023
+* Source code changes to address an operational crash in the HRRR Alaska smoke processing.
+   * With the recent addition of AF-Iband VIIRS data to the real-time operational runs, its likely that more FRP points will be detected at each gridpoint, which was the underlying reason for the crash.  In the smoke processing code, there is a hardwired cap of 20 detections, and with this code fix the loop will be skipped if the number of detections is greater than 20.
+   * Included with these changes to the RAP smoke processing are similar changes to the HRRR Alaska and HRRR CONUS smoke processing.
+
+
+* Repository Details
+   * Clone the rap.v5.1.11 branch of the RAP GitHub repository using the following command (contains v5.1.11 release notes):
+* git clone -b rap.v5.1.11 https://github.com/NOAA-EMC/RAP.git
+
+
+* sorc files changed
+   * sorc/rap_prep_smoke.fd/process-obs/HRRR-AK-Smoke/src/merge_FRP_HRRR_AK.f90
+   * sorc/rap_prep_smoke.fd/process-obs/HRRR-Smoke/src/merge_FRP_HRRR_v3.f90
+   * sorc/rap_prep_smoke.fd/process-obs/RAP-Smoke/src/merge_FRP_RAP_v3.f90
+
+
+* resource changes
+   * N/A
+
+
+* implementation instructions
+   * Retrieve the rap.v5.1.11 branch from GitHub
+   * Recompile the prep_smoke source codes.
+   * Run the smoke processing job for a single cycle.  A full cycle test is not needed.
+   * These changes should be implemented alongside hrrr.v4.1.9.
