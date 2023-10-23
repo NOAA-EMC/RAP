@@ -404,12 +404,14 @@ do
                fi  # SENDBN
            else
              mv tmpuv_${grid}.grib2 ${COMOUT}/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2
-             ${WGRIB2} ${COMOUT}/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2.idx 
+#             ${WGRIB2} ${COMOUT}/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2.idx 
 # complicated!!   only want to send pgrb alerts if FHR is not 3,6,9,12,15,18,21   Othwerwise, we still
 #    need to tack on 3-hr buckets generated in the mkawp ush script and will alert then
              if [ $fhr -ne 06 -a $fhr -ne 09 -a $fhr -ne 12 -a $fhr -ne 15 -a \
                   $fhr -ne 18 -a $fhr -ne 21 -a $fhr -ne 24 -a $fhr -ne 27 -a \
                   $fhr -ne 30 -a $fhr -ne 33 -a $fhr -ne 36 -a $fhr -ne 39 ] ; then
+               # create index file here for non 3-hr cycles; in ush/rap_mkawp.sh for 3-hy cycles.
+               ${WGRIB2} ${COMOUT}/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2 -s > ${COMOUT}/rap.${cycle}.awp${grid}pgrbf${fhr}.grib2.idx
                if [ $SENDDBN = YES ]
                  then
                   fil=awp${grid}pgrb
