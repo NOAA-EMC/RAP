@@ -6,8 +6,8 @@ v5.1.16 - released February 13, 2024
 
 
 * Repository Details
-   * Clone the rap.v5.1.16 branch of the RAP GitHub repository using the following command (contains v5.1.16 release notes):
-* git clone -b rap.v5.1.16 https://github.com/NOAA-EMC/RAP.git
+   * Retrieve the v5.1.16 tag from the rap.v5.1.16 branch of the RAP GitHub repository using the following command (contains v5.1.16 release notes):
+* git clone --branch v5.1.16 https://github.com/NOAA-EMC/RAP.git
 
 
 * sorc files changed
@@ -18,7 +18,7 @@ v5.1.16 - released February 13, 2024
 
 
 * implementation instructions
-   * Retrieve the rap.v5.1.16 branch from GitHub
+   * Retrieve the rap.v5.1.16 branch from GitHub, the v5.1.16 tag
    * Retrieve the following files/directories from /lfs/h1/ops/prod/packages/rap.v5.1.15:
       * exec/
       * fix/
