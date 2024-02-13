@@ -1,0 +1,31 @@
+Release Notes: RAP v5.1.15
+
+v5.1.15 - released October 23, 2023
+* Script changes to use eFire data in the RAP smoke pre-processing task.
+   * On November 30th, 2023, the VIIRS Active Fire (AF) I-band data that is currently used by the RAP will be discontinued.  It will be replaced by eFire VIIRS I-band data, which is already being produced operationally.  The format of the text files needed by the smoke pre-processing job remains the same, but the filenames will change.
+
+
+* Repository Details
+   * Clone the rap.v5.1.15 branch of the RAP GitHub repository using the following command (contains v5.1.15 release notes):
+      * git clone -b rap.v5.1.15 https://github.com/NOAA-EMC/RAP.git
+
+
+* script files changed
+   * scripts/exrap_prep_smoke.sh
+
+* resource changes
+   * N/A
+
+
+* implementation instructions
+   * Retrieve the rap.v5.1.15 branch from GitHub
+   * Retrieve the following files/directories from /lfs/h1/ops/prod/packages/rap.v5.1.14:
+      * exec/
+      * fix/
+      * parm/rap_QNWFA_QNIFA_Monthly_GFS
+      * parm/rap_run*
+      * sorc/rap_wrfpost.fd/gtg*
+      * sorc/rap_wrfpost.fd/map_routines.f90
+      * sorc/rap_wrfpost.fd/rap_gtg.config
+   * Run the prep_smoke job for a single cycle.  A full cycle test is not needed.
+   * These changes should be implemented alongside hrrr.v4.1.11.

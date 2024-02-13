@@ -19,12 +19,6 @@ export cray_pals_ver="1.0.12"
 export libjpeg_ver="9c"
 export radar_ver="v0.0"
 
-#export SENDDBN=NO
-
-# Debug for implementation
-#export maillist=gregory.mott@noaa.gov
-export maillist=${maillist:-'nco.spa@noaa.gov'}
-
 #for upstream dependencies
 #for PREPDIR and PREPDIR2 set in j-jobs
 export obsproc_ver=v1.1
@@ -37,3 +31,13 @@ export nsst_ver=v1.2
 
 #radarl2
 export radarl2_ver=v1.2
+
+#######
+## Flags for paratesting
+# export maillist=wei.wei@noaa.gov
+# export DCOMROOT=/lfs/h1/ops/prod/dcom
+# #export SENDDBN=NO
+# export DBNLOG=YES
+# export COMPATH=/lfs/h1/ops/prod/com/nsst/:/lfs/h1/ops/prod/com/gfs/:/lfs/h1/ops/prod/com/obsproc/:/lfs/h1/ops/prod/com/radarl2/
+# export DATAROOT=/lfs/f1/ops/para/tmp
+
