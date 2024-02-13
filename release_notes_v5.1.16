@@ -11,7 +11,7 @@ v5.1.16 - released February 13, 2024
 
 
 * sorc files changed
-   * sorc/rap_gsi.fd/src/gsi/read_l2rwbufr_mod.f90
+   * sorc/rap_gsi.fd/src/gsi/read_l2bufr_mod.f90
 
 * resource changes
    * N/A
