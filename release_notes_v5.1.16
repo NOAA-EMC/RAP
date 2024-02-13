@@ -1,0 +1,31 @@
+Release Notes: RAP v5.1.16
+
+v5.1.16 - released February 13, 2024
+* A GSI source code change to fix an operational RAP crash.
+   * On February 10th, 2024, the operational 11Z RAP crashed due to a GSI failure with the radar radial wind observation file (l2rwbufr).  A fix is provided to the GSI code which resolves the crash; it is the same fix that was provided for the NAM GSI in December 2021.
+
+
+* Repository Details
+   * Clone the rap.v5.1.16 branch of the RAP GitHub repository using the following command (contains v5.1.16 release notes):
+* git clone -b rap.v5.1.16 https://github.com/NOAA-EMC/RAP.git
+
+
+* sorc files changed
+   * sorc/rap_gsi.fd/src/gsi/read_l2rwbufr_mod.f90
+
+* resource changes
+   * N/A
+
+
+* implementation instructions
+   * Retrieve the rap.v5.1.16 branch from GitHub
+   * Retrieve the following files/directories from /lfs/h1/ops/prod/packages/rap.v5.1.15:
+      * exec/
+      * fix/
+      * parm/rap_QNWFA_QNIFA_Monthly_GFS
+      * parm/rap_run*
+      * sorc/rap_wrfpost.fd/gtg*
+      * sorc/rap_wrfpost.fd/map_routines.f90
+      * sorc/rap_wrfpost.fd/rap_gtg.config
+   * Re-compile the GSI source code.  A full cycle test is not needed.
+   * These changes should be implemented alongside hrrr.v4.1.13.
