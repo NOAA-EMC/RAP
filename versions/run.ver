@@ -21,7 +21,7 @@ export radar_ver="v0.0"
 
 #for upstream dependencies
 #for PREPDIR and PREPDIR2 set in j-jobs
-export obsproc_ver=v1.1
+export obsproc_ver=v1.2
 
 #GFS version
 export gfs_ver=v16.3
@@ -34,9 +34,8 @@ export radarl2_ver=v1.2
 
 #######
 ## Flags for paratesting
-# export maillist=wei.wei@noaa.gov
 # export DCOMROOT=/lfs/h1/ops/prod/dcom
-# #export SENDDBN=NO
+# export SENDDBN=NO
 # export DBNLOG=YES
 # export COMPATH=/lfs/h1/ops/prod/com/nsst/:/lfs/h1/ops/prod/com/gfs/:/lfs/h1/ops/prod/com/obsproc/:/lfs/h1/ops/prod/com/radarl2/
 # export DATAROOT=/lfs/f1/ops/para/tmp
