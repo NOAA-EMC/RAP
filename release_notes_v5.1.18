@@ -1,0 +1,31 @@
+Release Notes: RAP v5.1.18
+
+v5.1.18 - released June 26, 2024
+* The EFIRE VIIRS products were updated from v1.2 to v1.3.  
+   * There are no scientific changes associated with this product update, but the filenames have changed from EFIRE-VIIRSI_v1r2 to EFIRE-VIIRSI_v1r3, and the RAP smoke processing script needs to be updated accordingly.
+
+
+* Repository Details
+   * Retrieve the v5.1.18 branch of the RAP GitHub repository using the following command (contains v5.1.18 release notes):
+* git clone -b v5.1.18 https://github.com/NOAA-EMC/RAP.git
+
+
+* scripts files changed
+   * scripts/exrap_prep_smoke.sh
+
+* resource changes
+   * N/A
+
+
+* implementation instructions
+   * Retrieve the v5.1.18 branch from GitHub
+   * Retrieve the following files/directories from /lfs/h1/ops/prod/packages/rap.v5.1.17:
+      * exec/
+      * fix/
+      * parm/rap_QNWFA_QNIFA_Monthly_GFS
+      * parm/rap_run*
+      * sorc/rap_wrfpost.fd/gtg*
+      * sorc/rap_wrfpost.fd/map_routines.f90
+      * sorc/rap_wrfpost.fd/rap_gtg.config
+   * Test the RAP smoke processing task for a single cycle.  A full cycle test is not needed.
+   * These changes should be implemented alongside hrrr.v4.1.15.
