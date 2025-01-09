@@ -36,7 +36,6 @@ export radarl2_ver=v1.2
 ## Flags for paratesting
 # export DCOMROOT=/lfs/h1/ops/prod/dcom
 # export SENDDBN=NO
-# export DBNLOG=YES
-# export COMPATH=/lfs/h1/ops/prod/com/nsst/:/lfs/h1/ops/prod/com/gfs/:/lfs/h1/ops/prod/com/obsproc/:/lfs/h1/ops/prod/com/radarl2/
-# export DATAROOT=/lfs/f1/ops/para/tmp
-
+#export DBNLOG=YES
+#export COMPATH=/lfs/h1/ops/prod/com/nsst/:/lfs/h1/ops/prod/com/gfs/:/lfs/h1/ops/prod/com/obsproc/:/lfs/h1/ops/prod/com/radarl2/
+#export DATAROOT=/lfs/f1/ops/para/tmp

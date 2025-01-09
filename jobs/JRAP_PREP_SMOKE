@@ -108,9 +108,9 @@ env
 #######################################
 # Define observation source directories
 #######################################
-export DCOM_VIIRS_NPP="$DCOMROOT/"
-export DCOM_VIIRS_J01="$DCOMROOT/"
-export DCOM_MODIS="$DCOMROOT/"
+export DCOM_VIIRS_NPP=${DCOM_VIIRS_NPP:-"$DCOMROOT/"}
+export DCOM_VIIRS_J01=${DCOM_VIIRS_J01:-"$DCOMROOT/"}
+export DCOM_MODIS=${DCOM_MODIS:-"$DCOMROOT/"}
 
 test -d "$DCOM_VIIRS_NPP"
 test -d "$DCOM_VIIRS_J01"
