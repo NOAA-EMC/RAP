@@ -27,7 +27,7 @@ v5.1.19 - released January 9, 2025
       * sorc/rap_wrfpost.fd/map_routines.f90
       * sorc/rap_wrfpost.fd/rap_gtg.config
    * Retrieve the following fix file from Cactus or Dogwood (cant store fix files on Github):
-      * fix/rap_profdat
+      * /lfs/h2/emc/lam/noscrub/Benjamin.Blake/nwprod/rap.v5.1.19/fix/rap_profdat
 
    * Test the RAP wrfbufr and postsnd tasks for a single cycle.  A full cycle test is not needed.
    * These changes should be implemented alongside hrrr.v4.1.18.
