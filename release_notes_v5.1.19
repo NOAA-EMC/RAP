@@ -18,7 +18,7 @@ v5.1.19 - released January 9, 2025
 
 * implementation instructions
    * Retrieve the v5.1.19 branch from GitHub
-   * Retrieve the following files/directories from /lfs/h1/ops/prod/packages/rap.v5.1.17:
+   * Retrieve the following files/directories from /lfs/h1/ops/prod/packages/rap.v5.1.18:
       * exec/
       * fix/
       * parm/rap_QNWFA_QNIFA_Monthly_GFS
