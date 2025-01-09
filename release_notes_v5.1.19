@@ -1,0 +1,33 @@
+Release Notes: RAP v5.1.19
+
+v5.1.19 - released January 9, 2025
+* The regional station list for the bufr station time series output is updated to include 96 new stations over the United States.
+   * There are no model changes associated with this update, but the bufr sounding output now contains additional stations, and the RAP profdat file needs to be updated accordingly.
+
+* Repository Details
+   * Retrieve the v5.1.19 branch of the RAP GitHub repository using the following command (contains v5.1.19 release notes):
+* git clone b v5.1.19 https://github.com/NOAA-EMC/RAP.git
+
+
+* fix files changed
+   * fix/rap_profdat
+
+* resource changes
+   * N/A
+
+
+* implementation instructions
+   * Retrieve the v5.1.19 branch from GitHub
+   * Retrieve the following files/directories from /lfs/h1/ops/prod/packages/rap.v5.1.17:
+      * exec/
+      * fix/
+      * parm/rap_QNWFA_QNIFA_Monthly_GFS
+      * parm/rap_run*
+      * sorc/rap_wrfpost.fd/gtg*
+      * sorc/rap_wrfpost.fd/map_routines.f90
+      * sorc/rap_wrfpost.fd/rap_gtg.config
+   * Retrieve the following fix file from Cactus or Dogwood (cant store fix files on Github):
+      * fix/rap_profdat
+
+   * Test the RAP wrfbufr and postsnd tasks for a single cycle.  A full cycle test is not needed.
+   * These changes should be implemented alongside hrrr.v4.1.18.
