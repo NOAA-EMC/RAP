@@ -5,7 +5,7 @@ v5.1.20 - released April 17, 2025
 
 * Repository Details
    * Retrieve the v5.1.20 branch of the RAP GitHub repository using the following command (contains v5.1.20 release notes):
-* git clone b v5.1.20 https://github.com/NOAA-EMC/RAP.git
+* git clone -b v5.1.20 https://github.com/NOAA-EMC/RAP.git
 
 
 * fix files changed
