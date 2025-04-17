@@ -14,7 +14,7 @@ export BUILD_rap_gsi=no
 export BUILD_rap_prep_smoke=no
 
 export BUILD_rap_full_cycle_surface=no
-export BUILD_rap_process_cloud=no
+export BUILD_rap_process_cloud=yes
 export BUILD_rap_process_imssnow=no
 export BUILD_rap_process_mosaic=no
 export BUILD_rap_process_sst=no
@@ -22,7 +22,7 @@ export BUILD_rap_process_lightning=no
 export BUILD_rap_update_gvf=no
 export BUILD_rap_update_fields=no
 
-export BUILD_rap_sndp=yes
+export BUILD_rap_sndp=no
 export BUILD_rap_subflds_g2=no
 export BUILD_rap_wrfbufr=no
 export BUILD_rap_stnmlist=no

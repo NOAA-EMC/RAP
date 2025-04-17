@@ -1,0 +1,35 @@
+Release Notes: RAP v5.1.20
+
+v5.1.20 - released April 17, 2025
+* The GSI convinfo files and cloud processing code are updated to utilize GOES-19 satellite data.
+
+* Repository Details
+   * Retrieve the v5.1.20 branch of the RAP GitHub repository using the following command (contains v5.1.20 release notes):
+* git clone b v5.1.20 https://github.com/NOAA-EMC/RAP.git
+
+
+* fix files changed
+   * fix/rap_nam_regional_convinfo
+* sorc files changed
+   * sorc/rap_process_cloud.fd/process_NASALaRC_cloud.f90
+
+* resource changes
+   * N/A
+
+
+* implementation instructions
+   * Retrieve the v5.1.20 branch from GitHub
+   * Retrieve the following files/directories from /lfs/h1/ops/prod/packages/rap.v5.1.19:
+      * exec/
+      * fix/
+      * parm/rap_QNWFA_QNIFA_Monthly_GFS
+      * parm/rap_run*
+      * sorc/rap_wrfpost.fd/gtg*
+      * sorc/rap_wrfpost.fd/map_routines.f90
+      * sorc/rap_wrfpost.fd/rap_gtg.config
+   * Retrieve the following fix file from Cactus or Dogwood (can't store fix files on Github):
+      * /lfs/h2/emc/lam/noscrub/Benjamin.Blake/nwprod/rap.v5.1.20/fix/rap_nam_regional_convinfo
+   * Recompile the rap_process_cloud source code using sorc/build_rap_all.sh.  I've updated build_rap_all.sh within rap.v5.1.20 to only build this code instead of all the codes.
+
+   * Test the RAP processing and analysis tasks for a single cycle.  A full cycle test is not needed.
+   * These changes should be implemented alongside hrrr.v4.1.19.
