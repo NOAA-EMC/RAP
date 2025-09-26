@@ -1,0 +1,30 @@
+Release Notes: RAP v5.1.21
+
+v5.1.20 - released September 26, 2025
+* The GSI convinfo file is updated to address a RAP partial cycle forecast failure with the 9/7 06Z cycle.  The forecast failure was related to a strong hurricane in the Pacific Ocean, where the max U wind speed in the model reached 293 m/s due to a very high wind analysis increment in the GSI analysis.  To resolve the model failure, the gross check threshold for observation type 232 is decreased from 10 to 7.  This approach removes the unusual 232 observations, but still keeps most of the 232 observations in the RAP analysis to improve hurricane analyses and forecasts.
+
+* Repository Details
+   * Retrieve the v5.1.21 branch of the RAP GitHub repository using the following command (contains v5.1.21 release notes):
+* git clone –b v5.1.21 https://github.com/NOAA-EMC/RAP.git
+
+
+* fix files changed
+   * fix/rap_nam_regional_convinfo
+
+* resource changes
+   * N/A
+
+
+* implementation instructions
+   * Retrieve the v5.1.21 branch from GitHub
+   * Retrieve the following files/directories from /lfs/h1/ops/prod/packages/rap.v5.1.20:
+      * exec/
+      * fix/
+      * parm/rap_QNWFA_QNIFA_Monthly_GFS
+      * parm/rap_run*
+      * sorc/rap_wrfpost.fd/gtg*
+      * sorc/rap_wrfpost.fd/map_routines.f90
+      * sorc/rap_wrfpost.fd/rap_gtg.config
+   * Retrieve the following fix file from Cactus or Dogwood (can’t store fix files on Github):
+      * /lfs/h2/emc/lam/noscrub/Benjamin.Blake/nwprod/rap.v5.1.21/fix/rap_nam_regional_convinfo
+   * No specific testing is required as this change will have minimal impact on the RAP system.  The 9/7 06Z partial cycle forecast completed successfully with this change.
