@@ -1,6 +1,6 @@
 Release Notes: RAP v5.1.21
 
-v5.1.20 - released September 26, 2025
+v5.1.21 - released September 26, 2025
 * The GSI convinfo file is updated to address a RAP partial cycle forecast failure with the 9/7 06Z cycle.  The forecast failure was related to a strong hurricane in the Pacific Ocean, where the max U wind speed in the model reached 293 m/s due to a very high wind analysis increment in the GSI analysis.  To resolve the model failure, the gross check threshold for observation type 232 is decreased from 10 to 7.  This approach removes the unusual 232 observations, but still keeps most of the 232 observations in the RAP analysis to improve hurricane analyses and forecasts.
 
 * Repository Details
