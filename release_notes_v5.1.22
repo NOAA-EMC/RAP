@@ -1,0 +1,31 @@
+Release Notes: RAP v5.1.22
+
+v5.1.22 - released October 28, 2025
+* The GSI convinfo file is updated to address a RAP forecast failure with the 10/27 00Z cycle.  The forecast failure was related to Hurricane Melissa in the Caribbean.  A very strong wind analysis increment was introduced by the GSI analysis, exceeding 137 m/s.  To resolve the model failure, the gross check threshold for observation type 232 is decreased from 7 to 4.  In September, this threshold was reduced from 10 to 7 to resolve a similar failure in the RAP partial cycle forecast.  This approach removes the extreme 232 observations, and still keeps the 232 observations in the RAP analysis to improve hurricane analyses and forecasts.
+
+* Repository Details
+   * Retrieve the v5.1.22 branch of the RAP GitHub repository using the following command (contains v5.1.22 release notes):
+* git clone –b v5.1.22 https://github.com/NOAA-EMC/RAP.git
+
+
+* fix files changed
+   * fix/rap_nam_regional_convinfo
+
+* resource changes
+   * N/A
+
+
+* implementation instructions
+   * Retrieve the v5.1.22 branch from GitHub
+   * Retrieve the following files/directories from /lfs/h1/ops/prod/packages/rap.v5.1.21:
+      * exec/
+      * fix/
+      * parm/rap_QNWFA_QNIFA_Monthly_GFS
+      * parm/rap_run*
+      * sorc/rap_wrfpost.fd/gtg*
+      * sorc/rap_wrfpost.fd/map_routines.f90
+      * sorc/rap_wrfpost.fd/rap_gtg.config
+   * Retrieve the following fix file from Cactus or Dogwood (can’t store fix files on Github):
+      * /lfs/h2/emc/lam/noscrub/Benjamin.Blake/nwprod/rap.v5.1.22/fix/rap_nam_regional_convinfo
+   * This change will have an overall minimal scientific impact on the RAP system, therefore no specific testing is required.  The fix file change affects the RAP analysis task.  The 10/27 00Z forecast completed successfully with this change.
+
