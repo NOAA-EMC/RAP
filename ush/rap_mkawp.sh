@@ -462,9 +462,9 @@ if [[ $fhrNs =~ " $fhrN " ]] ; then
    if [ "$SENDCOM" == 'YES' ]; then
        cp $nwstg_bull ${WMO}/.
 
-       if [ "$SENDDBN" == 'YES' ]; then
-           ${DBNROOT}/bin/dbn_alert NTC_LOW gtg $job $WMO/$nwstg_bull
-       fi
+#       if [ "$SENDDBN" == 'YES' ]; then
+#           ${DBNROOT}/bin/dbn_alert NTC_LOW gtg $job $WMO/$nwstg_bull
+#       fi
    fi
 fi
 else
