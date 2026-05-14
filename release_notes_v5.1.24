@@ -1,0 +1,30 @@
+Release Notes: RAP v5.1.24
+
+v5.1.24 - released May 14, 2026
+* In preparation for the upcoming GFSv17 operational implementation, the RAP makebc and analysis run scripts are updated to handle the new filenames and directory paths for GFS model data.
+
+* Repository Details
+   * Retrieve the v5.1.24 branch of the RAP GitHub repository using the following command (contains v5.1.24 release notes):
+      * git clone –b v5.1.24 https://github.com/NOAA-EMC/RAP.git
+
+* scripts files changed
+   * scripts/exrap_analysis.sh
+   * scripts/exrap_analysis_pcyc.sh
+   * scripts/exrap_makebc.sh
+* versions files changed
+   * versions/run.ver
+
+* resource changes
+   * N/A
+
+* implementation instructions
+   * Retrieve the v5.1.24 branch from GitHub
+   * Retrieve the following files/directories from /lfs/h1/ops/prod/packages/rap.v5.1.23:
+      * exec/
+      * fix/
+      * parm/rap_QNWFA_QNIFA_Monthly_GFS
+      * parm/rap_run*
+      * sorc/rap_wrfpost.fd/gtg*
+      * sorc/rap_wrfpost.fd/map_routines.f90
+      * sorc/rap_wrfpost.fd/rap_gtg.config
+   * Run a full cycle test of the RAP.  Based on preliminary testing, these script changes will have an overall minimal scientific impact on the RAP system.
