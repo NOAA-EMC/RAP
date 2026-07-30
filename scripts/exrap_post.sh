@@ -481,7 +481,6 @@ do
        # Create subset of fields to be posted
        ${WGRIB2} -inv tmp.inv ${COMOUT}/rap.${cycle}.wrfprsf${fhr}.grib2
        grep < tmp.inv "`cat ${PARMrap}/rap_parmlist_${grid}.txt`" | ${WGRIB2} -i ${COMOUT}/rap.${cycle}.wrfprsf${fhr}.grib2 -grib tmp.grib2
-       $GRB2INDEX  ${COMOUT}/rap.${cycle}.wrfprsf${fhr}.grib2  ${COMOUT}/rap.${cycle}.wrfprsf${fhr}.grib2.idx
 
        # Merge vector field records in subset
        ${WGRIB2} tmp.grib2 -new_grid_vectors "`cat ${PARMrap}/rap_vector_fields.txt`" -submsg_uv tmpuv.grib2

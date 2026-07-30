@@ -1,0 +1,26 @@
+Release Notes: RAP v5.1.24
+
+v5.1.24 - released July 30, 2026
+* The RAP wrfprs grib2 index files are currently overwritten within the post job due to an extra inadvertent call to grb2index.  This occasionally causes the index files on NOMADS to be binary instead of the expected ASCII wgrib2 inventory.  A script change to remove the extra grb2index call ensures that this will no longer occur.
+
+* Repository Details
+   * Retrieve the rap.v5.1.24 branch of the RAP GitHub repository using the following command (contains v5.1.24 release notes):
+      * git clone –b rap.v5.1.24 https://github.com/NOAA-EMC/RAP.git
+
+* scripts files changed
+   * scripts/exrap_post.sh
+
+* resource changes
+   * N/A
+
+* implementation instructions
+   * Retrieve the rap.v5.1.24 branch from GitHub
+   * Retrieve the following files/directories from /lfs/h1/ops/prod/packages/rap.v5.1.23:
+      * exec/
+      * fix/
+      * parm/rap_QNWFA_QNIFA_Monthly_GFS
+      * parm/rap_run*
+      * sorc/rap_wrfpost.fd/gtg*
+      * sorc/rap_wrfpost.fd/map_routines.f90
+      * sorc/rap_wrfpost.fd/rap_gtg.config
+   * Run a single post job for the RAP.  This minor script change will have no scientific impact on the RAP system.
